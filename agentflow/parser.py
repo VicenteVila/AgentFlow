@@ -455,7 +455,20 @@ def _parse_function(
 
 
 def _scan_handle_eval_for_tools(method: ast.FunctionDef, graph: FlowGraph) -> None:
-    """Scan _handle_eval_result for tool dispatch patterns and add tool nodes."""
+    """Scan _handle_eval_result for tool dispatch patterns and add tool nodes.
+
+    These are tools dispatched from the for-loop body via if/elif chains.
+    We connect them to the for-loop node (loop_*) so they appear in the flow.
+    """
+    # Find the for-loop node (the tool_calls iterator)
+    for_loop_id = None
+    for n in graph.nodes:
+        if n.node_type == NodeType.LOOP and "tool_calls" in n.label.lower():
+            for_loop_id = n.id
+            break
+    if not for_loop_id:
+        for_loop_id = "main_loop"
+
     for node in ast.walk(method):
         if isinstance(node, ast.If):
             tool_name = _detect_tool_dispatch(node)
@@ -466,8 +479,8 @@ def _scan_handle_eval_for_tools(method: ast.FunctionDef, graph: FlowGraph) -> No
                     id=tool_id, label=label, detail=detail,
                     node_type=NodeType.TOOL, line=node.lineno,
                 ))
-                # Connect from main_loop (the tool is called from the loop)
-                graph.add_edge(Edge(source="main_loop", target=tool_id, label="dispatch"))
+                # Connect from the for-loop (tools are dispatched inside the loop)
+                graph.add_edge(Edge(source=for_loop_id, target=tool_id, label="dispatch"))
 
 
 # ── Label + detail extraction ───────────────────────────────────────
@@ -586,6 +599,17 @@ def _if_label_and_detail(stmt: ast.If) -> tuple[str, str]:
                     "Compact\ncontext?",
                     "tokens > 60000?\n(solo 1 vez por run)",
                 )
+        # Detect any(k in text.lower() for k in ("done", "fin", ...))
+        if isinstance(func, ast.Name) and func.id == "any":
+            try:
+                raw = ast.dump(test)
+                if "value='done'" in raw and "value='fin'" in raw:
+                    return (
+                        "Agent said\ndone?",
+                        "¿Agente dijo done/fin/finalizado?\n→ terminar si alcanzó target_h",
+                    )
+            except Exception:
+                pass
         if isinstance(func, ast.Name):
             if func.id == "stop_reason":
                 return (
@@ -621,8 +645,34 @@ def _if_label_and_detail(stmt: ast.If) -> tuple[str, str]:
                     "Mejora > umbral?\n→ aprender lección",
                 )
 
+        # Detect tool name comparisons: call.name == "tool_name"
+        if isinstance(left, ast.Attribute) and left.attr == "name":
+            for comp in test.comparators:
+                if isinstance(comp, ast.Constant) and isinstance(comp.value, str):
+                    tool_name = comp.value
+                    if tool_name in TOOL_INFO:
+                        label, detail = TOOL_INFO[tool_name]
+                        return (f"Tool:\n{tool_name}?", detail)
+                    return (f"Tool:\n{tool_name}?", f"Dispatch {tool_name}")
+
+        # Detect: node_id is not None / node_id in ...
+        if isinstance(left, ast.Name) and left.id == "node_id":
+            return (
+                "node_id\nvalid?",
+                "¿Se generó nodo?\n→ evaluar resultado",
+            )
+
     # Boolean ops
     if isinstance(test, ast.BoolOp):
+        # Try to detect specific patterns in BoolOp
+        for val in test.values:
+            if isinstance(val, ast.Compare):
+                left = val.left
+                if isinstance(left, ast.Name) and left.id == "node_id":
+                    return (
+                        "node_id valid\n+ tool check?",
+                        "Nodo existe y\nherramienta relevante?",
+                    )
         return (
             "Condition\ncheck?",
             "Múltiples condiciones\nAND/OR combinadas",
@@ -670,6 +720,24 @@ def _if_label_and_detail(stmt: ast.If) -> tuple[str, str]:
             return (
                 "Meta-edits\nenabled?",
                 "allow_meta_edits = True?\n→ permitir edit_skill",
+            )
+        # Detect "done"/"fin" keyword checks in text
+        if '"done"' in raw or '"fin"' in raw or '"finalizado"' in raw:
+            return (
+                "Agent said\ndone?",
+                "¿Agente dijo done/fin/finalizado?\n→ terminar si alcanzó target_h",
+            )
+        # Detect incremental/memory operations
+        if "incremental" in raw or "global_lessons" in raw:
+            return (
+                "Lessons\nto merge?",
+                "¿Hay lecciones incrementales?\n→ merge a global_lessons",
+            )
+        # Detect node_id checks
+        if "node_id" in raw:
+            return (
+                "node_id\nvalid?",
+                "¿Se generó nodo válido?\n→ evaluar resultado",
             )
     except Exception:
         pass

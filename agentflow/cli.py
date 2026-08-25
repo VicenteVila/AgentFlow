@@ -31,7 +31,7 @@ def main(argv: list[str] | None = None) -> None:
     )
     parser.add_argument(
         "-l", "--layout",
-        choices=["hierarchical", "grid"],
+        choices=["hierarchical", "grid", "phased"],
         default="hierarchical",
         help="Layout algorithm (default: hierarchical)",
     )

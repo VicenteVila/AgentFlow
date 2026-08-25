@@ -7,7 +7,7 @@ from pathlib import Path
 from agentflow.models import Edge, FlowGraph, Node, NodeType
 from agentflow.parser import parse_source
 from agentflow.excalidraw import to_excalidraw, save_excalidraw
-from agentflow.layouts import hierarchical_layout, grid_layout
+from agentflow.layouts import hierarchical_layout, grid_layout, phased_layout
 
 
 # ── Models tests ──────────────────────────────────────────────────────
@@ -131,6 +131,27 @@ def test_grid_layout():
     graph = parse_source(SIMPLE_AGENT, title="Test")
     result = grid_layout(graph)
     assert len(result.positioned) == graph.node_count
+
+
+def test_phased_layout():
+    graph = parse_source(SIMPLE_AGENT, title="Test")
+    result = phased_layout(graph)
+    assert len(result.positioned) == graph.node_count
+    assert len(result.phase_boxes) == 3  # FASE 1, 2, 3
+    # All nodes should have phase assigned
+    for p in result.positioned:
+        assert p.phase in (1, 2, 3)
+
+
+def test_phased_layout_excalidraw():
+    graph = parse_source(SIMPLE_AGENT, title="Phased Test")
+    doc = to_excalidraw(graph, layout="phased")
+    assert doc["type"] == "excalidraw"
+    # Should have phase boxes (rectangles with dashed stroke)
+    phase_boxes = [e for e in doc["elements"]
+                   if e["type"] == "rectangle" and e.get("strokeStyle") == "dashed"
+                   and e.get("strokeColor") == "#868e96"]
+    assert len(phase_boxes) >= 1  # At least one phase box
 
 
 def test_layout_no_overlap_simple():

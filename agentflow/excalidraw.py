@@ -14,9 +14,12 @@ from typing import Any
 
 from agentflow.layouts import (
     NODE_COLORS,
+    FeedbackArrow,
     LayoutResult,
+    PhaseBox,
     PositionedNode,
     hierarchical_layout,
+    phased_layout,
 )
 from agentflow.models import FlowGraph, NodeType
 
@@ -295,7 +298,7 @@ def to_excalidraw(graph: FlowGraph, layout: str = "hierarchical") -> dict[str, A
 
     Args:
         graph: The flow graph to convert.
-        layout: Layout algorithm - "hierarchical" (default) or "grid".
+        layout: Layout algorithm - "hierarchical" (default), "grid", or "phased".
 
     Returns:
         A dict that can be serialized to .excalidraw JSON.
@@ -305,6 +308,8 @@ def to_excalidraw(graph: FlowGraph, layout: str = "hierarchical") -> dict[str, A
     # Compute layout
     if layout == "grid":
         result = grid_layout(graph)
+    elif layout == "phased":
+        result = phased_layout(graph)
     else:
         result = hierarchical_layout(graph)
 
@@ -312,10 +317,82 @@ def to_excalidraw(graph: FlowGraph, layout: str = "hierarchical") -> dict[str, A
     id_map: dict[str, str] = {}  # node_id -> shape element id
     text_map: dict[str, str] = {}  # node_id -> text element id
 
-    # 0. Group boxes (background rectangles — drawn first so they appear behind)
+    # 0. Phase boxes (for phased layout — drawn first so they appear behind)
+    for pb in result.phase_boxes:
+        box_id = _rid()
+        label_id = _rid()
+        box = {
+            "id": box_id,
+            "type": "rectangle",
+            "x": pb.x,
+            "y": pb.y,
+            "width": pb.width,
+            "height": pb.height,
+            "angle": 0,
+            "strokeColor": pb.stroke,
+            "backgroundColor": pb.background,
+            "fillStyle": "solid",
+            "strokeWidth": 2,
+            "strokeStyle": "dashed",
+            "roughness": 0,
+            "opacity": 100,
+            "groupIds": [],
+            "frameId": None,
+            "index": "a0",
+            "roundness": {"type": 3},
+            "seed": random.randint(1, 2**31),
+            "version": 1,
+            "versionNonce": random.randint(1, 2**31),
+            "isDeleted": False,
+            "boundElements": [{"id": label_id, "type": "text"}],
+            "updated": 1,
+            "link": None,
+            "locked": False,
+        }
+        elements.append(box)
+        # Phase label — large, at top-left of box
+        lbl = {
+            "id": label_id,
+            "type": "text",
+            "x": pb.x + 20,
+            "y": pb.y + 15,
+            "width": len(pb.label) * 12,
+            "height": 30,
+            "angle": 0,
+            "strokeColor": "#343a40",
+            "backgroundColor": "transparent",
+            "fillStyle": "solid",
+            "strokeWidth": 1,
+            "strokeStyle": "solid",
+            "roughness": 0,
+            "opacity": 100,
+            "groupIds": [],
+            "frameId": None,
+            "index": "a1",
+            "roundness": None,
+            "seed": random.randint(1, 2**31),
+            "version": 1,
+            "versionNonce": random.randint(1, 2**31),
+            "isDeleted": False,
+            "boundElements": None,
+            "updated": 1,
+            "link": None,
+            "locked": False,
+            "text": pb.label,
+            "fontSize": 22,
+            "fontFamily": 1,
+            "textAlign": "left",
+            "verticalAlign": "top",
+            "containerId": box_id,
+            "originalText": pb.label,
+            "autoResize": True,
+            "lineHeight": 1.25,
+        }
+        elements.append(lbl)
+
+    # 0b. Group boxes (for hierarchical layout — drawn first so they appear behind)
     for gb in result.group_boxes:
         box_id = _rid()
-        # Group label at top-left of the box
         label_id = _rid()
         box = {
             "id": box_id,
@@ -346,7 +423,6 @@ def to_excalidraw(graph: FlowGraph, layout: str = "hierarchical") -> dict[str, A
             "locked": False,
         }
         elements.append(box)
-        # Group label
         lbl = {
             "id": label_id,
             "type": "text",
@@ -459,6 +535,92 @@ def to_excalidraw(graph: FlowGraph, layout: str = "hierarchical") -> dict[str, A
                 be.append({"id": arrow_id, "type": "arrow"})
                 el["boundElements"] = be
             if el["id"] == target_eid:
+                be = el.get("boundElements") or []
+                be.append({"id": arrow_id, "type": "arrow"})
+                el["boundElements"] = be
+
+    # 3b. Feedback arrows (dashed, going upward — e.g. budget→reason)
+    for fb in result.feedback_arrows:
+        if fb.source_id not in pos_lookup or fb.target_id not in pos_lookup:
+            continue
+        src_pos = pos_lookup[fb.source_id]
+        tgt_pos = pos_lookup[fb.target_id]
+        src_eid = id_map[fb.source_id]
+        tgt_eid = id_map[fb.target_id]
+
+        # For upward arrows: start from top-center of source, end at bottom-center of target
+        sx = src_pos.x + src_pos.width / 2
+        sy = src_pos.y
+        tx = tgt_pos.x + tgt_pos.width / 2
+        ty = tgt_pos.y + tgt_pos.height
+
+        arrow_id = _rid()
+        label_id = _rid() if fb.label else None
+
+        arrow = {
+            "id": arrow_id,
+            "type": "arrow",
+            "x": sx,
+            "y": sy,
+            "width": abs(tx - sx) if tx != sx else 1,
+            "height": abs(ty - sy) if ty != sy else 1,
+            "angle": 0,
+            "strokeColor": fb.color,
+            "backgroundColor": "transparent",
+            "fillStyle": "solid",
+            "strokeWidth": 2,
+            "strokeStyle": fb.style,
+            "roughness": 1,
+            "opacity": 100,
+            "groupIds": [],
+            "frameId": None,
+            "index": None,
+            "roundness": {"type": 2},
+            "seed": random.randint(1, 2**31),
+            "version": 1,
+            "versionNonce": random.randint(1, 2**31),
+            "isDeleted": False,
+            "boundElements": [{"id": label_id, "type": "text"}] if label_id else None,
+            "updated": 1,
+            "link": None,
+            "locked": False,
+            "points": [[0, 0], [tx - sx, ty - sy]],
+            "lastCommittedPoint": None,
+            "startBinding": {
+                "elementId": src_eid,
+                "focus": 0,
+                "gap": 8,
+                "fixedPoint": None,
+            },
+            "endBinding": {
+                "elementId": tgt_eid,
+                "focus": 0,
+                "gap": 8,
+                "fixedPoint": None,
+            },
+            "startArrowhead": None,
+            "endArrowhead": "arrow",
+            "elbowed": False,
+        }
+        elements.append(arrow)
+
+        # Add feedback label
+        if fb.label and label_id:
+            mid_x = (sx + tx) / 2 - 30
+            mid_y = (sy + ty) / 2
+            lbl = _make_text(mid_x, mid_y, fb.label, label_id, container_id=None)
+            lbl["containerId"] = arrow_id
+            lbl["strokeColor"] = fb.color
+            lbl["fontSize"] = 13
+            elements.append(lbl)
+
+        # Bind arrows to source/target shapes
+        for el in elements:
+            if el["id"] == src_eid:
+                be = el.get("boundElements") or []
+                be.append({"id": arrow_id, "type": "arrow"})
+                el["boundElements"] = be
+            if el["id"] == tgt_eid:
                 be = el.get("boundElements") or []
                 be.append({"id": arrow_id, "type": "arrow"})
                 el["boundElements"] = be
