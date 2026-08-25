@@ -162,12 +162,27 @@ def _make_arrow(
     arrow_id: str,
     label_id: str | None = None,
 ) -> list[dict[str, Any]]:
-    """Create an arrow element with optional label, bound to source and target."""
-    # Arrow starts at the bottom-center of source, ends at top-center of target
-    sx = source_pos.x + source_pos.width / 2
-    sy = source_pos.y + source_pos.height
-    tx = target_pos.x + target_pos.width / 2
-    ty = target_pos.y
+    """Create an arrow element with optional label, bound to source and target.
+    
+    For horizontal layout: arrow goes from right-center of source to left-center of target.
+    For vertical layout (fallback): arrow goes from bottom-center of source to top-center of target.
+    """
+    # Determine if horizontal or vertical based on relative positions
+    dx = target_pos.x - source_pos.x
+    dy = target_pos.y - source_pos.y
+
+    if abs(dx) > abs(dy):
+        # Horizontal: right of source → left of target
+        sx = source_pos.x + source_pos.width
+        sy = source_pos.y + source_pos.height / 2
+        tx = target_pos.x
+        ty = target_pos.y + target_pos.height / 2
+    else:
+        # Vertical: bottom of source → top of target
+        sx = source_pos.x + source_pos.width / 2
+        sy = source_pos.y + source_pos.height
+        tx = target_pos.x + target_pos.width / 2
+        ty = target_pos.y
 
     elements: list[dict[str, Any]] = []
 
@@ -297,8 +312,82 @@ def to_excalidraw(graph: FlowGraph, layout: str = "hierarchical") -> dict[str, A
     id_map: dict[str, str] = {}  # node_id -> shape element id
     text_map: dict[str, str] = {}  # node_id -> text element id
 
-    # 1. Title
-    elements.append(_make_title(graph.title, 50, 30))
+    # 0. Group boxes (background rectangles — drawn first so they appear behind)
+    for gb in result.group_boxes:
+        box_id = _rid()
+        # Group label at top-left of the box
+        label_id = _rid()
+        box = {
+            "id": box_id,
+            "type": "rectangle",
+            "x": gb.x,
+            "y": gb.y,
+            "width": gb.width,
+            "height": gb.height,
+            "angle": 0,
+            "strokeColor": gb.stroke,
+            "backgroundColor": gb.background,
+            "fillStyle": "solid",
+            "strokeWidth": 1,
+            "strokeStyle": "dashed",
+            "roughness": 0,
+            "opacity": 60,
+            "groupIds": [],
+            "frameId": None,
+            "index": "a0",
+            "roundness": {"type": 3},
+            "seed": random.randint(1, 2**31),
+            "version": 1,
+            "versionNonce": random.randint(1, 2**31),
+            "isDeleted": False,
+            "boundElements": [{"id": label_id, "type": "text"}],
+            "updated": 1,
+            "link": None,
+            "locked": False,
+        }
+        elements.append(box)
+        # Group label
+        lbl = {
+            "id": label_id,
+            "type": "text",
+            "x": gb.x + 10,
+            "y": gb.y + 6,
+            "width": len(gb.label) * 9,
+            "height": 16,
+            "angle": 0,
+            "strokeColor": gb.stroke,
+            "backgroundColor": "transparent",
+            "fillStyle": "solid",
+            "strokeWidth": 1,
+            "strokeStyle": "solid",
+            "roughness": 0,
+            "opacity": 100,
+            "groupIds": [],
+            "frameId": None,
+            "index": "a1",
+            "roundness": None,
+            "seed": random.randint(1, 2**31),
+            "version": 1,
+            "versionNonce": random.randint(1, 2**31),
+            "isDeleted": False,
+            "boundElements": None,
+            "updated": 1,
+            "link": None,
+            "locked": False,
+            "text": gb.label,
+            "fontSize": 12,
+            "fontFamily": 1,
+            "textAlign": "left",
+            "verticalAlign": "top",
+            "containerId": box_id,
+            "originalText": gb.label,
+            "autoResize": True,
+            "lineHeight": 1.25,
+        }
+        elements.append(lbl)
+
+    # 1. Title (above the main flow)
+    elements.append(_make_title(graph.title, 80, 30))
 
     # 2. Shape + text for each node
     for pos in result.positioned:

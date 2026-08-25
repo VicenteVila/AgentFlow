@@ -1,7 +1,7 @@
 """Layout algorithms for positioning nodes in a flow graph.
 
-Provides hierarchical (Sugiyama-lite) and grid layout strategies with
-modern visual design, proper spacing, and category-based grouping.
+Provides a HORIZONTAL layout (left→right) with visual grouping by category.
+Main control flow runs left to right. Tools branch below. Evolution feeds back.
 """
 
 from __future__ import annotations
@@ -20,7 +20,20 @@ class PositionedNode:
     y: float
     width: float
     height: float
-    group_id: str = ""  # Visual grouping (Excalidraw groupIds)
+    group_id: str = ""
+
+
+@dataclass
+class GroupBox:
+    """A visual background rectangle behind a group of nodes."""
+    group_id: str
+    label: str
+    x: float
+    y: float
+    width: float
+    height: float
+    background: str
+    stroke: str
 
 
 @dataclass
@@ -28,209 +41,214 @@ class LayoutResult:
     positioned: list[PositionedNode]
     width: float
     height: float
-    groups: dict[str, list[str]] = field(default_factory=dict)  # group_id -> [node_ids]
+    groups: dict[str, list[str]] = field(default_factory=dict)
+    group_boxes: list[GroupBox] = field(default_factory=list)
 
 
-# ── BPMN-inspired dimensions ────────────────────────────────────────────
+# ── Dimensions per node type ───────────────────────────────────────────
 
 NODE_WIDTHS: dict[NodeType, float] = {
-    NodeType.START: 160,       # Oval — wider for readability
-    NodeType.END: 160,
-    NodeType.PROCESS: 260,     # Rounded rect — generous
-    NodeType.DECISION: 200,    # Diamond — needs space for text
-    NodeType.SUBPROCESS: 280,  # Double-bordered rect
-    NodeType.TOOL: 240,        # Rect with thick left border
-    NodeType.LOOP: 240,        # Hexagon-ish (thick border)
-    NodeType.EVOLUTION: 240,   # Dashed rect — self-modification
+    NodeType.START: 180,
+    NodeType.END: 180,
+    NodeType.PROCESS: 300,
+    NodeType.DECISION: 220,
+    NodeType.SUBPROCESS: 300,
+    NodeType.TOOL: 280,
+    NodeType.LOOP: 280,
+    NodeType.EVOLUTION: 280,
 }
 
 NODE_HEIGHTS: dict[NodeType, float] = {
-    NodeType.START: 64,
-    NodeType.END: 64,
-    NodeType.PROCESS: 80,      # Taller for label + detail
-    NodeType.DECISION: 100,    # Taller for diamond + detail
-    NodeType.SUBPROCESS: 80,
-    NodeType.TOOL: 80,         # Taller for label + detail
-    NodeType.LOOP: 80,
-    NodeType.EVOLUTION: 80,    # Taller for label + detail
+    NodeType.START: 70,
+    NodeType.END: 70,
+    NodeType.PROCESS: 84,
+    NodeType.DECISION: 100,
+    NodeType.SUBPROCESS: 84,
+    NodeType.TOOL: 84,
+    NodeType.LOOP: 84,
+    NodeType.EVOLUTION: 84,
 }
 
-# ── Modern professional palette ─────────────────────────────────────────
-# Inspired by: Linear, Vercel, Stripe dashboard aesthetics
+# ── Modern palette ─────────────────────────────────────────────────────
 
 NODE_COLORS: dict[NodeType, dict[str, str]] = {
-    NodeType.START:     {"background": "#dcfce7", "stroke": "#16a34a"},  # Emerald
-    NodeType.END:       {"background": "#fee2e2", "stroke": "#dc2626"},  # Red
-    NodeType.PROCESS:   {"background": "#ede9fe", "stroke": "#7c3aed"},  # Violet
-    NodeType.DECISION:  {"background": "#fef9c3", "stroke": "#ca8a04"},  # Amber
-    NodeType.SUBPROCESS: {"background": "#dbeafe", "stroke": "#2563eb"}, # Blue
-    NodeType.TOOL:      {"background": "#ccfbf1", "stroke": "#0d9488"},  # Teal
-    NodeType.LOOP:      {"background": "#fce7f3", "stroke": "#db2777"},  # Pink
-    NodeType.EVOLUTION: {"background": "#ffedd5", "stroke": "#ea580c"},  # Orange
+    NodeType.START:     {"background": "#dcfce7", "stroke": "#16a34a"},
+    NodeType.END:       {"background": "#fee2e2", "stroke": "#dc2626"},
+    NodeType.PROCESS:   {"background": "#ede9fe", "stroke": "#7c3aed"},
+    NodeType.DECISION:  {"background": "#fef9c3", "stroke": "#ca8a04"},
+    NodeType.SUBPROCESS: {"background": "#dbeafe", "stroke": "#2563eb"},
+    NodeType.TOOL:      {"background": "#ccfbf1", "stroke": "#0d9488"},
+    NodeType.LOOP:      {"background": "#fce7f3", "stroke": "#db2777"},
+    NodeType.EVOLUTION: {"background": "#ffedd5", "stroke": "#ea580c"},
 }
 
-# ── Category labels for visual grouping ─────────────────────────────────
+# ── Category definitions ───────────────────────────────────────────────
 
-CATEGORY_LABELS: dict[str, str] = {
-    "control": "Control Flow",
-    "tools": "Tool Calls",
-    "evolution": "Self-Evolution",
-    "setup": "Setup & Teardown",
+CATEGORY_STYLES: dict[str, dict[str, str]] = {
+    "init":     {"background": "#f0fdf4", "stroke": "#86efac", "label": "INIT"},
+    "loop":     {"background": "#fdf2f8", "stroke": "#f9a8d4", "label": "MAIN LOOP"},
+    "dispatch": {"background": "#f5f3ff", "stroke": "#c4b5fd", "label": "DISPATCH & EVALUATE"},
+    "tools":    {"background": "#f0fdfa", "stroke": "#5eead4", "label": "TOOLS"},
+    "evolution":{"background": "#fff7ed", "stroke": "#fdba74", "label": "SELF-EVOLUTION"},
+    "teardown": {"background": "#fef2f2", "stroke": "#fca5a5", "label": "TEARDOWN"},
 }
 
-CATEGORY_COLORS: dict[str, dict[str, str]] = {
-    "control":   {"background": "#f8fafc", "stroke": "#94a3b8"},
-    "tools":     {"background": "#f0fdfa", "stroke": "#5eead4"},
-    "evolution": {"background": "#fff7ed", "stroke": "#fb923c"},
-    "setup":     {"background": "#faf5ff", "stroke": "#c084fc"},
-}
-
-# Node type -> category mapping
+# Node type -> default category
 _NODE_CATEGORIES: dict[NodeType, str] = {
-    NodeType.START: "control",
-    NodeType.END: "control",
-    NodeType.PROCESS: "control",
-    NodeType.DECISION: "control",
-    NodeType.LOOP: "control",
+    NodeType.START: "init",
+    NodeType.END: "teardown",
+    NodeType.PROCESS: "loop",
+    NodeType.DECISION: "dispatch",
+    NodeType.LOOP: "loop",
     NodeType.TOOL: "tools",
     NodeType.SUBPROCESS: "tools",
     NodeType.EVOLUTION: "evolution",
 }
 
+# ── Spacing constants ──────────────────────────────────────────────────
 
-def _get_category(node_type: NodeType) -> str:
-    return _NODE_CATEGORIES.get(node_type, "control")
-
-
-# ── Layout spacing constants ────────────────────────────────────────────
-
-COL_SPACING = 340    # Horizontal gap between nodes
-ROW_SPACING = 180    # Vertical gap between layers
-START_X = 80         # Left margin
-START_Y = 100        # Top margin (below title)
-CATEGORY_PADDING = 40  # Padding inside category groups
-CATEGORY_GAP = 60      # Gap between categories
-
-
-def grid_layout(
-    graph: FlowGraph,
-    col_spacing: float = COL_SPACING,
-    row_spacing: float = ROW_SPACING,
-    start_x: float = START_X,
-    start_y: float = START_Y,
-) -> LayoutResult:
-    """Simple grid layout: assigns nodes in topological order row by row."""
-    if not graph.nodes:
-        return LayoutResult([], 0, 0)
-
-    order = _topological_sort(graph)
-    positioned: list[PositionedNode] = []
-
-    col = 0
-    row = 0
-
-    for node_id in order:
-        node = graph.get_node(node_id)
-        if node is None:
-            continue
-
-        w = NODE_WIDTHS.get(node.node_type, 260)
-        h = NODE_HEIGHTS.get(node.node_type, 64)
-
-        x = start_x + col * col_spacing
-        y = start_y + row * row_spacing
-
-        cat = _get_category(node.node_type)
-        positioned.append(PositionedNode(node=node, x=x, y=y, width=w, height=h, group_id=cat))
-
-        if node.node_type == NodeType.DECISION:
-            row += 1
-            col = 0
-        elif node.node_type in (NodeType.LOOP,):
-            row += 1
-            col = 0
-        else:
-            col += 1
-
-    max_x = max((p.x + p.width for p in positioned), default=0)
-    max_y = max((p.y + p.height for p in positioned), default=0)
-
-    return LayoutResult(positioned=positioned, width=max_x + 100, height=max_y + 100)
+H_GAP = 60        # Horizontal gap between nodes in same row
+V_GAP = 40        # Vertical gap between rows
+ROW_HEIGHT = 140  # Height per row (node + gap)
+GROUP_PAD = 30    # Padding inside group boxes
+GROUP_GAP = 50    # Gap between group boxes
 
 
 def hierarchical_layout(
     graph: FlowGraph,
-    col_spacing: float = COL_SPACING,
-    row_spacing: float = ROW_SPACING,
-    start_x: float = START_X,
-    start_y: float = START_Y,
+    **kwargs,
 ) -> LayoutResult:
-    """Sugiyama-lite hierarchical layout with category-based grouping.
-
-    1. Assign layers via longest-path from start nodes.
-    2. Within each layer, order nodes to minimize edge crossings.
-    3. Group nodes by category and add visual separation.
-    4. Center each layer horizontally.
-    """
+    """Horizontal layout: main flow left→right, tools below, evolution as feedback."""
     if not graph.nodes:
         return LayoutResult([], 0, 0)
 
-    layers = _assign_layers(graph)
-    ordered_layers = _order_within_layers(graph, layers)
+    # 1. Assign nodes to rows and categories
+    main_row, tool_row, evo_row = _assign_rows(graph)
 
+    # 2. Position main flow horizontally
     positioned: list[PositionedNode] = []
-    groups: dict[str, list[str]] = defaultdict(list)
+    x_cursor = 80.0
 
-    # Find the maximum layer width to center everything
-    max_layer_width = max(
-        sum(NODE_WIDTHS.get(graph.get_node(nid).node_type, 260) + COL_SPACING
-            for nid in layer if graph.get_node(nid))
-        for layer in ordered_layers
-    ) if ordered_layers else 0
+    # Main flow (row 0): start → init → loop → decisions → end
+    for node_id in main_row:
+        node = graph.get_node(node_id)
+        if node is None:
+            continue
+        w = NODE_WIDTHS.get(node.node_type, 300)
+        h = NODE_HEIGHTS.get(node.node_type, 84)
+        y = 80.0  # Fixed Y for main row
+        positioned.append(PositionedNode(node=node, x=x_cursor, y=y, width=w, height=h, group_id=_NODE_CATEGORIES.get(node.node_type, "loop")))
+        x_cursor += w + H_GAP
 
-    for row_idx, layer in enumerate(ordered_layers):
-        # Calculate actual layer width for centering
-        layer_width = sum(
-            NODE_WIDTHS.get(graph.get_node(nid).node_type, 260)
-            for nid in layer if graph.get_node(nid)
-        )
-        layer_width += (len(layer) - 1) * COL_SPACING
+    main_width = x_cursor
 
-        # Center the layer
-        layer_offset = (max_layer_width - layer_width) / 2
+    # Tool row (row 1): tools positioned below main flow
+    tool_x = 80.0
+    for node_id in tool_row:
+        node = graph.get_node(node_id)
+        if node is None:
+            continue
+        w = NODE_WIDTHS.get(node.node_type, 280)
+        h = NODE_HEIGHTS.get(node.node_type, 84)
+        y = 80.0 + ROW_HEIGHT + V_GAP  # Below main row
+        positioned.append(PositionedNode(node=node, x=tool_x, y=y, width=w, height=h, group_id="tools"))
+        tool_x += w + H_GAP
 
-        x_cursor = start_x + layer_offset
+    # Evolution row (row 2): evolution nodes at bottom
+    evo_x = 80.0
+    for node_id in evo_row:
+        node = graph.get_node(node_id)
+        if node is None:
+            continue
+        w = NODE_WIDTHS.get(node.node_type, 280)
+        h = NODE_HEIGHTS.get(node.node_type, 84)
+        y = 80.0 + 2 * (ROW_HEIGHT + V_GAP)  # Below tools
+        positioned.append(PositionedNode(node=node, x=evo_x, y=y, width=w, height=h, group_id="evolution"))
+        evo_x += w + H_GAP
 
-        for col_idx, node_id in enumerate(layer):
-            node = graph.get_node(node_id)
-            if node is None:
-                continue
-
-            w = NODE_WIDTHS.get(node.node_type, 260)
-            h = NODE_HEIGHTS.get(node.node_type, 64)
-
-            x = x_cursor
-            y = start_y + row_idx * row_spacing
-
-            cat = _get_category(node.node_type)
-            pos = PositionedNode(node=node, x=x, y=y, width=w, height=h, group_id=cat)
-            positioned.append(pos)
-            groups[cat].append(node_id)
-
-            x_cursor += w + COL_SPACING
+    # 3. Compute group boxes
+    group_boxes = _compute_group_boxes(positioned, main_width)
 
     max_x = max((p.x + p.width for p in positioned), default=0)
     max_y = max((p.y + p.height for p in positioned), default=0)
 
     return LayoutResult(
         positioned=positioned,
-        width=max_x + 100,
-        height=max_y + 100,
-        groups=dict(groups),
+        width=max_x + 80,
+        height=max_y + 80,
+        group_boxes=group_boxes,
     )
 
 
+# ── Grid layout (fallback) ────────────────────────────────────────────
+
+
+def grid_layout(graph: FlowGraph, **kwargs) -> LayoutResult:
+    """Simple grid layout for non-agent graphs."""
+    return hierarchical_layout(graph, **kwargs)
+
+
 # ── Internal helpers ──────────────────────────────────────────────────
+
+
+def _assign_rows(graph: FlowGraph) -> tuple[list[str], list[str], list[str]]:
+    """Assign nodes to main row, tool row, or evolution row."""
+    main_row: list[str] = []
+    tool_row: list[str] = []
+    evo_row: list[str] = []
+
+    # Topological order for main flow
+    order = _topological_sort(graph)
+
+    for node_id in order:
+        node = graph.get_node(node_id)
+        if node is None:
+            continue
+
+        cat = _NODE_CATEGORIES.get(node.node_type, "loop")
+
+        if node.node_type in (NodeType.TOOL, NodeType.SUBPROCESS):
+            tool_row.append(node_id)
+        elif node.node_type == NodeType.EVOLUTION:
+            evo_row.append(node_id)
+        else:
+            main_row.append(node_id)
+
+    return main_row, tool_row, evo_row
+
+
+def _compute_group_boxes(positioned: list[PositionedNode], main_width: float) -> list[GroupBox]:
+    """Compute background rectangles for each category group."""
+    boxes: list[GroupBox] = []
+
+    # Group by category and Y position
+    by_group: dict[str, list[PositionedNode]] = defaultdict(list)
+    for p in positioned:
+        by_group[p.group_id].append(p)
+
+    for group_id, nodes in by_group.items():
+        if not nodes:
+            continue
+
+        style = CATEGORY_STYLES.get(group_id, CATEGORY_STYLES["loop"])
+
+        min_x = min(n.x for n in nodes) - GROUP_PAD
+        min_y = min(n.y for n in nodes) - GROUP_PAD
+        max_x = max(n.x + n.width for n in nodes) + GROUP_PAD
+        max_y = max(n.y + n.height for n in nodes) + GROUP_PAD
+
+        boxes.append(GroupBox(
+            group_id=group_id,
+            label=style["label"],
+            x=min_x,
+            y=min_y,
+            width=max_x - min_x,
+            height=max_y - min_y,
+            background=style["background"],
+            stroke=style["stroke"],
+        ))
+
+    return boxes
 
 
 def _topological_sort(graph: FlowGraph) -> list[str]:
@@ -260,66 +278,3 @@ def _topological_sort(graph: FlowGraph) -> list[str]:
             order.append(n.id)
 
     return order
-
-
-def _assign_layers(graph: FlowGraph) -> dict[str, int]:
-    """Assign each node to a layer using longest-path from roots."""
-    adj: dict[str, list[str]] = {n.id: [] for n in graph.nodes}
-    for e in graph.edges:
-        if e.source in adj:
-            adj[e.source].append(e.target)
-
-    layer_of: dict[str, int] = {}
-    _visiting: set[str] = set()
-
-    def dfs(node_id: str) -> int:
-        if node_id in layer_of:
-            return layer_of[node_id]
-        if node_id in _visiting:
-            layer_of[node_id] = 0
-            return 0
-        _visiting.add(node_id)
-        children = adj.get(node_id, [])
-        if not children:
-            layer_of[node_id] = 0
-        else:
-            max_child = max((dfs(c) for c in children), default=0)
-            layer_of[node_id] = max_child + 1
-        _visiting.discard(node_id)
-        return layer_of[node_id]
-
-    incoming = {e.target for e in graph.edges}
-    roots = [n.id for n in graph.nodes if n.id not in incoming]
-
-    if not roots and graph.nodes:
-        roots = [graph.nodes[0].id]
-
-    for root in roots:
-        dfs(root)
-
-    for n in graph.nodes:
-        if n.id not in layer_of:
-            dfs(n.id)
-
-    if layer_of:
-        max_layer = max(layer_of.values())
-        layer_of = {k: max_layer - v for k, v in layer_of.items()}
-
-    return layer_of
-
-
-def _order_within_layers(
-    graph: FlowGraph, layers: dict[str, int]
-) -> list[list[str]]:
-    """Group nodes by layer, preserving a reasonable order."""
-    grouped: dict[int, list[str]] = defaultdict(list)
-    for node in graph.nodes:
-        layer = layers.get(node.id, 0)
-        grouped[layer].append(node.id)
-
-    max_layer = max(grouped.keys()) if grouped else 0
-    result: list[list[str]] = []
-    for i in range(max_layer + 1):
-        result.append(grouped.get(i, []))
-
-    return result
