@@ -1,0 +1,44 @@
+%% CogniTeam Orchestrator
+sequenceDiagram
+    participant Self as Self
+    participant Planner as Planner
+    participant Debugger as Debugger
+    participant Agent as Agent
+    participant Memory as Memory
+
+    Self->>+Memory: seed_skills_from_prose()
+    Memory-->>-Self: done
+    Self->>+Memory: get_skills()
+    Memory-->>-Self: done
+    Self->>+Memory: get_hmem()
+    Memory-->>-Self: done
+    Self->>+Memory: get_graphrag()
+    Memory-->>-Self: done
+    Self->>+Memory: get_skills()
+    Memory-->>-Self: done
+    Self->>+Planner: generate_plan_with_world_model()
+    Planner-->>-Self: done
+    Self->>+Debugger: GroundingValidator()
+    Debugger-->>-Self: done
+    Self->>+Debugger: verify_html_quality()
+    Debugger-->>-Self: done
+    Self->>+Debugger: repair_step()
+    Debugger-->>-Self: done
+    Self->>+Debugger: _repair_fallback()
+    Debugger-->>-Self: done
+    Self->>+Agent: repair_with_loop()
+    Agent-->>-Self: done
+    Self->>+Memory: get_hmem()
+    Memory-->>-Self: done
+    Self->>+Memory: get_graphrag()
+    Memory-->>-Self: done
+    Self->>+Memory: get_hmem()
+    Memory-->>-Self: done
+    Self->>+Memory: get_graphrag()
+    Memory-->>-Self: done
+    Self->>+Memory: get_skills()
+    Memory-->>-Self: done
+    Self->>+Memory: get_matm()
+    Memory-->>-Self: done
+    Self->>+Memory: get_fastslow()
+    Memory-->>-Self: done

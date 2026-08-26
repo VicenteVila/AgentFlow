@@ -10,9 +10,15 @@ from agentflow.models import Edge, FlowGraph, Node, NodeType
 from agentflow.parser import parse_file, parse_source
 from agentflow.profiles import Profile, get_profile, load_profile
 from agentflow.repo import build_repo_overview, collect_python_files
+from agentflow.sequence import (
+    extract_from_file,
+    extract_interactions,
+    to_mermaid_sequence,
+    to_sequence_svg,
+)
 from agentflow.svg import save_svg, to_svg
 
-__version__ = "1.7.0"
+__version__ = "1.8.0"
 __all__ = [
     "Edge",
     "FlowGraph",
@@ -23,6 +29,8 @@ __all__ = [
     "collect_python_files",
     "diff_files",
     "diff_graphs",
+    "extract_from_file",
+    "extract_interactions",
     "get_profile",
     "load_profile",
     "parse_file",
@@ -38,5 +46,7 @@ __all__ = [
     "to_dot",
     "to_html",
     "to_mermaid",
+    "to_mermaid_sequence",
+    "to_sequence_svg",
     "to_svg",
 ]

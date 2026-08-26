@@ -147,7 +147,7 @@ def main(argv: list[str] | None = None) -> None:
     )
     parser.add_argument(
         "-f", "--format",
-        choices=["excalidraw", "svg", "mermaid", "html", "ascii", "dot"],
+        choices=["excalidraw", "svg", "mermaid", "html", "ascii", "dot", "sequence", "mermaid-seq"],
         default="excalidraw",
         help="Output format (default: excalidraw)",
     )
@@ -293,6 +293,35 @@ def main(argv: list[str] | None = None) -> None:
             print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
         else:
             sys.stdout.write(to_dot(graph, detail=args.detail, theme=args.theme))
+        return
+
+    if args.format in ("sequence", "mermaid-seq"):
+        from agentflow.sequence import (
+            extract_from_file,
+            to_mermaid_sequence,
+            to_sequence_svg,
+        )
+
+        interactions = extract_from_file(input_path)
+        title = args.title or f"Sequence: {input_path.stem}"
+        if args.format == "sequence":
+            svg_text = to_sequence_svg(interactions, title=title)
+            if args.output:
+                out = Path(args.output)
+                out.parent.mkdir(parents=True, exist_ok=True)
+                out.write_text(svg_text, encoding="utf-8")
+                print(f"OK: {out} ({len(interactions.messages)} messages, {len(interactions.all_participants)} actors)")
+            else:
+                sys.stdout.write(svg_text)
+        else:
+            mmd = to_mermaid_sequence(interactions, title=title)
+            if args.output:
+                out = Path(args.output)
+                out.parent.mkdir(parents=True, exist_ok=True)
+                out.write_text(mmd, encoding="utf-8")
+                print(f"OK: {out} ({len(interactions.messages)} messages)")
+            else:
+                sys.stdout.write(mmd)
         return
 
     from agentflow.excalidraw import save_excalidraw, to_excalidraw

@@ -27,6 +27,10 @@ agentflow -i ./my_repo -f mermaid -o repo.mmd
 agentflow -i orchestrator.py -f html -o flow.html
 agentflow -i ./my_repo -f html --detail low -o repo.html
 
+# Sequence diagram multi-agente (lifelines + mensajes ordenados)
+agentflow -i orchestrator.py -f sequence -o seq.svg
+agentflow -i orchestrator.py -f mermaid-seq -o seq.mmd   # renderiza en GitHub
+
 # Diff two versions (green=added, red=removed, amber=changed)
 agentflow diff old.py new.py -o diff.excalidraw
 agentflow diff old.py new.py -f mermaid -o diff.mmd
@@ -54,6 +58,7 @@ agentflow -i my_agent.py -f svg --theme dark --seed 42 -o flow.svg
 - **Mermaid export** — `flowchart TD` that renders natively on GitHub/GitLab/Notion, no extra tooling.
 - **Progressive detail** — `--detail low|med|high` makes huge graphs readable (low = labels only).
 - **Diff mode** — `agentflow diff old.py new.py` highlights added/removed/changed nodes (leverages `--seed` determinism).
+- **Sequence diagrams** — `-f sequence` / `-f mermaid-seq`: lifelines por agente (Planner/LLM/Memory…), mensajes ordenados por línea.
 - **Interactive HTML** — self-contained `flow.html` with pan/zoom, phase collapse and search (works offline via `file://`).
 - **Deterministic output** — pass `--seed` to get byte-identical files (great for CI diffs).
 - **6 output formats** — excalidraw · svg · mermaid · html · **ascii** (terminal) · **dot** (Graphviz).
@@ -102,6 +107,7 @@ models.py     Node / Edge / FlowGraph          profiles.py   generic · reaweb �
 | `mermaid.py` | FlowGraph → Mermaid flowchart TD |
 | `diff.py` | Diff two graphs (added/removed/changed) |
 | `html.py` | FlowGraph → interactive HTML (pan/zoom + search) |
+| `sequence.py` | Interacciones entre agentes → sequence diagram |
 | `repo.py` | Directory scan → overview FlowGraph |
 | `cli.py` | argparse front-end |
 
