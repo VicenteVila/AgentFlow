@@ -4,6 +4,8 @@ import json
 import tempfile
 from pathlib import Path
 
+import pytest
+
 from agentflow.excalidraw import save_excalidraw, to_excalidraw
 from agentflow.layouts import grid_layout, hierarchical_layout, phased_layout
 from agentflow.models import Edge, FlowGraph, Node, NodeType
@@ -244,6 +246,58 @@ def test_save_svg():
         result = save_svg(g, path)
         assert result.exists()
         assert "<svg" in result.read_text()
+
+
+# ── Golden fixture tests ──────────────────────────────────────────────
+
+
+GOLDEN_DIR = Path(__file__).parent / "golden"
+
+
+def _build_fixture_graph() -> FlowGraph:
+    """Deterministic input graph for golden fixtures (reaweb profile)."""
+    return parse(SIMPLE_AGENT, title="Golden Fixture")
+
+
+def _golden_bytes(layout: str, fmt: str) -> bytes:
+    graph = _build_fixture_graph()
+    if fmt == "excalidraw":
+        doc = to_excalidraw(graph, layout=layout, seed=42)
+        return json.dumps(doc, indent=2, ensure_ascii=False,
+                          sort_keys=True).encode("utf-8")
+    from agentflow.svg import to_svg
+
+    return to_svg(graph, layout=layout).encode("utf-8")
+
+
+@pytest.mark.parametrize("layout,fmt", [
+    ("phased", "excalidraw"),
+    ("hierarchical", "excalidraw"),
+    ("phased", "svg"),
+    ("hierarchical", "svg"),
+])
+def test_golden_fixtures(layout: str, fmt: str, request):
+    """Output must match versioned fixtures byte-for-byte.
+
+    Regenerate intentionally with:  pytest --update-golden
+    """
+    ext = "excalidraw" if fmt == "excalidraw" else "svg"
+    fixture = GOLDEN_DIR / f"{layout}.{ext}"
+    current = _golden_bytes(layout, fmt)
+
+    if request.config.getoption("--update-golden"):
+        GOLDEN_DIR.mkdir(exist_ok=True)
+        fixture.write_bytes(current)
+        pytest.skip(f"updated {fixture.name}")
+        return
+
+    assert fixture.exists(), (
+        f"{fixture} missing — run 'pytest --update-golden' to create it"
+    )
+    assert current == fixture.read_bytes(), (
+        f"output drift in {fixture.name}: regenerate with --update-golden "
+        "only if the change is intentional"
+    )
 
 
 # ── Layout tests ──────────────────────────────────────────────────────
