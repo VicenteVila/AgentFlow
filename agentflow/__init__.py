@@ -18,7 +18,7 @@ from agentflow.sequence import (
 )
 from agentflow.svg import save_svg, to_svg
 
-__version__ = "1.8.0"
+__version__ = "1.9.0"
 __all__ = [
     "Edge",
     "FlowGraph",

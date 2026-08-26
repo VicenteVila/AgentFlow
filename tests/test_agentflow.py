@@ -1226,3 +1226,208 @@ def test_sequence_cli(tmp_path=None):
         )
         assert r2.returncode == 0
         assert "sequenceDiagram" in out_mmd.read_text()
+
+
+# ── V7: sequence fragments (loop/alt/else) ────────────────────────────
+
+SEQ_FRAGMENT_SOURCE = '''
+from core.planner import generate_plan
+from tools.llm import llm_complete
+
+class DeveloperAgent:
+    async def run(self):
+        plan = generate_plan(task)
+        if plan.need_repair:
+            result = llm_complete(repair_prompt)
+        elif plan.need_review:
+            result = llm_complete(review_prompt)
+        else:
+            result = llm_complete(ok_prompt)
+        while not result.ok:
+            result = llm_complete(retry_prompt)
+'''
+
+
+def test_fragment_extraction():
+    from agentflow.sequence import extract_interactions
+
+    ix = extract_interactions(SEQ_FRAGMENT_SOURCE)
+    # Should have alt (if), else (elif), else (else), loop (while)
+    types = [f.type for f in ix.fragments]
+    assert "alt" in types
+    assert "loop" in types
+    # Messages inside fragments exist
+    assert len(ix.messages) >= 4
+
+
+def test_fragment_mermaid():
+    from agentflow.sequence import extract_interactions, to_mermaid_sequence
+
+    ix = extract_interactions(SEQ_FRAGMENT_SOURCE)
+    text = to_mermaid_sequence(ix, title="Fragments")
+    assert "alt" in text
+    assert "loop" in text
+    assert "end" in text
+    # Messages appear inside fragments
+    assert "generate_plan" in text
+
+
+def test_fragment_svg_valid():
+    import xml.dom.minidom
+
+    from agentflow.sequence import extract_interactions, to_sequence_svg
+
+    ix = extract_interactions(SEQ_FRAGMENT_SOURCE)
+    svg = to_sequence_svg(ix, title="Frag SVG")
+    xml.dom.minidom.parseString(svg)  # valid XML
+    # Fragment backgrounds rendered
+    assert "[ALT]" in svg or "[LOOP]" in svg
+
+
+def test_trivial_conditions_filtered():
+    from agentflow.sequence import extract_interactions
+
+    src = '''
+class Agent:
+    def run(self):
+        if isinstance(result, dict):
+            self.planner.do()
+        if not ok:
+            self.debugger.fix()
+        if status == "success":
+            self.memory.save()
+'''
+    ix = extract_interactions(src)
+    # isinstance should be filtered, "not ok" should be filtered
+    labels = [f.label for f in ix.fragments]
+    assert not any("isinstance" in lbl for lbl in labels)
+
+
+def test_orphan_else_filtered():
+    from agentflow.sequence import extract_interactions
+
+    src = '''
+class Agent:
+    def run(self):
+        if True:
+            self.planner.do()
+        else:
+            self.debugger.fix()
+'''
+    ix = extract_interactions(src)
+    # else should exist since it has a matching alt
+    # But a standalone else (without if) would be syntax error
+    # Test that fragments have matching alt
+    alt_count = sum(1 for f in ix.fragments if f.type == "alt")
+    else_count = sum(1 for f in ix.fragments if f.type == "else")
+    assert else_count <= alt_count  # no orphan else
+
+
+# ── B1: framework profiles ────────────────────────────────────────────
+
+LANGCHAIN_SOURCE = '''
+from langchain.agents import AgentExecutor
+from langchain.tools import Tool
+from langchain.chains import LLMChain
+
+class MyAgent:
+    def __init__(self):
+        self.chain = LLMChain()
+        self.executor = AgentExecutor()
+
+    def run(self):
+        self.chain.invoke({"input": "hello"})
+        self.executor.run(task)
+'''
+
+
+CREWAI_SOURCE = '''
+from crewai import Agent, Crew, Task
+
+class MyOrchestrator:
+    def __init__(self):
+        self.planner = Agent()
+        self.crew = Crew()
+
+    def run(self):
+        self.planner.run("plan")
+        self.crew.kickoff()
+'''
+
+
+AUTOGEN_SOURCE = '''
+from autogen import AssistantAgent, UserProxyAgent, GroupChatManager
+
+class MyChat:
+    def __init__(self):
+        self.assistant = AssistantAgent()
+        self.proxy = UserProxyAgent()
+        self.manager = GroupChatManager()
+
+    def run(self):
+        self.proxy.initiate_chat(self.assistant, message="hello")
+'''
+
+
+def test_langchain_profile_recognizes_chain():
+    from agentflow.profiles import get_profile
+
+    prof = get_profile("langchain")
+    assert "AgentExecutor" in prof.agent_class_names
+    assert "LLMChain" in prof.agent_class_names
+    assert "invoke" in prof.tool_names
+
+
+def test_crewai_profile_recognizes_crew():
+    from agentflow.profiles import get_profile
+
+    prof = get_profile("crewai")
+    assert "Agent" in prof.agent_class_names
+    assert "Crew" in prof.agent_class_names
+    assert "kickoff" in prof.tool_names
+
+
+def test_autogen_profile_recognizes_groupchat():
+    from agentflow.profiles import get_profile
+
+    prof = get_profile("autogen")
+    assert "AssistantAgent" in prof.agent_class_names
+    assert "GroupChatManager" in prof.agent_class_names
+    assert "initiate_chat" in prof.tool_names
+
+
+def test_langchain_sequence_profile():
+    from agentflow.sequence import extract_interactions
+
+    ix = extract_interactions(LANGCHAIN_SOURCE, profile="langchain")
+    actors_lower = [a.lower() for a in ix.actors]
+    # LLMChain → "LLM" or "Chain"; AgentExecutor → "Agent"
+    assert any("chain" in a or "llm" in a for a in actors_lower)
+
+
+def test_crewai_sequence_profile():
+    from agentflow.sequence import extract_interactions
+
+    ix = extract_interactions(CREWAI_SOURCE, profile="crewai")
+    actors_lower = [a.lower() for a in ix.actors]
+    # Crew → "Orchestrator"; Agent → "Agent"
+    assert any("orchestrator" in a or "crew" in a or "agent" in a for a in actors_lower)
+
+
+def test_autogen_sequence_profile():
+    from agentflow.sequence import extract_interactions
+
+    ix = extract_interactions(AUTOGEN_SOURCE, profile="autogen")
+    actors_lower = [a.lower() for a in ix.actors]
+    # AssistantAgent → "Assistant"; UserProxyAgent → "UserProxy"
+    assert any("assistant" in a or "proxy" in a or "manager" in a for a in actors_lower)
+
+
+def test_all_profiles_in_registry():
+    from agentflow.profiles import PROFILES
+
+    assert "generic" in PROFILES
+    assert "reaweb" in PROFILES
+    assert "langchain" in PROFILES
+    assert "crewai" in PROFILES
+    assert "autogen" in PROFILES

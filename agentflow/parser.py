@@ -62,7 +62,7 @@ def parse_source(
         node_type=NodeType.START,
     ))
 
-    agent_cls = _find_agent_class(tree)
+    agent_cls = _find_agent_class(tree, prof)
     if agent_cls:
         _parse_agent_class(agent_cls, ParseContext(prof, graph))
     else:
@@ -122,13 +122,22 @@ def _apply_phase_patterns(graph: FlowGraph, prof: Profile) -> None:
 # ── Class/method parsing ──────────────────────────────────────────────
 
 
-def _find_agent_class(tree: ast.Module) -> ast.ClassDef | None:
+def _find_agent_class(tree: ast.Module, profile: Profile | None = None) -> ast.ClassDef | None:
+    prof_names = set()
+    if profile and hasattr(profile, "agent_class_names"):
+        prof_names = {k.lower() for k in profile.agent_class_names}
+
     for node in ast.iter_child_nodes(tree):
         if isinstance(node, ast.ClassDef):
             name_lower = node.name.lower()
-            if "agent" in name_lower or any(
-                isinstance(item, _FUNC_TYPES) and item.name == "run"
-                for item in node.body
+            if (
+                "agent" in name_lower
+                or node.name in (profile.agent_class_names if profile else {})
+                or name_lower in prof_names
+                or any(
+                    isinstance(item, _FUNC_TYPES) and item.name == "run"
+                    for item in node.body
+                )
             ):
                 return node
     return None

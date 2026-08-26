@@ -302,7 +302,7 @@ def main(argv: list[str] | None = None) -> None:
             to_sequence_svg,
         )
 
-        interactions = extract_from_file(input_path)
+        interactions = extract_from_file(input_path, profile=args.profile)
         title = args.title or f"Sequence: {input_path.stem}"
         if args.format == "sequence":
             svg_text = to_sequence_svg(interactions, title=title)

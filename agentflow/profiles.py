@@ -51,6 +51,10 @@ class Profile:
     # Loop-back edge label (e.g. "loop")
     loop_edge_label: str = "loop"
 
+    # Framework-specific agent class names (for instance-to-actor mapping)
+    # e.g. {"AgentExecutor": "Agent", "Crew": "Orchestrator"}
+    agent_class_names: dict[str, str] = field(default_factory=dict)
+
 
 # ── Generic profile ───────────────────────────────────────────────────
 
@@ -261,9 +265,157 @@ REAWEB_PROFILE = Profile(
 )
 
 
+# ── LangChain profile ─────────────────────────────────────────────────
+
+LANGCHAIN_PROFILE = Profile(
+    name="langchain",
+    agent_class_names={
+        "AgentExecutor": "Agent",
+        "Chain": "Chain",
+        "LLMChain": "LLM",
+        "ConversationChain": "Conversation",
+        "SequentialChain": "Sequential",
+        "RouterChain": "Router",
+        "TransformChain": "Transform",
+        "MultiChain": "Multi",
+    },
+    tool_names={
+        "invoke": ("Invoke", "LangChain .invoke() — single input"),
+        "ainvoke": ("Async Invoke", "LangChain .ainvoke() — async single input"),
+        "batch": ("Batch", "LangChain .batch() — multiple inputs"),
+        "stream": ("Stream", "LangChain .stream() — token streaming"),
+        "astream": ("Async Stream", "LangChain .astream() — async streaming"),
+        "run": ("Run", "LangChain .run() — deprecated, use invoke"),
+        "predict": ("Predict", "LangChain .predict() — text in/text out"),
+        "apredict": ("Async Predict", "LangChain .apredict() — async predict"),
+        "apply": ("Apply", "LangChain .apply() — batch of inputs"),
+        "__call__": ("Call", "LangChain chain.__call__() — legacy invoke"),
+    },
+    special_calls={
+        "bind_tools": ("Bind Tools", "Attach tools to LLM", NodeType.TOOL),
+        "with_structured_output": ("Structured Output", "Wrap LLM for structured output", NodeType.TOOL),
+        "with_retry": ("Retry Wrapper", "Add retry logic to chain", NodeType.TOOL),
+        "with_callbacks": ("Callbacks", "Attach callback handlers", NodeType.TOOL),
+        "get_relevant_documents": ("Retrieve", "VectorStore similarity search", NodeType.TOOL),
+        "similarity_search": ("Similarity Search", "VectorStore similarity search", NodeType.TOOL),
+        "asimilarity_search": ("Async Similarity Search", "Async vector search", NodeType.TOOL),
+        "max_marginal_relevance_search": ("MMR Search", "Maximal marginal relevance", NodeType.TOOL),
+        "add_documents": ("Add Documents", "Insert into vector store", NodeType.TOOL),
+        "from_documents": ("Load Documents", "Create retriever from docs", NodeType.TOOL),
+        "save": ("Save", "Persist chain/agent to disk", NodeType.TOOL),
+        "load": ("Load", "Load chain/agent from disk", NodeType.TOOL),
+    },
+    evolution_methods={
+        "memory.save_context": ("Save Memory", "Store conversation context"),
+        "memory.clear": ("Clear Memory", "Reset conversation memory"),
+    },
+    phase_patterns={
+        "invoke": 2, "ainvoke": 2, "run": 2, "predict": 2,
+        "bind_tools": 2, "with_structured_output": 2,
+        "similarity_search": 2, "get_relevant_documents": 2,
+        "save_context": 3, "clear": 3,
+    },
+)
+
+
+# ── CrewAI profile ────────────────────────────────────────────────────
+
+CREWAI_PROFILE = Profile(
+    name="crewai",
+    agent_class_names={
+        "Agent": "Agent",
+        "Crew": "Orchestrator",
+        "Task": "Task",
+        "Process": "Process",
+        "Pipeline": "Pipeline",
+        "CrewBase": "CrewBase",
+    },
+    tool_names={
+        "kickoff": ("Kickoff", "CrewAI Crew.kickoff() — execute crew"),
+        "kickoff_async": ("Async Kickoff", "CrewAI async crew execution"),
+        "kickoff_for_each": ("Kickoff Each", "CrewAI parallel crew execution"),
+        "execute_task": ("Execute Task", "CrewAI Task.execute() — single task"),
+        "run": ("Run", "CrewAI Agent.run() — execute agent"),
+        "delegate_work": ("Delegate Work", "Agent delegation to another agent"),
+        "create_task": ("Create Task", "Dynamically create a task"),
+        "add_job": ("Add Job", "Add job to pipeline"),
+        "process_job": ("Process Job", "Process single pipeline job"),
+        "plot": ("Plot", "CrewAI crew.plot() — visualize crew"),
+    },
+    special_calls={
+        "tools.append": ("Add Tool", "Attach tool to agent", NodeType.TOOL),
+        "agent.tools": ("Set Tools", "Configure agent tools", NodeType.TOOL),
+        "allow_delegation": ("Allow Delegation", "Enable agent delegation", NodeType.TOOL),
+        "verbose": ("Verbose", "Enable verbose logging", NodeType.TOOL),
+        "max_iter": ("Max Iterations", "Set iteration limit", NodeType.TOOL),
+        "memory": ("Memory", "Enable crew memory", NodeType.TOOL),
+        "cache": ("Cache", "Enable response caching", NodeType.TOOL),
+        "step_callback": ("Step Callback", "Attach step callback", NodeType.TOOL),
+        "task_callback": ("Task Callback", "Attach task callback", NodeType.TOOL),
+    },
+    evolution_methods={
+        "store_output": ("Store Output", "Persist task output to memory"),
+        "update_memory": ("Update Memory", "Update crew memory with results"),
+    },
+    phase_patterns={
+        "kickoff": 2, "kickoff_async": 2, "run": 2,
+        "execute_task": 2, "delegate_work": 2,
+        "store_output": 3, "update_memory": 3,
+    },
+)
+
+
+# ── AutoGen profile ───────────────────────────────────────────────────
+
+AUTOGEN_PROFILE = Profile(
+    name="autogen",
+    agent_class_names={
+        "AssistantAgent": "Assistant",
+        "UserProxyAgent": "UserProxy",
+        "GroupChat": "GroupChat",
+        "GroupChatManager": "Manager",
+        "ConversableAgent": "Conversable",
+        "RetrieveAssistantAgent": "RetrieveAssistant",
+        "RetrieveUserProxyAgent": "RetrieveProxy",
+        "CodeExecutorAgent": "CodeExecutor",
+    },
+    tool_names={
+        "initiate_chat": ("Initiate Chat", "AutoGen — start a conversation"),
+        "send": ("Send", "AutoGen — send message to agent"),
+        "receive": ("Receive", "AutoGen — receive message"),
+        "generate_reply": ("Generate Reply", "AutoGen — generate agent response"),
+        "run_code": ("Run Code", "AutoGen — execute code block"),
+        "execute_code": ("Execute Code", "AutoGen — code execution"),
+        "register_for_llm": ("Register LLM", "AutoGen — register tool for LLM"),
+        "register_for_execution": ("Register Execution", "AutoGen — register for code exec"),
+        "register_function": ("Register Function", "AutoGen — register callable as tool"),
+        "process_message_before_send": ("Pre-send", "AutoGen — process message before send"),
+    },
+    special_calls={
+        "code_execution_config": ("Code Exec Config", "Configure code execution", NodeType.TOOL),
+        "human_input_mode": ("Human Input", "Set human input mode", NodeType.TOOL),
+        "max_consecutive_auto_reply": ("Max Auto Reply", "Limit auto-reply turns", NodeType.TOOL),
+        "temperature": ("Temperature", "Set LLM temperature", NodeType.TOOL),
+        "llm_config": ("LLM Config", "Configure LLM settings", NodeType.TOOL),
+    },
+    evolution_methods={
+        "update_system_message": ("Update System", "Modify agent system message"),
+        "reset": ("Reset", "Reset agent conversation state"),
+    },
+    phase_patterns={
+        "initiate_chat": 2, "send": 2, "generate_reply": 2,
+        "run_code": 2, "execute_code": 2,
+        "update_system_message": 3, "reset": 3,
+    },
+)
+
+
 PROFILES: dict[str, Profile] = {
     "generic": GENERIC_PROFILE,
     "reaweb": REAWEB_PROFILE,
+    "langchain": LANGCHAIN_PROFILE,
+    "crewai": CREWAI_PROFILE,
+    "autogen": AUTOGEN_PROFILE,
 }
 
 
