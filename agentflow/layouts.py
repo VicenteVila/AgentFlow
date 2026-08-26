@@ -20,6 +20,8 @@ LINE_H = 1.25      # Excalidraw lineHeight
 NODE_PAD_X = 32.0  # horizontal padding inside a node
 NODE_PAD_Y = 28.0  # vertical padding inside a node
 DIAMOND_FIT = 2.0  # diamonds need bbox ≈ 2× text so it fits the inscribed area
+DIAMOND_MAX_W = 520.0  # cap so verbose decisions never dominate the layout
+DIAMOND_MAX_H = 300.0
 DETAIL_GAP = 8.0   # vertical gap between label and detail text
 
 # Per-character em-widths calibrated for Excalidraw's hand-drawn font.
@@ -69,8 +71,11 @@ def node_size(node: Node) -> tuple[float, float]:
     inner_h = lh + (dh + DETAIL_GAP if node.detail else 0.0)
 
     if t == NodeType.DECISION:
-        w = max(min_w, lw * DIAMOND_FIT + NODE_PAD_X, dw * DIAMOND_FIT)
-        h = max(min_h, inner_h * DIAMOND_FIT + NODE_PAD_Y)
+        w = min(
+            max(min_w, lw * DIAMOND_FIT + NODE_PAD_X, dw * DIAMOND_FIT),
+            DIAMOND_MAX_W,
+        )
+        h = min(max(min_h, inner_h * DIAMOND_FIT + NODE_PAD_Y), DIAMOND_MAX_H)
     else:
         w = max(min_w, lw + NODE_PAD_X, dw + NODE_PAD_X)
         h = max(min_h, inner_h + NODE_PAD_Y)

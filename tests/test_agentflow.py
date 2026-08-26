@@ -7,7 +7,12 @@ from pathlib import Path
 import pytest
 
 from agentflow.excalidraw import save_excalidraw, to_excalidraw
-from agentflow.layouts import grid_layout, hierarchical_layout, phased_layout
+from agentflow.layouts import (
+    PositionedNode,
+    grid_layout,
+    hierarchical_layout,
+    phased_layout,
+)
 from agentflow.models import Edge, FlowGraph, Node, NodeType
 from agentflow.parser import parse_source
 from agentflow.profiles import (
@@ -509,6 +514,43 @@ def test_diamond_sized_for_text():
     lw, lh = measure_text(label, LABEL_FONT)
     assert p.width / 2 >= lw
     assert p.height / 2 >= lh
+
+
+def test_diamond_capped_for_extreme_labels():
+    """Verbose decisions must never exceed the diamond size cap."""
+    from agentflow.layouts import DIAMOND_MAX_H, DIAMOND_MAX_W
+
+    g = FlowGraph()
+    huge = "Una condición larguísima con muchas palabras\nsegunda línea igual de larga\ny hasta una tercera"
+    g.add_node(Node(id="d", label=huge, node_type=NodeType.DECISION))
+    result = hierarchical_layout(g)
+    p = result.positioned[0]
+    assert p.width <= DIAMOND_MAX_W
+    assert p.height <= DIAMOND_MAX_H
+
+
+def test_feedback_slots_stagger_same_side():
+    """Feedback arrows sharing a side must receive distinct slots."""
+    from agentflow.geometry import assign_feedback_slots
+    from agentflow.layouts import FeedbackArrow
+
+    g = FlowGraph()
+    g.add_node(Node(id="top", label="Top"))
+    g.add_node(Node(id="mid1", label="Mid1"))
+    g.add_node(Node(id="mid2", label="Mid2"))
+    pos = {
+        "top": PositionedNode(node=g.get_node("top"), x=400, y=80, width=200, height=80),
+        "mid1": PositionedNode(node=g.get_node("mid1"), x=400, y=300, width=200, height=80),
+        "mid2": PositionedNode(node=g.get_node("mid2"), x=400, y=500, width=200, height=80),
+    }
+    fb = [
+        FeedbackArrow(source_id="mid1", target_id="top"),
+        FeedbackArrow(source_id="mid2", target_id="top"),
+    ]
+    slots = assign_feedback_slots(fb, pos, canvas_width=1000)
+    # Both route right of center → consecutive slots, no overlap
+    assert slots[0] == 0
+    assert slots[1] == 1
 
 
 def test_phased_columns_do_not_overlap():
