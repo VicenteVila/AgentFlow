@@ -10,7 +10,7 @@ from agentflow.profiles import Profile, get_profile, load_profile
 from agentflow.repo import build_repo_overview, collect_python_files
 from agentflow.svg import save_svg, to_svg
 
-__version__ = "1.5.0"
+__version__ = "1.6.0"
 __all__ = [
     "Edge",
     "FlowGraph",

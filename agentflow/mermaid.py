@@ -110,6 +110,9 @@ def to_mermaid(
         result = grid_layout(graph)
     elif layout == "phased":
         result = phased_layout(graph)
+    elif layout == "swimlane":
+        from agentflow.layouts import swimlane_layout
+        result = swimlane_layout(graph)
     else:
         result = hierarchical_layout(graph)
 
@@ -123,14 +126,19 @@ def to_mermaid(
     lines.append("    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5")
     lines.append("    classDef changed fill:#fde68a,stroke:#92400e")
 
-    # Phase / group subgraphs
-    boxes = result.phase_boxes if layout == "phased" else result.group_boxes
-    # Map phase/group to node ids for subgraph containment
+    # Phase / group / lane subgraphs
+    if layout == "phased":
+        boxes = result.phase_boxes
+    elif layout == "swimlane":
+        boxes = result.lane_boxes
+    else:
+        boxes = result.group_boxes
+    # Map phase/group/lane to node ids for subgraph containment
     if boxes:
-        # Build lookup phase->node_ids
+        # Build lookup
         from collections import defaultdict
         by_box: dict[str, list[str]] = defaultdict(list)
-        # For phased, use phase number; for hierarchical, use group_id
+        # For phased, use phase number; for hierarchical/swimlane, use group_id/lane_id
         if layout == "phased":
             for p in result.positioned:
                 by_box[str(p.phase)].append(p.node.id)
@@ -149,13 +157,18 @@ def to_mermaid(
                 lines.append("    end")
         else:
             for p in result.positioned:
+                # For swimlane, group_id is lane; for hierarchical, same
                 by_box[p.group_id].append(p.node.id)
-            for gb in result.group_boxes:
-                members = by_box.get(gb.group_id, [])
+            # Choose correct box list
+            box_list = result.lane_boxes if layout == "swimlane" else result.group_boxes
+            for box in box_list:
+                # LaneBox has lane_id, GroupBox has group_id
+                bid = getattr(box, "lane_id", getattr(box, "group_id", ""))
+                members = by_box.get(bid, [])
                 if not members:
                     continue
-                safe_label = _escape_label(gb.label)
-                lines.append(f'    subgraph { _sanitize_id(gb.group_id) } ["{safe_label}"]')
+                safe_label = _escape_label(box.label)
+                lines.append(f'    subgraph { _sanitize_id(bid) } ["{safe_label}"]')
                 for nid in members:
                     node = next((x.node for x in result.positioned if x.node.id == nid), None)
                     if node:

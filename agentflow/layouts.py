@@ -146,6 +146,19 @@ class PhaseBox:
 
 
 @dataclass
+class LaneBox:
+    """A vertical swimlane background rectangle."""
+    lane_id: str
+    label: str
+    x: float
+    y: float
+    width: float
+    height: float
+    background: str
+    stroke: str
+
+
+@dataclass
 class FeedbackArrow:
     """A feedback arrow (e.g., budget→reason, revert→budget)."""
     source_id: str
@@ -163,6 +176,7 @@ class LayoutResult:
     groups: dict[str, list[str]] = field(default_factory=dict)
     group_boxes: list[GroupBox] = field(default_factory=list)
     phase_boxes: list[PhaseBox] = field(default_factory=list)
+    lane_boxes: list[LaneBox] = field(default_factory=list)
     feedback_arrows: list[FeedbackArrow] = field(default_factory=list)
 
 
@@ -263,6 +277,37 @@ PHASE_DEFS_DARK: dict[int, dict[str, str]] = {
     3: {"label": "FASE 3 · CIERRE", "background": "#15291a", "stroke": "#495057"},
 }
 
+# ── Swimlane layout constants ────────────────────────────────────────
+
+LANE_WIDTH = 380
+LANE_GAP = 40
+LANE_PAD = 30
+LANE_TOP = 80
+
+SWIMLANE_STYLES: dict[str, dict[str, str]] = {
+    "orchestrator": {"background": "#f0fdf4", "stroke": "#86efac", "label": "ORCHESTRATOR"},
+    "planner":      {"background": "#e0f2fe", "stroke": "#7dd3fc", "label": "PLANNER"},
+    "developer":    {"background": "#ede9fe", "stroke": "#c4b5fd", "label": "DEVELOPER"},
+    "debugger":     {"background": "#fce7f3", "stroke": "#f9a8d4", "label": "DEBUGGER"},
+    "designer":     {"background": "#ffedd5", "stroke": "#fdba74", "label": "DESIGNER"},
+    "tools":        {"background": "#f0fdfa", "stroke": "#5eead4", "label": "TOOLS"},
+    "evolution":    {"background": "#fff7ed", "stroke": "#fdba74", "label": "MEMORY"},
+    "teardown":     {"background": "#fef2f2", "stroke": "#fca5a5", "label": "TEARDOWN"},
+}
+
+SWIMLANE_STYLES_DARK: dict[str, dict[str, str]] = {
+    "orchestrator": {"background": "#052e16", "stroke": "#22c55e", "label": "ORCHESTRATOR"},
+    "planner":      {"background": "#0c4a6e", "stroke": "#38bdf8", "label": "PLANNER"},
+    "developer":    {"background": "#2e1065", "stroke": "#8b5cf6", "label": "DEVELOPER"},
+    "debugger":     {"background": "#500724", "stroke": "#db2777", "label": "DEBUGGER"},
+    "designer":     {"background": "#431407", "stroke": "#f97316", "label": "DESIGNER"},
+    "tools":        {"background": "#042f2e", "stroke": "#14b8a6", "label": "TOOLS"},
+    "evolution":    {"background": "#431407", "stroke": "#f97316", "label": "MEMORY"},
+    "teardown":     {"background": "#450a0a", "stroke": "#ef4444", "label": "TEARDOWN"},
+}
+
+LANE_ORDER = ["orchestrator", "planner", "developer", "debugger", "designer", "tools", "evolution", "teardown"]
+
 THEMES: dict[str, dict] = {
     "light": {
         "arrow": "#495057",
@@ -275,6 +320,7 @@ THEMES: dict[str, dict] = {
         "node_colors": NODE_COLORS,
         "category_styles": CATEGORY_STYLES,
         "phase_defs": PHASE_DEFS,
+        "swimlane_styles": SWIMLANE_STYLES,
     },
     "dark": {
         "arrow": "#ced4da",
@@ -296,6 +342,7 @@ THEMES: dict[str, dict] = {
         },
         "category_styles": CATEGORY_STYLES_DARK,
         "phase_defs": PHASE_DEFS_DARK,
+        "swimlane_styles": SWIMLANE_STYLES_DARK,
     },
 }
 
@@ -322,6 +369,40 @@ PHASE_PAD = 40       # Padding inside phase boxes
 PHASE_GAP = 60       # Gap between phase boxes
 PHASE_TOP = 80       # Starting Y position
 PHASE_SIDE_X = 120   # X for evolution column (left); center/tools derive from content
+
+# Edge semantic colors (overrides arrow color when label matches)
+EDGE_SEMANTIC_COLORS: dict[str, str] = {
+    "YES": "#16a34a",
+    "NO": "#dc2626",
+    "loop": "#2563eb",
+    "dispatch": "#7c3aed",
+}
+
+
+def _assign_lane(node: Node) -> str:
+    """Heuristic lane assignment based on node content."""
+    label = node.label.lower()
+    nid = node.id.lower()
+    combined = f"{label} {nid}"
+    if "planner" in combined:
+        return "planner"
+    if "developer" in combined or "coder" in combined:
+        return "developer"
+    if "debugger" in combined or "repair" in combined:
+        return "debugger"
+    if "designer" in combined or "ui_" in combined:
+        return "designer"
+    if node.node_type == NodeType.TOOL:
+        return "tools"
+    if node.node_type == NodeType.EVOLUTION:
+        return "evolution"
+    if node.node_type == NodeType.SUBPROCESS:
+        return "tools"
+    if node.node_type == NodeType.START:
+        return "orchestrator"
+    if node.node_type == NodeType.END:
+        return "teardown"
+    return "orchestrator"
 
 
 def hierarchical_layout(
@@ -394,6 +475,94 @@ def hierarchical_layout(
 def grid_layout(graph: FlowGraph, **kwargs) -> LayoutResult:
     """Simple grid layout for non-agent graphs."""
     return hierarchical_layout(graph, **kwargs)
+
+
+def swimlane_layout(graph: FlowGraph, **kwargs) -> LayoutResult:
+    """Vertical swimlane layout: one column per actor/lane, flow top→bottom.
+
+    Lanes are detected heuristically (orchestrator / planner / developer /
+    debugger / designer / tools / evolution). Nodes are placed in their
+    lane in topological order. Edges between lanes become horizontal.
+    """
+    if not graph.nodes:
+        return LayoutResult([], 0, 0)
+
+    # 1. Assign each node to a lane
+    lane_groups: dict[str, list[str]] = defaultdict(list)
+    for node in graph.nodes:
+        lane = _assign_lane(node)
+        lane_groups[lane].append(node.id)
+
+    # Order lanes by LANE_ORDER, extras last
+    ordered_lanes = sorted(
+        lane_groups.keys(),
+        key=lambda x: LANE_ORDER.index(x) if x in LANE_ORDER else 999,
+    )
+
+    # 2. Compute lane X positions (adaptive width per lane)
+    lane_x: dict[str, float] = {}
+    lane_widths: dict[str, float] = {}
+    x_cursor = 80.0
+    for lane in ordered_lanes:
+        max_w = max(
+            (node_size(graph.get_node(nid))[0] for nid in lane_groups[lane] if graph.get_node(nid)),
+            default=LANE_WIDTH,
+        )
+        lane_width = max(LANE_WIDTH, max_w + 2 * LANE_PAD)
+        lane_x[lane] = x_cursor
+        lane_widths[lane] = lane_width
+        x_cursor += lane_width + LANE_GAP
+
+    # 3. Place nodes lane by lane in topological order
+    positioned: list[PositionedNode] = []
+    y_cursors: dict[str, float] = {lane: float(LANE_TOP) for lane in ordered_lanes}
+    topo = _topological_sort(graph)
+    for nid in topo:
+        node = graph.get_node(nid)
+        if node is None:
+            continue
+        lane = _assign_lane(node)
+        if lane not in lane_x:
+            lane = ordered_lanes[0]
+        w, h = node_size(node)
+        x = lane_x[lane] + (lane_widths[lane] - w) / 2
+        y = y_cursors[lane]
+        positioned.append(PositionedNode(node=node, x=x, y=y, width=w, height=h,
+                                         group_id=lane, phase=0))
+        y_cursors[lane] += h + V_GAP
+
+    # Any nodes not in topo (isolated) — already handled via topo includes all
+    # 4. Compute lane boxes
+    pal = get_theme(kwargs.get("theme", "light"))
+    lane_styles = pal.get("swimlane_styles", SWIMLANE_STYLES)
+    lane_boxes: list[LaneBox] = []
+    for lane in ordered_lanes:
+        nodes_in_lane = [p for p in positioned if p.group_id == lane]
+        if not nodes_in_lane:
+            continue
+        style = lane_styles.get(lane, {"background": "#f8f9fa", "stroke": "#868e96", "label": lane.upper()})
+        min_x = min(p.x for p in nodes_in_lane) - LANE_PAD
+        min_y = min(p.y for p in nodes_in_lane) - LANE_PAD
+        max_x = max(p.x + p.width for p in nodes_in_lane) + LANE_PAD
+        max_y = max(p.y + p.height for p in nodes_in_lane) + LANE_PAD
+        lane_boxes.append(LaneBox(
+            lane_id=lane, label=style["label"],
+            x=min_x, y=min_y, width=max_x - min_x, height=max_y - min_y,
+            background=style["background"], stroke=style["stroke"],
+        ))
+
+    # 5. Feedback arrows (upward edges)
+    feedback = _identify_feedback_arrows(graph, positioned, color=pal["feedback_arrow"])
+
+    max_x = max((p.x + p.width for p in positioned), default=0)
+    max_y = max((p.y + p.height for p in positioned), default=0)
+    return LayoutResult(
+        positioned=positioned,
+        width=max_x + 80,
+        height=max_y + 80,
+        lane_boxes=lane_boxes,
+        feedback_arrows=feedback,
+    )
 
 
 def phased_layout(graph: FlowGraph, **kwargs) -> LayoutResult:

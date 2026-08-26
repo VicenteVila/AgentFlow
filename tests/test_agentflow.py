@@ -949,3 +949,88 @@ def test_html_diff():
     assert 'data-node-id="b"' in html
     # Diff colors should be present in embedded SVG
     assert "#a7f3d0" in html or "added" in html.lower()
+
+
+# ── Swimlane + edge semantics tests ───────────────────────────────────
+
+
+def test_swimlane_layout():
+    from agentflow.layouts import swimlane_layout
+
+    graph = parse(SIMPLE_AGENT, title="Swimlane")
+    result = swimlane_layout(graph)
+    assert len(result.positioned) == graph.node_count
+    assert len(result.lane_boxes) >= 1
+    # Each node should have a lane
+    assert all(p.group_id for p in result.positioned)
+    # Lane boxes should not overlap?
+    assert result.width > 0 and result.height > 0
+
+
+def test_swimlane_has_expected_lanes():
+    from agentflow.layouts import swimlane_layout
+
+    g = FlowGraph(title="Lane Test")
+    g.add_node(Node(id="a", label="Planner step", node_type=NodeType.PROCESS))
+    g.add_node(Node(id="b", label="Tool call", node_type=NodeType.TOOL))
+    g.add_node(Node(id="c", label="Memory update", node_type=NodeType.EVOLUTION))
+    g.add_edge(Edge(source="a", target="b"))
+    g.add_edge(Edge(source="b", target="c"))
+
+    result = swimlane_layout(g)
+    lane_ids = {p.group_id for p in result.positioned}
+    assert "planner" in lane_ids
+    assert "tools" in lane_ids
+    assert "evolution" in lane_ids
+
+
+def test_edge_semantic_colors():
+    g = FlowGraph(title="Semantic")
+    g.add_node(Node(id="a", label="A"))
+    g.add_node(Node(id="b", label="B"))
+    g.add_node(Node(id="c", label="C"))
+    g.add_edge(Edge(source="a", target="b", label="YES"))
+    g.add_edge(Edge(source="a", target="c", label="NO"))
+
+    doc = to_excalidraw(g, seed=42)
+    arrows = [e for e in doc["elements"] if e["type"] == "arrow"]
+    colors = {e.get("strokeColor") for e in arrows}
+    assert "#16a34a" in colors  # YES green
+    assert "#dc2626" in colors  # NO red
+
+    from agentflow.svg import to_svg
+
+    svg = to_svg(g)
+    assert "#16a34a" in svg
+    assert "#dc2626" in svg
+
+
+def test_swimlane_cli(tmp_path=None):
+    import subprocess
+    import sys
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        src = Path(tmpdir) / "agent.py"
+        src.write_text("class Agent:\n    def run(self):\n        if x:\n            do_a()\n        tool()\n")
+        out = Path(tmpdir) / "out.excalidraw"
+        result = subprocess.run(
+            [sys.executable, "-m", "agentflow.cli", "-i", str(src), "-o", str(out), "-l", "swimlane"],
+            capture_output=True, text=True,
+        )
+        assert result.returncode == 0
+        assert out.exists()
+        data = json.loads(out.read_text())
+        assert data["type"] == "excalidraw"
+
+    # Also test mermaid swimlane
+    with tempfile.TemporaryDirectory() as tmpdir:
+        src = Path(tmpdir) / "agent.py"
+        src.write_text("class Agent:\n    def run(self):\n        if x:\n            do_a()\n")
+        out = Path(tmpdir) / "out.mmd"
+        result = subprocess.run(
+            [sys.executable, "-m", "agentflow.cli", "-i", str(src), "-o", str(out), "-f", "mermaid", "-l", "swimlane"],
+            capture_output=True, text=True,
+        )
+        assert result.returncode == 0
+        assert "flowchart TD" in out.read_text()
+        assert "subgraph" in out.read_text()

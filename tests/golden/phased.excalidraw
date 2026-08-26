@@ -2149,7 +2149,7 @@
         "focus": 0,
         "gap": 8
       },
-      "strokeColor": "#495057",
+      "strokeColor": "#2563eb",
       "strokeStyle": "solid",
       "strokeWidth": 2,
       "type": "arrow",
@@ -2183,7 +2183,7 @@
       "roughness": 0,
       "roundness": null,
       "seed": 1420737820,
-      "strokeColor": "#495057",
+      "strokeColor": "#2563eb",
       "strokeStyle": "solid",
       "strokeWidth": 1,
       "text": "loop",

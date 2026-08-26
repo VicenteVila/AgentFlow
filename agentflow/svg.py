@@ -19,6 +19,7 @@ from agentflow.geometry import (
 )
 from agentflow.layouts import (
     DETAIL_FONT,
+    EDGE_SEMANTIC_COLORS,
     LABEL_FONT,
     PositionedNode,
     get_theme,
@@ -195,6 +196,16 @@ def to_svg(
         parts.append(_text_svg(gb.x + 70, gb.y + 14, gb.label, 12,
                                gb.stroke, align="start"))
 
+    for lb in result.lane_boxes:
+        parts.append(
+            f'<rect x="{_fmt(lb.x)}" y="{_fmt(lb.y)}" width="{_fmt(lb.width)}" '
+            f'height="{_fmt(lb.height)}" rx="12" fill="{lb.background}" '
+            f'stroke="{lb.stroke}" stroke-width="1" stroke-opacity="0.6" '
+            f'stroke-dasharray="8 5" data-group="{escape(lb.lane_id)}" data-lane="{escape(lb.lane_id)}"/>'
+        )
+        parts.append(_text_svg(lb.x + 70, lb.y + 14, lb.label, 12,
+                               lb.stroke, align="start"))
+
     # Title
     parts.append(_text_svg(80, 30, graph.title, 24, pal["title"], align="start"))
 
@@ -204,8 +215,13 @@ def to_svg(
 
     for key, edge in edges_by_pair.items():
         sx, sy, pts = routed_points(pos_lookup[key[0]], pos_lookup[key[1]])
-        edge_color = _DIFF_EDGE_COLORS.get(edge.diff_status, pal["arrow"])
-        is_dashed = edge.diff_status == "removed" or edge.style == "dashed"
+        if edge.diff_status in _DIFF_EDGE_COLORS:
+            edge_color = _DIFF_EDGE_COLORS[edge.diff_status]
+        elif edge.label in EDGE_SEMANTIC_COLORS:
+            edge_color = EDGE_SEMANTIC_COLORS[edge.label]
+        else:
+            edge_color = pal["arrow"]
+        is_dashed = edge.diff_status == "removed" or edge.style == "dashed" or edge.label == "loop"
         ap = _arrow_path(pts, sx, sy, edge_color, dashed=is_dashed)
         ap = ap.replace("/>", f' data-source="{escape(edge.source)}" data-target="{escape(edge.target)}" />')
         parts.append(ap)

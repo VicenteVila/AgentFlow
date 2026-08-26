@@ -22,6 +22,7 @@ from agentflow.geometry import (
 )
 from agentflow.layouts import (
     DETAIL_FONT,
+    EDGE_SEMANTIC_COLORS,
     PositionedNode,
     get_theme,
     hierarchical_layout,
@@ -419,6 +420,9 @@ def to_excalidraw(
         result = grid_layout(graph, theme=theme)
     elif layout == "phased":
         result = phased_layout(graph, theme=theme)
+    elif layout == "swimlane":
+        from agentflow.layouts import swimlane_layout
+        result = swimlane_layout(graph, theme=theme)
     else:
         result = hierarchical_layout(graph, theme=theme)
 
@@ -439,6 +443,15 @@ def to_excalidraw(
             gb.x, gb.y, gb.width, gb.height,
             background=gb.background, stroke=gb.stroke,
             label=gb.label, label_color=gb.stroke,
+            label_font_size=12, opacity=60,
+        ))
+
+    # 0c. Lane boxes (for swimlane layout)
+    for lb in result.lane_boxes:
+        elements.extend(_make_box_with_label(
+            lb.x, lb.y, lb.width, lb.height,
+            background=lb.background, stroke=lb.stroke,
+            label=lb.label, label_color=lb.stroke,
             label_font_size=12, opacity=60,
         ))
 
@@ -488,7 +501,12 @@ def to_excalidraw(
     for edge in edges_by_pair.values():
         arrow_id = _rid()
         label_id = _rid() if edge.label else None
-        edge_color = _DIFF_EDGE_COLORS.get(edge.diff_status, pal["arrow"])
+        if edge.diff_status in _DIFF_EDGE_COLORS:
+            edge_color = _DIFF_EDGE_COLORS[edge.diff_status]
+        elif edge.label in EDGE_SEMANTIC_COLORS:
+            edge_color = EDGE_SEMANTIC_COLORS[edge.label]
+        else:
+            edge_color = pal["arrow"]
 
         arrow_elements = _make_arrow(
             pos_lookup[edge.source], pos_lookup[edge.target],

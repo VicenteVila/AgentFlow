@@ -26,7 +26,7 @@ def _handle_diff(argv: list[str]) -> None:
     parser.add_argument("old", help="Old version of the file")
     parser.add_argument("new", help="New version of the file")
     parser.add_argument("-o", "--output", default=None, help="Output file path")
-    parser.add_argument("-l", "--layout", choices=["hierarchical", "grid", "phased"], default="hierarchical")
+    parser.add_argument("-l", "--layout", choices=["hierarchical", "grid", "phased", "swimlane"], default="hierarchical")
     parser.add_argument("-f", "--format", choices=["excalidraw", "svg", "mermaid", "html"], default="excalidraw")
     parser.add_argument("--profile", default="generic")
     parser.add_argument("-t", "--title", default=None)
@@ -122,7 +122,7 @@ def main(argv: list[str] | None = None) -> None:
     )
     parser.add_argument(
         "-l", "--layout",
-        choices=["hierarchical", "grid", "phased"],
+        choices=["hierarchical", "grid", "phased", "swimlane"],
         default="hierarchical",
         help="Layout algorithm (default: hierarchical)",
     )

@@ -41,10 +41,8 @@ agentflow -i my_agent.py -f svg --theme dark --seed 42 -o flow.svg
   Python class or function tree.
 - **Profiles** — pluggable domain knowledge (known tools, exhaustive labels, phase patterns).
   Built-ins: `generic` (zero assumptions) and `reaweb`. Load your own from a `.py` file.
-- **Three layouts** — `hierarchical` (horizontal + category groups), `phased`
-  (vertical FASE 1/2/3 boxes with feedback arrows), `grid`.
-- **Smart visuals** — content-driven node sizing, orthogonal arrow routing,
-  lateral feedback routes, light/dark themes, optional legend.
+- **Four layouts** — `hierarchical` (horizontal), `phased` (vertical FASE 1/2/3), `swimlane` (vertical lanes per actor), `grid`.
+- **Smart visuals** — content-driven sizing, orthogonal routing, swimlanes, lateral feedback, light/dark themes, **semantic edge colors** (YES green / NO red / loop blue).
 - **Repo overview** — point at a directory and get a map of the whole codebase (one node per module, optional import edges).
 - **Mermaid export** — `flowchart TD` that renders natively on GitHub/GitLab/Notion, no extra tooling.
 - **Progressive detail** — `--detail low|med|high` makes huge graphs readable (low = labels only).
