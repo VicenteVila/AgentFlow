@@ -865,3 +865,87 @@ def test_diff_cli(tmp_path=None):
         )
         assert result2.returncode == 0
         assert ":::added" in out2.read_text()
+
+
+# ── HTML interactive tests ────────────────────────────────────────────
+
+
+def test_to_html_valid_structure():
+    from agentflow.html import to_html
+
+    g = FlowGraph(title="HTML Test")
+    g.add_node(Node(id="a", label="Start", node_type=NodeType.START))
+    g.add_node(Node(id="b", label="Decide?", node_type=NodeType.DECISION))
+    g.add_edge(Edge(source="a", target="b"))
+
+    html = to_html(g)
+    assert "<!DOCTYPE html>" in html
+    assert "<svg" in html
+    assert 'data-node-id="a"' in html
+    assert 'data-phase' in html
+    assert 'id="search"' in html
+    assert 'id="canvas"' in html
+    assert "zoom-in" in html
+
+
+def test_to_html_with_phased_layout():
+    from agentflow.html import to_html
+
+    graph = parse(SIMPLE_AGENT, title="HTML Phased")
+    html = to_html(graph, layout="phased")
+    assert "<!DOCTYPE html>" in html
+    assert "FASE" in html or "phase" in html.lower()
+    assert "search" in html.lower()
+
+
+def test_save_html():
+    from agentflow.html import save_html
+
+    g = FlowGraph(title="Save HTML")
+    g.add_node(Node(id="a", label="A"))
+    g.add_node(Node(id="b", label="B"))
+    g.add_edge(Edge(source="a", target="b"))
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        path = Path(tmpdir) / "out.html"
+        result = save_html(g, path)
+        assert result.exists()
+        text = result.read_text()
+        assert "<!DOCTYPE html>" in text
+        assert "<svg" in text
+        assert "data-node-id" in text
+
+
+def test_html_cli(tmp_path=None):
+    import subprocess
+    import sys
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        src = Path(tmpdir) / "agent.py"
+        src.write_text("class Agent:\n    def run(self):\n        if x:\n            do_a()\n")
+        out = Path(tmpdir) / "out.html"
+        result = subprocess.run(
+            [sys.executable, "-m", "agentflow.cli", "-i", str(src), "-o", str(out), "-f", "html"],
+            capture_output=True, text=True,
+        )
+        assert result.returncode == 0
+        assert out.exists()
+        text = out.read_text()
+        assert "<!DOCTYPE html>" in text
+        assert "data-phase" in text
+
+
+def test_html_diff():
+    from agentflow.diff import diff_graphs
+    from agentflow.html import to_html
+
+    old = FlowGraph(title="old")
+    old.add_node(Node(id="a", label="A"))
+    new = FlowGraph(title="new")
+    new.add_node(Node(id="a", label="A"))
+    new.add_node(Node(id="b", label="B"))
+    merged = diff_graphs(old, new)
+    html = to_html(merged)
+    assert 'data-node-id="b"' in html
+    # Diff colors should be present in embedded SVG
+    assert "#a7f3d0" in html or "added" in html.lower()

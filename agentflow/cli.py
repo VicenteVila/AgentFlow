@@ -27,7 +27,7 @@ def _handle_diff(argv: list[str]) -> None:
     parser.add_argument("new", help="New version of the file")
     parser.add_argument("-o", "--output", default=None, help="Output file path")
     parser.add_argument("-l", "--layout", choices=["hierarchical", "grid", "phased"], default="hierarchical")
-    parser.add_argument("-f", "--format", choices=["excalidraw", "svg", "mermaid"], default="excalidraw")
+    parser.add_argument("-f", "--format", choices=["excalidraw", "svg", "mermaid", "html"], default="excalidraw")
     parser.add_argument("--profile", default="generic")
     parser.add_argument("-t", "--title", default=None)
     parser.add_argument("--theme", choices=["light", "dark"], default="light")
@@ -72,6 +72,15 @@ def _handle_diff(argv: list[str]) -> None:
             print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
         else:
             sys.stdout.write(to_mermaid(graph, layout=args.layout, detail=args.detail))
+        return
+    if args.format == "html":
+        from agentflow.html import save_html, to_html
+
+        if args.output:
+            path = save_html(graph, args.output, layout=args.layout, theme=args.theme, legend=not args.no_legend, detail=args.detail)
+            print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
+        else:
+            sys.stdout.write(to_html(graph, layout=args.layout, theme=args.theme, legend=not args.no_legend, detail=args.detail))
         return
     from agentflow.excalidraw import save_excalidraw, to_excalidraw
 
@@ -119,7 +128,7 @@ def main(argv: list[str] | None = None) -> None:
     )
     parser.add_argument(
         "-f", "--format",
-        choices=["excalidraw", "svg", "mermaid"],
+        choices=["excalidraw", "svg", "mermaid", "html"],
         default="excalidraw",
         help="Output format (default: excalidraw)",
     )
@@ -227,6 +236,16 @@ def main(argv: list[str] | None = None) -> None:
             print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
         else:
             sys.stdout.write(to_mermaid(graph, layout=args.layout, detail=args.detail))
+        return
+
+    if args.format == "html":
+        from agentflow.html import save_html, to_html
+
+        if args.output:
+            path = save_html(graph, args.output, layout=args.layout, theme=args.theme, legend=not args.no_legend, detail=args.detail)
+            print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
+        else:
+            sys.stdout.write(to_html(graph, layout=args.layout, theme=args.theme, legend=not args.no_legend, detail=args.detail))
         return
 
     from agentflow.excalidraw import save_excalidraw, to_excalidraw

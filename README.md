@@ -23,6 +23,10 @@ agentflow -i my_agent.py --profile reaweb -l phased -o flow.excalidraw
 agentflow -i orchestrator.py -f mermaid --detail low -o flow.mmd
 agentflow -i ./my_repo -f mermaid -o repo.mmd
 
+# Interactive HTML (pan/zoom, search, collapse phases)
+agentflow -i orchestrator.py -f html -o flow.html
+agentflow -i ./my_repo -f html --detail low -o repo.html
+
 # Diff two versions (green=added, red=removed, amber=changed)
 agentflow diff old.py new.py -o diff.excalidraw
 agentflow diff old.py new.py -f mermaid -o diff.mmd
@@ -45,6 +49,7 @@ agentflow -i my_agent.py -f svg --theme dark --seed 42 -o flow.svg
 - **Mermaid export** — `flowchart TD` that renders natively on GitHub/GitLab/Notion, no extra tooling.
 - **Progressive detail** — `--detail low|med|high` makes huge graphs readable (low = labels only).
 - **Diff mode** — `agentflow diff old.py new.py` highlights added/removed/changed nodes (leverages `--seed` determinism).
+- **Interactive HTML** — self-contained `flow.html` with pan/zoom, phase collapse and search (works offline via `file://`).
 - **Deterministic output** — pass `--seed` to get byte-identical files (great for CI diffs).
 - **SVG export** — same geometry, zero dependencies.
 
@@ -89,13 +94,14 @@ models.py     Node / Edge / FlowGraph          profiles.py   generic · reaweb �
 | `svg.py` | FlowGraph → standalone SVG |
 | `mermaid.py` | FlowGraph → Mermaid flowchart TD |
 | `diff.py` | Diff two graphs (added/removed/changed) |
+| `html.py` | FlowGraph → interactive HTML (pan/zoom + search) |
 | `repo.py` | Directory scan → overview FlowGraph |
 | `cli.py` | argparse front-end |
 
 ## Development
 
 ```bash
-python -m pytest tests/ -q   # 57 tests, <1s
+python -m pytest tests/ -q   # 62 tests, <1s
 python -m ruff check agentflow tests
 ```
 

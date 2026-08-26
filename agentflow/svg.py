@@ -179,7 +179,8 @@ def to_svg(
         parts.append(
             f'<rect x="{_fmt(pb.x)}" y="{_fmt(pb.y)}" width="{_fmt(pb.width)}" '
             f'height="{_fmt(pb.height)}" rx="12" fill="{pb.background}" '
-            f'stroke="{pb.stroke}" stroke-width="2" stroke-dasharray="8 5"/>'
+            f'stroke="{pb.stroke}" stroke-width="2" stroke-dasharray="8 5" '
+            f'data-phase="{pb.phase}"/>'
         )
         parts.append(_text_svg(pb.x + 120, pb.y + 24, pb.label, 22,
                                pal["phase_label"], align="start"))
@@ -189,7 +190,7 @@ def to_svg(
             f'<rect x="{_fmt(gb.x)}" y="{_fmt(gb.y)}" width="{_fmt(gb.width)}" '
             f'height="{_fmt(gb.height)}" rx="12" fill="{gb.background}" '
             f'stroke="{gb.stroke}" stroke-width="1" stroke-opacity="0.6" '
-            f'stroke-dasharray="8 5"/>'
+            f'stroke-dasharray="8 5" data-group="{escape(gb.group_id)}"/>'
         )
         parts.append(_text_svg(gb.x + 70, gb.y + 14, gb.label, 12,
                                gb.stroke, align="start"))
@@ -205,7 +206,9 @@ def to_svg(
         sx, sy, pts = routed_points(pos_lookup[key[0]], pos_lookup[key[1]])
         edge_color = _DIFF_EDGE_COLORS.get(edge.diff_status, pal["arrow"])
         is_dashed = edge.diff_status == "removed" or edge.style == "dashed"
-        parts.append(_arrow_path(pts, sx, sy, edge_color, dashed=is_dashed))
+        ap = _arrow_path(pts, sx, sy, edge_color, dashed=is_dashed)
+        ap = ap.replace("/>", f' data-source="{escape(edge.source)}" data-target="{escape(edge.target)}" />')
+        parts.append(ap)
         if edge.label:
             mx = sx + (pts[-1][0]) / 2
             my = sy + (pts[-1][1]) / 2 - 12
@@ -218,7 +221,9 @@ def to_svg(
         sx, sy, pts = feedback_route(pos_lookup[fb.source_id],
                                      pos_lookup[fb.target_id], result.width,
                                      slot=fb_slots[fb_idx])
-        parts.append(_arrow_path(pts, sx, sy, fb.color, dashed=True))
+        ap_fb = _arrow_path(pts, sx, sy, fb.color, dashed=True)
+        ap_fb = ap_fb.replace("/>", f' data-source="{escape(fb.source_id)}" data-target="{escape(fb.target_id)}" data-feedback="true" />')
+        parts.append(ap_fb)
         if fb.label:
             mx = sx + pts[-1][0] / 2
             my = sy + pts[-1][1] / 2
@@ -226,13 +231,19 @@ def to_svg(
 
     # Nodes on top of arrows
     for pos in result.positioned:
-        parts.append(_shape_svg(pos, pal))
+        extra = f' data-phase="{pos.phase}" data-node-id="{escape(pos.node.id)}" data-node-type="{pos.node.node_type.value}"'
+        if pos.group_id:
+            extra += f' data-group="{escape(pos.group_id)}"'
+        shape = _shape_svg(pos, pal).replace("/>", extra + " />")
+        parts.append(shape)
         label_c, detail_c = node_text_block(pos)
-        parts.append(_text_svg(label_c[0], label_c[1], pos.node.label,
-                               LABEL_FONT, pal["text"]))
+        label_svg = _text_svg(label_c[0], label_c[1], pos.node.label, LABEL_FONT, pal["text"])
+        label_svg = label_svg.replace("<text ", f'<text data-phase="{pos.phase}" data-node-id="{escape(pos.node.id)}" data-group="{escape(pos.group_id) if pos.group_id else ""}" ', 1)
+        parts.append(label_svg)
         if pos.node.detail and detail_c is not None:
-            parts.append(_text_svg(detail_c[0], detail_c[1], pos.node.detail,
-                                   DETAIL_FONT, pal["detail_text"]))
+            detail_svg = _text_svg(detail_c[0], detail_c[1], pos.node.detail, DETAIL_FONT, pal["detail_text"])
+            detail_svg = detail_svg.replace("<text ", f'<text data-phase="{pos.phase}" data-node-id="{escape(pos.node.id)}" data-group="{escape(pos.group_id) if pos.group_id else ""}" ', 1)
+            parts.append(detail_svg)
 
     # Legend
     if legend:
