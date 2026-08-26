@@ -2,7 +2,8 @@
 
 Usage:
     agentflow --input agent.py --output flowchart.excalidraw
-    agentflow --input agent.py --output flowchart.excalidraw --layout grid
+    agentflow --input agent.py --output flowchart.excalidraw --layout phased
+    agentflow --input agent.py --output flowchart.excalidraw --theme dark --no-legend
     agentflow --input agent.py  # prints to stdout as JSON
 """
 
@@ -36,9 +37,38 @@ def main(argv: list[str] | None = None) -> None:
         help="Layout algorithm (default: hierarchical)",
     )
     parser.add_argument(
+        "-f", "--format",
+        choices=["excalidraw", "svg"],
+        default="excalidraw",
+        help="Output format (default: excalidraw)",
+    )
+    parser.add_argument(
+        "--profile",
+        default="generic",
+        help="Domain profile: 'generic', 'reaweb', or path to a .py file "
+             "defining a PROFILE dict (default: generic)",
+    )
+    parser.add_argument(
         "-t", "--title",
         default=None,
         help="Diagram title (default: derived from filename)",
+    )
+    parser.add_argument(
+        "--theme",
+        choices=["light", "dark"],
+        default="light",
+        help="Color theme (default: light)",
+    )
+    parser.add_argument(
+        "--no-legend",
+        action="store_true",
+        help="Omit the node-type legend from the diagram",
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=None,
+        help="RNG seed for deterministic output (same input + seed = identical file)",
     )
     parser.add_argument(
         "--summary",
@@ -57,7 +87,11 @@ def main(argv: list[str] | None = None) -> None:
     from agentflow.parser import parse_file
 
     title = args.title or f"Flow: {input_path.stem}"
-    graph = parse_file(str(input_path))
+    try:
+        graph = parse_file(str(input_path), profile=args.profile)
+    except ValueError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(1)
     graph.title = title
 
     if args.summary:
@@ -65,13 +99,29 @@ def main(argv: list[str] | None = None) -> None:
         return
 
     # Generate Excalidraw
-    from agentflow.excalidraw import to_excalidraw, save_excalidraw
+    from agentflow.excalidraw import save_excalidraw, to_excalidraw
+
+    if args.format == "svg":
+        from agentflow.svg import save_svg
+
+        out = args.output or f"{input_path.stem}.svg"
+        path = save_svg(graph, out, layout=args.layout, theme=args.theme,
+                        legend=not args.no_legend)
+        print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
+        return
 
     if args.output:
-        path = save_excalidraw(graph, args.output, layout=args.layout)
+        path = save_excalidraw(
+            graph, args.output,
+            layout=args.layout, theme=args.theme, legend=not args.no_legend,
+            seed=args.seed,
+        )
         print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
     else:
-        doc = to_excalidraw(graph, layout=args.layout)
+        doc = to_excalidraw(
+            graph, layout=args.layout, theme=args.theme, legend=not args.no_legend,
+            seed=args.seed,
+        )
         json.dump(doc, sys.stdout, indent=2, ensure_ascii=False)
         sys.stdout.write("\n")
 

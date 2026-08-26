@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import enum
 from dataclasses import dataclass, field
-from typing import Optional
 
 
 class NodeType(enum.Enum):
@@ -25,6 +24,7 @@ class Node:
     node_type: NodeType = NodeType.PROCESS
     detail: str = ""
     line: int = 0
+    phase: int = 0  # Phase hint (1/2/3); 0 = let the layout decide structurally
 
     def __hash__(self) -> int:
         return hash(self.id)
@@ -61,7 +61,7 @@ class FlowGraph:
     def add_edge(self, edge: Edge) -> None:
         self.edges.append(edge)
 
-    def get_node(self, node_id: str) -> Optional[Node]:
+    def get_node(self, node_id: str) -> Node | None:
         for n in self.nodes:
             if n.id == node_id:
                 return n

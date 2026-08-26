@@ -4,10 +4,20 @@ import json
 import tempfile
 from pathlib import Path
 
+from agentflow.excalidraw import save_excalidraw, to_excalidraw
+from agentflow.layouts import grid_layout, hierarchical_layout, phased_layout
 from agentflow.models import Edge, FlowGraph, Node, NodeType
 from agentflow.parser import parse_source
-from agentflow.excalidraw import to_excalidraw, save_excalidraw
-from agentflow.layouts import hierarchical_layout, grid_layout, phased_layout
+from agentflow.profiles import (
+    REAWEB_PROFILE,
+    get_profile,
+    load_profile,
+)
+
+
+def parse(text, title="Test"):
+    """Parse with the reaweb profile (exhaustive labels)."""
+    return parse_source(text, title=title, profile="reaweb")
 
 
 # ── Models tests ──────────────────────────────────────────────────────
@@ -74,7 +84,7 @@ class Agent:
 
 
 def test_parse_simple_agent():
-    graph = parse_source(SIMPLE_AGENT, title="Test Agent")
+    graph = parse(SIMPLE_AGENT, title="Test Agent")
     assert graph.node_count >= 3
     assert graph.edge_count >= 1
     # Should have start and end
@@ -83,19 +93,19 @@ def test_parse_simple_agent():
 
 
 def test_parse_has_loop():
-    graph = parse_source(SIMPLE_AGENT, title="Test Agent")
+    graph = parse(SIMPLE_AGENT, title="Test Agent")
     loops = [n for n in graph.nodes if n.node_type == NodeType.LOOP]
     assert len(loops) >= 1
 
 
 def test_parse_has_decisions():
-    graph = parse_source(SIMPLE_AGENT, title="Test Agent")
+    graph = parse(SIMPLE_AGENT, title="Test Agent")
     decisions = [n for n in graph.nodes if n.node_type == NodeType.DECISION]
     assert len(decisions) >= 1
 
 
 def test_parse_has_tool_calls():
-    graph = parse_source(SIMPLE_AGENT, title="Test Agent")
+    graph = parse(SIMPLE_AGENT, title="Test Agent")
     tools = [n for n in graph.nodes if n.node_type == NodeType.TOOL]
     assert len(tools) >= 1
 
@@ -116,11 +126,131 @@ def test_parse_minimal():
     assert graph.node_count >= 3
 
 
+# ── Profile tests ─────────────────────────────────────────────────────
+
+
+def test_generic_profile_has_no_domain_knowledge():
+    """The generic profile must not recognize ReaWeb tools."""
+    graph = parse_source(SIMPLE_AGENT, title="Generic")
+    tools = [n for n in graph.nodes if n.node_type == NodeType.TOOL]
+    assert len(tools) == 0
+    # But the control flow is still extracted
+    assert any(n.node_type == NodeType.LOOP for n in graph.nodes)
+    assert any(n.node_type == NodeType.DECISION for n in graph.nodes)
+
+
+def test_reaweb_profile_recognizes_tools():
+    graph = parse(SIMPLE_AGENT)
+    tools = [n for n in graph.nodes if n.node_type == NodeType.TOOL]
+    assert len(tools) >= 1
+
+
+def test_get_profile_builtins():
+    import pytest
+
+    assert get_profile(None).name == "generic"
+    assert get_profile("reaweb").name == "reaweb"
+    assert get_profile(REAWEB_PROFILE) is REAWEB_PROFILE
+    with pytest.raises(ValueError):
+        get_profile("nope")
+
+
+def test_load_profile_from_file(tmp_path=None):
+    import tempfile as _tf
+
+    with _tf.TemporaryDirectory() as tmpdir:
+        p = Path(tmpdir) / "my_profile.py"
+        p.write_text(
+            "PROFILE = {\n"
+            "  'name': 'custom',\n"
+            "  'tool_names': {'deploy': 'Deploy App'},\n"
+            "  'phase_patterns': {'deploy': 2},\n"
+            "}\n"
+        )
+        prof = load_profile(p)
+        assert prof.name == "custom"
+        assert prof.tool_names["deploy"] == ("Deploy App", "")
+
+        src = '''
+class Agent:
+    def run(self):
+        if action == "deploy":
+            self.deploy()
+'''
+        graph = parse_source(src, title="Custom", profile=prof)
+        tools = [n for n in graph.nodes if n.node_type == NodeType.TOOL]
+        assert len(tools) == 1
+        assert tools[0].label == "Deploy App"
+
+
+def test_structural_phases_without_patterns():
+    """Phased layout works for graphs with no phase hints at all."""
+    graph = parse_source(SIMPLE_AGENT, title="Structural")  # generic profile
+    result = phased_layout(graph)
+    assert all(p.phase in (1, 2, 3) for p in result.positioned)
+    # The while-loop cycle forces a phase 2; ancestors/descendants give 1 and 3
+    phases = {p.phase for p in result.positioned}
+    assert 2 in phases
+
+
+# ── Determinism tests ─────────────────────────────────────────────────
+
+
+def test_deterministic_output_with_seed():
+    """Same input + same seed must produce byte-identical JSON."""
+    graph = parse(SIMPLE_AGENT, title="Determinism")
+    doc1 = to_excalidraw(graph, layout="phased", seed=42)
+    doc2 = to_excalidraw(graph, layout="phased", seed=42)
+    assert json.dumps(doc1, sort_keys=True) == json.dumps(doc2, sort_keys=True)
+
+
+def test_different_seeds_differ():
+    graph = parse(SIMPLE_AGENT, title="Seeds")
+    doc1 = to_excalidraw(graph, seed=1)
+    doc2 = to_excalidraw(graph, seed=2)
+    ids1 = {e["id"] for e in doc1["elements"]}
+    ids2 = {e["id"] for e in doc2["elements"]}
+    assert ids1 != ids2
+
+
+# ── SVG export tests ──────────────────────────────────────────────────
+
+
+def test_to_svg_valid_xml():
+    import xml.dom.minidom
+
+    from agentflow.svg import to_svg
+
+    graph = parse(SIMPLE_AGENT, title="SVG Test")
+    svg = to_svg(graph, layout="phased")
+    doc = xml.dom.minidom.parseString(svg)  # raises if malformed
+    assert doc.documentElement.tagName == "svg"
+    assert len(doc.getElementsByTagName("path")) >= 1   # arrows
+    assert len(doc.getElementsByTagName("ellipse")) >= 1  # start/end
+    assert len(doc.getElementsByTagName("polygon")) >= 1  # decisions
+    assert "Budget" in svg or "Main Loop" in svg
+
+
+def test_save_svg():
+    from agentflow.svg import save_svg
+
+    g = FlowGraph(title="Save SVG")
+    g.add_node(Node(id="a", label="A"))
+    g.add_edge(Edge(source="a", target="b"))
+    g.add_node(Node(id="b", label="B"))
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        path = Path(tmpdir) / "out.svg"
+        result = save_svg(g, path)
+        assert result.exists()
+        assert "<svg" in result.read_text()
+
+
 # ── Layout tests ──────────────────────────────────────────────────────
 
 
 def test_hierarchical_layout():
-    graph = parse_source(SIMPLE_AGENT, title="Test")
+    graph = parse(SIMPLE_AGENT, title="Test")
     result = hierarchical_layout(graph)
     assert len(result.positioned) == graph.node_count
     assert result.width > 0
@@ -128,13 +258,13 @@ def test_hierarchical_layout():
 
 
 def test_grid_layout():
-    graph = parse_source(SIMPLE_AGENT, title="Test")
+    graph = parse(SIMPLE_AGENT, title="Test")
     result = grid_layout(graph)
     assert len(result.positioned) == graph.node_count
 
 
 def test_phased_layout():
-    graph = parse_source(SIMPLE_AGENT, title="Test")
+    graph = parse(SIMPLE_AGENT, title="Test")
     result = phased_layout(graph)
     assert len(result.positioned) == graph.node_count
     assert len(result.phase_boxes) == 3  # FASE 1, 2, 3
@@ -144,7 +274,7 @@ def test_phased_layout():
 
 
 def test_phased_layout_excalidraw():
-    graph = parse_source(SIMPLE_AGENT, title="Phased Test")
+    graph = parse(SIMPLE_AGENT, title="Phased Test")
     doc = to_excalidraw(graph, layout="phased")
     assert doc["type"] == "excalidraw"
     # Should have phase boxes (rectangles with dashed stroke)
@@ -243,7 +373,7 @@ def test_save_excalidraw():
 
 def test_full_pipeline():
     """End-to-end: parse agent code → layout → Excalidraw JSON."""
-    graph = parse_source(SIMPLE_AGENT, title="Full Pipeline Test")
+    graph = parse(SIMPLE_AGENT, title="Full Pipeline Test")
     doc = to_excalidraw(graph)
 
     # Verify the pipeline produces valid output
@@ -260,7 +390,7 @@ def test_full_pipeline():
 
 def test_full_pipeline_with_save():
     """End-to-end: parse → save .excalidraw file."""
-    graph = parse_source(SIMPLE_AGENT, title="Save Pipeline")
+    graph = parse(SIMPLE_AGENT, title="Save Pipeline")
 
     with tempfile.TemporaryDirectory() as tmpdir:
         path = Path(tmpdir) / "agent_flow.excalidraw"
@@ -270,3 +400,97 @@ def test_full_pipeline_with_save():
         data = json.loads(path.read_text())
         assert data["type"] == "excalidraw"
         assert len(data["elements"]) > 0
+
+
+# ── Visual invariant tests ───────────────────────────────────────────
+
+
+def _shape_ids(doc):
+    return {e["id"] for e in doc["elements"] if e["type"] in ("rectangle", "diamond", "ellipse")}
+
+
+def test_no_duplicate_feedback_arrows():
+    """Edges rendered as feedback arrows must not be drawn twice."""
+    graph = parse_source(SIMPLE_AGENT, title="Dedup Test")
+    doc = to_excalidraw(graph, layout="phased")
+
+    # Each (startBinding, endBinding) pair should appear at most once
+    seen = set()
+    for el in doc["elements"]:
+        if el["type"] != "arrow":
+            continue
+        sb = (el.get("startBinding") or {}).get("elementId")
+        eb = (el.get("endBinding") or {}).get("elementId")
+        key = (sb, eb)
+        assert key not in seen, f"duplicate arrow {key}"
+        seen.add(key)
+
+
+def test_text_fits_in_nodes():
+    """Node dimensions must accommodate their measured label + detail."""
+    from agentflow.layouts import DETAIL_FONT, LABEL_FONT, measure_text
+
+    g = FlowGraph()
+    long_label = "Generate Candidate For Long Running Subtask"
+    long_detail = "LLM sub-agent genera HTML/CSS/JS\nexploration=True, target_h=0..N"
+    g.add_node(Node(id="a", label=long_label, detail=long_detail,
+                    node_type=NodeType.PROCESS))
+    result = hierarchical_layout(g)
+    p = result.positioned[0]
+    lw, lh = measure_text(p.node.label, LABEL_FONT)
+    _dw, dh = measure_text(p.node.detail, DETAIL_FONT)
+    assert p.width >= lw
+    assert p.height >= lh + dh
+
+
+def test_diamond_sized_for_text():
+    """Decision diamond bbox must inscribe its label (half-extents ≥ text)."""
+    from agentflow.layouts import LABEL_FONT, measure_text
+
+    g = FlowGraph()
+    label = "Múltiples condiciones\nAND/OR combinadas?"
+    g.add_node(Node(id="d", label=label, node_type=NodeType.DECISION))
+    result = hierarchical_layout(g)
+    p = result.positioned[0]
+    lw, lh = measure_text(label, LABEL_FONT)
+    assert p.width / 2 >= lw
+    assert p.height / 2 >= lh
+
+
+def test_phased_columns_do_not_overlap():
+    """Main flow column must not intersect side (tools) or evolution columns."""
+    graph = parse(SIMPLE_AGENT, title="Columns")
+    result = phased_layout(graph)
+
+    main = [p for p in result.positioned
+            if p.node.node_type not in (NodeType.TOOL, NodeType.SUBPROCESS, NodeType.EVOLUTION)]
+    side = [p for p in result.positioned
+            if p.node.node_type in (NodeType.TOOL, NodeType.SUBPROCESS)]
+    evo = [p for p in result.positioned if p.node.node_type == NodeType.EVOLUTION]
+
+    def x_ranges(nodes):
+        return [(p.x, p.x + p.width) for p in nodes]
+
+    for m_range in x_ranges(main):
+        for s_range in x_ranges(side) + x_ranges(evo):
+            assert m_range[1] <= s_range[0] or s_range[1] <= m_range[0], \
+                f"column overlap: main {m_range} vs other {s_range}"
+
+
+def test_theme_dark_changes_colors():
+    doc_dark = to_excalidraw(FlowGraph(title="T"), theme="dark", legend=False)
+    doc_light = to_excalidraw(FlowGraph(title="T"), theme="light", legend=False)
+    assert doc_dark["appState"]["viewBackgroundColor"] != \
+        doc_light["appState"]["viewBackgroundColor"]
+
+
+def test_legend_optional():
+    g = FlowGraph(title="No Legend")
+    g.add_node(Node(id="a", label="A"))
+    doc = to_excalidraw(g, legend=False)
+    texts = [e.get("text", "") for e in doc["elements"] if e["type"] == "text"]
+    assert "LEGEND" not in texts
+
+    doc2 = to_excalidraw(g, legend=True)
+    texts2 = [e.get("text", "") for e in doc2["elements"] if e["type"] == "text"]
+    assert "LEGEND" in texts2

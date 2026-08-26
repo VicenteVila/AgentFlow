@@ -4,15 +4,15 @@ build-backend = "hatchling.build"
 
 [project]
 name = "agentflow"
-version = "0.1.0"
-description = "Parse and visualize AI agent control flows as Excalidraw diagrams"
-readme = {text = "Parse and visualize AI agent control flows as Excalidraw diagrams", content-type = "text/plain"}
+version = "1.0.0"
+description = "Parse and visualize AI agent control flows as Excalidraw diagrams and SVG"
+readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"
 authors = [{ name = "Vicente Vila", email = "vicentevilaramirez@gmail.com" }]
-keywords = ["excalidraw", "flowchart", "ai-agent", "visualization", "diagram"]
+keywords = ["excalidraw", "flowchart", "ai-agent", "visualization", "diagram", "svg"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
@@ -25,10 +25,19 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=7.0"]
+dev = ["pytest>=7.0", "ruff>=0.4"]
 
 [project.scripts]
 agentflow = "agentflow.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["agentflow"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "SIM", "B", "UP"]
+ignore = [
+    "E501",  # long lines in diagram labels are intentional
+]

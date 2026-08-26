@@ -4,138 +4,36 @@ Uses Python's ast module to analyze the control flow of an agent class
 and produce a FlowGraph with nodes (processes, decisions, tools) and
 edges (flow connections with labels).
 
-Labels are EXHAUSTIVE: each node includes its parameters, thresholds,
-conditions, and what it does — not just a name.
+The parser is domain-agnostic: all domain knowledge (known tools,
+exhaustive labels, decision hints, phase patterns) comes from a
+:class:`agentflow.profiles.Profile`. Labels are EXHAUSTIVE when the
+profile provides rich metadata; the generic profile derives labels
+directly from the code.
 """
 
 from __future__ import annotations
 
 import ast
-import re
 from pathlib import Path
-from typing import Optional
 
 from agentflow.models import Edge, FlowGraph, Node, NodeType
+from agentflow.profiles import Profile, get_profile
 
 
-# ── Pattern matching helpers ──────────────────────────────────────────
-
-TOOL_NAMES = {
-    "generate_candidate", "audit_page", "audit_visual", "audit_creative",
-    "audit_truth", "revert_workspace", "select_final", "update_lessons",
-    "fetch_readme", "fetch_repo_topics",
-    "inspect_archetype", "analyze_project", "deploy_preview", "git_snapshot",
-}
-
-# ── Auto-evolution patterns ────────────────────────────────────────
-
-AUTO_EVOLUTION_METHODS = {
-    "_maybe_auto_lesson", "_maybe_subtask_lesson", "_maybe_content_lesson",
-    "_auto_truth_audit", "_auto_visual_audit", "_compute_novelty",
-}
-META_EDIT_TOOLS = {"edit_skill", "review_harness"}
-CONTEXT_METHODS = {"_compact", "should_compact"}
-
-# ── Exhaustive node labels ──────────────────────────────────────────
-# Each entry: (label, detail) — label is the name, detail is params/what-it-does
-
-TOOL_INFO: dict[str, tuple[str, str]] = {
-    "generate_candidate": (
-        "Generate Candidate",
-        "LLM sub-agent genera HTML/CSS/JS\nexploration=True, target_h=0..N",
-    ),
-    "audit_page": (
-        "Audit Page",
-        "Validación estática: SEO, A11y,\nPerf, Responsive, Best Practices",
-    ),
-    "audit_visual": (
-        "Audit Visual",
-        "VLM Gemini: screenshot → score 0-100\n+ issues + suggestions",
-    ),
-    "audit_creative": (
-        "Audit Creative",
-        "VLM anti-proxy: novedad/originalidad\nscore 0-100, mutation hints",
-    ),
-    "audit_truth": (
-        "Audit Truth",
-        "Partes huérfanas, enlaces rotos,\nreferencias vs diseño real",
-    ),
-    "revert_workspace": (
-        "Revert Workspace",
-        "Restaura candidato anterior\nsi el nuevo empeora",
-    ),
-    "select_final": (
-        "Select Final",
-        "Selecciona mejor candidato\ny exporta a runs/{run_id}/final/",
-    ),
-    "update_lessons": (
-        "Update Lessons",
-        "Persiste lecciones acumuladas\na memory/global_lessons",
-    ),
-    "fetch_readme": (
-        "Fetch README",
-        "Descarga README de GitHub\n→ genera página HTML por repo",
-    ),
-    "fetch_repo_topics": (
-        "Fetch Repo Topics",
-        "Clasifica repos vía LLM\n→ genera graph_data.json",
-    ),
-    "inspect_archetype": (
-        "Inspect Archetype",
-        "Analiza estructura del archetype\npluck + archetype_name",
-    ),
-    "analyze_project": (
-        "Analyze Project",
-        "Análisis completo del proyecto\nstack, estructura, dependencias",
-    ),
-    "deploy_preview": (
-        "Deploy Preview",
-        "http.server en puerto 8000\npara preview local",
-    ),
-    "git_snapshot": (
-        "Git Snapshot",
-        "Copia candidato a runs/\npara historial de versiones",
-    ),
-}
-
-EVO_INFO: dict[str, tuple[str, str]] = {
-    "_maybe_auto_lesson": (
-        "Auto Lesson",
-        "delta ≥ 4.0 → aprende worked/didnt\nmax 8/run, dedup por snippet",
-    ),
-    "_maybe_subtask_lesson": (
-        "Subtask Lesson",
-        "Detecta subtask fail→pass\n(prev best vs candidato actual)",
-    ),
-    "_maybe_content_lesson": (
-        "Content Lesson",
-        "VLM score < 85 → extrae issues\ny suggestions como lecciones",
-    ),
-    "_auto_truth_audit": (
-        "Auto Truth Audit",
-        "1 vez/run: partes conectadas\nrepo linking, broken refs",
-    ),
-    "_auto_visual_audit": (
-        "Auto Visual Audit",
-        "Post-generate: VLM screenshot\nevalúa calidad visual 0-100",
-    ),
-    "_compute_novelty": (
-        "Compute Novelty",
-        "DOM(0.45) + palette(0.35)\n+ JS(0.20) vs best previous",
-    ),
-}
-
-
-def parse_file(filepath: str | Path) -> FlowGraph:
+def parse_file(filepath: str | Path, profile: str | Profile | None = None) -> FlowGraph:
     """Parse a Python file and extract the agent flow graph."""
     path = Path(filepath)
     source = path.read_text(encoding="utf-8")
-    graph = parse_source(source, title=f"Flow: {path.stem}")
-    return graph
+    return parse_source(source, title=f"Flow: {path.stem}", profile=profile)
 
 
-def parse_source(source: str, title: str = "Agent Flow") -> FlowGraph:
+def parse_source(
+    source: str,
+    title: str = "Agent Flow",
+    profile: str | Profile | None = None,
+) -> FlowGraph:
     """Parse Python source code and extract the agent flow graph."""
+    prof = get_profile(profile)
     tree = ast.parse(source)
     graph = FlowGraph(title=title)
 
@@ -146,7 +44,7 @@ def parse_source(source: str, title: str = "Agent Flow") -> FlowGraph:
 
     agent_cls = _find_agent_class(tree)
     if agent_cls:
-        _parse_agent_class(agent_cls, graph)
+        _parse_agent_class(agent_cls, graph, prof)
     else:
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef):
@@ -159,13 +57,43 @@ def parse_source(source: str, title: str = "Agent Flow") -> FlowGraph:
             node_type=NodeType.END,
         ))
 
+    _apply_phase_patterns(graph, prof)
+
     return graph
+
+
+# ── Phase assignment ──────────────────────────────────────────────────
+
+
+def _apply_phase_patterns(graph: FlowGraph, prof: Profile) -> None:
+    """Stamp phase hints (1/2/3) onto nodes from profile patterns.
+
+    Nodes that match nothing keep phase=0; the phased layout then falls
+    back to structural detection (cycles → loop phase).
+    """
+    if not prof.phase_patterns:
+        return
+
+    for node in graph.nodes:
+        nid = node.id.lower()
+        label = node.label.lower()
+        matched = 0
+        for pattern, phase in prof.phase_patterns.items():
+            if pattern in nid or pattern in label:
+                matched = phase
+                break
+        if matched:
+            node.phase = matched
+        elif node.node_type == NodeType.START:
+            node.phase = 1
+        elif node.node_type == NodeType.END:
+            node.phase = 3
 
 
 # ── Class/method parsing ──────────────────────────────────────────────
 
 
-def _find_agent_class(tree: ast.Module) -> Optional[ast.ClassDef]:
+def _find_agent_class(tree: ast.Module) -> ast.ClassDef | None:
     for node in ast.iter_child_nodes(tree):
         if isinstance(node, ast.ClassDef):
             name_lower = node.name.lower()
@@ -177,7 +105,7 @@ def _find_agent_class(tree: ast.Module) -> Optional[ast.ClassDef]:
     return None
 
 
-def _parse_agent_class(cls: ast.ClassDef, graph: FlowGraph) -> None:
+def _parse_agent_class(cls: ast.ClassDef, graph: FlowGraph, prof: Profile) -> None:
     run_method = None
     init_method = None
     handle_eval = None
@@ -191,7 +119,7 @@ def _parse_agent_class(cls: ast.ClassDef, graph: FlowGraph) -> None:
                 handle_eval = item
 
     if init_method:
-        _parse_init(init_method, graph)
+        _parse_init(init_method, graph, prof)
 
     if init_method:
         graph.add_edge(Edge(source="start", target="init", label=""))
@@ -201,11 +129,11 @@ def _parse_agent_class(cls: ast.ClassDef, graph: FlowGraph) -> None:
         prev_node = "start"
 
     if run_method:
-        _parse_run_method(run_method, graph, prev_node)
+        _parse_run_method(run_method, graph, prev_node, prof)
 
         # Also scan _handle_eval_result for tool dispatch patterns
         if handle_eval:
-            _scan_handle_eval_for_tools(handle_eval, graph)
+            _scan_handle_eval_for_tools(handle_eval, graph, prof)
     else:
         for item in cls.body:
             if isinstance(item, ast.FunctionDef) and item.name != "__init__":
@@ -213,7 +141,7 @@ def _parse_agent_class(cls: ast.ClassDef, graph: FlowGraph) -> None:
                 break
 
 
-def _parse_init(method: ast.FunctionDef, graph: FlowGraph) -> None:
+def _parse_init(method: ast.FunctionDef, graph: FlowGraph, prof: Profile) -> None:
     setup_steps = []
     for stmt in method.body:
         if isinstance(stmt, ast.Assign):
@@ -226,22 +154,26 @@ def _parse_init(method: ast.FunctionDef, graph: FlowGraph) -> None:
                 setup_steps.append(func.attr)
 
     key_steps = [s for s in setup_steps if not s.startswith("_")][:8]
-    label = "Init Agent"
-    detail = "Configura LLM, budget, memory,\ncontext manager, harness snapshot"
-    if key_steps:
-        detail = ", ".join(key_steps[:6])
 
-    graph.add_node(Node(id="init", label=label, detail=detail, node_type=NodeType.PROCESS))
+    label, base_detail = prof.init_label or (
+        "Init Agent", "Configura dependencias\nde forma automática"
+    )
+    detail = base_detail if not key_steps else ", ".join(key_steps[:6])
+
+    graph.add_node(Node(id="init", label=label, detail=detail,
+                        node_type=NodeType.PROCESS))
 
 
-def _parse_run_method(method: ast.FunctionDef, graph: FlowGraph, prev_node: str) -> None:
+def _parse_run_method(
+    method: ast.FunctionDef, graph: FlowGraph, prev_node: str, prof: Profile
+) -> None:
     graph.add_node(Node(
         id="main_loop", label="Main Loop",
         detail="while True:\n  turn += 1\n  register_evaluation()\n  budget.done()?",
         node_type=NodeType.LOOP,
     ))
     graph.add_edge(Edge(source=prev_node, target="main_loop"))
-    _parse_block(method.body, graph, parent_id="main_loop")
+    _parse_block(method.body, graph, parent_id="main_loop", prof=prof)
 
 
 def _parse_block(
@@ -249,25 +181,27 @@ def _parse_block(
     graph: FlowGraph,
     parent_id: str,
     depth: int = 0,
+    prof: Profile = None,  # type: ignore[assignment]
 ) -> str:
     if depth > 10:
         return parent_id
+    assert prof is not None
 
     current = parent_id
 
     for stmt in stmts:
         if isinstance(stmt, ast.While):
-            current = _parse_while(stmt, graph, current, depth)
+            current = _parse_while(stmt, graph, current, depth, prof)
         elif isinstance(stmt, ast.If):
-            current = _parse_if(stmt, graph, current, depth)
+            current = _parse_if(stmt, graph, current, depth, prof)
         elif isinstance(stmt, ast.For):
-            current = _parse_for(stmt, graph, current, depth)
+            current = _parse_for(stmt, graph, current, depth, prof)
         elif isinstance(stmt, ast.Expr):
-            current = _parse_expr_stmt(stmt, graph, current)
+            current = _parse_expr_stmt(stmt, graph, current, prof)
         elif isinstance(stmt, ast.Assign):
-            current = _parse_assign(stmt, graph, current)
+            current = _parse_assign(stmt, graph, current, prof)
         elif isinstance(stmt, ast.Try):
-            current = _parse_try(stmt, graph, current, depth)
+            current = _parse_try(stmt, graph, current, depth, prof)
         elif isinstance(stmt, ast.FunctionDef):
             current = _parse_local_function(stmt, graph, current)
 
@@ -275,46 +209,52 @@ def _parse_block(
 
 
 def _parse_while(
-    stmt: ast.While, graph: FlowGraph, parent_id: str, depth: int
+    stmt: ast.While, graph: FlowGraph, parent_id: str, depth: int, prof: Profile
 ) -> str:
     loop_id = f"loop_{stmt.lineno}"
     graph.add_node(Node(id=loop_id, label=_while_label(stmt), node_type=NodeType.LOOP))
     graph.add_edge(Edge(source=parent_id, target=loop_id))
 
-    last_in_body = _parse_block(stmt.body, graph, loop_id, depth + 1)
+    last_in_body = _parse_block(stmt.body, graph, loop_id, depth + 1, prof)
 
     if last_in_body != loop_id:
-        graph.add_edge(Edge(source=last_in_body, target=loop_id, label="loop"))
+        graph.add_edge(Edge(source=last_in_body, target=loop_id, label=prof.loop_edge_label))
 
     return loop_id
 
 
 def _parse_if(
-    stmt: ast.If, graph: FlowGraph, parent_id: str, depth: int
+    stmt: ast.If, graph: FlowGraph, parent_id: str, depth: int, prof: Profile
 ) -> str:
-    tool_from_dispatch = _detect_tool_dispatch(stmt)
+    tool_from_dispatch = _detect_tool_dispatch(stmt, prof)
 
     dec_id = f"dec_{stmt.lineno}"
-    label, detail = _if_label_and_detail(stmt)
+    label, detail = _if_label_and_detail(stmt, prof)
     graph.add_node(Node(id=dec_id, label=label, detail=detail, node_type=NodeType.DECISION))
     graph.add_edge(Edge(source=parent_id, target=dec_id))
 
     if tool_from_dispatch:
         tool_id = f"tool_{tool_from_dispatch}_{stmt.lineno}"
-        t_label, t_detail = TOOL_INFO.get(tool_from_dispatch, (tool_from_dispatch, ""))
+        t_label, t_detail = prof.tool_names.get(tool_from_dispatch, (tool_from_dispatch, ""))
         graph.add_node(Node(
             id=tool_id, label=t_label, detail=t_detail,
             node_type=NodeType.TOOL, line=stmt.lineno,
         ))
         graph.add_edge(Edge(source=dec_id, target=tool_id, label="YES"))
+    else:
+        tool_id = None
 
-    last_yes = _parse_block(stmt.body, graph, tool_id if tool_from_dispatch else dec_id, depth + 1)
+    last_yes = _parse_block(
+        stmt.body, graph,
+        tool_id if tool_from_dispatch else dec_id,
+        depth + 1, prof,
+    )
 
     if stmt.orelse:
         if len(stmt.orelse) == 1 and isinstance(stmt.orelse[0], ast.If):
-            last_no = _parse_if(stmt.orelse[0], graph, dec_id, depth + 1)
+            last_no = _parse_if(stmt.orelse[0], graph, dec_id, depth + 1, prof)
         else:
-            last_no = _parse_block(stmt.orelse, graph, dec_id, depth + 1)
+            last_no = _parse_block(stmt.orelse, graph, dec_id, depth + 1, prof)
             for e in graph.edges:
                 if e.source == dec_id and e.target == last_yes and not e.label:
                     e.label = "YES"
@@ -326,7 +266,8 @@ def _parse_if(
         return last_yes
 
 
-def _detect_tool_dispatch(stmt: ast.If) -> Optional[str]:
+def _detect_tool_dispatch(stmt: ast.If, prof: Profile) -> str | None:
+    """Detect ``if <obj>.<dispatch_attr> == "<known tool>"`` patterns."""
     test = stmt.test
     if not isinstance(test, ast.Compare):
         return None
@@ -336,7 +277,7 @@ def _detect_tool_dispatch(stmt: ast.If) -> Optional[str]:
         return None
 
     left = test.left
-    if not isinstance(left, ast.Attribute) or left.attr != "name":
+    if not isinstance(left, ast.Attribute) or left.attr != prof.dispatch_attr:
         return None
 
     comparator = test.comparators[0]
@@ -344,16 +285,15 @@ def _detect_tool_dispatch(stmt: ast.If) -> Optional[str]:
         return None
 
     tool_name = comparator.value
-    if tool_name in TOOL_NAMES:
+    if tool_name in prof.tool_names:
         return tool_name
     return None
 
 
 def _parse_for(
-    stmt: ast.For, graph: FlowGraph, parent_id: str, depth: int
+    stmt: ast.For, graph: FlowGraph, parent_id: str, depth: int, prof: Profile
 ) -> str:
     loop_id = f"loop_{stmt.lineno}"
-    # Improve the for-loop label
     target = stmt.target
     if isinstance(target, ast.Name):
         iter_name = ""
@@ -365,22 +305,22 @@ def _parse_for(
         if iter_name:
             label += f" in {iter_name}"
     else:
-        label = f"For loop"
+        label = "For loop"
     graph.add_node(Node(id=loop_id, label=label, node_type=NodeType.LOOP))
     graph.add_edge(Edge(source=parent_id, target=loop_id))
 
-    last_in_body = _parse_block(stmt.body, graph, loop_id, depth + 1)
+    last_in_body = _parse_block(stmt.body, graph, loop_id, depth + 1, prof)
     if last_in_body != loop_id:
-        graph.add_edge(Edge(source=last_in_body, target=loop_id, label="loop"))
+        graph.add_edge(Edge(source=last_in_body, target=loop_id, label=prof.loop_edge_label))
 
     return loop_id
 
 
 def _parse_expr_stmt(
-    stmt: ast.Expr, graph: FlowGraph, parent_id: str
+    stmt: ast.Expr, graph: FlowGraph, parent_id: str, prof: Profile
 ) -> str:
     if isinstance(stmt.value, ast.Call):
-        call_info = _extract_call_info(stmt.value)
+        call_info = _extract_call_info(stmt.value, prof)
         if call_info:
             node_id, label, node_type, detail = call_info
             graph.add_node(Node(
@@ -393,10 +333,10 @@ def _parse_expr_stmt(
 
 
 def _parse_assign(
-    stmt: ast.Assign, graph: FlowGraph, parent_id: str
+    stmt: ast.Assign, graph: FlowGraph, parent_id: str, prof: Profile
 ) -> str:
     if isinstance(stmt.value, ast.Call):
-        call_info = _extract_call_info(stmt.value)
+        call_info = _extract_call_info(stmt.value, prof)
         if call_info:
             node_id, label, node_type, detail = call_info
             if stmt.targets and isinstance(stmt.targets[0], ast.Name):
@@ -413,15 +353,15 @@ def _parse_assign(
 
 
 def _parse_try(
-    stmt: ast.Try, graph: FlowGraph, parent_id: str, depth: int
+    stmt: ast.Try, graph: FlowGraph, parent_id: str, depth: int, prof: Profile
 ) -> str:
-    last = _parse_block(stmt.body, graph, parent_id, depth + 1)
+    last = _parse_block(stmt.body, graph, parent_id, depth + 1, prof)
 
     for handler in stmt.handlers:
-        last = _parse_block(handler.body, graph, last, depth + 1)
+        last = _parse_block(handler.body, graph, last, depth + 1, prof)
 
     if stmt.finalbody:
-        last = _parse_block(stmt.finalbody, graph, last, depth + 1)
+        last = _parse_block(stmt.finalbody, graph, last, depth + 1, prof)
 
     return last
 
@@ -445,22 +385,19 @@ def _parse_local_function(
     return node_id
 
 
-def _parse_function(
-    method: ast.FunctionDef, graph: FlowGraph
-) -> None:
+def _parse_function(method: ast.FunctionDef, graph: FlowGraph) -> None:
     node_id = f"fn_{method.name}"
     label = method.name.lstrip("_").replace("_", " ").title()
     graph.add_node(Node(id=node_id, label=label, node_type=NodeType.SUBPROCESS, line=method.lineno))
     graph.add_edge(Edge(source="start", target=node_id))
 
 
-def _scan_handle_eval_for_tools(method: ast.FunctionDef, graph: FlowGraph) -> None:
+def _scan_handle_eval_for_tools(method: ast.FunctionDef, graph: FlowGraph, prof: Profile) -> None:
     """Scan _handle_eval_result for tool dispatch patterns and add tool nodes.
 
     These are tools dispatched from the for-loop body via if/elif chains.
     We connect them to the for-loop node (loop_*) so they appear in the flow.
     """
-    # Find the for-loop node (the tool_calls iterator)
     for_loop_id = None
     for n in graph.nodes:
         if n.node_type == NodeType.LOOP and "tool_calls" in n.label.lower():
@@ -471,10 +408,10 @@ def _scan_handle_eval_for_tools(method: ast.FunctionDef, graph: FlowGraph) -> No
 
     for node in ast.walk(method):
         if isinstance(node, ast.If):
-            tool_name = _detect_tool_dispatch(node)
+            tool_name = _detect_tool_dispatch(node, prof)
             if tool_name and not any(n.id.startswith(f"tool_{tool_name}_") for n in graph.nodes):
                 tool_id = f"tool_{tool_name}_{node.lineno}"
-                label, detail = TOOL_INFO.get(tool_name, (tool_name, ""))
+                label, detail = prof.tool_names.get(tool_name, (tool_name, ""))
                 graph.add_node(Node(
                     id=tool_id, label=label, detail=detail,
                     node_type=NodeType.TOOL, line=node.lineno,
@@ -486,16 +423,18 @@ def _scan_handle_eval_for_tools(method: ast.FunctionDef, graph: FlowGraph) -> No
 # ── Label + detail extraction ───────────────────────────────────────
 
 
-def _extract_call_info(call: ast.Call) -> Optional[tuple[str, str, NodeType, str]]:
+def _extract_call_info(
+    call: ast.Call, prof: Profile
+) -> tuple[str, str, NodeType, str] | None:
     """Extract (node_id, label, type, detail) from a function call."""
     func = call.func
 
     if isinstance(func, ast.Attribute):
         method_name = func.attr
 
-        # Tool calls — exhaustive labels
-        if method_name in TOOL_NAMES:
-            label, detail = TOOL_INFO.get(method_name, (method_name, ""))
+        # Known tools — exhaustive labels from the profile
+        if method_name in prof.tool_names:
+            label, detail = prof.tool_names[method_name]
             return (
                 f"tool_{method_name}_{call.lineno}",
                 label,
@@ -504,8 +443,8 @@ def _extract_call_info(call: ast.Call) -> Optional[tuple[str, str, NodeType, str
             )
 
         # Auto-evolution methods
-        if method_name in AUTO_EVOLUTION_METHODS:
-            label, detail = EVO_INFO.get(method_name, (method_name, ""))
+        if method_name in prof.evolution_methods:
+            label, detail = prof.evolution_methods[method_name]
             return (
                 f"evo_{method_name}_{call.lineno}",
                 label,
@@ -513,236 +452,93 @@ def _extract_call_info(call: ast.Call) -> Optional[tuple[str, str, NodeType, str
                 detail,
             )
 
-        # Meta-edit tools
-        if method_name in META_EDIT_TOOLS:
+        # Special calls (meta-edits, compaction, snapshot, export…)
+        if method_name in prof.special_calls:
+            label, detail, node_type = prof.special_calls[method_name]
+            if not label:
+                return None  # explicitly skipped (e.g. budget sync noise)
+            prefix = "meta" if node_type == NodeType.EVOLUTION else "special"
             return (
-                f"meta_{method_name}_{call.lineno}",
-                f"Meta-Edit: {method_name}",
-                NodeType.EVOLUTION,
-                "Propone cambio al harness\nacepta/revierte vía gate_harness_edit",
+                f"{prefix}_{method_name}_{call.lineno}",
+                label,
+                node_type,
+                detail,
             )
 
-        # Context compaction
-        if method_name in CONTEXT_METHODS:
-            return (
-                f"ctx_{method_name}_{call.lineno}",
-                "Context Compaction",
-                NodeType.EVOLUTION,
-                "tokens > 60000 → compacta\nresumen + lessons persistentes",
-            )
-
-        # Internal methods
-        if method_name == "_snapshot":
-            return (
-                f"snapshot_{call.lineno}",
-                "Snapshot Workspace",
-                NodeType.PROCESS,
-                "Copia workspace/ → candidates/{id}/\npara historial de cambios",
-            )
-        if method_name == "_seed_from_workspace":
-            return (
-                f"seed_{call.lineno}",
-                "Seed Workspace",
-                NodeType.PROCESS,
-                "Si workspace/current existe\n→ evalúa como H0 inicial",
-            )
-        if method_name == "_export_final":
-            return (
-                f"export_{call.lineno}",
-                "Export Final",
-                NodeType.END,
-                "Copia mejor candidato a\nruns/{run_id}/final/index.html",
-            )
-        if method_name == "_render_state":
-            return (
-                f"state_{call.lineno}",
-                "Render State",
-                NodeType.PROCESS,
-                "Genera prompt con: turn, cost,\nbest, tree, lessons, stagnation",
-            )
-        if method_name == "_sync_budget_cost":
+    if isinstance(func, ast.Name) and func.id in prof.special_calls:
+        label, detail, node_type = prof.special_calls[func.id]
+        if not label:
             return None
-
-    if isinstance(func, ast.Name):
-        func_name = func.id
-        if func_name in ("evaluate", "render_screenshot", "novelty_score"):
-            return (
-                f"fn_{func_name}_{call.lineno}",
-                func_name,
-                NodeType.TOOL,
-                "",
-            )
+        return (
+            f"fn_{func.id}_{call.lineno}",
+            label,
+            node_type,
+            detail,
+        )
 
     return None
 
 
-def _if_label_and_detail(stmt: ast.If) -> tuple[str, str]:
-    """Generate exhaustive label + detail for an if statement."""
+def _generic_if_label(stmt: ast.If) -> tuple[str, str]:
+    """Derive a readable label/detail from an arbitrary condition."""
+    try:
+        raw = ast.unparse(stmt.test)
+    except Exception:  # noqa: BLE001 — unparse fallback is best-effort
+        raw = stmt.test.__class__.__name__
+
+    # Split into ≤2 lines of ~28 chars for diamond readability
+    words = raw.split()
+    lines: list[str] = [""]
+    for w in words:
+        if len(lines[-1]) + len(w) + 1 > 28 and len(lines) < 2:
+            lines.append("")
+        if len(lines[-1]) + len(w) + 1 <= 34:
+            lines[-1] = (lines[-1] + " " + w).strip()
+    while len(lines) < 2:
+        lines.append("")
+    label = "\n".join(lines[:2]).strip() or "Condition?"
+
+    detail = f"Condición en línea {stmt.lineno}:\n{raw[:60]}"
+    return label, detail
+
+
+def _if_label_and_detail(stmt: ast.If, prof: Profile) -> tuple[str, str]:
+    """Generate label + detail for an if statement using profile hints."""
     test = stmt.test
 
-    # budget.done()
-    if isinstance(test, ast.Call):
-        func = test.func
-        if isinstance(func, ast.Attribute):
-            if func.attr == "done":
-                return (
-                    "Budget\ndone?",
-                    "turns ≥ 24 OR cost ≥ $5.00\nOR stagnation ≥ 16 OR time ≥ 120min",
-                )
-            if func.attr == "register_evaluation":
-                return (
-                    "Register\nscore?",
-                    "score - last_best ≥ 2%?\n→ reset stagnation counter",
-                )
-            if func.attr == "should_compact":
-                return (
-                    "Compact\ncontext?",
-                    "tokens > 60000?\n(solo 1 vez por run)",
-                )
-        # Detect any(k in text.lower() for k in ("done", "fin", ...))
-        if isinstance(func, ast.Name) and func.id == "any":
-            try:
-                raw = ast.dump(test)
-                if "value='done'" in raw and "value='fin'" in raw:
-                    return (
-                        "Agent said\ndone?",
-                        "¿Agente dijo done/fin/finalizado?\n→ terminar si alcanzó target_h",
-                    )
-            except Exception:
-                pass
-        if isinstance(func, ast.Name):
-            if func.id == "stop_reason":
-                return (
-                    "Stop\nreason?",
-                    "Agente dijo done/fin?\nO budget agotado?",
-                )
+    if (
+        isinstance(test, ast.UnaryOp)
+        and isinstance(test.op, ast.Not)
+        and isinstance(test.operand, ast.Attribute)
+    ):
+        return (
+            f"NOT {test.operand.attr}?",
+            f"Niega {test.operand.attr}\npara lógica invertida",
+        )
 
-    # tool_calls check
-    if isinstance(test, ast.Attribute):
-        if test.attr in ("tool_calls",):
-            return (
-                "Has tool\ncalls?",
-                "LLM devolvió tool_calls?\n→ iterar sobre cada una",
-            )
-        if test.attr in ("nodes",):
-            return (
-                "Has nodes?",
-                "Search tree tiene nodos?\n→ evaluar candidato",
-            )
-
-    # Comparisons
+    # Tool dispatch comparisons: call.name == "x" → "Tool: x?"
     if isinstance(test, ast.Compare):
         left = test.left
-        if isinstance(left, ast.Name):
-            if left.id == "stop_reason":
-                return (
-                    "Stop\nreason?",
-                    "Motivo de parada?\nbudget/stagnation/agent-decided",
-                )
-            if left.id == "delta":
-                return (
-                    "Delta >\nthreshold?",
-                    "Mejora > umbral?\n→ aprender lección",
-                )
-
-        # Detect tool name comparisons: call.name == "tool_name"
-        if isinstance(left, ast.Attribute) and left.attr == "name":
+        if isinstance(left, ast.Attribute) and left.attr == prof.dispatch_attr:
             for comp in test.comparators:
                 if isinstance(comp, ast.Constant) and isinstance(comp.value, str):
                     tool_name = comp.value
-                    if tool_name in TOOL_INFO:
-                        label, detail = TOOL_INFO[tool_name]
-                        return (f"Tool:\n{tool_name}?", detail)
+                    if tool_name in prof.tool_names:
+                        label, detail = prof.tool_names[tool_name]
+                        single = label.split("\n")[0]
+                        return (f"Tool:\n{single}?", detail)
                     return (f"Tool:\n{tool_name}?", f"Dispatch {tool_name}")
 
-        # Detect: node_id is not None / node_id in ...
-        if isinstance(left, ast.Name) and left.id == "node_id":
-            return (
-                "node_id\nvalid?",
-                "¿Se generó nodo?\n→ evaluar resultado",
-            )
-
-    # Boolean ops
-    if isinstance(test, ast.BoolOp):
-        # Try to detect specific patterns in BoolOp
-        for val in test.values:
-            if isinstance(val, ast.Compare):
-                left = val.left
-                if isinstance(left, ast.Name) and left.id == "node_id":
-                    return (
-                        "node_id valid\n+ tool check?",
-                        "Nodo existe y\nherramienta relevante?",
-                    )
-        return (
-            "Condition\ncheck?",
-            "Múltiples condiciones\nAND/OR combinadas",
-        )
-
-    # Name
-    if isinstance(test, ast.Name):
-        return (
-            f"{test.id}?",
-            f"Verifica {test.id}\nen contexto actual",
-        )
-
-    # Not
-    if isinstance(test, ast.UnaryOp) and isinstance(test.op, ast.Not):
-        if isinstance(test.operand, ast.Attribute):
-            return (
-                f"NOT {test.operand.attr}?",
-                f"Niega {test.operand.attr}\npara lógica invertida",
-            )
-
-    # Fallback with raw analysis
+    # Profile decision hints: substring match on the AST dump
     try:
         raw = ast.dump(test)
-        if "stop_reason" in raw:
-            return (
-                "Stop\nreason?",
-                "Motivo de parada?\nbudget/stagnation/agent-decided",
-            )
-        if "budget" in raw:
-            return (
-                "Budget\ncheck?",
-                "turns ≥ 24 OR cost ≥ $5.00\nOR stagnation ≥ 16",
-            )
-        if "tool_calls" in raw:
-            return (
-                "Has tool\ncalls?",
-                "LLM devolvió tool_calls?\n→ iterar sobre cada una",
-            )
-        if "target_h" in raw:
-            return (
-                "Target H\nreached?",
-                "hypothesis_count ≤ target_h?\n→ continuar generando",
-            )
-        if "meta_edits" in raw or "allow_meta" in raw:
-            return (
-                "Meta-edits\nenabled?",
-                "allow_meta_edits = True?\n→ permitir edit_skill",
-            )
-        # Detect "done"/"fin" keyword checks in text
-        if '"done"' in raw or '"fin"' in raw or '"finalizado"' in raw:
-            return (
-                "Agent said\ndone?",
-                "¿Agente dijo done/fin/finalizado?\n→ terminar si alcanzó target_h",
-            )
-        # Detect incremental/memory operations
-        if "incremental" in raw or "global_lessons" in raw:
-            return (
-                "Lessons\nto merge?",
-                "¿Hay lecciones incrementales?\n→ merge a global_lessons",
-            )
-        # Detect node_id checks
-        if "node_id" in raw:
-            return (
-                "node_id\nvalid?",
-                "¿Se generó nodo válido?\n→ evaluar resultado",
-            )
-    except Exception:
-        pass
+    except Exception:  # noqa: BLE001 — dump fallback is best-effort
+        raw = ""
+    for needle, label, detail in prof.decision_hints:
+        if needle in raw:
+            return (label, detail)
 
-    return ("Condition?", "Condición no identificada")
+    return _generic_if_label(stmt)
 
 
 def _while_label(stmt: ast.While) -> str:

@@ -9,9 +9,72 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import Optional
 
-from agentflow.models import Edge, FlowGraph, Node, NodeType
+from agentflow.models import FlowGraph, Node, NodeType
+
+# ── Text measurement ──────────────────────────────────────────────────
+
+LABEL_FONT = 14
+DETAIL_FONT = 10
+LINE_H = 1.25      # Excalidraw lineHeight
+NODE_PAD_X = 32.0  # horizontal padding inside a node
+NODE_PAD_Y = 28.0  # vertical padding inside a node
+DIAMOND_FIT = 2.0  # diamonds need bbox ≈ 2× text so it fits the inscribed area
+DETAIL_GAP = 8.0   # vertical gap between label and detail text
+
+# Per-character em-widths calibrated for Excalidraw's hand-drawn font.
+# Grouped by visual class instead of a flat average for much better fit.
+_NARROW_CHARS = set("iljI.,:;'|!()[]{}·-")
+_WIDE_CHARS = set("mwMW%@&")
+
+
+def _char_em_width(ch: str) -> float:
+    """Approximate glyph width in em units for the Excalidraw font."""
+    if ch in _NARROW_CHARS:
+        return 0.34
+    if ch in _WIDE_CHARS:
+        return 0.95
+    if ch.isupper():
+        return 0.72
+    if ch.isdigit():
+        return 0.62
+    if ch == " ":
+        return 0.30
+    return 0.55
+
+
+def measure_text(text: str, font_size: int = 16) -> tuple[float, float]:
+    """Estimate rendered text size (width, height) in diagram units."""
+    lines = text.split("\n") if text else [""]
+    max_em = max(
+        (sum(_char_em_width(ch) for ch in line) for line in lines),
+        default=1.0,
+    )
+    width = max(max_em * font_size, 10.0)
+    height = len(lines) * font_size * LINE_H
+    return round(width, 1), round(height, 1)
+
+
+def node_size(node: Node) -> tuple[float, float]:
+    """Compute node dimensions: fit the text, respecting per-type minimums."""
+    t = node.node_type
+    min_w = NODE_WIDTHS.get(t, 300)
+    min_h = NODE_HEIGHTS.get(t, 84)
+
+    lw, lh = measure_text(node.label, LABEL_FONT)
+    dw = dh = 0.0
+    if node.detail:
+        dw, dh = measure_text(node.detail, DETAIL_FONT)
+
+    inner_h = lh + (dh + DETAIL_GAP if node.detail else 0.0)
+
+    if t == NodeType.DECISION:
+        w = max(min_w, lw * DIAMOND_FIT + NODE_PAD_X, dw * DIAMOND_FIT)
+        h = max(min_h, inner_h * DIAMOND_FIT + NODE_PAD_Y)
+    else:
+        w = max(min_w, lw + NODE_PAD_X, dw + NODE_PAD_X)
+        h = max(min_h, inner_h + NODE_PAD_Y)
+    return round(w, 1), round(h, 1)
 
 
 @dataclass
@@ -132,17 +195,9 @@ _NODE_CATEGORIES: dict[NodeType, str] = {
     NodeType.EVOLUTION: "evolution",
 }
 
-# ── Spacing constants ──────────────────────────────────────────────────
+# ── Phase definitions (light) ─────────────────────────────────────────
 
-H_GAP = 60        # Horizontal gap between nodes in same row
-V_GAP = 40        # Vertical gap between rows
-ROW_HEIGHT = 140  # Height per row (node + gap)
-GROUP_PAD = 30    # Padding inside group boxes
-GROUP_GAP = 50    # Gap between group boxes
-
-# ── Phase definitions (for phased vertical layout) ────────────────────
-
-PHASE_DEFS = {
+PHASE_DEFS: dict[int, dict[str, str]] = {
     1: {
         "label": "FASE 1 · PREPARACIÓN",
         "background": "#f8f9fa",
@@ -160,40 +215,73 @@ PHASE_DEFS = {
     },
 }
 
-# Node ID patterns → phase assignment
-_PHASE_PATTERNS: dict[str, int] = {
-    "start": 1,
-    "init": 1,
-    "seed": 1,
-    "decision_url": 1,
-    "fetch_url": 1,
-    "main_loop": 2,
-    "render": 2,
-    "llm": 2,
-    "budget": 2,
-    "generate": 2,
-    "audit": 2,
-    "truth": 2,
-    "revert": 2,
-    "vlm": 2,
-    "creative": 2,
-    "lesson": 2,
-    "auto_lesson": 2,
-    "subtask_lesson": 2,
-    "content_lesson": 2,
-    "truth_audit": 2,
-    "visual_audit": 2,
-    "novelty": 2,
-    "compact": 2,
-    "snapshot": 2,  # snapshot_workspace is inside the loop
-    "select": 3,
-    "export": 3,
-    "final": 3,
-    "end": 3,
-    "meta": 3,
-    "harm": 3,
-    "summary": 3,
+# ── Themes ─────────────────────────────────────────────────────────────
+
+CATEGORY_STYLES_DARK: dict[str, dict[str, str]] = {
+    "init":     {"background": "#052e16", "stroke": "#22c55e", "label": "INIT"},
+    "loop":     {"background": "#500724", "stroke": "#db2777", "label": "MAIN LOOP"},
+    "dispatch": {"background": "#2e1065", "stroke": "#8b5cf6", "label": "DISPATCH & EVALUATE"},
+    "tools":    {"background": "#042f2e", "stroke": "#14b8a6", "label": "TOOLS"},
+    "evolution":{"background": "#431407", "stroke": "#f97316", "label": "SELF-EVOLUTION"},
+    "teardown": {"background": "#450a0a", "stroke": "#ef4444", "label": "TEARDOWN"},
 }
+
+PHASE_DEFS_DARK: dict[int, dict[str, str]] = {
+    1: {"label": "FASE 1 · PREPARACIÓN", "background": "#1a1d21", "stroke": "#495057"},
+    2: {"label": "FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)", "background": "#2b2717", "stroke": "#495057"},
+    3: {"label": "FASE 3 · CIERRE", "background": "#15291a", "stroke": "#495057"},
+}
+
+THEMES: dict[str, dict] = {
+    "light": {
+        "arrow": "#495057",
+        "feedback_arrow": "#1971c2",
+        "text": "#1e1e1e",
+        "detail_text": "#666666",
+        "title": "#1e1e1e",
+        "phase_label": "#343a40",
+        "canvas_background": "#ffffff",
+        "node_colors": NODE_COLORS,
+        "category_styles": CATEGORY_STYLES,
+        "phase_defs": PHASE_DEFS,
+    },
+    "dark": {
+        "arrow": "#ced4da",
+        "feedback_arrow": "#4dabf7",
+        "text": "#f1f3f5",
+        "detail_text": "#adb5bd",
+        "title": "#f8f9fa",
+        "phase_label": "#dee2e6",
+        "canvas_background": "#111111",
+        "node_colors": {
+            NodeType.START:      {"background": "#14532d", "stroke": "#4ade80"},
+            NodeType.END:        {"background": "#7f1d1d", "stroke": "#f87171"},
+            NodeType.PROCESS:    {"background": "#4c1d95", "stroke": "#a78bfa"},
+            NodeType.DECISION:   {"background": "#713f12", "stroke": "#facc15"},
+            NodeType.SUBPROCESS: {"background": "#1e3a8a", "stroke": "#60a5fa"},
+            NodeType.TOOL:       {"background": "#134e4a", "stroke": "#2dd4bf"},
+            NodeType.LOOP:       {"background": "#831843", "stroke": "#f472b6"},
+            NodeType.EVOLUTION:  {"background": "#7c2d12", "stroke": "#fb923c"},
+        },
+        "category_styles": CATEGORY_STYLES_DARK,
+        "phase_defs": PHASE_DEFS_DARK,
+    },
+}
+
+
+def get_theme(name: str) -> dict:
+    """Return the palette for a theme name ('light' or 'dark')."""
+    return THEMES.get(name, THEMES["light"])
+
+# ── Spacing constants ──────────────────────────────────────────────────
+
+H_GAP = 60        # Horizontal gap between nodes in same row
+V_GAP = 40        # Vertical gap between rows
+ROW_HEIGHT = 140  # Height per row (node + gap)
+GROUP_PAD = 30    # Padding inside group boxes
+GROUP_GAP = 50    # Gap between group boxes
+
+# ── Phase definitions (for phased vertical layout) ────────────────────
 
 # Phased layout constants
 PHASE_H_GAP = 40     # Horizontal gap between nodes in same row
@@ -202,9 +290,7 @@ PHASE_ROW_H = 130    # Height per row (node + gap)
 PHASE_PAD = 40       # Padding inside phase boxes
 PHASE_GAP = 60       # Gap between phase boxes
 PHASE_TOP = 80       # Starting Y position
-PHASE_CENTER_X = 500 # Center X for main flow
-PHASE_SIDE_X = 120   # X for side branches (left)
-PHASE_TOOL_X = 780   # X for tool branches (right)
+PHASE_SIDE_X = 120   # X for evolution column (left); center/tools derive from content
 
 
 def hierarchical_layout(
@@ -227,8 +313,7 @@ def hierarchical_layout(
         node = graph.get_node(node_id)
         if node is None:
             continue
-        w = NODE_WIDTHS.get(node.node_type, 300)
-        h = NODE_HEIGHTS.get(node.node_type, 84)
+        w, h = node_size(node)
         y = 80.0  # Fixed Y for main row
         positioned.append(PositionedNode(node=node, x=x_cursor, y=y, width=w, height=h, group_id=_NODE_CATEGORIES.get(node.node_type, "loop")))
         x_cursor += w + H_GAP
@@ -241,8 +326,7 @@ def hierarchical_layout(
         node = graph.get_node(node_id)
         if node is None:
             continue
-        w = NODE_WIDTHS.get(node.node_type, 280)
-        h = NODE_HEIGHTS.get(node.node_type, 84)
+        w, h = node_size(node)
         y = 80.0 + ROW_HEIGHT + V_GAP  # Below main row
         positioned.append(PositionedNode(node=node, x=tool_x, y=y, width=w, height=h, group_id="tools"))
         tool_x += w + H_GAP
@@ -253,14 +337,14 @@ def hierarchical_layout(
         node = graph.get_node(node_id)
         if node is None:
             continue
-        w = NODE_WIDTHS.get(node.node_type, 280)
-        h = NODE_HEIGHTS.get(node.node_type, 84)
+        w, h = node_size(node)
         y = 80.0 + 2 * (ROW_HEIGHT + V_GAP)  # Below tools
         positioned.append(PositionedNode(node=node, x=evo_x, y=y, width=w, height=h, group_id="evolution"))
         evo_x += w + H_GAP
 
     # 3. Compute group boxes
-    group_boxes = _compute_group_boxes(positioned, main_width)
+    pal = get_theme(kwargs.get("theme", "light"))
+    group_boxes = _compute_group_boxes(positioned, main_width, pal["category_styles"])
 
     max_x = max((p.x + p.width for p in positioned), default=0)
     max_y = max((p.y + p.height for p in positioned), default=0)
@@ -291,10 +375,7 @@ def phased_layout(graph: FlowGraph, **kwargs) -> LayoutResult:
         return LayoutResult([], 0, 0)
 
     # 1. Assign nodes to phases
-    phase_groups: dict[int, list[str]] = {1: [], 2: [], 3: []}
-    for node in graph.nodes:
-        phase = _assign_phase(node)
-        phase_groups[phase].append(node.id)
+    phase_groups = _phase_groups(graph)
 
     # 2. Topological order within each phase
     for phase in phase_groups:
@@ -303,6 +384,23 @@ def phased_layout(graph: FlowGraph, **kwargs) -> LayoutResult:
     # 3. Separate main flow from side branches per phase
     positioned: list[PositionedNode] = []
     y_cursor = float(PHASE_TOP)
+
+    # 3a. Adaptive column geometry: derive center X from the widest content
+    # in each column so nothing collides regardless of graph size.
+    max_main_w = 0.0
+    max_side_w = 0.0
+    max_evo_w = 0.0
+    for node in graph.nodes:
+        w, _ = node_size(node)
+        if node.node_type in (NodeType.TOOL, NodeType.SUBPROCESS):
+            max_side_w = max(max_side_w, w)
+        elif node.node_type == NodeType.EVOLUTION:
+            max_evo_w = max(max_evo_w, w)
+        else:
+            max_main_w = max(max_main_w, w)
+    col_gap = 120.0
+    center_x = PHASE_SIDE_X + max_evo_w + col_gap + max_main_w / 2
+    tool_col_x = center_x + max_main_w / 2 + col_gap
 
     for phase in [1, 2, 3]:
         node_ids = phase_groups[phase]
@@ -317,9 +415,8 @@ def phased_layout(graph: FlowGraph, **kwargs) -> LayoutResult:
             node = graph.get_node(nid)
             if node is None:
                 continue
-            w = NODE_WIDTHS.get(node.node_type, 300)
-            h = NODE_HEIGHTS.get(node.node_type, 84)
-            x = PHASE_CENTER_X - w / 2
+            w, h = node_size(node)
+            x = center_x - w / 2
             positioned.append(PositionedNode(
                 node=node, x=x, y=phase_y, width=w, height=h,
                 group_id="main", phase=phase,
@@ -332,10 +429,9 @@ def phased_layout(graph: FlowGraph, **kwargs) -> LayoutResult:
             node = graph.get_node(nid)
             if node is None:
                 continue
-            w = NODE_WIDTHS.get(node.node_type, 280)
-            h = NODE_HEIGHTS.get(node.node_type, 84)
+            w, h = node_size(node)
             positioned.append(PositionedNode(
-                node=node, x=PHASE_TOOL_X, y=side_y, width=w, height=h,
+                node=node, x=tool_col_x, y=side_y, width=w, height=h,
                 group_id="tools", phase=phase,
             ))
             side_y += h + PHASE_V_GAP
@@ -346,8 +442,7 @@ def phased_layout(graph: FlowGraph, **kwargs) -> LayoutResult:
             node = graph.get_node(nid)
             if node is None:
                 continue
-            w = NODE_WIDTHS.get(node.node_type, 280)
-            h = NODE_HEIGHTS.get(node.node_type, 84)
+            w, h = node_size(node)
             positioned.append(PositionedNode(
                 node=node, x=PHASE_SIDE_X, y=evo_y, width=w, height=h,
                 group_id="evolution", phase=phase,
@@ -363,10 +458,11 @@ def phased_layout(graph: FlowGraph, **kwargs) -> LayoutResult:
         y_cursor = max_phase_y + PHASE_GAP
 
     # 4. Compute phase boxes
-    phase_boxes = _compute_phase_boxes(positioned)
+    pal = get_theme(kwargs.get("theme", "light"))
+    phase_boxes = _compute_phase_boxes(positioned, pal["phase_defs"])
 
     # 5. Identify feedback arrows
-    feedback = _identify_feedback_arrows(graph, positioned)
+    feedback = _identify_feedback_arrows(graph, positioned, color=pal["feedback_arrow"])
 
     max_x = max((p.x + p.width for p in positioned), default=0)
     max_y = max((p.y + p.height for p in positioned), default=0)
@@ -397,8 +493,6 @@ def _assign_rows(graph: FlowGraph) -> tuple[list[str], list[str], list[str]]:
         if node is None:
             continue
 
-        cat = _NODE_CATEGORIES.get(node.node_type, "loop")
-
         if node.node_type in (NodeType.TOOL, NodeType.SUBPROCESS):
             tool_row.append(node_id)
         elif node.node_type == NodeType.EVOLUTION:
@@ -409,32 +503,96 @@ def _assign_rows(graph: FlowGraph) -> tuple[list[str], list[str], list[str]]:
     return main_row, tool_row, evo_row
 
 
-def _assign_phase(node: Node) -> int:
-    """Assign a node to a phase (1=init, 2=loop, 3=close)."""
-    nid = node.id.lower()
-    label = node.label.lower()
+def _phase_groups(graph: FlowGraph) -> dict[int, list[str]]:
+    """Group node ids by phase (1=init, 2=loop, 3=close).
 
-    # Check exact matches first
-    for pattern, phase in _PHASE_PATTERNS.items():
-        if pattern in nid:
-            return phase
+    Uses parser-stamped phase hints when available; otherwise detects
+    phases structurally: nodes in cycles → loop phase, their ancestors
+    → init phase, the rest → close phase.
+    """
+    groups: dict[int, list[str]] = {1: [], 2: [], 3: []}
 
-    # Check label matches
-    for pattern, phase in _PHASE_PATTERNS.items():
-        if pattern in label:
-            return phase
+    if any(n.phase for n in graph.nodes):
+        for node in graph.nodes:
+            groups[node.phase or 2].append(node.id)
+        return groups
 
-    # Default: use node type
+    return _structural_phase_groups(graph)
+
+
+def _structural_phase_groups(graph: FlowGraph) -> dict[int, list[str]]:
+    """Infer phases from graph topology (works for any agent)."""
+    groups: dict[int, list[str]] = {1: [], 2: [], 3: []}
+    cyc = _nodes_in_cycles(graph)
+
+    if not cyc:
+        # Acyclic graph: single pass — start→1, end→3, rest→2
+        for node in graph.nodes:
+            groups[_default_phase(node)].append(node.id)
+        return groups
+
+    ancestors = _ancestors_of(graph, cyc) - cyc
+
+    for node in graph.nodes:
+        if node.id in cyc:
+            groups[2].append(node.id)
+        elif node.id in ancestors:
+            groups[1].append(node.id)
+        else:
+            groups[3].append(node.id)
+
+    return groups
+
+
+def _nodes_in_cycles(graph: FlowGraph) -> set[str]:
+    """Return ids of nodes that lie on a directed cycle."""
+    adj: dict[str, list[str]] = {n.id: [] for n in graph.nodes}
+    for e in graph.edges:
+        if e.source in adj and e.target in adj:
+            adj[e.source].append(e.target)
+
+    cyc: set[str] = set()
+    for start, neighbors in adj.items():
+        # BFS from successors; cycle iff we can reach `start` again
+        stack = list(neighbors)
+        seen: set[str] = set()
+        while stack and start not in cyc:
+            cur = stack.pop()
+            if cur == start:
+                cyc.add(start)
+                break
+            if cur in seen:
+                continue
+            seen.add(cur)
+            stack.extend(adj.get(cur, []))
+    return cyc
+
+
+def _ancestors_of(graph: FlowGraph, targets: set[str]) -> set[str]:
+    """All nodes that can reach any id in `targets` (excluding targets themselves)."""
+    radj: dict[str, list[str]] = {n.id: [] for n in graph.nodes}
+    for e in graph.edges:
+        if e.source in radj and e.target in radj:
+            radj[e.target].append(e.source)
+
+    found: set[str] = set()
+    stack = list(targets)
+    while stack:
+        cur = stack.pop()
+        for prev in radj.get(cur, []):
+            if prev not in found and prev not in targets:
+                found.add(prev)
+                stack.append(prev)
+    return found
+
+
+def _default_phase(node: Node) -> int:
+    """Type-based phase fallback."""
     if node.node_type == NodeType.START:
         return 1
     if node.node_type == NodeType.END:
         return 3
-    if node.node_type in (NodeType.TOOL, NodeType.SUBPROCESS):
-        return 2  # Tools are in the loop phase
-    if node.node_type == NodeType.EVOLUTION:
-        return 2  # Evolution is in the loop phase
-
-    return 2  # Default to loop phase
+    return 2
 
 
 def _classify_phase_nodes(
@@ -466,8 +624,12 @@ def _topo_order_filtered(graph: FlowGraph, node_ids: list[str]) -> list[str]:
     return [nid for nid in full_order if nid in id_set]
 
 
-def _compute_phase_boxes(positioned: list[PositionedNode]) -> list[PhaseBox]:
+def _compute_phase_boxes(
+    positioned: list[PositionedNode],
+    phase_defs: dict[int, dict[str, str]] | None = None,
+) -> list[PhaseBox]:
     """Compute background rectangles for each phase."""
+    defs_map = phase_defs or PHASE_DEFS
     boxes: list[PhaseBox] = []
     by_phase: dict[int, list[PositionedNode]] = defaultdict(list)
 
@@ -479,7 +641,7 @@ def _compute_phase_boxes(positioned: list[PositionedNode]) -> list[PhaseBox]:
         if not nodes:
             continue
 
-        defs = PHASE_DEFS.get(phase, PHASE_DEFS[2])
+        defs = defs_map.get(phase, defs_map[2])
         min_x = min(n.x for n in nodes) - PHASE_PAD
         min_y = min(n.y for n in nodes) - PHASE_PAD
         max_x = max(n.x + n.width for n in nodes) + PHASE_PAD
@@ -500,7 +662,7 @@ def _compute_phase_boxes(positioned: list[PositionedNode]) -> list[PhaseBox]:
 
 
 def _identify_feedback_arrows(
-    graph: FlowGraph, positioned: list[PositionedNode]
+    graph: FlowGraph, positioned: list[PositionedNode], color: str = "#1971c2"
 ) -> list[FeedbackArrow]:
     """Identify feedback arrows (edges that go upward in the layout)."""
     pos_lookup = {p.node.id: p for p in positioned}
@@ -517,14 +679,19 @@ def _identify_feedback_arrows(
                     target_id=edge.target,
                     label=edge.label,
                     style="dashed",
-                    color="#1971c2",
+                    color=color,
                 ))
 
     return feedback
 
 
-def _compute_group_boxes(positioned: list[PositionedNode], main_width: float) -> list[GroupBox]:
+def _compute_group_boxes(
+    positioned: list[PositionedNode],
+    main_width: float,
+    styles: dict[str, dict[str, str]] | None = None,
+) -> list[GroupBox]:
     """Compute background rectangles for each category group."""
+    style_map = styles or CATEGORY_STYLES
     boxes: list[GroupBox] = []
 
     # Group by category and Y position
@@ -536,7 +703,7 @@ def _compute_group_boxes(positioned: list[PositionedNode], main_width: float) ->
         if not nodes:
             continue
 
-        style = CATEGORY_STYLES.get(group_id, CATEGORY_STYLES["loop"])
+        style = style_map.get(group_id, style_map["loop"])
 
         min_x = min(n.x for n in nodes) - GROUP_PAD
         min_y = min(n.y for n in nodes) - GROUP_PAD
