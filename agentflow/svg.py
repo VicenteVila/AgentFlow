@@ -10,10 +10,12 @@ from __future__ import annotations
 from pathlib import Path
 from xml.sax.saxutils import escape
 
-from agentflow.excalidraw import (
-    _feedback_points,
-    _node_text_block,
-    _straight_or_routed_points,
+from agentflow.geometry import (
+    assign_feedback_slots,
+    feedback_route,
+    node_text_block,
+    resolve_edges,
+    routed_points,
 )
 from agentflow.layouts import (
     DETAIL_FONT,
@@ -174,35 +176,25 @@ def to_svg(
     # Title
     parts.append(_text_svg(80, 30, graph.title, 24, pal["title"], align="start"))
 
-    # Edges first (under nodes), reusing the same routing as Excalidraw output
+    # Edges first (under nodes), same shared policy as the Excalidraw renderer
     pos_lookup = {p.node.id: p for p in result.positioned}
-    id_pos = pos_lookup
-    feedback_keys = {(fb.source_id, fb.target_id) for fb in result.feedback_arrows}
-
-    edges_by_pair: dict[tuple[str, str], object] = {}
-    for edge in graph.edges:
-        if edge.source not in pos_lookup or edge.target not in pos_lookup:
-            continue
-        key = (edge.source, edge.target)
-        existing = edges_by_pair.get(key)
-        if existing is None or (not existing.label and edge.label):
-            edges_by_pair[key] = edge
+    edges_by_pair = resolve_edges(graph, result)
 
     for key, edge in edges_by_pair.items():
-        if key in feedback_keys:
-            continue
-        sx, sy, pts = _straight_or_routed_points(id_pos[key[0]], id_pos[key[1]])
+        sx, sy, pts = routed_points(pos_lookup[key[0]], pos_lookup[key[1]])
         parts.append(_arrow_path(pts, sx, sy, pal["arrow"], dashed=False))
         if edge.label:
             mx = sx + (pts[-1][0]) / 2
             my = sy + (pts[-1][1]) / 2 - 12
             parts.append(_text_svg(mx, my, edge.label, 11, pal["detail_text"]))
 
-    for fb in result.feedback_arrows:
+    fb_slots = assign_feedback_slots(result.feedback_arrows, pos_lookup, result.width)
+    for fb_idx, fb in enumerate(result.feedback_arrows):
         if fb.source_id not in pos_lookup or fb.target_id not in pos_lookup:
             continue
-        sx, sy, pts = _feedback_points(pos_lookup[fb.source_id],
-                                       pos_lookup[fb.target_id], result.width)
+        sx, sy, pts = feedback_route(pos_lookup[fb.source_id],
+                                     pos_lookup[fb.target_id], result.width,
+                                     slot=fb_slots[fb_idx])
         parts.append(_arrow_path(pts, sx, sy, fb.color, dashed=True))
         if fb.label:
             mx = sx + pts[-1][0] / 2
@@ -212,7 +204,7 @@ def to_svg(
     # Nodes on top of arrows
     for pos in result.positioned:
         parts.append(_shape_svg(pos, pal))
-        label_c, detail_c = _node_text_block(pos)
+        label_c, detail_c = node_text_block(pos)
         parts.append(_text_svg(label_c[0], label_c[1], pos.node.label,
                                LABEL_FONT, pal["text"]))
         if pos.node.detail and detail_c is not None:

@@ -13,10 +13,15 @@ import string
 from pathlib import Path
 from typing import Any
 
+from agentflow.geometry import (
+    assign_feedback_slots,
+    feedback_route,
+    node_text_block,
+    resolve_edges,
+    routed_points,
+)
 from agentflow.layouts import (
     DETAIL_FONT,
-    DETAIL_GAP,
-    LABEL_FONT,
     PositionedNode,
     get_theme,
     hierarchical_layout,
@@ -154,86 +159,6 @@ def _make_text(x: float, y: float, text: str, eid: str,
     return el
 
 
-def _node_text_block(pos: PositionedNode) -> tuple[tuple[float, float], tuple[float, float] | None]:
-    """Compute centered coordinates for (label, detail) inside a node.
-
-    Returns ((label_cx, label_cy), (detail_cx, detail_cy) | None).
-    """
-    _, lh = measure_text(pos.node.label, LABEL_FONT)
-    cy = pos.y + pos.height / 2
-
-    if not pos.node.detail:
-        return (pos.x + pos.width / 2, cy), None
-
-    _, dh = measure_text(pos.node.detail, DETAIL_FONT)
-    total = lh + DETAIL_GAP + dh
-    label_cy = pos.y + (pos.height - total) / 2 + lh / 2
-    detail_cy = pos.y + (pos.height + total) / 2 - dh / 2
-    cx = pos.x + pos.width / 2
-    return (cx, label_cy), (cx, detail_cy)
-
-
-def _straight_or_routed_points(
-    source_pos: PositionedNode, target_pos: PositionedNode
-) -> tuple[float, float, list[list[float]]]:
-    """Compute anchor points and waypoint list for an edge.
-
-    Returns (start_x, start_y, relative_points). Uses a straight segment
-    when nodes are aligned, otherwise an orthogonal L/Z-shaped route.
-    """
-    scx = source_pos.x + source_pos.width / 2
-    scy = source_pos.y + source_pos.height / 2
-    tcx = target_pos.x + target_pos.width / 2
-    tcy = target_pos.y + target_pos.height / 2
-
-    dx = tcx - scx
-    dy = tcy - scy
-    # Rows/columns considered aligned when centers fall within half-extents
-    row_aligned = abs(dy) <= (source_pos.height + target_pos.height) / 4
-    col_aligned = abs(dx) <= (source_pos.width + target_pos.width) / 4
-
-    if row_aligned and abs(dx) > 1:
-        # Straight horizontal: right/left edge of source → opposite edge of target
-        sx = source_pos.x + source_pos.width if dx > 0 else source_pos.x
-        tx = target_pos.x if dx > 0 else target_pos.x + target_pos.width
-        return sx, scy, [[0, 0], [tx - sx, 0]]
-
-    if col_aligned and abs(dy) > 1:
-        # Straight vertical: bottom/top edge of source → opposite edge of target
-        sy = source_pos.y + source_pos.height if dy > 0 else source_pos.y
-        ty = target_pos.y if dy > 0 else target_pos.y + target_pos.height
-        return scx, sy, [[0, 0], [0, ty - sy]]
-
-    if abs(dx) >= abs(dy):
-        # Horizontal-dominant L: exit sideways, cross vertically at mid X
-        sx = source_pos.x + source_pos.width if dx > 0 else source_pos.x
-        sy = scy
-        tx = target_pos.x if dx > 0 else target_pos.x + target_pos.width
-        ty = tcy
-        mid_x = (sx + tx) / 2
-        pts = [
-            [0.0, 0.0],
-            [mid_x - sx, 0.0],
-            [mid_x - sx, ty - sy],
-            [tx - sx, ty - sy],
-        ]
-        return sx, sy, pts
-
-    # Vertical-dominant L: exit top/bottom, cross horizontally at mid Y
-    sx = scx
-    sy = source_pos.y + source_pos.height if dy > 0 else source_pos.y
-    tx = tcx
-    ty = target_pos.y if dy > 0 else target_pos.y + target_pos.height
-    mid_y = (sy + ty) / 2
-    pts = [
-        [0.0, 0.0],
-        [0.0, mid_y - sy],
-        [tx - sx, mid_y - sy],
-        [tx - sx, ty - sy],
-    ]
-    return sx, sy, pts
-
-
 def _make_arrow(
     source_pos: PositionedNode,
     target_pos: PositionedNode,
@@ -245,7 +170,7 @@ def _make_arrow(
     color: str = "#495057",
 ) -> list[dict[str, Any]]:
     """Create an arrow element with orthogonal routing and optional label."""
-    sx, sy, pts = _straight_or_routed_points(source_pos, target_pos)
+    sx, sy, pts = routed_points(source_pos, target_pos)
     ex = sx + pts[-1][0]
     ey = sy + pts[-1][1]
 
@@ -314,35 +239,6 @@ def _make_arrow(
         elements.append(lbl)
 
     return elements
-
-
-def _feedback_points(
-    src: PositionedNode, tgt: PositionedNode, canvas_width: float
-) -> tuple[float, float, list[list[float]]]:
-    """Lateral route for feedback arrows: up from source top, around the
-    outside of both nodes, into the target bottom. Keeps the main column clear.
-    """
-    sx = src.x + src.width / 2
-    sy_top = src.y
-    tx = tgt.x + tgt.width / 2
-    ty_bot = tgt.y + tgt.height
-
-    pair_center = (sx + tx) / 2
-    route_right = pair_center >= canvas_width / 2
-    offset = 70.0
-
-    if route_right:
-        rx = max(src.x + src.width, tgt.x + tgt.width) + offset
-    else:
-        rx = min(src.x, tgt.x) - offset
-
-    pts = [
-        [0.0, 0.0],
-        [rx - sx, 0.0],
-        [rx - sx, ty_bot - sy_top],
-        [tx - sx, ty_bot - sy_top],
-    ]
-    return sx, sy_top, pts
 
 
 def _bind_arrow(elements: list[dict[str, Any]], shape_eid: str, arrow_id: str) -> None:
@@ -538,7 +434,7 @@ def to_excalidraw(
 
         shape = _make_shape(pos, shape_id, pal)
 
-        label_center, detail_center = _node_text_block(pos)
+        label_center, detail_center = node_text_block(pos)
         label_text = _make_text(
             pos.x, pos.y, pos.node.label, text_id,
             container_id=shape_id,
@@ -564,25 +460,12 @@ def to_excalidraw(
 
         shape["boundElements"] = bound
 
-    # 3. Arrows between nodes (one per node pair; skip feedback-drawn edges).
-    # Parallel edges (same source→target) collapse into a single arrow,
-    # preferring the one that carries a label.
+    # 3. Arrows between nodes (one per node pair; feedback edges excluded
+    # — the shared policy lives in geometry.resolve_edges)
     pos_lookup = {p.node.id: p for p in result.positioned}
-    feedback_keys = {(fb.source_id, fb.target_id) for fb in result.feedback_arrows}
+    edges_by_pair = resolve_edges(graph, result)
 
-    edges_by_pair: dict[tuple[str, str], Any] = {}
-    for edge in graph.edges:
-        if edge.source not in pos_lookup or edge.target not in pos_lookup:
-            continue
-        key = (edge.source, edge.target)
-        existing = edges_by_pair.get(key)
-        if existing is None or (not existing.label and edge.label):
-            edges_by_pair[key] = edge
-
-    for key, edge in edges_by_pair.items():
-        if key in feedback_keys:
-            continue
-
+    for edge in edges_by_pair.values():
         arrow_id = _rid()
         label_id = _rid() if edge.label else None
 
@@ -596,14 +479,17 @@ def to_excalidraw(
         _bind_arrow(elements, id_map[edge.source], arrow_id)
         _bind_arrow(elements, id_map[edge.target], arrow_id)
 
-    # 3b. Feedback arrows (dashed, routed laterally around the flow)
-    for fb in result.feedback_arrows:
+    # 3b. Feedback arrows (dashed, routed laterally around the flow,
+    # staggered per side so parallel routes never overlap)
+    fb_slots = assign_feedback_slots(result.feedback_arrows, pos_lookup, result.width)
+    for fb_idx, fb in enumerate(result.feedback_arrows):
         if fb.source_id not in pos_lookup or fb.target_id not in pos_lookup:
             continue
         src_pos = pos_lookup[fb.source_id]
         tgt_pos = pos_lookup[fb.target_id]
 
-        sx, sy, pts = _feedback_points(src_pos, tgt_pos, result.width)
+        sx, sy, pts = feedback_route(src_pos, tgt_pos, result.width,
+                                     slot=fb_slots[fb_idx])
         ex = sx + pts[-1][0]
         ey = sy + pts[-1][1]
 
