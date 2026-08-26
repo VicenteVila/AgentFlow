@@ -553,19 +553,21 @@ def to_sequence_svg(interactions: Interactions, title: str = "") -> str:
         x_min = min(xs.values()) - 60
         x_max = max(xs.values()) + 60
         bg, stroke = _FRAGMENT_COLORS.get(frag.type, ("#f8f9fa", "#868e96"))
-        # Draw background rect
+        # Draw background rect (wrapped in group for HTML interactivity)
+        esc_l = frag.label.replace("&", "&amp;").replace("<", "&lt;")[:50]
+        frag_id = f"f{frag.begin_line}"
+        parts.append(f'<g data-frag="{frag.type}" data-frag-id="{frag_id}" class="frag-header">')
         parts.append(
-            f'<rect x="{x_min}" y="{y_min}" width="{x_max - x_min}" '
+            f'  <rect x="{x_min}" y="{y_min}" width="{x_max - x_min}" '
             f'height="{y_max - y_min}" rx="6" fill="{bg}" '
             f'stroke="{stroke}" stroke-width="1.5" stroke-dasharray="6 3" opacity="0.85"/>'
         )
-        # Label in top-left
-        esc_l = frag.label.replace("&", "&amp;").replace("<", "&lt;")[:50]
         parts.append(
-            f'<text x="{x_min + 8}" y="{y_min + 16}" font-family="{_FONT}" '
+            f'  <text x="{x_min + 8}" y="{y_min + 16}" font-family="{_FONT}" '
             f'font-size="10" fill="{stroke}" font-weight="bold">'
             f'[{frag.type.upper()}] {esc_l}</text>'
         )
+        parts.append('</g>')
 
     # Messages in order
     for i, m in enumerate(interactions.messages):
@@ -585,7 +587,7 @@ def to_sequence_svg(interactions: Interactions, title: str = "") -> str:
             f'stroke-width="2"{dash} marker-end="url(#seq-arrow)"/>'
         )
         parts.append(f'<text x="{mx}" y="{y - 8}" font-family="{_FONT}" font-size="12" '
-                     f'fill="#495057" text-anchor="middle">{esc_l}</text>')
+                     f'fill="#495057" text-anchor="middle" data-label="{esc_l}">{esc_l}</text>')
         parts.append(f'<text x="30" y="{y + 4}" font-family="{_FONT}" font-size="10" '
                      f'fill="#adb5bd">{i + 1}. L{m.line}</text>')
 
@@ -599,3 +601,246 @@ def save_sequence_svg(interactions: Interactions, output_path: str | Path,
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(to_sequence_svg(interactions, title=title), encoding="utf-8")
     return path
+
+
+# ── HTML rendering ────────────────────────────────────────────────────
+
+_SEQ_HTML_TEMPLATE = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{title}</title>
+<style>
+  * {{ box-sizing: border-box; }}
+  body {{ margin: 0; font-family: system-ui, -apple-system, sans-serif; background: #f8f9fa; color: #212529; }}
+  header {{ padding: 14px 20px; background: #fff; border-bottom: 1px solid #dee2e6; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }}
+  header h1 {{ margin: 0; font-size: 18px; font-weight: 600; flex: 1; min-width: 200px; }}
+  #controls {{ display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }}
+  #controls input[type="search"] {{ padding: 6px 10px; border: 1px solid #ced4da; border-radius: 6px; font-size: 13px; width: 200px; }}
+  #controls button {{ padding: 6px 10px; border: 1px solid #ced4da; border-radius: 6px; background: #fff; cursor: pointer; font-size: 12px; }}
+  #controls button:hover {{ background: #e9ecef; }}
+  #canvas {{ overflow: hidden; width: 100%; height: calc(100vh - 60px); background: #fff; cursor: grab; position: relative; }}
+  #canvas svg {{ transform-origin: 0 0; display: block; }}
+  #canvas.grabbing {{ cursor: grabbing; }}
+  .search-match {{ outline: 2px solid #ffd43b; outline-offset: 2px; filter: drop-shadow(0 0 6px #ffd43b); }}
+  #zoom-hint {{ position: absolute; bottom: 12px; right: 12px; background: rgba(255,255,255,0.9); padding: 6px 10px; border-radius: 6px; font-size: 11px; color: #495057; border: 1px solid #dee2e6; }}
+  .frag-header {{ cursor: pointer; user-select: none; }}
+  .frag-header:hover {{ opacity: 0.8; }}
+</style>
+</head>
+<body>
+<header>
+  <h1>{title}</h1>
+  <div id="controls">
+    <input type="search" id="search" placeholder="Search messages…" autocomplete="off">
+    <button id="zoom-in" title="Zoom +">+</button>
+    <button id="zoom-out" title="Zoom −">−</button>
+    <button id="zoom-reset" title="Reset">Reset</button>
+    <button id="toggle-fragments" title="Toggle fragment labels">Fragments</button>
+  </div>
+</header>
+<div id="canvas">{svg}</div>
+<div id="zoom-hint">Scroll: zoom · Drag: pan · Click fragment: collapse</div>
+<script>
+(function() {{
+  const canvas = document.getElementById('canvas');
+  const svg = canvas.querySelector('svg');
+  let scale = 1, tx = 0, ty = 0, isPanning = false, startX = 0, startY = 0;
+
+  function updateTransform() {{
+    svg.style.transform = `translate(${{tx}}px, ${{ty}}px) scale(${{scale}})`;
+  }}
+
+  canvas.addEventListener('wheel', e => {{
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? 0.9 : 1.1;
+    const newScale = Math.min(Math.max(scale * delta, 0.15), 6);
+    const rect = canvas.getBoundingClientRect();
+    const cx = e.clientX - rect.left;
+    const cy = e.clientY - rect.top;
+    tx = cx - (cx - tx) * (newScale / scale);
+    ty = cy - (cy - ty) * (newScale / scale);
+    scale = newScale;
+    updateTransform();
+  }}, {{ passive: false }});
+
+  canvas.addEventListener('mousedown', e => {{
+    isPanning = true;
+    startX = e.clientX - tx;
+    startY = e.clientY - ty;
+    canvas.classList.add('grabbing');
+  }});
+  window.addEventListener('mousemove', e => {{
+    if (!isPanning) return;
+    tx = e.clientX - startX;
+    ty = e.clientY - startY;
+    updateTransform();
+  }});
+  window.addEventListener('mouseup', () => {{
+    isPanning = false;
+    canvas.classList.remove('grabbing');
+  }});
+
+  document.getElementById('zoom-in').onclick = () => {{ scale = Math.min(scale * 1.25, 6); updateTransform(); }};
+  document.getElementById('zoom-out').onclick = () => {{ scale = Math.max(scale * 0.8, 0.15); updateTransform(); }};
+  document.getElementById('zoom-reset').onclick = () => {{ scale = 1; tx = 0; ty = 0; updateTransform(); }};
+
+  // Search
+  const search = document.getElementById('search');
+  const msgEls = Array.from(svg.querySelectorAll('[data-label]'));
+  search.addEventListener('input', () => {{
+    const q = search.value.toLowerCase();
+    msgEls.forEach(el => {{
+      el.classList.remove('search-match');
+      if (q && el.dataset.label.toLowerCase().includes(q)) el.classList.add('search-match');
+    }});
+  }});
+
+  // Fragment collapse
+  let fragmentsVisible = true;
+  document.getElementById('toggle-fragments').onclick = () => {{
+    fragmentsVisible = !fragmentsVisible;
+    svg.querySelectorAll('[data-frag]').forEach(el => {{
+      el.style.display = fragmentsVisible ? '' : 'none';
+    }});
+  }};
+
+  // Click fragment header to collapse/expand
+  svg.querySelectorAll('.frag-header').forEach(el => {{
+    el.addEventListener('click', () => {{
+      const id = el.dataset.fragId;
+      const children = svg.querySelectorAll(`[data-frag-parent="${{id}}"]`);
+      const isHidden = el.dataset.collapsed === 'true';
+      children.forEach(c => c.style.display = isHidden ? '' : 'none');
+      el.dataset.collapsed = isHidden ? 'false' : 'true';
+      el.style.opacity = isHidden ? '1' : '0.5';
+    }});
+  }});
+}})();
+</script>
+</body>
+</html>"""
+
+
+def to_sequence_html(interactions: Interactions, title: str = "") -> str:
+    """Render an interactive HTML page with the sequence SVG embedded."""
+    svg = to_sequence_svg(interactions, title=title)
+    return _SEQ_HTML_TEMPLATE.format(title=title or "Sequence Diagram", svg=svg)
+
+
+# ── Multi-file analysis ───────────────────────────────────────────────
+
+
+def _build_import_actor_map(tree: ast.Module) -> dict[str, str]:
+    """Map imported names to their source module actor hints.
+
+    ``from core.planner import generate_plan`` → {"generate_plan": "Planner"}
+    ``from tools.llm import llm_complete`` → {"llm_complete": "LLM"}
+    """
+    mapping: dict[str, str] = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ImportFrom) and node.module:
+            mod_low = node.module.lower()
+            actor_hint = None
+            for hint in _ACTOR_NAME_HINTS:
+                if hint in mod_low:
+                    actor_hint = hint
+                    break
+            if actor_hint is None:
+                continue
+            # Derive actor name from module path
+            actor = "Agent"
+            for seg in reversed(node.module.split(".")):
+                if actor_hint in seg.lower():
+                    actor = _re.sub(r"[ _-]?agents?$", "", seg, flags=_re.IGNORECASE)
+                    break
+            actor = actor.replace("_", " ").strip().title() or "Agent"
+            if actor.lower() == "llm":
+                actor = "LLM"
+            for alias in node.names:
+                mapping[alias.asname or alias.name] = actor
+    return mapping
+
+
+def merge_interactions(
+    interactions_list: list[Interactions],
+    *,
+    title: str = "Merged Sequence",
+) -> Interactions:
+    """Merge multiple Interactions into one, deduplicating actors/messages."""
+    merged = Interactions()
+    seen_actors: set[str] = set()
+    seen_messages: set[tuple[str, str, str]] = set()
+
+    for ix in interactions_list:
+        for actor in ix.actors:
+            if actor not in seen_actors:
+                merged.actors.append(actor)
+                seen_actors.add(actor)
+        for msg in ix.messages:
+            key = (msg.sender, msg.receiver, msg.label)
+            if key not in seen_messages:
+                merged.messages.append(msg)
+                seen_messages.add(key)
+        for frag in ix.fragments:
+            merged.fragments.append(frag)
+
+    merged.messages.sort(key=lambda m: m.line)
+    return merged
+
+
+def extract_interactions_multi(
+    paths: list[str | Path],
+    *,
+    default_sender: str | None = None,
+    profile: str | Profile | None = None,
+) -> Interactions:
+    """Extract and merge interactions from multiple Python files.
+
+    Each file is parsed independently; imports are tracked to resolve
+    cross-file actor references.
+    """
+    all_ix: list[Interactions] = []
+    for p in paths:
+        path = Path(p)
+        if not path.exists():
+            continue
+        source = path.read_text(encoding="utf-8")
+        tree = ast.parse(source)
+
+        # Build import→actor map for cross-file resolution
+        import_map = _build_import_actor_map(tree)
+
+        ix = extract_interactions(
+            source, default_sender=default_sender, profile=profile,
+        )
+
+        # Remap function-based senders using the import map
+        for msg in ix.messages:
+            if msg.sender in import_map:
+                msg.sender = import_map[msg.sender]
+            if msg.receiver in import_map:
+                msg.receiver = import_map[msg.receiver]
+
+        all_ix.append(ix)
+
+    return merge_interactions(all_ix)
+
+
+def extract_interactions_from_dir(
+    directory: str | Path,
+    *,
+    default_sender: str | None = None,
+    profile: str | Profile | None = None,
+    pattern: str = "*.py",
+) -> Interactions:
+    """Extract interactions from all matching Python files in a directory."""
+    dir_path = Path(directory)
+    files = sorted(
+        p for p in dir_path.rglob(pattern)
+        if p.is_file() and "__pycache__" not in str(p)
+    )
+    return extract_interactions_multi(
+        files, default_sender=default_sender, profile=profile,
+    )

@@ -25,7 +25,10 @@ from agentflow.sequence import (
 # Valid Python identifiers
 IDENT = st.from_regex(r"[A-Za-z_][A-Za-z0-9_]{0,20}", fullmatch=True).filter(
     lambda s: s not in {"True", "False", "None", "and", "or", "not", "if", "else",
-                         "while", "for", "class", "def", "return", "import", "from"}
+                         "while", "for", "class", "def", "return", "import", "from",
+                         "as", "try", "except", "finally", "with", "lambda", "yield",
+                         "global", "nonlocal", "assert", "del", "pass", "break",
+                         "continue", "raise", "in", "is", "async", "await"}
 )
 
 # Simple expressions that are always valid Python

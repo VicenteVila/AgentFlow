@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "agentflow"
-version = "1.9.0"
-description = "Parse and visualize AI agent control flows as Excalidraw diagrams and SVG"
+version = "2.0.0"
+description = "Parse and visualize AI agent control flows as Excalidraw, SVG, Mermaid, HTML, ASCII, DOT, and sequence diagrams"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"
 authors = [{ name = "Vicente Vila", email = "vicentevilaramirez@gmail.com" }]
-keywords = ["excalidraw", "flowchart", "ai-agent", "visualization", "diagram", "svg"]
+keywords = ["excalidraw", "flowchart", "ai-agent", "visualization", "diagram", "svg", "sequence-diagram", "mermaid"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
@@ -21,6 +21,11 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Visualization",
 ]
+
+[project.urls]
+Homepage = "https://github.com/VicenteVila/AgentFlow"
+Repository = "https://github.com/VicenteVila/AgentFlow"
+Issues = "https://github.com/VicenteVila/AgentFlow/issues"
 
 dependencies = []
 

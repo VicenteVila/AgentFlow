@@ -13,12 +13,16 @@ from agentflow.repo import build_repo_overview, collect_python_files
 from agentflow.sequence import (
     extract_from_file,
     extract_interactions,
+    extract_interactions_from_dir,
+    extract_interactions_multi,
+    merge_interactions,
     to_mermaid_sequence,
+    to_sequence_html,
     to_sequence_svg,
 )
 from agentflow.svg import save_svg, to_svg
 
-__version__ = "1.9.0"
+__version__ = "2.0.0"
 __all__ = [
     "Edge",
     "FlowGraph",
@@ -47,6 +51,10 @@ __all__ = [
     "to_html",
     "to_mermaid",
     "to_mermaid_sequence",
+    "to_sequence_html",
     "to_sequence_svg",
     "to_svg",
+    "extract_interactions_from_dir",
+    "extract_interactions_multi",
+    "merge_interactions",
 ]

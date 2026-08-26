@@ -1431,3 +1431,137 @@ def test_all_profiles_in_registry():
     assert "langchain" in PROFILES
     assert "crewai" in PROFILES
     assert "autogen" in PROFILES
+
+
+# ── v2.0: multi-file sequence analysis ────────────────────────────────
+
+def test_merge_interactions_dedup():
+    from agentflow.sequence import Interactions, Message, merge_interactions
+
+    ix1 = Interactions(
+        actors=["A", "B"],
+        messages=[Message("A", "B", "do()", 1)],
+    )
+    ix2 = Interactions(
+        actors=["B", "C"],
+        messages=[Message("A", "B", "do()", 1), Message("B", "C", "fix()", 2)],
+    )
+    merged = merge_interactions([ix1, ix2])
+    assert "A" in merged.actors
+    assert "B" in merged.actors
+    assert "C" in merged.actors
+    assert len(merged.messages) == 2  # do() deduped
+
+
+def test_multi_file_sequence(tmp_path):
+    from agentflow.sequence import extract_interactions_multi
+
+    f1 = tmp_path / "orchestrator.py"
+    f1.write_text(
+        "from planner import generate_plan\n"
+        "class Orchestrator:\n"
+        "    def run(self):\n"
+        "        generate_plan('task')\n"
+    )
+    f2 = tmp_path / "planner.py"
+    f2.write_text(
+        "from tools.llm import llm_complete\n"
+        "class PlannerAgent:\n"
+        "    def generate_plan(self, task):\n"
+        "        llm_complete('plan this')\n"
+    )
+    ix = extract_interactions_multi([f1, f2])
+    # Should have actors from both files
+    actors_lower = [a.lower() for a in ix.actors]
+    assert any("orchestrator" in a or "planner" in a for a in actors_lower)
+
+
+def test_extract_from_dir(tmp_path):
+    from agentflow.sequence import extract_interactions_from_dir
+
+    (tmp_path / "agent_a.py").write_text(
+        "class AgentA:\n    def run(self):\n        pass\n"
+    )
+    (tmp_path / "agent_b.py").write_text(
+        "class AgentB:\n    def run(self):\n        pass\n"
+    )
+    (tmp_path / "not_python.txt").write_text("ignore me\n")
+    ix = extract_interactions_from_dir(tmp_path)
+    actors_lower = [a.lower() for a in ix.actors]
+    assert any("agenta" in a or "a" in a for a in actors_lower)
+    assert any("agentb" in a or "b" in a for a in actors_lower)
+
+
+def test_multi_file_mermaid(tmp_path):
+    from agentflow.sequence import extract_interactions_multi, to_mermaid_sequence
+
+    f1 = tmp_path / "orch.py"
+    f1.write_text(
+        "from planner import run_planner\n"
+        "class Orch:\n    def run(self):\n        run_planner()\n"
+    )
+    f2 = tmp_path / "planner.py"
+    f2.write_text(
+        "def run_planner():\n    pass\n"
+    )
+    ix = extract_interactions_multi([f1, f2])
+    text = to_mermaid_sequence(ix, title="Multi")
+    assert "sequenceDiagram" in text
+
+
+def test_build_import_actor_map():
+    import ast
+
+    from agentflow.sequence import _build_import_actor_map
+
+    src = (
+        "from core.planner import generate_plan\n"
+        "from tools.llm import llm_complete\n"
+        "from memory.store import store_data\n"
+    )
+    tree = ast.parse(src)
+    m = _build_import_actor_map(tree)
+    assert m.get("generate_plan") == "Planner"
+    assert m.get("llm_complete") == "LLM"
+    assert m.get("store_data") == "Memory"
+
+
+# ── v2.0: match/case support ─────────────────────────────────────────
+
+def test_match_case_parsing():
+    """Parser handles Python 3.10+ match/case statements."""
+    from agentflow.parser import parse_source
+
+    src = '''
+class Router:
+    def run(self):
+        match action:
+            case "plan":
+                self.planner.plan()
+            case "debug":
+                self.debugger.fix()
+            case _:
+                pass
+'''
+    graph = parse_source(src)
+    labels = [n.label.lower() for n in graph.nodes]
+    assert any("match" in lbl for lbl in labels)
+    assert any("case" in lbl for lbl in labels)
+
+
+def test_match_case_with_method():
+    """match/case on method call."""
+    from agentflow.parser import parse_source
+
+    src = '''
+class Agent:
+    def run(self):
+        match self.get_action():
+            case "run":
+                self.execute()
+            case "stop":
+                pass
+'''
+    graph = parse_source(src)
+    labels = [n.label.lower() for n in graph.nodes]
+    assert any("match" in lbl for lbl in labels)

@@ -239,6 +239,8 @@ def _parse_block(ctx: ParseContext, stmts: list[ast.stmt], parent_id: str,
             current = _parse_assign(ctx, stmt, current)
         elif isinstance(stmt, ast.Try):
             current = _parse_try(ctx, stmt, current, depth)
+        elif hasattr(ast, "Match") and isinstance(stmt, ast.Match):
+            current = _parse_match(ctx, stmt, current, depth)
         elif isinstance(stmt, _FUNC_TYPES):
             current = _parse_local_function(stmt, ctx.graph, current)
         elif isinstance(stmt, ast.AsyncFor):
@@ -386,6 +388,35 @@ def _parse_try(ctx: ParseContext, stmt: ast.Try, parent_id: str, depth: int) -> 
     if stmt.finalbody:
         last = _parse_block(ctx, stmt.finalbody, last, depth + 1)
     return last
+
+
+def _parse_match(ctx: ParseContext, stmt: ast.Match, parent_id: str, depth: int) -> str:
+    """Parse a match/case statement (Python 3.10+)."""
+    subject = ast.unparse(stmt.subject) if hasattr(ast, "unparse") else "value"
+    match_id = f"match_{stmt.lineno}"
+    ctx.graph.add_node(Node(
+        id=match_id, label=f"match {subject}",
+        detail=f"structural pattern match\nsubject: {subject}",
+        node_type=NodeType.DECISION,
+        line=stmt.lineno,
+    ))
+    ctx.graph.add_edge(Edge(source=parent_id, target=match_id))
+
+    for case in stmt.cases:
+        pattern = ast.unparse(case.pattern) if hasattr(ast, "unparse") else "case"
+        case_line = case.body[0].lineno if case.body else stmt.lineno
+        case_id = f"case_{case_line}"
+        ctx.graph.add_node(Node(
+            id=case_id, label=f"case {pattern}",
+            detail=f"pattern: {pattern}",
+            node_type=NodeType.DECISION,
+            line=case_line,
+        ))
+        ctx.graph.add_edge(Edge(source=match_id, target=case_id))
+        case_last = _parse_block(ctx, case.body, case_id, depth + 1)
+        if case_last != case_id:
+            ctx.graph.add_edge(Edge(source=case_last, target=match_id))
+    return match_id
 
 
 def _parse_local_function(method: ast.FunctionDef | ast.AsyncFunctionDef, graph: FlowGraph, parent_id: str) -> str:

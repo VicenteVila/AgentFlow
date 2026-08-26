@@ -147,7 +147,7 @@ def main(argv: list[str] | None = None) -> None:
     )
     parser.add_argument(
         "-f", "--format",
-        choices=["excalidraw", "svg", "mermaid", "html", "ascii", "dot", "sequence", "mermaid-seq"],
+        choices=["excalidraw", "svg", "mermaid", "html", "ascii", "dot", "sequence", "mermaid-seq", "sequence-html"],
         default="excalidraw",
         help="Output format (default: excalidraw)",
     )
@@ -295,10 +295,11 @@ def main(argv: list[str] | None = None) -> None:
             sys.stdout.write(to_dot(graph, detail=args.detail, theme=args.theme))
         return
 
-    if args.format in ("sequence", "mermaid-seq"):
+    if args.format in ("sequence", "mermaid-seq", "sequence-html"):
         from agentflow.sequence import (
             extract_from_file,
             to_mermaid_sequence,
+            to_sequence_html,
             to_sequence_svg,
         )
 
@@ -313,6 +314,15 @@ def main(argv: list[str] | None = None) -> None:
                 print(f"OK: {out} ({len(interactions.messages)} messages, {len(interactions.all_participants)} actors)")
             else:
                 sys.stdout.write(svg_text)
+        elif args.format == "sequence-html":
+            html_text = to_sequence_html(interactions, title=title)
+            if args.output:
+                out = Path(args.output)
+                out.parent.mkdir(parents=True, exist_ok=True)
+                out.write_text(html_text, encoding="utf-8")
+                print(f"OK: {out} ({len(interactions.messages)} messages, {len(interactions.all_participants)} actors)")
+            else:
+                sys.stdout.write(html_text)
         else:
             mmd = to_mermaid_sequence(interactions, title=title)
             if args.output:
