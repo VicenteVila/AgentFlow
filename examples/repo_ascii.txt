@@ -1,0 +1,185 @@
+Flow: Repo: cogniteam
+========================================
+Nodes: 61  Edges: 60
+
+    [START] Start
+      ──▶ Repair V2
+
+    [LOOP] Repair V2
+      ──▶ Orchestrator
+
+    [LOOP] Orchestrator
+      ──▶ Planner
+
+    [PROCESS] Planner
+      ──▶ Session
+
+    [PROCESS] Session
+      ──▶ Parse Agent Skills
+
+    [LOOP] Parse Agent Skills
+      ──▶ Agent
+
+    [LOOP] Agent
+      ──▶ Loader
+
+    [LOOP] Loader
+      ──▶ Operations
+
+    [LOOP] Operations
+      ──▶ Operations
+
+    [PROCESS] Operations
+      ──▶ Api
+
+    [PROCESS] Api
+      ──▶ Cocoguide
+
+    [PROCESS] Cocoguide
+      ──▶ Pdf
+
+    [PROCESS] Pdf
+      ──▶ Text Artifact
+
+    [PROCESS] Text Artifact
+      ──▶ Tts
+
+    [PROCESS] Tts
+      ──▶ Engine
+
+    [LOOP] Engine
+      ──▶ Proposals
+
+    [PROCESS] Proposals
+      ──▶ Terminal
+
+    [PROCESS] Terminal
+      ──▶ Analyze
+
+    [LOOP] Analyze
+      ──▶ Combine
+
+    [LOOP] Combine
+      ──▶ Css
+
+    [PROCESS] Css
+      ──▶ Fix
+
+    [PROCESS] Fix
+      ──▶ Html
+
+    [PROCESS] Html
+      ──▶ Js
+
+    [PROCESS] Js
+      ──▶ Validate
+
+    [PROCESS] Validate
+      ──▶ Llm
+
+    [PROCESS] Llm
+      ──▶ Ratelimit
+
+    [PROCESS] Ratelimit
+      ──▶  Brave
+
+    [LOOP]  Brave
+      ──▶  Cse
+
+    [PROCESS]  Cse
+      ──▶ Browse
+
+    [LOOP] Browse
+      ──▶ Extract
+
+    [PROCESS] Extract
+      ──▶ Search
+
+    [LOOP] Search
+      ──▶ Fs
+
+    [PROCESS] Fs
+      ──▶ Io
+
+    [PROCESS] Io
+      ──▶ Security
+
+    [PROCESS] Security
+      ──▶ Cogniteam Integration
+
+    [LOOP] Cogniteam Integration
+      ──▶ Deterministic Cage
+
+    [LOOP] Deterministic Cage
+      ──▶ Rules Loader
+
+    [PROCESS] Rules Loader
+      ──▶ World Model Layer
+
+    [PROCESS] World Model Layer
+      ──▶ Yaml Loader
+
+    [LOOP] Yaml Loader
+      ──▶ Crear Proyecto Godot
+
+    [PROCESS] Crear Proyecto Godot
+      ──▶ Main
+
+    [LOOP] Main
+      ──▶ Check Coverage
+
+    [LOOP] Check Coverage
+      ──▶ Check Drift
+
+    [LOOP] Check Drift
+      ──▶ Check Regression
+
+    [LOOP] Check Regression
+      ──▶ Rescue Orphans
+
+    [LOOP] Rescue Orphans
+      ──▶ Run Memory Test
+
+    [PROCESS] Run Memory Test
+      ──▶ Test Fastslow
+
+    [LOOP] Test Fastslow
+      ──▶ Test Graphrag
+
+    [LOOP] Test Graphrag
+      ──▶ Test Grounding Gate
+
+    [SUBPROC] Test Grounding Gate
+      ──▶ Test Hardened Gates
+
+    [SUBPROC] Test Hardened Gates
+      ──▶ Test Hmem
+
+    [SUBPROC] Test Hmem
+      ──▶ Test Local Recovery
+
+    [SUBPROC] Test Local Recovery
+      ──▶ Test Register Agent
+
+    [SUBPROC] Test Register Agent
+      ──▶ Test Repair Step
+
+    [SUBPROC] Test Repair Step
+      ──▶ Test Repair V2
+
+    [SUBPROC] Test Repair V2
+      ──▶ Test Scoping
+
+    [SUBPROC] Test Scoping
+      ──▶ Test Parse Agent Skills
+
+    [SUBPROC] Test Parse Agent Skills
+      ──▶ Test Skills
+
+    [LOOP] Test Skills
+      ──▶ Test Structure Gate
+
+    [SUBPROC] Test Structure Gate
+      ──▶ End
+
+    [END] End

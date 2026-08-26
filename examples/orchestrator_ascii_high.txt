@@ -1,0 +1,457 @@
+Flow: Flow: orchestrator
+========================================
+Nodes: 133  Edges: 139
+
+    [START] Start — Agent.run() invoked
+     ├─ ──▶ Resolve Tool Name
+     ├─ ──▶ Validate Output
+     ├─ ──▶ Seed Skills Once
+     ├─ ──▶ Record Step Skill Usage
+     ├─ ──▶ Get Memory Context
+     ├─ ──▶ Get Artifacts Summary
+     ├─ ──▶ Run Functional Validation
+     ├─ ──▶ Find File In Tree
+     ├─ ──▶ Run Orchestrated Flow
+     ├─ ──▶ Is Transient Error
+     ├─ ──▶ Build Repair Structure Hint
+     ├─ ──▶ Try Local Repair
+     ├─ ──▶ Try Local Repair V2
+     ├─ ──▶ Build Completed Summary
+     ├─ ──▶ Store In Memory
+     └─ ──▶ Save All Memory
+
+    [END] End — db.close()
+    [SUBPROC] Resolve Tool Name
+      ──▶ raw_name in available
+
+    [SUBPROC] Validate Output
+      ──▶ not expected_format
+
+    [SUBPROC] Seed Skills Once
+    [SUBPROC] Record Step Skill Usage
+    [SUBPROC] Get Memory Context
+      ──▶ ctx.get('results')
+
+    [SUBPROC] Get Artifacts Summary
+      ──▶ For loop
+
+    [SUBPROC] Run Functional Validation
+      ──▶ not html_files
+
+    [SUBPROC] Find File In Tree
+    [SUBPROC] Run Orchestrated Flow
+      ──▶ memory_enabled
+
+    [SUBPROC] Is Transient Error
+    [SUBPROC] Build Repair Structure Hint
+    [SUBPROC] Try Local Repair
+      ──▶ not tool_names
+
+    [SUBPROC] Try Local Repair V2
+      ──▶ NOT repair_max_attempts?
+
+    [SUBPROC] Build Completed Summary
+      ──▶ For each s in completed_steps
+
+    [SUBPROC] Store In Memory
+    [SUBPROC] Save All Memory
+    [DECISION] raw_name in available — Condición en línea 135:
+      ──▶ m and m.group(1) in
+available
+
+    [DECISION] not expected_format — Condición en línea 146:
+      ──▶ expected_format == 'json'
+and isinstance(check, str)
+
+    [DECISION] ctx.get('results') — Condición en línea 271:
+      ──▶ temporal
+
+    [LOOP] For loop
+      ──▶ isinstance(val, dict)
+
+    [DECISION] not html_files — Condición en línea 340:
+      ──▶ For each fname in html_files
+
+    [DECISION] memory_enabled — Condición en línea 404:
+      ──▶ memory_context
+
+    [DECISION] not tool_names — Condición en línea 1017:
+      ──▶ atype == 'RETRY_SAME'
+
+    [DECISION] NOT repair_max_attempts? — Niega repair_max_attempts
+      ──▶ action == 'insert'
+
+    [LOOP] For each s in completed_steps
+    [DECISION] m and m.group(1) in
+available — Condición en línea 138:
+    [DECISION] expected_format == 'json'
+and isinstance(check, str) — Condición en línea 152:
+      ──▶ isinstance(output, dict) and
+'success' in output and ('message'
+
+    [DECISION] temporal — Condición en línea 275:
+      ──▶ gctx.get('global_communities')
+
+    [DECISION] isinstance(val, dict) — Condición en línea 316:
+      ──▶ isinstance(val, str)
+
+    [LOOP] For each fname in html_files
+      ──▶ result.get('passed')
+
+    [DECISION] memory_context — Condición en línea 407:
+      ──▶ artifacts_dir is None
+
+    [DECISION] atype == 'RETRY_SAME' — Condición en línea 1046:
+      ──▶ atype == 'PATCH_INPUTS'
+
+    [DECISION] action == 'insert' — Condición en línea 1147:
+      ──▶ not isinstance(prep_step,
+dict) or not
+
+    [DECISION] isinstance(output, dict) and
+'success' in output and ('message' — Condición en línea 160:
+     ├─ ──▶ expected_format ==
+'tool_response_dict'
+     └─ ──▶ isinstance(output, dict) and
+'result' in output
+
+    [DECISION] gctx.get('global_communities') — Condición en línea 284:
+      ──▶ summaries
+
+    [DECISION] isinstance(val, str) — Condición en línea 318:
+      ──▶ content and len(content) >
+20
+
+    [DECISION] result.get('passed') — Condición en línea 351:
+      ──▶ For each err
+
+    [DECISION] artifacts_dir is None — Condición en línea 417:
+      ──▶ Loop
+
+    [DECISION] atype == 'PATCH_INPUTS' — Condición en línea 1049:
+      ──▶ isinstance(new_inputs, dict)
+and dict)
+
+    [DECISION] not isinstance(prep_step,
+dict) or not — Condición en línea 1149:
+      ──▶ inserts >=
+settings.repair_max_inserted_prep
+
+    [DECISION] expected_format ==
+'tool_response_dict' — Condición en línea 161:
+      ──▶ expected_format == 'json'
+
+    [DECISION] isinstance(output, dict) and
+'result' in output — Condición en línea 170:
+     ├─ ──▶ expected_format == 'json'
+     └─ ──▶ isinstance(output, dict) and
+'success' in output
+
+    [DECISION] summaries — Condición en línea 288:
+      ──▶ sctx.get('relevant_skills')
+
+    [DECISION] content and len(content) >
+20 — Condición en línea 322:
+      -- loop --> For loop
+
+    [LOOP] For each err
+      ──▶ result.get('screenshot_path')
+
+    [LOOP] Loop
+     ├─ ──▶ replan_count > 0
+     └─ ──▶ execution_success and
+world_model and
+
+    [DECISION] isinstance(new_inputs, dict)
+and dict) — Condición en línea 1051:
+      ──▶ atype == 'PATCH_TOOL'
+
+    [DECISION] inserts >=
+settings.repair_max_inserted_prep — Condición en línea 1152:
+      ──▶ isinstance(steps[step_idx],
+dict)
+
+    [DECISION] expected_format == 'json' — Condición en línea 163:
+      ──▶ output.get('success')
+
+    [DECISION] expected_format == 'json' — Condición en línea 171:
+    [DECISION] isinstance(output, dict) and
+'success' in output — Condición en línea 175:
+      ──▶ output.get('success')
+
+    [DECISION] sctx.get('relevant_skills') — Condición en línea 297:
+      ──▶ skills_list
+
+    [DECISION] result.get('screenshot_path') — Condición en línea 359:
+      -- loop --> For each fname in html_files
+
+    [DECISION] replan_count > 0 — Condición en línea 442:
+      ──▶ failed_plan_summary
+
+    [DECISION] execution_success and
+world_model and — Condición en línea 866:
+      ──▶ file_keywords
+
+    [DECISION] atype == 'PATCH_TOOL' — Condición en línea 1056:
+      ──▶ new_tool in tool_map and
+new_tool !=
+
+    [DECISION] isinstance(steps[step_idx],
+dict) — Condición en línea 1164:
+      ──▶ For each i
+
+    [DECISION] output.get('success') — Condición en línea 165:
+    [DECISION] output.get('success') — Condición en línea 176:
+      ──▶ expected_format == 'html'
+
+    [DECISION] skills_list — Condición en línea 302:
+      ──▶ parts
+
+    [DECISION] failed_plan_summary — Condición en línea 444:
+      ──▶ continuation_mode
+
+    [DECISION] file_keywords — Condición en línea 868:
+      ──▶ For each fname in file_keywords
+
+    [DECISION] new_tool in tool_map and
+new_tool != — Condición en línea 1058:
+      ──▶ atype == 'INSERT_BEFORE'
+
+    [LOOP] For each i
+     ├─ ──▶ isinstance(s, dict) and
+isinstance(s.get('step'), int)
+     └─ ──▶ action == 'retry'
+
+    [DECISION] expected_format == 'html' — Condición en línea 181:
+      ──▶ expected_format in ('css',
+'js', 'javascript', 'ts',
+
+    [DECISION] parts — Condición en línea 307:
+    [DECISION] continuation_mode — Condición en línea 449:
+      ──▶ wm_status == 'failed'
+
+    [LOOP] For each fname in file_keywords
+     ├─ ──▶ not
+_find_file_in_tree(artifacts_dir,
+     └─ ──▶ missing
+
+    [DECISION] atype == 'INSERT_BEFORE' — Condición en línea 1065:
+    [DECISION] isinstance(s, dict) and
+isinstance(s.get('step'), int) — Condición en línea 1175:
+      -- loop --> For each i
+
+    [DECISION] action == 'retry' — Condición en línea 1179:
+    [DECISION] expected_format in ('css',
+'js', 'javascript', 'ts', — Condición en línea 185:
+      ──▶ expected_format == 'text'
+
+    [DECISION] wm_status == 'failed' — Condición en línea 471:
+      ──▶ plan_result.get('action') ==
+'RECLARIFY'
+
+    [DECISION] not
+_find_file_in_tree(artifacts_dir, — Condición en línea 871:
+      -- loop --> For each fname in file_keywords
+
+    [DECISION] missing — Condición en línea 873:
+      ──▶ execution_success and domain
+and archetype
+
+    [DECISION] expected_format == 'text' — Condición en línea 187:
+      ──▶ expected_format ==
+'json_string'
+
+    [DECISION] plan_result.get('action') ==
+'RECLARIFY' — Condición en línea 474:
+      ──▶ not plan or not
+isinstance(plan.get('steps'), or
+
+    [DECISION] execution_success and domain
+and archetype — Condición en línea 880:
+      ──▶ not v['passed']
+
+    [DECISION] expected_format ==
+'json_string' — Condición en línea 189:
+     ├─ ──▶ valid
+     └─ ──▶ expected_format == 'json'
+
+    [DECISION] not plan or not
+isinstance(plan.get('steps'), or — Condición en línea 487:
+      ──▶ replan_count <
+max_replanning
+
+    [DECISION] not v['passed'] — Condición en línea 886:
+     ├─ YES ─▶ For each e
+     └─ ──▶ execution_success
+
+    [DECISION] valid — Condición en línea 191:
+    [DECISION] expected_format == 'json' — Condición en línea 197:
+      ──▶ expected_format == 'boolean'
+
+    [DECISION] replan_count <
+max_replanning — Condición en línea 489:
+      ──▶ continuation_mode
+
+    [LOOP] For each e
+    [DECISION] execution_success — Condición en línea 898:
+      ──▶ quality['total_conflicts'] >
+0
+
+    [DECISION] expected_format == 'boolean' — Condición en línea 199:
+      ──▶ expected_format ==
+'tool_response_dict'
+
+    [DECISION] continuation_mode — Condición en línea 502:
+      ──▶ For loop
+
+    [DECISION] quality['total_conflicts'] >
+0 — Condición en línea 901:
+     ├─ ──▶ For each fwc
+     └─ ──▶ quality['files_checked'] > 0
+
+    [DECISION] expected_format ==
+'tool_response_dict' — Condición en línea 201:
+      ──▶ not valid
+
+    [LOOP] For loop
+     ├─ ──▶ isinstance(_s, dict)
+     └─ ──▶ domain and archetype
+
+    [LOOP] For each fwc
+      ──▶ For each c
+
+    [DECISION] quality['files_checked'] > 0 — Condición en línea 907:
+      ──▶ execution_success
+
+    [DECISION] not valid — Condición en línea 206:
+    [DECISION] isinstance(_s, dict) — Condición en línea 504:
+      -- loop --> For loop
+
+    [DECISION] domain and archetype — Condición en línea 511:
+      ──▶ continuation_mode
+
+    [LOOP] For each c
+      -- loop --> For each fwc
+
+    [DECISION] execution_success — Condición en línea 911:
+      ──▶ calibration_store is not
+None and domain and archetype and
+
+    [DECISION] continuation_mode — Condición en línea 516:
+     ├─ YES ─▶ not structure_gate['passed']
+     └─ ──▶ not structure_gate['passed']
+
+    [DECISION] calibration_store is not
+None and domain and archetype and — Condición en línea 915:
+      ──▶ memory_enabled
+
+    [DECISION] not structure_gate['passed'] — Condición en línea 521:
+    [DECISION] not structure_gate['passed'] — Condición en línea 531:
+      ──▶ added
+
+    [DECISION] memory_enabled — Condición en línea 923:
+      ──▶ flow_failed
+
+    [DECISION] added — Condición en línea 537:
+      ──▶ not structure_gate['passed']
+
+    [DECISION] flow_failed — Condición en línea 931:
+      ──▶ not flow_failed and domain
+and archetype
+
+    [DECISION] not structure_gate['passed'] — Condición en línea 545:
+     ├─ YES ─▶ replan_count <
+max_replanning
+     └─ ──▶ Loop
+
+    [DECISION] not flow_failed and domain
+and archetype — Condición en línea 953:
+    [DECISION] replan_count <
+max_replanning — Condición en línea 547:
+    [LOOP] Loop
+     ├─ ──▶ flow_failed
+     └─ ──▶ requested_continuation
+
+    [DECISION] flow_failed — Condición en línea 569:
+      ──▶ not isinstance(step_info,
+dict)
+
+    [DECISION] requested_continuation — Condición en línea 775:
+      ──▶ step_cap_exceeded
+
+    [DECISION] not isinstance(step_info,
+dict) — Condición en línea 572:
+      ──▶ isinstance(step_num, int)
+and step_num < resume_from
+
+    [DECISION] step_cap_exceeded — Condición en línea 778:
+      ──▶ flow_failed and replan_count
+< max_replanning
+
+    [DECISION] isinstance(step_num, int)
+and step_num < resume_from — Condición en línea 581:
+      ──▶ resolved and resolved !=
+'AgentLogic'
+
+    [DECISION] flow_failed and replan_count
+< max_replanning — Condición en línea 781:
+      ──▶ flow_failed
+
+    [DECISION] resolved and resolved !=
+'AgentLogic' — Condición en línea 599:
+      ──▶ step_info.get('step_id') or
+tool_name
+
+    [DECISION] flow_failed — Condición en línea 786:
+      ──▶ world_model and
+world_model.get('keywords')
+
+    [DECISION] step_info.get('step_id') or
+tool_name — Condición en línea 706:
+      ──▶ not step_ok
+
+    [DECISION] world_model and
+world_model.get('keywords') — Condición en línea 794:
+     ├─ ──▶ Condition?
+     └─ ──▶ execution_success and domain
+and archetype
+
+    [DECISION] not step_ok — Condición en línea 709:
+      ──▶ step_attempts == 0 and
+
+    [DECISION] Condition? — Condición en línea 813:
+      ──▶ grounding_result.should_replan()
+
+    [DECISION] execution_success and domain
+and archetype — Condición en línea 834:
+      ──▶ not _gate_v['passed']
+
+    [DECISION] step_attempts == 0 and — Condición en línea 715:
+      ──▶ settings.local_recovery and
+step_attempts <= local_attempts
+
+    [DECISION] grounding_result.should_replan() — Condición en línea 815:
+      ──▶ grounding_result.should_abort()
+
+    [DECISION] not _gate_v['passed'] — Condición en línea 844:
+     ├─ YES ─▶ replan_count <
+max_replanning
+     └─ loop ─▶ Loop
+
+    [DECISION] settings.local_recovery and
+step_attempts <= local_attempts — Condición en línea 721:
+      ──▶ action == 'retry'
+
+    [DECISION] grounding_result.should_abort() — Condición en línea 825:
+    [DECISION] replan_count <
+max_replanning — Condición en línea 847:
+    [DECISION] action == 'retry' — Condición en línea 743:
+      ──▶ action == 'insert'
+
+    [DECISION] action == 'insert' — Condición en línea 746:
+      ──▶ step_attempts <
+max_replanning
+
+    [DECISION] step_attempts <
+max_replanning — Condición en línea 752:
+      -- loop --> Loop

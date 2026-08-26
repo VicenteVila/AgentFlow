@@ -1034,3 +1034,104 @@ def test_swimlane_cli(tmp_path=None):
         assert result.returncode == 0
         assert "flowchart TD" in out.read_text()
         assert "subgraph" in out.read_text()
+
+
+# ── V5: ASCII, DOT, palettes ──────────────────────────────────────────
+
+
+def test_to_ascii():
+    from agentflow.ascii import to_ascii
+
+    g = FlowGraph(title="ASCII")
+    g.add_node(Node(id="a", label="Start", node_type=NodeType.START))
+    g.add_node(Node(id="b", label="Do it", node_type=NodeType.PROCESS))
+    g.add_edge(Edge(source="a", target="b", label="go"))
+
+    text = to_ascii(g)
+    assert "Flow: ASCII" in text
+    assert "START" in text
+    assert "Do it" in text
+    assert "go" in text
+
+
+def test_to_ascii_detail_levels():
+    from agentflow.ascii import to_ascii
+
+    g = FlowGraph(title="Detail ASCII")
+    g.add_node(Node(id="a", label="A", detail="line1\nline2", node_type=NodeType.PROCESS))
+    low = to_ascii(g, detail="low")
+    high = to_ascii(g, detail="high")
+    assert len(high) > len(low)
+    assert "line1" not in low
+    assert "line1" in high
+
+
+def test_to_dot():
+    from agentflow.dot import to_dot
+
+    g = FlowGraph(title="DOT")
+    g.add_node(Node(id="a", label="Start", node_type=NodeType.START))
+    g.add_node(Node(id="b", label="Decide?", node_type=NodeType.DECISION))
+    g.add_edge(Edge(source="a", target="b", label="YES"))
+
+    dot = to_dot(g)
+    assert 'digraph "DOT"' in dot
+    assert "Start" in dot
+    assert "Decide?" in dot
+    assert "YES" in dot
+    assert 'shape=ellipse' in dot
+    assert 'shape=diamond' in dot
+
+
+def test_ascii_dot_cli(tmp_path=None):
+    import subprocess
+    import sys
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        src = Path(tmpdir) / "agent.py"
+        src.write_text("class Agent:\n    def run(self):\n        if x:\n            do_a()\n")
+        for fmt, ext in [("ascii", ".txt"), ("dot", ".dot")]:
+            out = Path(tmpdir) / f"out{ext}"
+            result = subprocess.run(
+                [sys.executable, "-m", "agentflow.cli", "-i", str(src), "-o", str(out), "-f", fmt],
+                capture_output=True, text=True,
+            )
+            assert result.returncode == 0
+            assert out.exists()
+            assert len(out.read_text()) > 20
+
+
+def test_palette_themes():
+    g = FlowGraph(title="Palette")
+    g.add_node(Node(id="a", label="A"))
+    g.add_node(Node(id="b", label="B"))
+    g.add_edge(Edge(source="a", target="b"))
+
+    from agentflow.svg import to_svg
+
+    light = to_svg(g, theme="light")
+    pastel = to_svg(g, theme="pastel")
+    neon = to_svg(g, theme="neon")
+    mono = to_svg(g, theme="mono")
+    # Each theme should produce distinct SVG (different colors)
+    assert light != pastel
+    assert light != neon
+    assert light != mono
+    assert "#fffbeb" in pastel or "#f0fdf4" in pastel  # pastel canvas or node
+    assert "#0a0a0a" in neon
+    assert "#ffffff" in mono or "#f8fafc" in mono
+
+    # Palette alias via CLI
+    import subprocess
+    import sys
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        src = Path(tmpdir) / "a.py"
+        src.write_text("class Agent:\n    def run(self):\n        pass\n")
+        out = Path(tmpdir) / "out.svg"
+        result = subprocess.run(
+            [sys.executable, "-m", "agentflow.cli", "-i", str(src), "-o", str(out), "--palette", "neon"],
+            capture_output=True, text=True,
+        )
+        assert result.returncode == 0
+        assert "#0a0a0a" in out.read_text() or "#00ff88" in out.read_text()

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "agentflow"
-version = "1.6.0"
+version = "1.7.0"
 description = "Parse and visualize AI agent control flows as Excalidraw diagrams and SVG"
 readme = "README.md"
 license = "MIT"

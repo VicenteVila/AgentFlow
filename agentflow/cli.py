@@ -30,11 +30,14 @@ def _handle_diff(argv: list[str]) -> None:
     parser.add_argument("-f", "--format", choices=["excalidraw", "svg", "mermaid", "html"], default="excalidraw")
     parser.add_argument("--profile", default="generic")
     parser.add_argument("-t", "--title", default=None)
-    parser.add_argument("--theme", choices=["light", "dark"], default="light")
+    parser.add_argument("--theme", choices=["light", "dark", "pastel", "neon", "mono"], default="light")
+    parser.add_argument("--palette", choices=["light", "dark", "pastel", "neon", "mono"], default=None, help="Alias for --theme")
     parser.add_argument("--no-legend", action="store_true")
     parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--detail", choices=["low", "med", "high"], default="high")
     args = parser.parse_args(argv)
+    if args.palette:
+        args.theme = args.palette
 
     old_p = Path(args.old)
     new_p = Path(args.new)
@@ -82,6 +85,22 @@ def _handle_diff(argv: list[str]) -> None:
         else:
             sys.stdout.write(to_html(graph, layout=args.layout, theme=args.theme, legend=not args.no_legend, detail=args.detail))
         return
+    if args.format == "ascii":
+        from agentflow.ascii import save_ascii, to_ascii
+        if args.output:
+            path = save_ascii(graph, args.output, detail=args.detail)
+            print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
+        else:
+            sys.stdout.write(to_ascii(graph, detail=args.detail))
+        return
+    if args.format == "dot":
+        from agentflow.dot import save_dot, to_dot
+        if args.output:
+            path = save_dot(graph, args.output, detail=args.detail)
+            print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
+        else:
+            sys.stdout.write(to_dot(graph, detail=args.detail))
+        return
     from agentflow.excalidraw import save_excalidraw, to_excalidraw
 
     if args.output:
@@ -128,7 +147,7 @@ def main(argv: list[str] | None = None) -> None:
     )
     parser.add_argument(
         "-f", "--format",
-        choices=["excalidraw", "svg", "mermaid", "html"],
+        choices=["excalidraw", "svg", "mermaid", "html", "ascii", "dot"],
         default="excalidraw",
         help="Output format (default: excalidraw)",
     )
@@ -145,9 +164,15 @@ def main(argv: list[str] | None = None) -> None:
     )
     parser.add_argument(
         "--theme",
-        choices=["light", "dark"],
+        choices=["light", "dark", "pastel", "neon", "mono"],
         default="light",
         help="Color theme (default: light)",
+    )
+    parser.add_argument(
+        "--palette",
+        choices=["light", "dark", "pastel", "neon", "mono"],
+        default=None,
+        help="Alias for --theme (overrides --theme if given)",
     )
     parser.add_argument(
         "--no-legend",
@@ -178,6 +203,8 @@ def main(argv: list[str] | None = None) -> None:
     )
 
     args = parser.parse_args(argv)
+    if getattr(args, "palette", None):
+        args.theme = args.palette
 
     input_path = Path(args.input)
     if not input_path.exists():
@@ -246,6 +273,26 @@ def main(argv: list[str] | None = None) -> None:
             print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
         else:
             sys.stdout.write(to_html(graph, layout=args.layout, theme=args.theme, legend=not args.no_legend, detail=args.detail))
+        return
+
+    if args.format == "ascii":
+        from agentflow.ascii import save_ascii, to_ascii
+
+        if args.output:
+            path = save_ascii(graph, args.output, detail=args.detail)
+            print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
+        else:
+            sys.stdout.write(to_ascii(graph, detail=args.detail))
+        return
+
+    if args.format == "dot":
+        from agentflow.dot import save_dot, to_dot
+
+        if args.output:
+            path = save_dot(graph, args.output, detail=args.detail, theme=args.theme)
+            print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
+        else:
+            sys.stdout.write(to_dot(graph, detail=args.detail, theme=args.theme))
         return
 
     from agentflow.excalidraw import save_excalidraw, to_excalidraw

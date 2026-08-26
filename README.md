@@ -31,6 +31,13 @@ agentflow -i ./my_repo -f html --detail low -o repo.html
 agentflow diff old.py new.py -o diff.excalidraw
 agentflow diff old.py new.py -f mermaid -o diff.mmd
 
+# Terminal ASCII + Graphviz DOT
+agentflow -i orchestrator.py -f ascii --detail low
+agentflow -i my_agent.py -f dot -o flow.dot   # → dot -Tsvg flow.dot
+
+# Palettes: light | dark | pastel | neon | mono (--palette = alias de --theme)
+agentflow -i my_agent.py -f svg --palette neon -o flow.svg
+
 # SVG export, dark theme, deterministic output
 agentflow -i my_agent.py -f svg --theme dark --seed 42 -o flow.svg
 ```
@@ -49,6 +56,8 @@ agentflow -i my_agent.py -f svg --theme dark --seed 42 -o flow.svg
 - **Diff mode** — `agentflow diff old.py new.py` highlights added/removed/changed nodes (leverages `--seed` determinism).
 - **Interactive HTML** — self-contained `flow.html` with pan/zoom, phase collapse and search (works offline via `file://`).
 - **Deterministic output** — pass `--seed` to get byte-identical files (great for CI diffs).
+- **6 output formats** — excalidraw · svg · mermaid · html · **ascii** (terminal) · **dot** (Graphviz).
+- **5 palettes** — light, dark, pastel, neon, mono via `--palette`.
 - **SVG export** — same geometry, zero dependencies.
 
 ## Profiles
@@ -99,7 +108,7 @@ models.py     Node / Edge / FlowGraph          profiles.py   generic · reaweb �
 ## Development
 
 ```bash
-python -m pytest tests/ -q   # 62 tests, <1s
+python -m pytest tests/ -q   # 71 tests, <1s
 python -m ruff check agentflow tests
 ```
 

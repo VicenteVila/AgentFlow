@@ -1,0 +1,457 @@
+Flow: Flow: orchestrator
+========================================
+Nodes: 133  Edges: 139
+
+    [START] Start
+     ├─ ──▶ Resolve Tool Name
+     ├─ ──▶ Validate Output
+     ├─ ──▶ Seed Skills Once
+     ├─ ──▶ Record Step Skill Usage
+     ├─ ──▶ Get Memory Context
+     ├─ ──▶ Get Artifacts Summary
+     ├─ ──▶ Run Functional Validation
+     ├─ ──▶ Find File In Tree
+     ├─ ──▶ Run Orchestrated Flow
+     ├─ ──▶ Is Transient Error
+     ├─ ──▶ Build Repair Structure Hint
+     ├─ ──▶ Try Local Repair
+     ├─ ──▶ Try Local Repair V2
+     ├─ ──▶ Build Completed Summary
+     ├─ ──▶ Store In Memory
+     └─ ──▶ Save All Memory
+
+    [END] End
+    [SUBPROC] Resolve Tool Name
+      ──▶ raw_name in available
+
+    [SUBPROC] Validate Output
+      ──▶ not expected_format
+
+    [SUBPROC] Seed Skills Once
+    [SUBPROC] Record Step Skill Usage
+    [SUBPROC] Get Memory Context
+      ──▶ ctx.get('results')
+
+    [SUBPROC] Get Artifacts Summary
+      ──▶ For loop
+
+    [SUBPROC] Run Functional Validation
+      ──▶ not html_files
+
+    [SUBPROC] Find File In Tree
+    [SUBPROC] Run Orchestrated Flow
+      ──▶ memory_enabled
+
+    [SUBPROC] Is Transient Error
+    [SUBPROC] Build Repair Structure Hint
+    [SUBPROC] Try Local Repair
+      ──▶ not tool_names
+
+    [SUBPROC] Try Local Repair V2
+      ──▶ NOT repair_max_attempts?
+
+    [SUBPROC] Build Completed Summary
+      ──▶ For each s in completed_steps
+
+    [SUBPROC] Store In Memory
+    [SUBPROC] Save All Memory
+    [DECISION] raw_name in available
+      ──▶ m and m.group(1) in
+available
+
+    [DECISION] not expected_format
+      ──▶ expected_format == 'json'
+and isinstance(check, str)
+
+    [DECISION] ctx.get('results')
+      ──▶ temporal
+
+    [LOOP] For loop
+      ──▶ isinstance(val, dict)
+
+    [DECISION] not html_files
+      ──▶ For each fname in html_files
+
+    [DECISION] memory_enabled
+      ──▶ memory_context
+
+    [DECISION] not tool_names
+      ──▶ atype == 'RETRY_SAME'
+
+    [DECISION] NOT repair_max_attempts?
+      ──▶ action == 'insert'
+
+    [LOOP] For each s in completed_steps
+    [DECISION] m and m.group(1) in
+available
+    [DECISION] expected_format == 'json'
+and isinstance(check, str)
+      ──▶ isinstance(output, dict) and
+'success' in output and ('message'
+
+    [DECISION] temporal
+      ──▶ gctx.get('global_communities')
+
+    [DECISION] isinstance(val, dict)
+      ──▶ isinstance(val, str)
+
+    [LOOP] For each fname in html_files
+      ──▶ result.get('passed')
+
+    [DECISION] memory_context
+      ──▶ artifacts_dir is None
+
+    [DECISION] atype == 'RETRY_SAME'
+      ──▶ atype == 'PATCH_INPUTS'
+
+    [DECISION] action == 'insert'
+      ──▶ not isinstance(prep_step,
+dict) or not
+
+    [DECISION] isinstance(output, dict) and
+'success' in output and ('message'
+     ├─ ──▶ expected_format ==
+'tool_response_dict'
+     └─ ──▶ isinstance(output, dict) and
+'result' in output
+
+    [DECISION] gctx.get('global_communities')
+      ──▶ summaries
+
+    [DECISION] isinstance(val, str)
+      ──▶ content and len(content) >
+20
+
+    [DECISION] result.get('passed')
+      ──▶ For each err
+
+    [DECISION] artifacts_dir is None
+      ──▶ Loop
+
+    [DECISION] atype == 'PATCH_INPUTS'
+      ──▶ isinstance(new_inputs, dict)
+and dict)
+
+    [DECISION] not isinstance(prep_step,
+dict) or not
+      ──▶ inserts >=
+settings.repair_max_inserted_prep
+
+    [DECISION] expected_format ==
+'tool_response_dict'
+      ──▶ expected_format == 'json'
+
+    [DECISION] isinstance(output, dict) and
+'result' in output
+     ├─ ──▶ expected_format == 'json'
+     └─ ──▶ isinstance(output, dict) and
+'success' in output
+
+    [DECISION] summaries
+      ──▶ sctx.get('relevant_skills')
+
+    [DECISION] content and len(content) >
+20
+      -- loop --> For loop
+
+    [LOOP] For each err
+      ──▶ result.get('screenshot_path')
+
+    [LOOP] Loop
+     ├─ ──▶ replan_count > 0
+     └─ ──▶ execution_success and
+world_model and
+
+    [DECISION] isinstance(new_inputs, dict)
+and dict)
+      ──▶ atype == 'PATCH_TOOL'
+
+    [DECISION] inserts >=
+settings.repair_max_inserted_prep
+      ──▶ isinstance(steps[step_idx],
+dict)
+
+    [DECISION] expected_format == 'json'
+      ──▶ output.get('success')
+
+    [DECISION] expected_format == 'json'
+    [DECISION] isinstance(output, dict) and
+'success' in output
+      ──▶ output.get('success')
+
+    [DECISION] sctx.get('relevant_skills')
+      ──▶ skills_list
+
+    [DECISION] result.get('screenshot_path')
+      -- loop --> For each fname in html_files
+
+    [DECISION] replan_count > 0
+      ──▶ failed_plan_summary
+
+    [DECISION] execution_success and
+world_model and
+      ──▶ file_keywords
+
+    [DECISION] atype == 'PATCH_TOOL'
+      ──▶ new_tool in tool_map and
+new_tool !=
+
+    [DECISION] isinstance(steps[step_idx],
+dict)
+      ──▶ For each i
+
+    [DECISION] output.get('success')
+    [DECISION] output.get('success')
+      ──▶ expected_format == 'html'
+
+    [DECISION] skills_list
+      ──▶ parts
+
+    [DECISION] failed_plan_summary
+      ──▶ continuation_mode
+
+    [DECISION] file_keywords
+      ──▶ For each fname in file_keywords
+
+    [DECISION] new_tool in tool_map and
+new_tool !=
+      ──▶ atype == 'INSERT_BEFORE'
+
+    [LOOP] For each i
+     ├─ ──▶ isinstance(s, dict) and
+isinstance(s.get('step'), int)
+     └─ ──▶ action == 'retry'
+
+    [DECISION] expected_format == 'html'
+      ──▶ expected_format in ('css',
+'js', 'javascript', 'ts',
+
+    [DECISION] parts
+    [DECISION] continuation_mode
+      ──▶ wm_status == 'failed'
+
+    [LOOP] For each fname in file_keywords
+     ├─ ──▶ not
+_find_file_in_tree(artifacts_dir,
+     └─ ──▶ missing
+
+    [DECISION] atype == 'INSERT_BEFORE'
+    [DECISION] isinstance(s, dict) and
+isinstance(s.get('step'), int)
+      -- loop --> For each i
+
+    [DECISION] action == 'retry'
+    [DECISION] expected_format in ('css',
+'js', 'javascript', 'ts',
+      ──▶ expected_format == 'text'
+
+    [DECISION] wm_status == 'failed'
+      ──▶ plan_result.get('action') ==
+'RECLARIFY'
+
+    [DECISION] not
+_find_file_in_tree(artifacts_dir,
+      -- loop --> For each fname in file_keywords
+
+    [DECISION] missing
+      ──▶ execution_success and domain
+and archetype
+
+    [DECISION] expected_format == 'text'
+      ──▶ expected_format ==
+'json_string'
+
+    [DECISION] plan_result.get('action') ==
+'RECLARIFY'
+      ──▶ not plan or not
+isinstance(plan.get('steps'), or
+
+    [DECISION] execution_success and domain
+and archetype
+      ──▶ not v['passed']
+
+    [DECISION] expected_format ==
+'json_string'
+     ├─ ──▶ valid
+     └─ ──▶ expected_format == 'json'
+
+    [DECISION] not plan or not
+isinstance(plan.get('steps'), or
+      ──▶ replan_count <
+max_replanning
+
+    [DECISION] not v['passed']
+     ├─ YES ─▶ For each e
+     └─ ──▶ execution_success
+
+    [DECISION] valid
+    [DECISION] expected_format == 'json'
+      ──▶ expected_format == 'boolean'
+
+    [DECISION] replan_count <
+max_replanning
+      ──▶ continuation_mode
+
+    [LOOP] For each e
+    [DECISION] execution_success
+      ──▶ quality['total_conflicts'] >
+0
+
+    [DECISION] expected_format == 'boolean'
+      ──▶ expected_format ==
+'tool_response_dict'
+
+    [DECISION] continuation_mode
+      ──▶ For loop
+
+    [DECISION] quality['total_conflicts'] >
+0
+     ├─ ──▶ For each fwc
+     └─ ──▶ quality['files_checked'] > 0
+
+    [DECISION] expected_format ==
+'tool_response_dict'
+      ──▶ not valid
+
+    [LOOP] For loop
+     ├─ ──▶ isinstance(_s, dict)
+     └─ ──▶ domain and archetype
+
+    [LOOP] For each fwc
+      ──▶ For each c
+
+    [DECISION] quality['files_checked'] > 0
+      ──▶ execution_success
+
+    [DECISION] not valid
+    [DECISION] isinstance(_s, dict)
+      -- loop --> For loop
+
+    [DECISION] domain and archetype
+      ──▶ continuation_mode
+
+    [LOOP] For each c
+      -- loop --> For each fwc
+
+    [DECISION] execution_success
+      ──▶ calibration_store is not
+None and domain and archetype and
+
+    [DECISION] continuation_mode
+     ├─ YES ─▶ not structure_gate['passed']
+     └─ ──▶ not structure_gate['passed']
+
+    [DECISION] calibration_store is not
+None and domain and archetype and
+      ──▶ memory_enabled
+
+    [DECISION] not structure_gate['passed']
+    [DECISION] not structure_gate['passed']
+      ──▶ added
+
+    [DECISION] memory_enabled
+      ──▶ flow_failed
+
+    [DECISION] added
+      ──▶ not structure_gate['passed']
+
+    [DECISION] flow_failed
+      ──▶ not flow_failed and domain
+and archetype
+
+    [DECISION] not structure_gate['passed']
+     ├─ YES ─▶ replan_count <
+max_replanning
+     └─ ──▶ Loop
+
+    [DECISION] not flow_failed and domain
+and archetype
+    [DECISION] replan_count <
+max_replanning
+    [LOOP] Loop
+     ├─ ──▶ flow_failed
+     └─ ──▶ requested_continuation
+
+    [DECISION] flow_failed
+      ──▶ not isinstance(step_info,
+dict)
+
+    [DECISION] requested_continuation
+      ──▶ step_cap_exceeded
+
+    [DECISION] not isinstance(step_info,
+dict)
+      ──▶ isinstance(step_num, int)
+and step_num < resume_from
+
+    [DECISION] step_cap_exceeded
+      ──▶ flow_failed and replan_count
+< max_replanning
+
+    [DECISION] isinstance(step_num, int)
+and step_num < resume_from
+      ──▶ resolved and resolved !=
+'AgentLogic'
+
+    [DECISION] flow_failed and replan_count
+< max_replanning
+      ──▶ flow_failed
+
+    [DECISION] resolved and resolved !=
+'AgentLogic'
+      ──▶ step_info.get('step_id') or
+tool_name
+
+    [DECISION] flow_failed
+      ──▶ world_model and
+world_model.get('keywords')
+
+    [DECISION] step_info.get('step_id') or
+tool_name
+      ──▶ not step_ok
+
+    [DECISION] world_model and
+world_model.get('keywords')
+     ├─ ──▶ Condition?
+     └─ ──▶ execution_success and domain
+and archetype
+
+    [DECISION] not step_ok
+      ──▶ step_attempts == 0 and
+
+    [DECISION] Condition?
+      ──▶ grounding_result.should_replan()
+
+    [DECISION] execution_success and domain
+and archetype
+      ──▶ not _gate_v['passed']
+
+    [DECISION] step_attempts == 0 and
+      ──▶ settings.local_recovery and
+step_attempts <= local_attempts
+
+    [DECISION] grounding_result.should_replan()
+      ──▶ grounding_result.should_abort()
+
+    [DECISION] not _gate_v['passed']
+     ├─ YES ─▶ replan_count <
+max_replanning
+     └─ loop ─▶ Loop
+
+    [DECISION] settings.local_recovery and
+step_attempts <= local_attempts
+      ──▶ action == 'retry'
+
+    [DECISION] grounding_result.should_abort()
+    [DECISION] replan_count <
+max_replanning
+    [DECISION] action == 'retry'
+      ──▶ action == 'insert'
+
+    [DECISION] action == 'insert'
+      ──▶ step_attempts <
+max_replanning
+
+    [DECISION] step_attempts <
+max_replanning
+      -- loop --> Loop
