@@ -16,10 +16,10 @@ _HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{title}</title>
+<title>__TITLE__</title>
 <style>
   * {{ box-sizing: border-box; }}
-  body {{ margin: 0; font-family: system-ui, -apple-system, Segoe UI, sans-serif; background: {page_bg}; color: #212529; }}
+  body {{ margin: 0; font-family: system-ui, -apple-system, Segoe UI, sans-serif; background: __PAGE_BG__; color: #212529; }}
   header {{ padding: 14px 20px; background: #fff; border-bottom: 1px solid #dee2e6; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }}
   header h1 {{ margin: 0; font-size: 18px; font-weight: 600; flex: 1; min-width: 200px; }}
   #controls {{ display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }}
@@ -28,7 +28,7 @@ _HTML_TEMPLATE = """<!DOCTYPE html>
   #controls button.active {{ background: #1971c2; color: #fff; border-color: #1971c2; }}
   #controls button:hover {{ background: #e9ecef; }}
   #controls button.active:hover {{ background: #1864ab; }}
-  #canvas {{ overflow: hidden; width: 100%; height: calc(100vh - 60px); background: {canvas_bg}; cursor: grab; position: relative; }}
+  #canvas {{ overflow: hidden; width: 100%; height: calc(100vh - 60px); background: __CANVAS_BG__; cursor: grab; position: relative; }}
   #canvas svg {{ transform-origin: 0 0; display: block; }}
   #canvas.grabbing {{ cursor: grabbing; }}
   .search-match {{ outline: 2px solid #ffd43b; outline-offset: 2px; filter: drop-shadow(0 0 6px #ffd43b); }}
@@ -47,7 +47,7 @@ _HTML_TEMPLATE = """<!DOCTYPE html>
     <button id="zoom-reset" title="Reset">Reset</button>
   </div>
 </header>
-<div id="canvas">{svg}</div>
+<div id="canvas">__SVG__</div>
 <div id="zoom-hint">Rueda: zoom · Arrastra: pan · Click fase: colapsar</div>
 <script>
 (function() {{
@@ -167,7 +167,7 @@ _HTML_TEMPLATE = """<!DOCTYPE html>
 
   phaseVals.forEach(v => toggleContainer.appendChild(makeToggle(`FASE ${{v}}`, v, 'data-phase')));
   groupVals.forEach(v => toggleContainer.appendChild(makeToggle(v, v, 'data-group')));
-}})();
+})();
 </script>
 </body>
 </html>
@@ -180,8 +180,13 @@ def to_html(
     theme: str = "light",
     legend: bool = True,
     detail: str = "high",
+    links: dict[str, str] | None = None,
 ) -> str:
-    """Render *graph* as a self-contained interactive HTML page."""
+    """Render *graph* as a self-contained interactive HTML page.
+
+    *links* maps node IDs to relative URLs for drill-down navigation.
+    Nodes with links get pointer cursor and click-to-navigate behavior.
+    """
     # Theme-aware page background
     page_bg = "#f8f9fa" if theme == "light" else "#0f0f0f"
     # SVG already carries its own canvas background; keep page slightly different
@@ -189,16 +194,51 @@ def to_html(
     # Ensure SVG has an id for JS targeting (inject if missing)
     if 'id="diagram"' not in svg_text:
         svg_text = svg_text.replace("<svg ", '<svg id="diagram" ', 1)
+
+    # Inject data-link attributes for drill-down nodes
+    if links:
+        import re as _re
+        for node_id, url in links.items():
+            # Add data-link to all elements with data-node-id matching this node
+            svg_text = _re.sub(
+                r'(data-node-id="' + _re.escape(node_id) + r'")',
+                r'\1 data-link="' + url + '"',
+                svg_text,
+            )
+
     # Derive canvas background from theme for the wrapper
     from agentflow.layouts import get_theme
     pal = get_theme(theme)
     canvas_bg = pal["canvas_background"]
-    return _HTML_TEMPLATE.format(
-        title=graph.title,
-        svg=svg_text,
-        page_bg=page_bg,
-        canvas_bg=canvas_bg,
-    )
+
+    # Add drill-down JS if links provided
+    drilldown_js = ""
+    if links:
+        drilldown_js = (
+            '<script>\n'
+            '(function() {\n'
+            '  const svg = document.querySelector("#canvas svg");\n'
+            '  if (!svg) return;\n'
+            '  svg.querySelectorAll("[data-link]").forEach(el => {\n'
+            '    el.style.cursor = "pointer";\n'
+            '    el.addEventListener("click", e => {\n'
+            '      e.stopPropagation();\n'
+            '      window.location.href = el.dataset.link;\n'
+            '    });\n'
+            '  });\n'
+            '})();\n'
+            '</script>'
+        )
+
+    page = _HTML_TEMPLATE
+    page = page.replace("__TITLE__", graph.title)
+    page = page.replace("__PAGE_BG__", page_bg)
+    page = page.replace("__CANVAS_BG__", canvas_bg)
+    page = page.replace("__SVG__", svg_text)
+    # Inject drill-down script before </body>
+    if drilldown_js:
+        page = page.replace("</body>", drilldown_js + "\n</body>")
+    return page
 
 
 def save_html(
@@ -208,12 +248,13 @@ def save_html(
     theme: str = "light",
     legend: bool = True,
     detail: str = "high",
+    links: dict[str, str] | None = None,
 ) -> Path:
     """Save an interactive HTML file for *graph*."""
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        to_html(graph, layout=layout, theme=theme, legend=legend, detail=detail),
+        to_html(graph, layout=layout, theme=theme, legend=legend, detail=detail, links=links),
         encoding="utf-8",
     )
     return path

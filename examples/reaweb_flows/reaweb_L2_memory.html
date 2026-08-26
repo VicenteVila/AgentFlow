@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ReaWeb · L2 · Memory/State</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, sans-serif; background: #f8f9fa; color: #212529; }
+  header { padding: 14px 20px; background: #fff; border-bottom: 1px solid #dee2e6; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  header h1 { margin: 0; font-size: 18px; font-weight: 600; flex: 1; min-width: 200px; }
+  #controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  #controls input[type="search"] { padding: 6px 10px; border: 1px solid #ced4da; border-radius: 6px; font-size: 13px; width: 200px; }
+  #controls button { padding: 6px 10px; border: 1px solid #ced4da; border-radius: 6px; background: #fff; cursor: pointer; font-size: 12px; }
+  #controls button.active { background: #1971c2; color: #fff; border-color: #1971c2; }
+  #controls button:hover { background: #e9ecef; }
+  #controls button.active:hover { background: #1864ab; }
+  #canvas { overflow: hidden; width: 100%; height: calc(100vh - 60px); background: #ffffff; cursor: grab; position: relative; }
+  #canvas svg { transform-origin: 0 0; display: block; }
+  #canvas.grabbing { cursor: grabbing; }
+  .search-match { outline: 2px solid #ffd43b; outline-offset: 2px; filter: drop-shadow(0 0 6px #ffd43b); }
+  .dimmed { opacity: 0.15 !important; pointer-events: none; }
+  #zoom-hint { position: absolute; bottom: 12px; right: 12px; background: rgba(255,255,255,0.9); padding: 6px 10px; border-radius: 6px; font-size: 11px; color: #495057; border: 1px solid #dee2e6; }
+</style>
+</head>
+<body>
+<header>
+  <h1>ReaWeb · L2 · Memory/State</h1>
+  <div id="controls">
+    <input type="search" id="search" placeholder="Buscar nodo…" autocomplete="off">
+    <span id="phase-toggles"></span>
+    <button id="zoom-in" title="Zoom +">+</button>
+    <button id="zoom-out" title="Zoom −">−</button>
+    <button id="zoom-reset" title="Reset">Reset</button>
+  </div>
+</header>
+<div id="canvas"><svg id="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 444" width="800" height="444"><rect width="100%" height="100%" fill="#ffffff"/><defs><marker id="arrow-495057" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 1 L 9 5 L 0 9 z" fill="#495057"/></marker></defs><rect x="50" y="50" width="240" height="138.5" rx="12" fill="#f0fdf4" stroke="#86efac" stroke-width="1" stroke-opacity="0.6" stroke-dasharray="8 5" data-group="init"/><text text-anchor='start' font-family="'Comic Shanns','Virgil','Segoe UI',system-ui,sans-serif" font-size="12" fill="#86efac"><tspan x="120" y="67.3">INIT</tspan></text><rect x="290" y="50" width="240" height="138.5" rx="12" fill="#fef2f2" stroke="#fca5a5" stroke-width="1" stroke-opacity="0.6" stroke-dasharray="8 5" data-group="teardown"/><text text-anchor='start' font-family="'Comic Shanns','Virgil','Segoe UI',system-ui,sans-serif" font-size="12" fill="#fca5a5"><tspan x="360" y="67.3">TEARDOWN</tspan></text><rect x="50" y="230" width="360" height="144" rx="12" fill="#f0fdfa" stroke="#5eead4" stroke-width="1" stroke-opacity="0.6" stroke-dasharray="8 5" data-group="tools"/><text text-anchor='start' font-family="'Comic Shanns','Virgil','Segoe UI',system-ui,sans-serif" font-size="12" fill="#5eead4"><tspan x="120" y="247.3">TOOLS</tspan></text><text text-anchor='start' font-family="'Comic Shanns','Virgil','Segoe UI',system-ui,sans-serif" font-size="24" fill="#1e1e1e"><tspan x="80" y="36.6">ReaWeb · L2 · Memory/State</tspan></text><path d="M 170 158.5 L 170 260" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#arrow-495057)" data-source="start" data-target="fn__now" /><ellipse cx="170" cy="119.2" rx="90" ry="39.2" fill="#dcfce7" stroke="#16a34a" stroke-width="2" data-phase="0" data-node-id="start" data-node-type="start" data-group="init" /><text data-phase="0" data-node-id="start" data-group="init" text-anchor='middle' font-family="'Comic Shanns','Virgil','Segoe UI',system-ui,sans-serif" font-size="14" fill="#1e1e1e"><tspan x="170" y="106.6">Start</tspan></text><text data-phase="0" data-node-id="start" data-group="init" text-anchor='middle' font-family="'Comic Shanns','Virgil','Segoe UI',system-ui,sans-serif" font-size="10" fill="#666666"><tspan x="170" y="128.5">Agent.run() invoked</tspan><tspan x="170" y="141">budget.start()</tspan></text><ellipse cx="410" cy="119.2" rx="90" ry="39.2" fill="#fee2e2" stroke="#dc2626" stroke-width="2" data-phase="0" data-node-id="end" data-node-type="end" data-group="teardown" /><text data-phase="0" data-node-id="end" data-group="teardown" text-anchor='middle' font-family="'Comic Shanns','Virgil','Segoe UI',system-ui,sans-serif" font-size="14" fill="#1e1e1e"><tspan x="410" y="106.6">End</tspan></text><text data-phase="0" data-node-id="end" data-group="teardown" text-anchor='middle' font-family="'Comic Shanns','Virgil','Segoe UI',system-ui,sans-serif" font-size="10" fill="#666666"><tspan x="410" y="128.5">db.close()</tspan><tspan x="410" y="141">_final_summary()</tspan></text><rect x="80" y="260" width="300" height="84" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2" data-phase="0" data-node-id="fn__now" data-node-type="subprocess" data-group="tools" /><text data-phase="0" data-node-id="fn__now" data-group="tools" text-anchor='middle' font-family="'Comic Shanns','Virgil','Segoe UI',system-ui,sans-serif" font-size="14" fill="#1e1e1e"><tspan x="230" y="305.9">Now</tspan></text><text text-anchor='middle' font-family="'Comic Shanns','Virgil','Segoe UI',system-ui,sans-serif" font-size="14" fill="#1e1e1e"><tspan x="680" y="41.9">LEGEND</tspan></text><rect x="640" y="55" width="20" height="20" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/><text text-anchor='start' font-family="'Comic Shanns','Virgil','Segoe UI',system-ui,sans-serif" font-size="14" fill="#1e1e1e"><tspan x="668" y="68.8">Start</tspan></text><rect x="640" y="85" width="20" height="20" rx="4" fill="#fee2e2" stroke="#dc2626" stroke-width="1"/><text text-anchor='start' font-family="'Comic Shanns','Virgil','Segoe UI',system-ui,sans-serif" font-size="14" fill="#1e1e1e"><tspan x="668" y="98.8">End</tspan></text><rect x="640" y="115" width="20" height="20" rx="4" fill="#ede9fe" stroke="#7c3aed" stroke-width="1"/><text text-anchor='start' font-family="'Comic Shanns','Virgil','Segoe UI',system-ui,sans-serif" font-size="14" fill="#1e1e1e"><tspan x="668" y="128.8">Process</tspan></text><rect x="640" y="145" width="20" height="20" rx="4" fill="#fef9c3" stroke="#ca8a04" stroke-width="1"/><text text-anchor='start' font-family="'Comic Shanns','Virgil','Segoe UI',system-ui,sans-serif" font-size="14" fill="#1e1e1e"><tspan x="668" y="158.8">Decision</tspan></text><rect x="640" y="175" width="20" height="20" rx="4" fill="#ccfbf1" stroke="#0d9488" stroke-width="1"/><text text-anchor='start' font-family="'Comic Shanns','Virgil','Segoe UI',system-ui,sans-serif" font-size="14" fill="#1e1e1e"><tspan x="668" y="188.8">Tool call</tspan></text><rect x="640" y="205" width="20" height="20" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1"/><text text-anchor='start' font-family="'Comic Shanns','Virgil','Segoe UI',system-ui,sans-serif" font-size="14" fill="#1e1e1e"><tspan x="668" y="218.8">Subprocess</tspan></text><rect x="640" y="235" width="20" height="20" rx="4" fill="#fce7f3" stroke="#db2777" stroke-width="1"/><text text-anchor='start' font-family="'Comic Shanns','Virgil','Segoe UI',system-ui,sans-serif" font-size="14" fill="#1e1e1e"><tspan x="668" y="248.8">Loop</tspan></text><rect x="640" y="265" width="20" height="20" rx="4" fill="#ffedd5" stroke="#ea580c" stroke-width="1" stroke-dasharray="4 3"/><text text-anchor='start' font-family="'Comic Shanns','Virgil','Segoe UI',system-ui,sans-serif" font-size="14" fill="#1e1e1e"><tspan x="668" y="278.9">Self-evolution</tspan></text></svg></div>
+<div id="zoom-hint">Rueda: zoom · Arrastra: pan · Click fase: colapsar</div>
+<script>
+(function() {
+  const canvas = document.getElementById('canvas');
+  const svg = canvas.querySelector('svg');
+  let scale = 1, tx = 0, ty = 0, isPanning = false, startX = 0, startY = 0;
+
+  function updateTransform() {
+    svg.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+  }
+
+  canvas.addEventListener('wheel', e => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? 0.9 : 1.1;
+    const newScale = Math.min(Math.max(scale * delta, 0.2), 5);
+    // Zoom toward cursor
+    const rect = canvas.getBoundingClientRect();
+    const cx = e.clientX - rect.left;
+    const cy = e.clientY - rect.top;
+    tx = cx - (cx - tx) * (newScale / scale);
+    ty = cy - (cy - ty) * (newScale / scale);
+    scale = newScale;
+    updateTransform();
+  }, { passive: false });
+
+  canvas.addEventListener('mousedown', e => {
+    isPanning = true;
+    startX = e.clientX - tx;
+    startY = e.clientY - ty;
+    canvas.classList.add('grabbing');
+  });
+  window.addEventListener('mousemove', e => {
+    if (!isPanning) return;
+    tx = e.clientX - startX;
+    ty = e.clientY - startY;
+    updateTransform();
+  });
+  window.addEventListener('mouseup', () => {
+    isPanning = false;
+    canvas.classList.remove('grabbing');
+  });
+
+  document.getElementById('zoom-in').onclick = () => { scale = Math.min(scale * 1.25, 5); updateTransform(); };
+  document.getElementById('zoom-out').onclick = () => { scale = Math.max(scale * 0.8, 0.2); updateTransform(); };
+  document.getElementById('zoom-reset').onclick = () => { scale = 1; tx = 0; ty = 0; updateTransform(); };
+
+  // Search
+  const search = document.getElementById('search');
+  const nodeEls = Array.from(svg.querySelectorAll('[data-node-id]'));
+  search.addEventListener('input', () => {
+    const q = search.value.trim().toLowerCase();
+    nodeEls.forEach(el => {
+      const txt = (el.textContent || '').toLowerCase();
+      const match = q && txt.includes(q);
+      el.classList.toggle('search-match', match);
+      if (q && !match && el.hasAttribute('data-node-id')) {
+        // Dim non-matches only when query active
+        // Keep dimming subtle: only dim text, not shapes? Dim both for clarity
+      }
+    });
+    // Dim non-matching nodes when searching
+    if (q) {
+      const matchedIds = new Set(nodeEls.filter(el => el.classList.contains('search-match')).map(el => el.getAttribute('data-node-id')));
+      nodeEls.forEach(el => {
+        const id = el.getAttribute('data-node-id');
+        if (!matchedIds.has(id)) el.classList.add('dimmed');
+        else el.classList.remove('dimmed');
+      });
+    } else {
+      nodeEls.forEach(el => el.classList.remove('dimmed', 'search-match'));
+    }
+  });
+
+  // Phase / group toggles — collect unique values
+  const phaseVals = [...new Set(Array.from(svg.querySelectorAll('[data-phase]')).map(el => el.getAttribute('data-phase')).filter(v => v && v !== '0'))];
+  const groupVals = [...new Set(Array.from(svg.querySelectorAll('[data-group]')).map(el => el.getAttribute('data-group')).filter(v => v))];
+  const toggleContainer = document.getElementById('phase-toggles');
+  const idToPhase = new Map();
+  svg.querySelectorAll('[data-node-id][data-phase]').forEach(el => {
+    const id = el.getAttribute('data-node-id');
+    if (!idToPhase.has(id)) idToPhase.set(id, el.getAttribute('data-phase'));
+  });
+  svg.querySelectorAll('[data-node-id][data-group]').forEach(el => {
+    const id = el.getAttribute('data-node-id');
+    if (!idToPhase.has(id + ':group')) idToPhase.set(id + ':group', el.getAttribute('data-group'));
+  });
+
+  function makeToggle(label, key, attr) {
+    const btn = document.createElement('button');
+    btn.textContent = label;
+    btn.classList.add('active');
+    btn.dataset.key = key;
+    btn.dataset.attr = attr;
+    btn.onclick = () => {
+      btn.classList.toggle('active');
+      const hide = !btn.classList.contains('active');
+      svg.querySelectorAll(`[${attr}="${CSS.escape(key)}"]`).forEach(el => {
+        el.style.opacity = hide ? '0.12' : '';
+        el.style.pointerEvents = hide ? 'none' : '';
+      });
+      // For edges, hide if either endpoint phase is collapsed
+      if (attr === 'data-phase' || attr === 'data-group') {
+        const collapsed = new Set(Array.from(toggleContainer.querySelectorAll('button:not(.active)')).map(b => b.dataset.key));
+        svg.querySelectorAll('path[data-source]').forEach(path => {
+          const src = path.getAttribute('data-source');
+          const tgt = path.getAttribute('data-target');
+          const srcPhase = idToPhase.get(src) || idToPhase.get(src + ':group');
+          const tgtPhase = idToPhase.get(tgt) || idToPhase.get(tgt + ':group');
+          const shouldHide = collapsed.has(srcPhase) || collapsed.has(tgtPhase) || collapsed.has(path.getAttribute(attr));
+          path.style.opacity = shouldHide ? '0.12' : '';
+          path.style.pointerEvents = shouldHide ? 'none' : '';
+        });
+      }
+    };
+    return btn;
+  }
+
+  phaseVals.forEach(v => toggleContainer.appendChild(makeToggle(`FASE ${v}`, v, 'data-phase')));
+  groupVals.forEach(v => toggleContainer.appendChild(makeToggle(v, v, 'data-group')));
+})();
+</script>
+</body>
+</html>

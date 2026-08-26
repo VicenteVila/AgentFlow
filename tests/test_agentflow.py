@@ -898,6 +898,31 @@ def test_to_html_with_phased_layout():
     assert "search" in html.lower()
 
 
+def test_to_html_with_links():
+    from agentflow.html import to_html
+
+    g = FlowGraph(title="Links Test")
+    g.add_node(Node(id="comp_a", label="Component A"))
+    g.add_node(Node(id="comp_b", label="Component B"))
+    g.add_edge(Edge(source="comp_a", target="comp_b"))
+
+    links = {"comp_a": "detail_a.html", "comp_b": "detail_b.html"}
+    html = to_html(g, links=links)
+    assert 'data-link="detail_a.html"' in html
+    assert 'data-link="detail_b.html"' in html
+    assert "el.style.cursor" in html  # drill-down JS injected
+
+
+def test_to_html_without_links():
+    from agentflow.html import to_html
+
+    g = FlowGraph(title="No Links")
+    g.add_node(Node(id="a", label="A"))
+    html = to_html(g)
+    assert "data-link" not in html
+    assert "el.style.cursor" not in html
+
+
 def test_save_html():
     from agentflow.html import save_html
 
