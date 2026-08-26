@@ -14,11 +14,18 @@ import json
 import sys
 from pathlib import Path
 
+from agentflow import __version__
+
 
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(
         prog="agentflow",
         description="Parse AI agent control flows and generate Excalidraw diagrams.",
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"agentflow {__version__}",
     )
     parser.add_argument(
         "-i", "--input",

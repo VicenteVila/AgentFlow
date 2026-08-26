@@ -6,7 +6,7 @@ from agentflow.parser import parse_file, parse_source
 from agentflow.profiles import Profile, get_profile, load_profile
 from agentflow.svg import save_svg, to_svg
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 __all__ = [
     "Edge",
     "FlowGraph",
