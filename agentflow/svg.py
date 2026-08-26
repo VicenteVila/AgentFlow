@@ -25,6 +25,7 @@ from agentflow.layouts import (
     grid_layout,
     hierarchical_layout,
     phased_layout,
+    with_detail_level,
 )
 from agentflow.models import FlowGraph, NodeType
 
@@ -135,8 +136,11 @@ def to_svg(
     layout: str = "hierarchical",
     theme: str = "light",
     legend: bool = True,
+    detail: str = "high",
 ) -> str:
     """Render a FlowGraph as a standalone SVG string."""
+    if detail != "high":
+        graph = with_detail_level(graph, detail)
     pal = get_theme(theme)
 
     if layout == "grid":
@@ -242,10 +246,11 @@ def save_svg(
     layout: str = "hierarchical",
     theme: str = "light",
     legend: bool = True,
+    detail: str = "high",
 ) -> Path:
     """Render a FlowGraph and save it as an .svg file."""
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(to_svg(graph, layout=layout, theme=theme, legend=legend),
+    path.write_text(to_svg(graph, layout=layout, theme=theme, legend=legend, detail=detail),
                     encoding="utf-8")
     return path

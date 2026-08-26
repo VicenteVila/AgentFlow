@@ -651,3 +651,106 @@ def test_repo_overview_cli(tmp_path=None):
         assert out.exists()
         data = json.loads(out.read_text())
         assert data["type"] == "excalidraw"
+
+
+# ── Mermaid + detail tests ────────────────────────────────────────────
+
+
+def test_to_mermaid_valid_structure():
+    from agentflow.mermaid import to_mermaid
+
+    g = FlowGraph(title="Mermaid Test")
+    g.add_node(Node(id="a", label="Start", node_type=NodeType.START))
+    g.add_node(Node(id="b", label="Decide?", node_type=NodeType.DECISION))
+    g.add_node(Node(id="c", label="End", node_type=NodeType.END))
+    g.add_edge(Edge(source="a", target="b", label="go"))
+    g.add_edge(Edge(source="b", target="c", label="yes"))
+
+    text = to_mermaid(g)
+    assert text.startswith("%%")
+    assert "flowchart TD" in text
+    assert "classDef evolution" in text
+    # Decision uses {} shape
+    assert "{" in text and "}" in text
+    # Edge labels
+    assert "go" in text
+
+
+def test_to_mermaid_with_phased_layout():
+    from agentflow.mermaid import to_mermaid
+
+    graph = parse(SIMPLE_AGENT, title="Mermaid Phased")
+    text = to_mermaid(graph, layout="phased")
+    assert "flowchart TD" in text
+    assert "subgraph" in text  # phases become subgraphs
+
+
+def test_save_mermaid():
+    from agentflow.mermaid import save_mermaid
+
+    g = FlowGraph(title="Save Mermaid")
+    g.add_node(Node(id="a", label="A"))
+    g.add_node(Node(id="b", label="B"))
+    g.add_edge(Edge(source="a", target="b"))
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        path = Path(tmpdir) / "out.mmd"
+        result = save_mermaid(g, path)
+        assert result.exists()
+        assert "flowchart TD" in result.read_text()
+
+
+def test_detail_levels():
+    from agentflow.layouts import with_detail_level
+    from agentflow.mermaid import to_mermaid
+
+    # Build a graph with rich details
+    g = parse(SIMPLE_AGENT, title="Detail Test")
+    # Ensure there's at least one node with detail
+    assert any(n.detail for n in g.nodes)
+
+    low = to_mermaid(g, detail="low")
+    med = to_mermaid(g, detail="med")
+    high = to_mermaid(g, detail="high")
+    # Low should be shortest, high longest
+    assert len(low) < len(med) < len(high)
+
+    # with_detail_level directly
+    g_low = with_detail_level(g, "low")
+    assert all(not n.detail for n in g_low.nodes)
+    g_med = with_detail_level(g, "med")
+    for n in g_med.nodes:
+        assert "\n" not in n.detail  # truncated to first line
+
+
+def test_detail_affects_excalidraw_and_svg():
+    g = parse(SIMPLE_AGENT, title="Detail SVG")
+    low_doc = to_excalidraw(g, detail="low")
+    high_doc = to_excalidraw(g, detail="high")
+    # High has more text elements (details) than low
+    low_texts = [e for e in low_doc["elements"] if e["type"] == "text"]
+    high_texts = [e for e in high_doc["elements"] if e["type"] == "text"]
+    assert len(high_texts) >= len(low_texts)
+
+    from agentflow.svg import to_svg
+
+    low_svg = to_svg(g, detail="low")
+    high_svg = to_svg(g, detail="high")
+    assert len(high_svg) > len(low_svg)
+
+
+def test_mermaid_cli(tmp_path=None):
+    import subprocess
+    import sys
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        src = Path(tmpdir) / "agent.py"
+        src.write_text("class Agent:\n    def run(self):\n        if x:\n            do_a()\n")
+        out = Path(tmpdir) / "out.mmd"
+        result = subprocess.run(
+            [sys.executable, "-m", "agentflow.cli", "-i", str(src), "-o", str(out), "-f", "mermaid", "--detail", "low"],
+            capture_output=True, text=True,
+        )
+        assert result.returncode == 0
+        assert out.exists()
+        assert "flowchart TD" in out.read_text()

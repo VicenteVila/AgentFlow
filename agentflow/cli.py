@@ -3,7 +3,7 @@
 Usage:
     agentflow --input agent.py --output flowchart.excalidraw
     agentflow --input agent.py --output flowchart.excalidraw --layout phased
-    agentflow --input agent.py --output flowchart.excalidraw --theme dark --no-legend
+    agentflow -i ./my_repo -o repo.mmd -f mermaid --detail low
     agentflow --input agent.py  # prints to stdout as JSON
 """
 
@@ -45,7 +45,7 @@ def main(argv: list[str] | None = None) -> None:
     )
     parser.add_argument(
         "-f", "--format",
-        choices=["excalidraw", "svg"],
+        choices=["excalidraw", "svg", "mermaid"],
         default="excalidraw",
         help="Output format (default: excalidraw)",
     )
@@ -76,6 +76,12 @@ def main(argv: list[str] | None = None) -> None:
         type=int,
         default=None,
         help="RNG seed for deterministic output (same input + seed = identical file)",
+    )
+    parser.add_argument(
+        "--detail",
+        choices=["low", "med", "high"],
+        default="high",
+        help="Detail level for node text (default: high)",
     )
     parser.add_argument(
         "--include-imports",
@@ -125,29 +131,43 @@ def main(argv: list[str] | None = None) -> None:
         print(graph.summary())
         return
 
-    # Generate Excalidraw
-    from agentflow.excalidraw import save_excalidraw, to_excalidraw
-
+    # Generate output (detail level applied inside renderers)
     if args.format == "svg":
-        from agentflow.svg import save_svg
+        from agentflow.svg import save_svg, to_svg
 
-        out = args.output or f"{input_path.stem}.svg"
-        path = save_svg(graph, out, layout=args.layout, theme=args.theme,
-                        legend=not args.no_legend)
-        print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
+        if args.output:
+            path = save_svg(graph, args.output, layout=args.layout, theme=args.theme,
+                            legend=not args.no_legend, detail=args.detail)
+            print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
+        else:
+            svg_text = to_svg(graph, layout=args.layout, theme=args.theme,
+                              legend=not args.no_legend, detail=args.detail)
+            sys.stdout.write(svg_text)
         return
+
+    if args.format == "mermaid":
+        from agentflow.mermaid import save_mermaid, to_mermaid
+
+        if args.output:
+            path = save_mermaid(graph, args.output, layout=args.layout, detail=args.detail)
+            print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
+        else:
+            sys.stdout.write(to_mermaid(graph, layout=args.layout, detail=args.detail))
+        return
+
+    from agentflow.excalidraw import save_excalidraw, to_excalidraw
 
     if args.output:
         path = save_excalidraw(
             graph, args.output,
             layout=args.layout, theme=args.theme, legend=not args.no_legend,
-            seed=args.seed,
+            seed=args.seed, detail=args.detail,
         )
         print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
     else:
         doc = to_excalidraw(
             graph, layout=args.layout, theme=args.theme, legend=not args.no_legend,
-            seed=args.seed,
+            seed=args.seed, detail=args.detail,
         )
         json.dump(doc, sys.stdout, indent=2, ensure_ascii=False)
         sys.stdout.write("\n")

@@ -1,0 +1,285 @@
+%% Flow: orchestrator
+flowchart TD
+    classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
+    subgraph init ["INIT"]
+    start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    end
+    subgraph teardown ["TEARDOWN"]
+    end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    end
+    subgraph dispatch ["DISPATCH & EVALUATE"]
+    dec_135{"raw_name in available<br><i>Condición en línea 135:<br>raw_name in available</i>"}
+    dec_146{"not expected_format<br><i>Condición en línea 146:<br>not expected_format</i>"}
+    dec_271{"ctx.get('results')<br><i>Condición en línea 271:<br>ctx.get('results')</i>"}
+    dec_340{"not html_files<br><i>Condición en línea 340:<br>not html_files</i>"}
+    dec_404{"memory_enabled<br><i>Condición en línea 404:<br>memory_enabled</i>"}
+    dec_1017{"not tool_names<br><i>Condición en línea 1017:<br>not tool_names</i>"}
+    dec_1100{"NOT repair_max_attempts?<br><i>Niega repair_max_attempts<br>para lógica invertida</i>"}
+    dec_138{"m and m.group(1) in<br>available<br><i>Condición en línea 138:<br>m and m.group(1) in available</i>"}
+    dec_152{"expected_format == 'json'<br>and isinstance(check, str)<br><i>Condición en línea 152:<br>expected_format == 'json' and isinstance(check, str)</i>"}
+    dec_275{"temporal<br><i>Condición en línea 275:<br>temporal</i>"}
+    dec_407{"memory_context<br><i>Condición en línea 407:<br>memory_context</i>"}
+    dec_1046{"atype == 'RETRY_SAME'<br><i>Condición en línea 1046:<br>atype == 'RETRY_SAME'</i>"}
+    dec_1147{"action == 'insert'<br><i>Condición en línea 1147:<br>action == 'insert'</i>"}
+    dec_160{"isinstance(output, dict) and<br>'success' in output and ('message'<br><i>Condición en línea 160:<br>isinstance(output, dict) and 'success' in output and ('messa</i>"}
+    dec_284{"gctx.get('global_communities')<br><i>Condición en línea 284:<br>gctx.get('global_communities')</i>"}
+    dec_417{"artifacts_dir is None<br><i>Condición en línea 417:<br>artifacts_dir is None</i>"}
+    dec_1049{"atype == 'PATCH_INPUTS'<br><i>Condición en línea 1049:<br>atype == 'PATCH_INPUTS'</i>"}
+    dec_1149{"not isinstance(prep_step,<br>dict) or not<br><i>Condición en línea 1149:<br>not isinstance(prep_step, dict) or not prep_step.get('tool_t</i>"}
+    dec_161{"expected_format ==<br>'tool_response_dict'<br><i>Condición en línea 161:<br>expected_format == 'tool_response_dict'</i>"}
+    dec_170{"isinstance(output, dict) and<br>'result' in output<br><i>Condición en línea 170:<br>isinstance(output, dict) and 'result' in output</i>"}
+    dec_288{"summaries<br><i>Condición en línea 288:<br>summaries</i>"}
+    dec_1051{"isinstance(new_inputs, dict)<br>and dict)<br><i>Condición en línea 1051:<br>isinstance(new_inputs, dict) and isinstance(step_info.get('i</i>"}
+    dec_1152{"inserts >=<br>settings.repair_max_inserted_prep<br><i>Condición en línea 1152:<br>inserts >= settings.repair_max_inserted_prep</i>"}
+    dec_163{"expected_format == 'json'<br><i>Condición en línea 163:<br>expected_format == 'json'</i>"}
+    dec_171{"expected_format == 'json'<br><i>Condición en línea 171:<br>expected_format == 'json'</i>"}
+    dec_175{"isinstance(output, dict) and<br>'success' in output<br><i>Condición en línea 175:<br>isinstance(output, dict) and 'success' in output</i>"}
+    dec_297{"sctx.get('relevant_skills')<br><i>Condición en línea 297:<br>sctx.get('relevant_skills')</i>"}
+    dec_1056{"atype == 'PATCH_TOOL'<br><i>Condición en línea 1056:<br>atype == 'PATCH_TOOL'</i>"}
+    dec_1164{"isinstance(steps(step_idx),<br>dict)<br><i>Condición en línea 1164:<br>isinstance(steps(step_idx), dict)</i>"}
+    dec_165{"output.get('success')<br><i>Condición en línea 165:<br>output.get('success')</i>"}
+    dec_176{"output.get('success')<br><i>Condición en línea 176:<br>output.get('success')</i>"}
+    dec_302{"skills_list<br><i>Condición en línea 302:<br>skills_list</i>"}
+    dec_1058{"new_tool in tool_map and<br>new_tool !=<br><i>Condición en línea 1058:<br>new_tool in tool_map and new_tool != step_info.get('tool_to_</i>"}
+    dec_181{"expected_format == 'html'<br><i>Condición en línea 181:<br>expected_format == 'html'</i>"}
+    dec_307{"parts<br><i>Condición en línea 307:<br>parts</i>"}
+    dec_1065{"atype == 'INSERT_BEFORE'<br><i>Condición en línea 1065:<br>atype == 'INSERT_BEFORE'</i>"}
+    dec_185{"expected_format in ('css',<br>'js', 'javascript', 'ts',<br><i>Condición en línea 185:<br>expected_format in ('css', 'js', 'javascript', 'ts', 'typesc</i>"}
+    dec_187{"expected_format == 'text'<br><i>Condición en línea 187:<br>expected_format == 'text'</i>"}
+    dec_189{"expected_format ==<br>'json_string'<br><i>Condición en línea 189:<br>expected_format == 'json_string'</i>"}
+    dec_191{"valid<br><i>Condición en línea 191:<br>valid</i>"}
+    dec_197{"expected_format == 'json'<br><i>Condición en línea 197:<br>expected_format == 'json'</i>"}
+    dec_199{"expected_format == 'boolean'<br><i>Condición en línea 199:<br>expected_format == 'boolean'</i>"}
+    dec_201{"expected_format ==<br>'tool_response_dict'<br><i>Condición en línea 201:<br>expected_format == 'tool_response_dict'</i>"}
+    dec_206{"not valid<br><i>Condición en línea 206:<br>not valid</i>"}
+    dec_316{"isinstance(val, dict)<br><i>Condición en línea 316:<br>isinstance(val, dict)</i>"}
+    dec_318{"isinstance(val, str)<br><i>Condición en línea 318:<br>isinstance(val, str)</i>"}
+    dec_322{"content and len(content) ><br>20<br><i>Condición en línea 322:<br>content and len(content) > 20</i>"}
+    dec_351{"result.get('passed')<br><i>Condición en línea 351:<br>result.get('passed')</i>"}
+    dec_359{"result.get('screenshot_path')<br><i>Condición en línea 359:<br>result.get('screenshot_path')</i>"}
+    dec_442{"replan_count > 0<br><i>Condición en línea 442:<br>replan_count > 0</i>"}
+    dec_444{"failed_plan_summary<br><i>Condición en línea 444:<br>failed_plan_summary</i>"}
+    dec_449{"continuation_mode<br><i>Condición en línea 449:<br>continuation_mode</i>"}
+    dec_471{"wm_status == 'failed'<br><i>Condición en línea 471:<br>wm_status == 'failed'</i>"}
+    dec_474{"plan_result.get('action') ==<br>'RECLARIFY'<br><i>Condición en línea 474:<br>plan_result.get('action') == 'RECLARIFY'</i>"}
+    dec_487{"not plan or not<br>isinstance(plan.get('steps'), or<br><i>Condición en línea 487:<br>not plan or not isinstance(plan.get('steps'), list) or (not</i>"}
+    dec_489{"replan_count <<br>max_replanning<br><i>Condición en línea 489:<br>replan_count < max_replanning</i>"}
+    dec_502{"continuation_mode<br><i>Condición en línea 502:<br>continuation_mode</i>"}
+    dec_504{"isinstance(_s, dict)<br><i>Condición en línea 504:<br>isinstance(_s, dict)</i>"}
+    dec_511{"domain and archetype<br><i>Condición en línea 511:<br>domain and archetype</i>"}
+    dec_516{"continuation_mode<br><i>Condición en línea 516:<br>continuation_mode</i>"}
+    dec_521{"not structure_gate('passed')<br><i>Condición en línea 521:<br>not structure_gate('passed')</i>"}
+    dec_531{"not structure_gate('passed')<br><i>Condición en línea 531:<br>not structure_gate('passed')</i>"}
+    dec_537{"added<br><i>Condición en línea 537:<br>added</i>"}
+    dec_545{"not structure_gate('passed')<br><i>Condición en línea 545:<br>not structure_gate('passed')</i>"}
+    dec_547{"replan_count <<br>max_replanning<br><i>Condición en línea 547:<br>replan_count < max_replanning</i>"}
+    dec_569{"flow_failed<br><i>Condición en línea 569:<br>flow_failed</i>"}
+    dec_572{"not isinstance(step_info,<br>dict)<br><i>Condición en línea 572:<br>not isinstance(step_info, dict)</i>"}
+    dec_581{"isinstance(step_num, int)<br>and step_num < resume_from<br><i>Condición en línea 581:<br>isinstance(step_num, int) and step_num < resume_from</i>"}
+    dec_599{"resolved and resolved !=<br>'AgentLogic'<br><i>Condición en línea 599:<br>resolved and resolved != 'AgentLogic'</i>"}
+    dec_706{"step_info.get('step_id') or<br>tool_name<br><i>Condición en línea 706:<br>step_info.get('step_id') or tool_name</i>"}
+    dec_709{"not step_ok<br><i>Condición en línea 709:<br>not step_ok</i>"}
+    dec_715{"step_attempts == 0 and<br><i>Condición en línea 715:<br>step_attempts == 0 and _is_transient_error(failed_step_detai</i>"}
+    dec_721{"settings.local_recovery and<br>step_attempts <= local_attempts<br><i>Condición en línea 721:<br>settings.local_recovery and step_attempts <= local_attempts</i>"}
+    dec_743{"action == 'retry'<br><i>Condición en línea 743:<br>action == 'retry'</i>"}
+    dec_746{"action == 'insert'<br><i>Condición en línea 746:<br>action == 'insert'</i>"}
+    dec_752{"step_attempts <<br>max_replanning<br><i>Condición en línea 752:<br>step_attempts < max_replanning</i>"}
+    dec_775{"requested_continuation<br><i>Condición en línea 775:<br>requested_continuation</i>"}
+    dec_778{"step_cap_exceeded<br><i>Condición en línea 778:<br>step_cap_exceeded</i>"}
+    dec_781{"flow_failed and replan_count<br>< max_replanning<br><i>Condición en línea 781:<br>flow_failed and replan_count < max_replanning</i>"}
+    dec_786{"flow_failed<br><i>Condición en línea 786:<br>flow_failed</i>"}
+    dec_794{"world_model and<br>world_model.get('keywords')<br><i>Condición en línea 794:<br>world_model and world_model.get('keywords')</i>"}
+    dec_813{"Condition?<br><i>Condición en línea 813:<br>grounding_result.should_continue()</i>"}
+    dec_815{"grounding_result.should_replan()<br><i>Condición en línea 815:<br>grounding_result.should_replan()</i>"}
+    dec_825{"grounding_result.should_abort()<br><i>Condición en línea 825:<br>grounding_result.should_abort()</i>"}
+    dec_834{"execution_success and domain<br>and archetype<br><i>Condición en línea 834:<br>execution_success and domain and archetype</i>"}
+    dec_844{"not _gate_v('passed')<br><i>Condición en línea 844:<br>not _gate_v('passed')</i>"}
+    dec_847{"replan_count <<br>max_replanning<br><i>Condición en línea 847:<br>replan_count < max_replanning</i>"}
+    dec_866{"execution_success and<br>world_model and<br><i>Condición en línea 866:<br>execution_success and world_model and world_model.get('keywo</i>"}
+    dec_868{"file_keywords<br><i>Condición en línea 868:<br>file_keywords</i>"}
+    dec_871{"not<br>_find_file_in_tree(artifacts_dir,<br><i>Condición en línea 871:<br>not _find_file_in_tree(artifacts_dir, fname)</i>"}
+    dec_873{"missing<br><i>Condición en línea 873:<br>missing</i>"}
+    dec_880{"execution_success and domain<br>and archetype<br><i>Condición en línea 880:<br>execution_success and domain and archetype</i>"}
+    dec_886{"not v('passed')<br><i>Condición en línea 886:<br>not v('passed')</i>"}
+    dec_898{"execution_success<br><i>Condición en línea 898:<br>execution_success</i>"}
+    dec_901{"quality('total_conflicts') ><br>0<br><i>Condición en línea 901:<br>quality('total_conflicts') > 0</i>"}
+    dec_907{"quality('files_checked') > 0<br><i>Condición en línea 907:<br>quality('files_checked') > 0</i>"}
+    dec_911{"execution_success<br><i>Condición en línea 911:<br>execution_success</i>"}
+    dec_915{"calibration_store is not<br>None and domain and archetype and<br><i>Condición en línea 915:<br>calibration_store is not None and domain and archetype and w</i>"}
+    dec_923{"memory_enabled<br><i>Condición en línea 923:<br>memory_enabled</i>"}
+    dec_931{"flow_failed<br><i>Condición en línea 931:<br>flow_failed</i>"}
+    dec_953{"not flow_failed and domain<br>and archetype<br><i>Condición en línea 953:<br>not flow_failed and domain and archetype</i>"}
+    dec_1175{"isinstance(s, dict) and<br>isinstance(s.get('step'), int)<br><i>Condición en línea 1175:<br>isinstance(s, dict) and isinstance(s.get('step'), int)</i>"}
+    dec_1179{"action == 'retry'<br><i>Condición en línea 1179:<br>action == 'retry'</i>"}
+    end
+    subgraph loop ["MAIN LOOP"]
+    loop_1187["For each s in completed_steps"]
+    loop_315["For loop"]
+    loop_345["For each fname in html_files"]
+    loop_357["For each err"]
+    loop_440["Loop"]
+    loop_503["For loop"]
+    loop_567["Loop"]
+    loop_870["For each fname in file_keywords"]
+    loop_888["For each e"]
+    loop_904["For each fwc"]
+    loop_905["For each c"]
+    loop_1173["For each i"]
+    end
+    subgraph tools ["TOOLS"]
+    fn__resolve_tool_name[["Resolve Tool Name"]]
+    fn__validate_output[["Validate Output"]]
+    fn__seed_skills_once[["Seed Skills Once"]]
+    fn__record_step_skill_usage[["Record Step Skill Usage"]]
+    fn__get_memory_context[["Get Memory Context"]]
+    fn__get_artifacts_summary[["Get Artifacts Summary"]]
+    fn__run_functional_validation[["Run Functional Validation"]]
+    fn__find_file_in_tree[["Find File In Tree"]]
+    fn_run_orchestrated_flow[["Run Orchestrated Flow"]]
+    fn__is_transient_error[["Is Transient Error"]]
+    fn__build_repair_structure_hint[["Build Repair Structure Hint"]]
+    fn__try_local_repair[["Try Local Repair"]]
+    fn__try_local_repair_v2[["Try Local Repair V2"]]
+    fn__build_completed_summary[["Build Completed Summary"]]
+    fn__store_in_memory[["Store In Memory"]]
+    fn__save_all_memory[["Save All Memory"]]
+    end
+    start --> fn__resolve_tool_name
+    fn__resolve_tool_name --> dec_135
+    dec_135 --> dec_138
+    start --> fn__validate_output
+    fn__validate_output --> dec_146
+    dec_146 --> dec_152
+    dec_152 --> dec_160
+    dec_160 --> dec_161
+    dec_161 --> dec_163
+    dec_163 --> dec_165
+    dec_160 --> dec_170
+    dec_170 --> dec_171
+    dec_170 --> dec_175
+    dec_175 --> dec_176
+    dec_176 --> dec_181
+    dec_181 --> dec_185
+    dec_185 --> dec_187
+    dec_187 --> dec_189
+    dec_189 --> dec_191
+    dec_189 --> dec_197
+    dec_197 --> dec_199
+    dec_199 --> dec_201
+    dec_201 --> dec_206
+    start --> fn__seed_skills_once
+    start --> fn__record_step_skill_usage
+    start --> fn__get_memory_context
+    fn__get_memory_context --> dec_271
+    dec_271 --> dec_275
+    dec_275 --> dec_284
+    dec_284 --> dec_288
+    dec_288 --> dec_297
+    dec_297 --> dec_302
+    dec_302 --> dec_307
+    start --> fn__get_artifacts_summary
+    fn__get_artifacts_summary --> loop_315
+    loop_315 --> dec_316
+    dec_316 --> dec_318
+    dec_318 --> dec_322
+    dec_322 -- "loop" --> loop_315
+    start --> fn__run_functional_validation
+    fn__run_functional_validation --> dec_340
+    dec_340 --> loop_345
+    loop_345 --> dec_351
+    dec_351 --> loop_357
+    loop_357 --> dec_359
+    dec_359 -- "loop" --> loop_345
+    start --> fn__find_file_in_tree
+    start --> fn_run_orchestrated_flow
+    fn_run_orchestrated_flow --> dec_404
+    dec_404 --> dec_407
+    dec_407 --> dec_417
+    dec_417 --> loop_440
+    loop_440 --> dec_442
+    dec_442 --> dec_444
+    dec_444 --> dec_449
+    dec_449 --> dec_471
+    dec_471 --> dec_474
+    dec_474 --> dec_487
+    dec_487 --> dec_489
+    dec_489 --> dec_502
+    dec_502 --> loop_503
+    loop_503 --> dec_504
+    dec_504 -- "loop" --> loop_503
+    loop_503 --> dec_511
+    dec_511 --> dec_516
+    dec_516 -- "YES" --> dec_521
+    dec_516 --> dec_531
+    dec_531 --> dec_537
+    dec_537 --> dec_545
+    dec_545 -- "YES" --> dec_547
+    dec_545 --> loop_567
+    loop_567 --> dec_569
+    dec_569 --> dec_572
+    dec_572 --> dec_581
+    dec_581 --> dec_599
+    dec_599 --> dec_706
+    dec_706 --> dec_709
+    dec_709 --> dec_715
+    dec_715 --> dec_721
+    dec_721 --> dec_743
+    dec_743 --> dec_746
+    dec_746 --> dec_752
+    dec_752 -- "loop" --> loop_567
+    loop_567 --> dec_775
+    dec_775 --> dec_778
+    dec_778 --> dec_781
+    dec_781 --> dec_786
+    dec_786 --> dec_794
+    dec_794 --> dec_813
+    dec_813 --> dec_815
+    dec_815 --> dec_825
+    dec_794 --> dec_834
+    dec_834 --> dec_844
+    dec_844 -- "YES" --> dec_847
+    dec_844 -- "loop" --> loop_440
+    loop_440 --> dec_866
+    dec_866 --> dec_868
+    dec_868 --> loop_870
+    loop_870 --> dec_871
+    dec_871 -- "loop" --> loop_870
+    loop_870 --> dec_873
+    dec_873 --> dec_880
+    dec_880 --> dec_886
+    dec_886 -- "YES" --> loop_888
+    dec_886 --> dec_898
+    dec_898 --> dec_901
+    dec_901 --> loop_904
+    loop_904 --> loop_905
+    loop_905 -- "loop" --> loop_904
+    dec_901 --> dec_907
+    dec_907 --> dec_911
+    dec_911 --> dec_915
+    dec_915 --> dec_923
+    dec_923 --> dec_931
+    dec_931 --> dec_953
+    start --> fn__is_transient_error
+    start --> fn__build_repair_structure_hint
+    start --> fn__try_local_repair
+    fn__try_local_repair --> dec_1017
+    dec_1017 --> dec_1046
+    dec_1046 --> dec_1049
+    dec_1049 --> dec_1051
+    dec_1051 --> dec_1056
+    dec_1056 --> dec_1058
+    dec_1058 --> dec_1065
+    start --> fn__try_local_repair_v2
+    fn__try_local_repair_v2 --> dec_1100
+    dec_1100 --> dec_1147
+    dec_1147 --> dec_1149
+    dec_1149 --> dec_1152
+    dec_1152 --> dec_1164
+    dec_1164 --> loop_1173
+    loop_1173 --> dec_1175
+    dec_1175 -- "loop" --> loop_1173
+    loop_1173 --> dec_1179
+    start --> fn__build_completed_summary
+    fn__build_completed_summary --> loop_1187
+    start --> fn__store_in_memory
+    start --> fn__save_all_memory

@@ -27,6 +27,7 @@ from agentflow.layouts import (
     hierarchical_layout,
     measure_text,
     phased_layout,
+    with_detail_level,
 )
 from agentflow.models import FlowGraph, NodeType
 
@@ -376,6 +377,7 @@ def to_excalidraw(
     theme: str = "light",
     legend: bool = True,
     seed: int | None = None,
+    detail: str = "high",
 ) -> dict[str, Any]:
     """Convert a FlowGraph to a complete Excalidraw JSON structure.
 
@@ -385,6 +387,7 @@ def to_excalidraw(
         theme: Color theme - "light" (default) or "dark".
         legend: Whether to draw the node-type legend.
         seed: RNG seed; same input + seed produces byte-identical output.
+        detail: Detail level — "high" (full), "med" (first line), "low" (label only).
 
     Returns:
         A dict that can be serialized to .excalidraw JSON.
@@ -392,6 +395,8 @@ def to_excalidraw(
     from agentflow.layouts import grid_layout
 
     _set_seed(seed)
+    if detail != "high":
+        graph = with_detail_level(graph, detail)
     pal = get_theme(theme)
 
     # Compute layout
@@ -636,6 +641,7 @@ def save_excalidraw(
     theme: str = "light",
     legend: bool = True,
     seed: int | None = None,
+    detail: str = "high",
 ) -> Path:
     """Generate and save an Excalidraw file from a FlowGraph.
 
@@ -646,6 +652,7 @@ def save_excalidraw(
         theme: Color theme ("light" or "dark").
         legend: Whether to include the legend.
         seed: RNG seed for deterministic output.
+        detail: Detail level.
 
     Returns:
         The Path of the saved file.
@@ -653,6 +660,6 @@ def save_excalidraw(
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
 
-    doc = to_excalidraw(graph, layout=layout, theme=theme, legend=legend, seed=seed)
+    doc = to_excalidraw(graph, layout=layout, theme=theme, legend=legend, seed=seed, detail=detail)
     path.write_text(json.dumps(doc, indent=2, ensure_ascii=False), encoding="utf-8")
     return path

@@ -10,7 +10,7 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass, field
 
-from agentflow.models import FlowGraph, Node, NodeType
+from agentflow.models import Edge, FlowGraph, Node, NodeType
 
 # ── Text measurement ──────────────────────────────────────────────────
 
@@ -55,6 +55,30 @@ def measure_text(text: str, font_size: int = 16) -> tuple[float, float]:
     width = max(max_em * font_size, 10.0)
     height = len(lines) * font_size * LINE_H
     return round(width, 1), round(height, 1)
+
+
+def with_detail_level(graph: FlowGraph, level: str) -> FlowGraph:
+    """Return a copy of *graph* with details truncated per *level*.
+
+    - high: unchanged
+    - med:  detail truncated to first line
+    - low:  detail removed
+    """
+    if level == "high":
+        return graph
+    filtered = FlowGraph(title=graph.title)
+    for n in graph.nodes:
+        if level == "low":
+            detail = ""
+        elif level == "med":
+            detail = n.detail.split("\n")[0] if n.detail else ""
+        else:
+            detail = n.detail
+        filtered.add_node(Node(id=n.id, label=n.label, detail=detail,
+                               node_type=n.node_type, line=n.line, phase=n.phase))
+    for e in graph.edges:
+        filtered.add_edge(Edge(source=e.source, target=e.target, label=e.label, style=e.style))
+    return filtered
 
 
 def node_size(node: Node) -> tuple[float, float]:

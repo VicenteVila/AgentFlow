@@ -1,0 +1,132 @@
+%% Repo: cogniteam
+flowchart TD
+    classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
+    subgraph init ["INIT"]
+    start(["Start"])
+    end
+    subgraph loop ["MAIN LOOP"]
+    mod_cogniteam_agents_repair_v2["Repair V2<br><i>cogniteam/agents/repair_v2.py<br>60 nodes, 63 edges</i>"]
+    mod_cogniteam_core_orchestrator["Orchestrator<br><i>cogniteam/core/orchestrator.py<br>133 nodes, 139 edges</i>"]
+    mod_cogniteam_core_planner["Planner<br><i>cogniteam/core/planner.py<br>4 nodes, 2 edges</i>"]
+    mod_cogniteam_core_session["Session<br><i>cogniteam/core/session.py<br>9 nodes, 7 edges</i>"]
+    mod_cogniteam_memory_skills_seeder["Parse Agent Skills<br><i>cogniteam/memory/skills/seeder.py<br>17 nodes, 18 edges</i>"]
+    mod_cogniteam_scoping_agent["Agent<br><i>cogniteam/scoping/agent.py<br>99 nodes, 116 edges</i>"]
+    mod_cogniteam_scoping_loader["Loader<br><i>cogniteam/scoping/loader.py<br>32 nodes, 36 edges</i>"]
+    mod_cogniteam_tools_filesystem_operations["Operations<br><i>cogniteam/tools/filesystem/operations.py<br>34 nodes, 32 edges</i>"]
+    mod_cogniteam_tools_git_operations["Operations<br><i>cogniteam/tools/git/operations.py<br>17 nodes, 15 edges</i>"]
+    mod_cogniteam_tools_integrations_api["Api<br><i>cogniteam/tools/integrations/api.py<br>7 nodes, 5 edges</i>"]
+    mod_cogniteam_tools_integrations_cocoguide["Cocoguide<br><i>cogniteam/tools/integrations/cocoguide.py<br>16 nodes, 14 edges</i>"]
+    mod_cogniteam_tools_integrations_pdf["Pdf<br><i>cogniteam/tools/integrations/pdf.py<br>5 nodes, 3 edges</i>"]
+    mod_cogniteam_tools_integrations_text_artifact["Text Artifact<br><i>cogniteam/tools/integrations/text_artifact.py<br>8 nodes, 6 edges</i>"]
+    mod_cogniteam_tools_integrations_tts["Tts<br><i>cogniteam/tools/integrations/tts.py<br>7 nodes, 5 edges</i>"]
+    mod_cogniteam_tools_rag_engine["Engine<br><i>cogniteam/tools/rag/engine.py<br>17 nodes, 16 edges</i>"]
+    mod_cogniteam_tools_scripting_proposals["Proposals<br><i>cogniteam/tools/scripting/proposals.py<br>17 nodes, 15 edges</i>"]
+    mod_cogniteam_tools_scripting_terminal["Terminal<br><i>cogniteam/tools/scripting/terminal.py<br>11 nodes, 9 edges</i>"]
+    mod_cogniteam_tools_ui_analyze["Analyze<br><i>cogniteam/tools/ui/analyze.py<br>19 nodes, 19 edges</i>"]
+    mod_cogniteam_tools_ui_combine["Combine<br><i>cogniteam/tools/ui/combine.py<br>28 nodes, 33 edges</i>"]
+    mod_cogniteam_tools_ui_css["Css<br><i>cogniteam/tools/ui/css.py<br>8 nodes, 6 edges</i>"]
+    mod_cogniteam_tools_ui_fix["Fix<br><i>cogniteam/tools/ui/fix.py<br>5 nodes, 3 edges</i>"]
+    mod_cogniteam_tools_ui_html["Html<br><i>cogniteam/tools/ui/html.py<br>11 nodes, 9 edges</i>"]
+    mod_cogniteam_tools_ui_js["Js<br><i>cogniteam/tools/ui/js.py<br>10 nodes, 8 edges</i>"]
+    mod_cogniteam_tools_ui_validate["Validate<br><i>cogniteam/tools/ui/validate.py<br>6 nodes, 4 edges</i>"]
+    mod_cogniteam_tools_utils_llm["Llm<br><i>cogniteam/tools/utils/llm.py<br>65 nodes, 63 edges</i>"]
+    mod_cogniteam_tools_utils_ratelimit["Ratelimit<br><i>cogniteam/tools/utils/ratelimit.py<br>22 nodes, 20 edges</i>"]
+    mod_cogniteam_tools_web__brave["Brave<br><i>cogniteam/tools/web/_brave.py<br>6 nodes, 4 edges</i>"]
+    mod_cogniteam_tools_web__cse["Cse<br><i>cogniteam/tools/web/_cse.py<br>4 nodes, 2 edges</i>"]
+    mod_cogniteam_tools_web_browse["Browse<br><i>cogniteam/tools/web/browse.py<br>19 nodes, 20 edges</i>"]
+    mod_cogniteam_tools_web_extract["Extract<br><i>cogniteam/tools/web/extract.py<br>5 nodes, 3 edges</i>"]
+    mod_cogniteam_tools_web_search["Search<br><i>cogniteam/tools/web/search.py<br>13 nodes, 11 edges</i>"]
+    mod_cogniteam_utils_fs["Fs<br><i>cogniteam/utils/fs.py<br>6 nodes, 4 edges</i>"]
+    mod_cogniteam_utils_io["Io<br><i>cogniteam/utils/io.py<br>4 nodes, 2 edges</i>"]
+    mod_cogniteam_utils_security["Security<br><i>cogniteam/utils/security.py<br>10 nodes, 8 edges</i>"]
+    mod_cogniteam_world_model_cogniteam_integration["Cogniteam Integration<br><i>cogniteam/world_model/cogniteam_integration.py<br>11 nodes, 11 edges</i>"]
+    mod_cogniteam_world_model_deterministic_cage["Deterministic Cage<br><i>cogniteam/world_model/deterministic_cage.py<br>15 nodes, 13 edges</i>"]
+    mod_cogniteam_world_model_rules_loader["Rules Loader<br><i>cogniteam/world_model/rules_loader.py<br>5 nodes, 3 edges</i>"]
+    mod_cogniteam_world_model_world_model_layer["World Model Layer<br><i>cogniteam/world_model/world_model_layer.py<br>6 nodes, 4 edges</i>"]
+    mod_cogniteam_world_model_yaml_loader["Yaml Loader<br><i>cogniteam/world_model/yaml_loader.py<br>35 nodes, 38 edges</i>"]
+    mod_experiments_crear_proyecto_godot["Crear Proyecto Godot<br><i>experiments/crear_proyecto_godot.py<br>5 nodes, 3 edges</i>"]
+    mod_main["Main<br><i>main.py<br>32 nodes, 35 edges</i>"]
+    mod_scripts_check_coverage["Check Coverage<br><i>scripts/check_coverage.py<br>14 nodes, 15 edges</i>"]
+    mod_scripts_check_drift["Check Drift<br><i>scripts/check_drift.py<br>26 nodes, 26 edges</i>"]
+    mod_scripts_check_regression["Check Regression<br><i>scripts/check_regression.py<br>9 nodes, 9 edges</i>"]
+    mod_scripts_rescue_orphans["Rescue Orphans<br><i>scripts/rescue_orphans.py<br>27 nodes, 28 edges</i>"]
+    mod_scripts_run_memory_test["Run Memory Test<br><i>scripts/run_memory_test.py<br>5 nodes, 3 edges</i>"]
+    mod_tests_test_fastslow["Test Fastslow<br><i>tests/test_fastslow.py<br>23 nodes, 21 edges</i>"]
+    mod_tests_test_graphrag["Test Graphrag<br><i>tests/test_graphrag.py<br>15 nodes, 13 edges</i>"]
+    mod_tests_test_skills["Test Skills<br><i>tests/test_skills.py<br>23 nodes, 21 edges</i>"]
+    end
+    subgraph teardown ["TEARDOWN"]
+    end(["End"])
+    end
+    subgraph tools ["TOOLS"]
+    mod_tests_test_grounding_gate[["Test Grounding Gate<br><i>tests/test_grounding_gate.py<br>8 nodes, 6 edges</i>"]]
+    mod_tests_test_hardened_gates[["Test Hardened Gates<br><i>tests/test_hardened_gates.py<br>13 nodes, 11 edges</i>"]]
+    mod_tests_test_hmem[["Test Hmem<br><i>tests/test_hmem.py<br>19 nodes, 17 edges</i>"]]
+    mod_tests_test_local_recovery[["Test Local Recovery<br><i>tests/test_local_recovery.py<br>12 nodes, 10 edges</i>"]]
+    mod_tests_test_matm[["Test Register Agent<br><i>tests/test_matm.py<br>18 nodes, 16 edges</i>"]]
+    mod_tests_test_repair_step[["Test Repair Step<br><i>tests/test_repair_step.py<br>7 nodes, 5 edges</i>"]]
+    mod_tests_test_repair_v2[["Test Repair V2<br><i>tests/test_repair_v2.py<br>22 nodes, 20 edges</i>"]]
+    mod_tests_test_scoping[["Test Scoping<br><i>tests/test_scoping.py<br>12 nodes, 11 edges</i>"]]
+    mod_tests_test_skill_seeder[["Test Parse Agent Skills<br><i>tests/test_skill_seeder.py<br>12 nodes, 10 edges</i>"]]
+    mod_tests_test_structure_gate[["Test Structure Gate<br><i>tests/test_structure_gate.py<br>11 nodes, 9 edges</i>"]]
+    end
+    start --> mod_cogniteam_agents_repair_v2
+    mod_cogniteam_agents_repair_v2 --> mod_cogniteam_core_orchestrator
+    mod_cogniteam_core_orchestrator --> mod_cogniteam_core_planner
+    mod_cogniteam_core_planner --> mod_cogniteam_core_session
+    mod_cogniteam_core_session --> mod_cogniteam_memory_skills_seeder
+    mod_cogniteam_memory_skills_seeder --> mod_cogniteam_scoping_agent
+    mod_cogniteam_scoping_agent --> mod_cogniteam_scoping_loader
+    mod_cogniteam_scoping_loader --> mod_cogniteam_tools_filesystem_operations
+    mod_cogniteam_tools_filesystem_operations --> mod_cogniteam_tools_git_operations
+    mod_cogniteam_tools_git_operations --> mod_cogniteam_tools_integrations_api
+    mod_cogniteam_tools_integrations_api --> mod_cogniteam_tools_integrations_cocoguide
+    mod_cogniteam_tools_integrations_cocoguide --> mod_cogniteam_tools_integrations_pdf
+    mod_cogniteam_tools_integrations_pdf --> mod_cogniteam_tools_integrations_text_artifact
+    mod_cogniteam_tools_integrations_text_artifact --> mod_cogniteam_tools_integrations_tts
+    mod_cogniteam_tools_integrations_tts --> mod_cogniteam_tools_rag_engine
+    mod_cogniteam_tools_rag_engine --> mod_cogniteam_tools_scripting_proposals
+    mod_cogniteam_tools_scripting_proposals --> mod_cogniteam_tools_scripting_terminal
+    mod_cogniteam_tools_scripting_terminal --> mod_cogniteam_tools_ui_analyze
+    mod_cogniteam_tools_ui_analyze --> mod_cogniteam_tools_ui_combine
+    mod_cogniteam_tools_ui_combine --> mod_cogniteam_tools_ui_css
+    mod_cogniteam_tools_ui_css --> mod_cogniteam_tools_ui_fix
+    mod_cogniteam_tools_ui_fix --> mod_cogniteam_tools_ui_html
+    mod_cogniteam_tools_ui_html --> mod_cogniteam_tools_ui_js
+    mod_cogniteam_tools_ui_js --> mod_cogniteam_tools_ui_validate
+    mod_cogniteam_tools_ui_validate --> mod_cogniteam_tools_utils_llm
+    mod_cogniteam_tools_utils_llm --> mod_cogniteam_tools_utils_ratelimit
+    mod_cogniteam_tools_utils_ratelimit --> mod_cogniteam_tools_web__brave
+    mod_cogniteam_tools_web__brave --> mod_cogniteam_tools_web__cse
+    mod_cogniteam_tools_web__cse --> mod_cogniteam_tools_web_browse
+    mod_cogniteam_tools_web_browse --> mod_cogniteam_tools_web_extract
+    mod_cogniteam_tools_web_extract --> mod_cogniteam_tools_web_search
+    mod_cogniteam_tools_web_search --> mod_cogniteam_utils_fs
+    mod_cogniteam_utils_fs --> mod_cogniteam_utils_io
+    mod_cogniteam_utils_io --> mod_cogniteam_utils_security
+    mod_cogniteam_utils_security --> mod_cogniteam_world_model_cogniteam_integration
+    mod_cogniteam_world_model_cogniteam_integration --> mod_cogniteam_world_model_deterministic_cage
+    mod_cogniteam_world_model_deterministic_cage --> mod_cogniteam_world_model_rules_loader
+    mod_cogniteam_world_model_rules_loader --> mod_cogniteam_world_model_world_model_layer
+    mod_cogniteam_world_model_world_model_layer --> mod_cogniteam_world_model_yaml_loader
+    mod_cogniteam_world_model_yaml_loader --> mod_experiments_crear_proyecto_godot
+    mod_experiments_crear_proyecto_godot --> mod_main
+    mod_main --> mod_scripts_check_coverage
+    mod_scripts_check_coverage --> mod_scripts_check_drift
+    mod_scripts_check_drift --> mod_scripts_check_regression
+    mod_scripts_check_regression --> mod_scripts_rescue_orphans
+    mod_scripts_rescue_orphans --> mod_scripts_run_memory_test
+    mod_scripts_run_memory_test --> mod_tests_test_fastslow
+    mod_tests_test_fastslow --> mod_tests_test_graphrag
+    mod_tests_test_graphrag --> mod_tests_test_grounding_gate
+    mod_tests_test_grounding_gate --> mod_tests_test_hardened_gates
+    mod_tests_test_hardened_gates --> mod_tests_test_hmem
+    mod_tests_test_hmem --> mod_tests_test_local_recovery
+    mod_tests_test_local_recovery --> mod_tests_test_matm
+    mod_tests_test_matm --> mod_tests_test_repair_step
+    mod_tests_test_repair_step --> mod_tests_test_repair_v2
+    mod_tests_test_repair_v2 --> mod_tests_test_scoping
+    mod_tests_test_scoping --> mod_tests_test_skill_seeder
+    mod_tests_test_skill_seeder --> mod_tests_test_skills
+    mod_tests_test_skills --> mod_tests_test_structure_gate
+    mod_tests_test_structure_gate --> end

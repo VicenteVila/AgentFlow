@@ -19,6 +19,10 @@ agentflow -i ./my_repo --include-imports -o repo_imports.excalidraw  # dashed im
 # Domain profile with exhaustive labels
 agentflow -i my_agent.py --profile reaweb -l phased -o flow.excalidraw
 
+# Mermaid for GitHub, with detail control (orchestrator 133 nodes → readable)
+agentflow -i orchestrator.py -f mermaid --detail low -o flow.mmd
+agentflow -i ./my_repo -f mermaid -o repo.mmd
+
 # SVG export, dark theme, deterministic output
 agentflow -i my_agent.py -f svg --theme dark --seed 42 -o flow.svg
 ```
@@ -34,6 +38,8 @@ agentflow -i my_agent.py -f svg --theme dark --seed 42 -o flow.svg
 - **Smart visuals** — content-driven node sizing, orthogonal arrow routing,
   lateral feedback routes, light/dark themes, optional legend.
 - **Repo overview** — point at a directory and get a map of the whole codebase (one node per module, optional import edges).
+- **Mermaid export** — `flowchart TD` that renders natively on GitHub/GitLab/Notion, no extra tooling.
+- **Progressive detail** — `--detail low|med|high` makes huge graphs readable (low = labels only).
 - **Deterministic output** — pass `--seed` to get byte-identical files (great for CI diffs).
 - **SVG export** — same geometry, zero dependencies.
 
