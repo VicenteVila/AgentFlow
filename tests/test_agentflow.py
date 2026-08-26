@@ -590,3 +590,64 @@ def test_legend_optional():
     doc2 = to_excalidraw(g, legend=True)
     texts2 = [e.get("text", "") for e in doc2["elements"] if e["type"] == "text"]
     assert "LEGEND" in texts2
+
+
+# ── Repo overview tests ───────────────────────────────────────────────
+
+
+def test_repo_overview_builds_graph():
+    from agentflow.repo import build_repo_overview
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        root = Path(tmpdir)
+        (root / "agent_a.py").write_text(
+            "class AgentA:\n    def run(self):\n        if x:\n            do_a()\n"
+        )
+        (root / "agent_b.py").write_text(
+            "class AgentB:\n    def run(self):\n        for i in items:\n            do_b()\n"
+        )
+        (root / "empty.py").write_text("# nothing\n")
+        graph = build_repo_overview(root)
+        # Should have start, 2 module nodes, end
+        assert graph.node_count == 4
+        assert graph.edge_count >= 3
+        assert any("agent_a" in n.id for n in graph.nodes)
+        assert any("agent_b" in n.id for n in graph.nodes)
+
+
+def test_repo_overview_empty_dir():
+    from agentflow.repo import build_repo_overview
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        graph = build_repo_overview(Path(tmpdir))
+        assert graph.node_count == 2  # start + end with "no agents" edge
+
+
+def test_repo_overview_rejects_file():
+    from agentflow.repo import build_repo_overview
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        f = Path(tmpdir) / "single.py"
+        f.write_text("x = 1\n")
+        with pytest.raises(ValueError):
+            build_repo_overview(f)
+
+
+def test_repo_overview_cli(tmp_path=None):
+    import subprocess
+    import sys
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        root = Path(tmpdir)
+        (root / "mod.py").write_text(
+            "class MyAgent:\n    def run(self):\n        if ok:\n            act()\n"
+        )
+        out = Path(tmpdir) / "out.excalidraw"
+        result = subprocess.run(
+            [sys.executable, "-m", "agentflow.cli", "-i", str(root), "-o", str(out)],
+            capture_output=True, text=True,
+        )
+        assert result.returncode == 0
+        assert out.exists()
+        data = json.loads(out.read_text())
+        assert data["type"] == "excalidraw"

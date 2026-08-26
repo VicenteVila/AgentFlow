@@ -30,7 +30,7 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument(
         "-i", "--input",
         required=True,
-        help="Python source file to parse (e.g., agent.py)",
+        help="Python source file or directory to parse (e.g., agent.py or ./my_repo)",
     )
     parser.add_argument(
         "-o", "--output",
@@ -78,6 +78,11 @@ def main(argv: list[str] | None = None) -> None:
         help="RNG seed for deterministic output (same input + seed = identical file)",
     )
     parser.add_argument(
+        "--include-imports",
+        action="store_true",
+        help="In repo mode, add dashed import edges between modules",
+    )
+    parser.add_argument(
         "--summary",
         action="store_true",
         help="Print graph summary instead of generating diagram",
@@ -90,16 +95,31 @@ def main(argv: list[str] | None = None) -> None:
         print(f"Error: file not found: {input_path}", file=sys.stderr)
         sys.exit(1)
 
-    # Parse the source
-    from agentflow.parser import parse_file
+    # Parse the source (file vs directory → repo overview)
+    if input_path.is_dir():
+        from agentflow.repo import build_repo_overview
 
-    title = args.title or f"Flow: {input_path.stem}"
-    try:
-        graph = parse_file(str(input_path), profile=args.profile)
-    except ValueError as exc:
-        print(f"Error: {exc}", file=sys.stderr)
-        sys.exit(1)
-    graph.title = title
+        title = args.title or f"Repo: {input_path.resolve().name}"
+        try:
+            graph = build_repo_overview(
+                input_path,
+                profile=args.profile,
+                include_imports=args.include_imports,
+                title=title,
+            )
+        except ValueError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            sys.exit(1)
+    else:
+        from agentflow.parser import parse_file
+
+        title = args.title or f"Flow: {input_path.stem}"
+        try:
+            graph = parse_file(str(input_path), profile=args.profile)
+        except ValueError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            sys.exit(1)
+        graph.title = title
 
     if args.summary:
         print(graph.summary())

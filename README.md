@@ -9,8 +9,12 @@ AgentFlow reads Python source code of AI agents, extracts the control flow via A
 ```bash
 pip install -e .
 
-# Generic mode: works with ANY Python agent
+# Single file: works with ANY Python agent
 agentflow -i my_agent.py -o flow.excalidraw
+
+# Whole repository overview (each module → one node)
+agentflow -i ./my_repo -o repo.excalidraw
+agentflow -i ./my_repo --include-imports -o repo_imports.excalidraw  # dashed import edges
 
 # Domain profile with exhaustive labels
 agentflow -i my_agent.py --profile reaweb -l phased -o flow.excalidraw
@@ -29,6 +33,7 @@ agentflow -i my_agent.py -f svg --theme dark --seed 42 -o flow.svg
   (vertical FASE 1/2/3 boxes with feedback arrows), `grid`.
 - **Smart visuals** — content-driven node sizing, orthogonal arrow routing,
   lateral feedback routes, light/dark themes, optional legend.
+- **Repo overview** — point at a directory and get a map of the whole codebase (one node per module, optional import edges).
 - **Deterministic output** — pass `--seed` to get byte-identical files (great for CI diffs).
 - **SVG export** — same geometry, zero dependencies.
 
@@ -71,12 +76,13 @@ models.py     Node / Edge / FlowGraph          profiles.py   generic · reaweb �
 | `layouts.py` | hierarchical / phased / grid positioning, text measurement, themes |
 | `excalidraw.py` | FlowGraph → Excalidraw JSON (bindings, orthogonal routing) |
 | `svg.py` | FlowGraph → standalone SVG |
+| `repo.py` | Directory scan → overview FlowGraph |
 | `cli.py` | argparse front-end |
 
 ## Development
 
 ```bash
-python -m pytest tests/ -q   # 36 tests, <1s
+python -m pytest tests/ -q   # 46 tests, <1s
 python -m ruff check agentflow tests
 ```
 
