@@ -19,6 +19,16 @@ from pathlib import Path
 from agentflow.models import Edge, FlowGraph, Node, NodeType
 from agentflow.profiles import Profile, get_profile
 
+_FUNC_TYPES = (ast.FunctionDef, ast.AsyncFunctionDef)
+
+
+def _unwrap_call(expr: object):
+    """Unwrap Await so async calls are detected like sync ones."""
+    import ast as _ast
+    if isinstance(expr, _ast.Await):
+        return expr.value
+    return expr
+
 
 class ParseContext:
     """Carries the profile and target graph through the parse pipeline."""
@@ -56,9 +66,18 @@ def parse_source(
     if agent_cls:
         _parse_agent_class(agent_cls, ParseContext(prof, graph))
     else:
-        for node in ast.walk(tree):
-            if isinstance(node, ast.FunctionDef):
-                _parse_function(node, graph)
+        # No agent class: treat top-level functions as entry points.
+        # Expand the largest function's body so its internal control flow is visible.
+        ctx = ParseContext(prof, graph)
+        top_funcs = [n for n in tree.body if isinstance(n, _FUNC_TYPES)]
+        for fn in top_funcs:
+            fid = f"fn_{fn.name}"
+            label = fn.name.lstrip("_").replace("_", " ").title()
+            graph.add_node(Node(id=fid, label=label, node_type=NodeType.SUBPROCESS, line=fn.lineno))
+            graph.add_edge(Edge(source="start", target=fid))
+            # Expand each function's body so internal control flow is visible
+            if len(fn.body) > 3:
+                _parse_block(ctx, fn.body, fid)
 
     if not any(n.node_type == NodeType.END for n in graph.nodes):
         graph.add_node(Node(
@@ -108,7 +127,7 @@ def _find_agent_class(tree: ast.Module) -> ast.ClassDef | None:
         if isinstance(node, ast.ClassDef):
             name_lower = node.name.lower()
             if "agent" in name_lower or any(
-                isinstance(item, ast.FunctionDef) and item.name == "run"
+                isinstance(item, _FUNC_TYPES) and item.name == "run"
                 for item in node.body
             ):
                 return node
@@ -120,7 +139,7 @@ def _parse_agent_class(cls: ast.ClassDef, ctx: ParseContext) -> None:
     init_method = None
     handle_eval = None
     for item in cls.body:
-        if isinstance(item, ast.FunctionDef):
+        if isinstance(item, _FUNC_TYPES):
             if item.name == "run":
                 run_method = item
             elif item.name == "__init__":
@@ -142,13 +161,24 @@ def _parse_agent_class(cls: ast.ClassDef, ctx: ParseContext) -> None:
         if handle_eval:
             _scan_handle_eval_for_tools(handle_eval, ctx)
     else:
-        for item in cls.body:
-            if isinstance(item, ast.FunctionDef) and item.name != "__init__":
-                _parse_function(item, ctx.graph)
-                break
+        # No run() method: expand the largest non-init method as the main flow.
+        candidates = [i for i in cls.body if isinstance(i, _FUNC_TYPES) and i.name != "__init__"]
+        for item in candidates:
+            fid = f"fn_{item.name}_{item.lineno}"
+            label = item.name.lstrip("_").replace("_", " ").title()
+            detail = ""
+            if (item.body and isinstance(item.body[0], ast.Expr)
+                    and isinstance(item.body[0].value, ast.Constant)
+                    and isinstance(item.body[0].value.value, str)):
+                detail = item.body[0].value.value[:120]
+            ctx.graph.add_node(Node(id=fid, label=label, detail=detail,
+                                    node_type=NodeType.SUBPROCESS, line=item.lineno))
+            ctx.graph.add_edge(Edge(source="start", target=fid))
+            if len(item.body) > 3:
+                _parse_block(ctx, item.body, fid)
 
 
-def _parse_init(method: ast.FunctionDef, ctx: ParseContext) -> None:
+def _parse_init(method: ast.FunctionDef | ast.AsyncFunctionDef, ctx: ParseContext) -> None:
     setup_steps = []
     for stmt in method.body:
         if isinstance(stmt, ast.Assign):
@@ -171,7 +201,7 @@ def _parse_init(method: ast.FunctionDef, ctx: ParseContext) -> None:
                             node_type=NodeType.PROCESS))
 
 
-def _parse_run_method(method: ast.FunctionDef, ctx: ParseContext, prev_node: str) -> None:
+def _parse_run_method(method: ast.FunctionDef | ast.AsyncFunctionDef, ctx: ParseContext, prev_node: str) -> None:
     ctx.graph.add_node(Node(
         id="main_loop", label="Main Loop",
         detail="while True:\n  turn += 1\n  register_evaluation()\n  budget.done()?",
@@ -200,8 +230,12 @@ def _parse_block(ctx: ParseContext, stmts: list[ast.stmt], parent_id: str,
             current = _parse_assign(ctx, stmt, current)
         elif isinstance(stmt, ast.Try):
             current = _parse_try(ctx, stmt, current, depth)
-        elif isinstance(stmt, ast.FunctionDef):
+        elif isinstance(stmt, _FUNC_TYPES):
             current = _parse_local_function(stmt, ctx.graph, current)
+        elif isinstance(stmt, ast.AsyncFor):
+            current = _parse_for(ctx, stmt, current, depth)
+        elif isinstance(stmt, ast.AsyncWith):
+            current = _parse_block(ctx, stmt.body, current, depth + 1)
     return current
 
 
@@ -278,7 +312,7 @@ def _detect_tool_dispatch(stmt: ast.If, prof: Profile) -> str | None:
     return None
 
 
-def _parse_for(ctx: ParseContext, stmt: ast.For, parent_id: str, depth: int) -> str:
+def _parse_for(ctx: ParseContext, stmt: ast.For | ast.AsyncFor, parent_id: str, depth: int) -> str:
     loop_id = f"loop_{stmt.lineno}"
     target = stmt.target
     if isinstance(target, ast.Name):
@@ -303,8 +337,9 @@ def _parse_for(ctx: ParseContext, stmt: ast.For, parent_id: str, depth: int) -> 
 
 
 def _parse_expr_stmt(ctx: ParseContext, stmt: ast.Expr, parent_id: str) -> str:
-    if isinstance(stmt.value, ast.Call):
-        call_info = _extract_call_info(stmt.value, ctx.prof)
+    inner = _unwrap_call(stmt.value)
+    if isinstance(inner, ast.Call):
+        call_info = _extract_call_info(inner, ctx.prof)
         if call_info:
             node_id, label, node_type, detail = call_info
             ctx.graph.add_node(Node(
@@ -317,8 +352,9 @@ def _parse_expr_stmt(ctx: ParseContext, stmt: ast.Expr, parent_id: str) -> str:
 
 
 def _parse_assign(ctx: ParseContext, stmt: ast.Assign, parent_id: str) -> str:
-    if isinstance(stmt.value, ast.Call):
-        call_info = _extract_call_info(stmt.value, ctx.prof)
+    inner = _unwrap_call(stmt.value)
+    if isinstance(inner, ast.Call):
+        call_info = _extract_call_info(inner, ctx.prof)
         if call_info:
             node_id, label, node_type, detail = call_info
             if stmt.targets and isinstance(stmt.targets[0], ast.Name):
@@ -343,7 +379,7 @@ def _parse_try(ctx: ParseContext, stmt: ast.Try, parent_id: str, depth: int) -> 
     return last
 
 
-def _parse_local_function(method: ast.FunctionDef, graph: FlowGraph, parent_id: str) -> str:
+def _parse_local_function(method: ast.FunctionDef | ast.AsyncFunctionDef, graph: FlowGraph, parent_id: str) -> str:
     node_id = f"fn_{method.name}_{method.lineno}"
     label = method.name.lstrip("_").replace("_", " ").title()
     detail = ""
@@ -359,7 +395,7 @@ def _parse_local_function(method: ast.FunctionDef, graph: FlowGraph, parent_id: 
     return node_id
 
 
-def _parse_function(method: ast.FunctionDef, graph: FlowGraph) -> None:
+def _parse_function(method: ast.FunctionDef | ast.AsyncFunctionDef, graph: FlowGraph) -> None:
     node_id = f"fn_{method.name}"
     label = method.name.lstrip("_").replace("_", " ").title()
     graph.add_node(Node(id=node_id, label=label, node_type=NodeType.SUBPROCESS,
@@ -367,7 +403,7 @@ def _parse_function(method: ast.FunctionDef, graph: FlowGraph) -> None:
     graph.add_edge(Edge(source="start", target=node_id))
 
 
-def _scan_handle_eval_for_tools(method: ast.FunctionDef, ctx: ParseContext) -> None:
+def _scan_handle_eval_for_tools(method: ast.FunctionDef | ast.AsyncFunctionDef, ctx: ParseContext) -> None:
     """Scan _handle_eval_result for tool dispatch patterns and add tool nodes.
 
     These are tools dispatched from the for-loop body via if/elif chains.
@@ -450,6 +486,15 @@ def _extract_call_info(
             f"fn_{func.id}_{call.lineno}",
             label,
             node_type,
+            detail,
+        )
+
+    if isinstance(func, ast.Name) and func.id in prof.tool_names:
+        label, detail = prof.tool_names[func.id]
+        return (
+            f"tool_{func.id}_{call.lineno}",
+            label,
+            NodeType.TOOL,
             detail,
         )
 

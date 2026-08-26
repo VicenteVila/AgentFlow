@@ -313,5 +313,23 @@ def load_profile(path: str | Path) -> Profile:
         normalized["evolution_methods"] = {
             k: (v if isinstance(v, tuple) else (str(v), "")) for k, v in evo.items()
         }
+    # Normalize special_calls string node types ("tool", "process", ...)
+    _NODE_TYPE_MAP = {
+        "start": NodeType.START, "end": NodeType.END, "process": NodeType.PROCESS,
+        "decision": NodeType.DECISION, "subprocess": NodeType.SUBPROCESS,
+        "tool": NodeType.TOOL, "loop": NodeType.LOOP, "evolution": NodeType.EVOLUTION,
+    }
+    sc = normalized.get("special_calls")
+    if isinstance(sc, dict):
+        norm_sc: dict[str, tuple[str, str, NodeType]] = {}
+        for k, v in sc.items():
+            if not isinstance(v, (list, tuple)) or len(v) != 3:
+                norm_sc[k] = v  # let Profile.__init__ raise
+                continue
+            label, detail, ntype = v
+            if isinstance(ntype, str):
+                ntype = _NODE_TYPE_MAP.get(ntype.lower(), NodeType.PROCESS)
+            norm_sc[k] = (label, detail, ntype)
+        normalized["special_calls"] = norm_sc
 
     return Profile(**normalized)

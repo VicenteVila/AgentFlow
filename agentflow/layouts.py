@@ -647,9 +647,13 @@ def _compute_phase_boxes(
             continue
 
         defs = defs_map.get(phase, defs_map[2])
+        label = defs["label"]
+        lw, _ = measure_text(label, 22)
         min_x = min(n.x for n in nodes) - PHASE_PAD
         min_y = min(n.y for n in nodes) - PHASE_PAD
         max_x = max(n.x + n.width for n in nodes) + PHASE_PAD
+        # Ensure box is wide enough for its label
+        max_x = max(max_x, min_x + lw + 60)
         max_y = max(n.y + n.height for n in nodes) + PHASE_PAD
 
         boxes.append(PhaseBox(
