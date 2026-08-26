@@ -31,6 +31,17 @@ from agentflow.layouts import (
 )
 from agentflow.models import FlowGraph, NodeType
 
+_DIFF_NODE_COLORS = {
+    "added": {"background": "#a7f3d0", "stroke": "#065f46"},
+    "removed": {"background": "#fecaca", "stroke": "#991b1b"},
+    "changed": {"background": "#fef3c7", "stroke": "#92400e"},
+}
+_DIFF_EDGE_COLORS = {
+    "added": "#065f46",
+    "removed": "#991b1b",
+    "changed": "#92400e",
+}
+
 # Module-level RNG; re-seeded by to_excalidraw(seed=...) for deterministic output
 _rng: random.Random = random.Random()
 
@@ -48,9 +59,13 @@ def _rid() -> str:
 
 def _base_element(pos: PositionedNode, eid: str, pal: dict) -> dict[str, Any]:
     """Common properties for all Excalidraw elements."""
-    colors = pal["node_colors"].get(
-        pos.node.node_type, {"background": "#e9ecef", "stroke": "#495057"}
-    )
+    diff = pos.node.diff_status
+    if diff in _DIFF_NODE_COLORS:
+        colors = _DIFF_NODE_COLORS[diff]
+    else:
+        colors = pal["node_colors"].get(
+            pos.node.node_type, {"background": "#e9ecef", "stroke": "#495057"}
+        )
     return {
         "id": eid,
         "x": pos.x,
@@ -62,9 +77,9 @@ def _base_element(pos: PositionedNode, eid: str, pal: dict) -> dict[str, Any]:
         "backgroundColor": colors["background"],
         "fillStyle": "solid",
         "strokeWidth": 2,
-        "strokeStyle": "solid",
+        "strokeStyle": "dashed" if pos.node.diff_status == "removed" else "solid",
         "roughness": 1,
-        "opacity": 100,
+        "opacity": 60 if pos.node.diff_status == "removed" else 100,
         "groupIds": [],
         "frameId": None,
         "index": None,
@@ -473,13 +488,20 @@ def to_excalidraw(
     for edge in edges_by_pair.values():
         arrow_id = _rid()
         label_id = _rid() if edge.label else None
+        edge_color = _DIFF_EDGE_COLORS.get(edge.diff_status, pal["arrow"])
 
         arrow_elements = _make_arrow(
             pos_lookup[edge.source], pos_lookup[edge.target],
             id_map[edge.source], id_map[edge.target],
             edge.label, arrow_id, label_id,
-            color=pal["arrow"],
+            color=edge_color,
         )
+        # Removed edges render as dashed
+        if edge.diff_status == "removed":
+            for el in arrow_elements:
+                if el["type"] == "arrow":
+                    el["strokeStyle"] = "dashed"
+                    el["opacity"] = 60
         elements.extend(arrow_elements)
         _bind_arrow(elements, id_map[edge.source], arrow_id)
         _bind_arrow(elements, id_map[edge.target], arrow_id)

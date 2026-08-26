@@ -1,0 +1,22 @@
+%% Diff: /tmp/old.py → /tmp/new.py
+flowchart TD
+    classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    subgraph teardown ["TEARDOWN"]
+    end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    end
+    subgraph init ["INIT"]
+    start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    end
+    subgraph loop ["MAIN LOOP"]
+    main_loop["Main Loop<br><i>while True:<br>  turn += 1<br>  register_evaluation()<br>  budget.done()?</i>"]
+    end
+    subgraph dispatch ["DISPATCH & EVALUATE"]
+    dec_3{"x<br><i>Condición en línea 3:<br>x</i>"}
+    dec_5{"y<br><i>Condición en línea 5:<br>y</i>"}:::added
+    end
+    dec_3 --> dec_5
+    main_loop --> dec_3
+    start --> main_loop

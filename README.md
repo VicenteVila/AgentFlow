@@ -23,6 +23,10 @@ agentflow -i my_agent.py --profile reaweb -l phased -o flow.excalidraw
 agentflow -i orchestrator.py -f mermaid --detail low -o flow.mmd
 agentflow -i ./my_repo -f mermaid -o repo.mmd
 
+# Diff two versions (green=added, red=removed, amber=changed)
+agentflow diff old.py new.py -o diff.excalidraw
+agentflow diff old.py new.py -f mermaid -o diff.mmd
+
 # SVG export, dark theme, deterministic output
 agentflow -i my_agent.py -f svg --theme dark --seed 42 -o flow.svg
 ```
@@ -40,6 +44,7 @@ agentflow -i my_agent.py -f svg --theme dark --seed 42 -o flow.svg
 - **Repo overview** — point at a directory and get a map of the whole codebase (one node per module, optional import edges).
 - **Mermaid export** — `flowchart TD` that renders natively on GitHub/GitLab/Notion, no extra tooling.
 - **Progressive detail** — `--detail low|med|high` makes huge graphs readable (low = labels only).
+- **Diff mode** — `agentflow diff old.py new.py` highlights added/removed/changed nodes (leverages `--seed` determinism).
 - **Deterministic output** — pass `--seed` to get byte-identical files (great for CI diffs).
 - **SVG export** — same geometry, zero dependencies.
 
@@ -82,13 +87,15 @@ models.py     Node / Edge / FlowGraph          profiles.py   generic · reaweb �
 | `layouts.py` | hierarchical / phased / grid positioning, text measurement, themes |
 | `excalidraw.py` | FlowGraph → Excalidraw JSON (bindings, orthogonal routing) |
 | `svg.py` | FlowGraph → standalone SVG |
+| `mermaid.py` | FlowGraph → Mermaid flowchart TD |
+| `diff.py` | Diff two graphs (added/removed/changed) |
 | `repo.py` | Directory scan → overview FlowGraph |
 | `cli.py` | argparse front-end |
 
 ## Development
 
 ```bash
-python -m pytest tests/ -q   # 46 tests, <1s
+python -m pytest tests/ -q   # 57 tests, <1s
 python -m ruff check agentflow tests
 ```
 

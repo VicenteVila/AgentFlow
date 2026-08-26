@@ -75,9 +75,11 @@ def with_detail_level(graph: FlowGraph, level: str) -> FlowGraph:
         else:
             detail = n.detail
         filtered.add_node(Node(id=n.id, label=n.label, detail=detail,
-                               node_type=n.node_type, line=n.line, phase=n.phase))
+                               node_type=n.node_type, line=n.line, phase=n.phase,
+                               diff_status=n.diff_status))
     for e in graph.edges:
-        filtered.add_edge(Edge(source=e.source, target=e.target, label=e.label, style=e.style))
+        filtered.add_edge(Edge(source=e.source, target=e.target, label=e.label,
+                               style=e.style, diff_status=e.diff_status))
     return filtered
 
 

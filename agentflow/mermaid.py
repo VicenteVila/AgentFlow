@@ -75,8 +75,12 @@ def _node_definition(node) -> str:
     nid = _sanitize_id(node.id)
     label = _node_label(node)
     l_brace, r_brace = _MERMAID_SHAPES.get(node.node_type, _DEFAULT_SHAPE)
-    # Evolution gets a class for dashed styling
-    suffix = ":::evolution" if node.node_type == NodeType.EVOLUTION else ""
+    if node.diff_status in ("added", "removed", "changed"):
+        suffix = f":::{node.diff_status}"
+    elif node.node_type == NodeType.EVOLUTION:
+        suffix = ":::evolution"
+    else:
+        suffix = ""
     return f'    {nid}{l_brace}"{label}"{r_brace}{suffix}'
 
 
@@ -115,6 +119,9 @@ def to_mermaid(
 
     # Class for evolution nodes (dashed)
     lines.append("    classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5")
+    lines.append("    classDef added fill:#a7f3d0,stroke:#065f46")
+    lines.append("    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5")
+    lines.append("    classDef changed fill:#fde68a,stroke:#92400e")
 
     # Phase / group subgraphs
     boxes = result.phase_boxes if layout == "phased" else result.group_boxes
@@ -167,7 +174,7 @@ def to_mermaid(
     from agentflow.geometry import resolve_edges
     edges_by_pair = resolve_edges(graph, result)
     for edge in edges_by_pair.values():
-        dashed = edge.style == "dashed"
+        dashed = edge.style == "dashed" or edge.diff_status == "removed"
         lines.append(_edge_line(edge.source, edge.target, edge.label, dashed))
     for fb in result.feedback_arrows:
         lines.append(_edge_line(fb.source_id, fb.target_id, fb.label, dashed=True))

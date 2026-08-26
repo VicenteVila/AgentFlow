@@ -1,5 +1,6 @@
 """AgentFlow - Parse and visualize AI agent control flows as Excalidraw/SVG diagrams."""
 
+from agentflow.diff import diff_files, diff_graphs
 from agentflow.excalidraw import save_excalidraw, to_excalidraw
 from agentflow.mermaid import save_mermaid, to_mermaid
 from agentflow.models import Edge, FlowGraph, Node, NodeType
@@ -8,7 +9,7 @@ from agentflow.profiles import Profile, get_profile, load_profile
 from agentflow.repo import build_repo_overview, collect_python_files
 from agentflow.svg import save_svg, to_svg
 
-__version__ = "1.3.0"
+__version__ = "1.4.0"
 __all__ = [
     "Edge",
     "FlowGraph",
@@ -17,6 +18,8 @@ __all__ = [
     "Profile",
     "build_repo_overview",
     "collect_python_files",
+    "diff_files",
+    "diff_graphs",
     "get_profile",
     "load_profile",
     "parse_file",

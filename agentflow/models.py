@@ -25,6 +25,7 @@ class Node:
     detail: str = ""
     line: int = 0
     phase: int = 0  # Phase hint (1/2/3); 0 = let the layout decide structurally
+    diff_status: str = ""  # "", "added", "removed", "changed", "unchanged"
 
     def __hash__(self) -> int:
         return hash(self.id)
@@ -41,6 +42,7 @@ class Edge:
     target: str
     label: str = ""
     style: str = "solid"
+    diff_status: str = ""  # "", "added", "removed", "unchanged"
 
     def __hash__(self) -> int:
         return hash((self.source, self.target, self.label))

@@ -754,3 +754,114 @@ def test_mermaid_cli(tmp_path=None):
         assert result.returncode == 0
         assert out.exists()
         assert "flowchart TD" in out.read_text()
+
+
+# ── Diff tests ────────────────────────────────────────────────────────
+
+
+def test_diff_graphs_added_removed():
+    from agentflow.diff import diff_graphs
+
+    old = FlowGraph(title="old")
+    old.add_node(Node(id="a", label="A"))
+    old.add_node(Node(id="b", label="B"))
+    old.add_edge(Edge(source="a", target="b"))
+
+    new = FlowGraph(title="new")
+    new.add_node(Node(id="a", label="A"))
+    new.add_node(Node(id="c", label="C"))
+    new.add_edge(Edge(source="a", target="c"))
+
+    merged = diff_graphs(old, new)
+    by_id = {n.id: n for n in merged.nodes}
+    assert by_id["a"].diff_status == "unchanged"
+    assert by_id["b"].diff_status == "removed"
+    assert by_id["c"].diff_status == "added"
+
+    edge_status = {(e.source, e.target): e.diff_status for e in merged.edges}
+    assert edge_status[("a", "b")] == "removed"
+    assert edge_status[("a", "c")] == "added"
+
+
+def test_diff_detects_changed_node():
+    from agentflow.diff import diff_graphs
+
+    old = FlowGraph(title="old")
+    old.add_node(Node(id="a", label="Hello"))
+
+    new = FlowGraph(title="new")
+    new.add_node(Node(id="a", label="World"))
+
+    merged = diff_graphs(old, new)
+    assert merged.nodes[0].diff_status == "changed"
+
+
+def test_diff_render_excalidraw_colors():
+    from agentflow.diff import diff_graphs
+
+    old = FlowGraph(title="old")
+    old.add_node(Node(id="a", label="A"))
+    old.add_node(Node(id="b", label="B"))
+    old.add_edge(Edge(source="a", target="b"))
+
+    new = FlowGraph(title="new")
+    new.add_node(Node(id="a", label="A"))
+    new.add_node(Node(id="c", label="C"))
+    new.add_edge(Edge(source="a", target="c"))
+
+    merged = diff_graphs(old, new)
+    doc = to_excalidraw(merged, seed=42)
+
+    # Added node should have diff green background
+    added_shapes = [e for e in doc["elements"] if e.get("backgroundColor") == "#a7f3d0"]
+    assert len(added_shapes) >= 1
+    # Removed node should have diff red background (or at least one)
+    removed_shapes = [e for e in doc["elements"] if e.get("backgroundColor") == "#fecaca"]
+    assert len(removed_shapes) >= 1
+
+
+def test_diff_render_mermaid_classes():
+    from agentflow.diff import diff_graphs
+    from agentflow.mermaid import to_mermaid
+
+    old = FlowGraph(title="old")
+    old.add_node(Node(id="a", label="A"))
+    old.add_node(Node(id="b", label="B"))
+
+    new = FlowGraph(title="new")
+    new.add_node(Node(id="a", label="A"))
+    new.add_node(Node(id="c", label="C"))
+
+    merged = diff_graphs(old, new)
+    text = to_mermaid(merged)
+    assert ":::added" in text
+    assert ":::removed" in text
+    assert "classDef added" in text
+
+
+def test_diff_cli(tmp_path=None):
+    import subprocess
+    import sys
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        old = Path(tmpdir) / "old.py"
+        new = Path(tmpdir) / "new.py"
+        old.write_text("class Agent:\n    def run(self):\n        if x:\n            do_a()\n")
+        new.write_text("class Agent:\n    def run(self):\n        if x:\n            do_a()\n        if y:\n            do_b()\n")
+        out = Path(tmpdir) / "diff.excalidraw"
+        result = subprocess.run(
+            [sys.executable, "-m", "agentflow.cli", "diff", str(old), str(new), "-o", str(out)],
+            capture_output=True, text=True,
+        )
+        assert result.returncode == 0
+        assert out.exists()
+        data = json.loads(out.read_text())
+        assert data["type"] == "excalidraw"
+        # Also test mermaid diff
+        out2 = Path(tmpdir) / "diff.mmd"
+        result2 = subprocess.run(
+            [sys.executable, "-m", "agentflow.cli", "diff", str(old), str(new), "-o", str(out2), "-f", "mermaid"],
+            capture_output=True, text=True,
+        )
+        assert result2.returncode == 0
+        assert ":::added" in out2.read_text()

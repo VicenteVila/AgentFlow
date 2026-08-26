@@ -4,6 +4,7 @@ Usage:
     agentflow --input agent.py --output flowchart.excalidraw
     agentflow --input agent.py --output flowchart.excalidraw --layout phased
     agentflow -i ./my_repo -o repo.mmd -f mermaid --detail low
+    agentflow diff old.py new.py -o diff.excalidraw
     agentflow --input agent.py  # prints to stdout as JSON
 """
 
@@ -17,7 +18,80 @@ from pathlib import Path
 from agentflow import __version__
 
 
+def _handle_diff(argv: list[str]) -> None:
+    parser = argparse.ArgumentParser(
+        prog="agentflow diff",
+        description="Diff two agent files and render the merged graph (green=added, red=removed, amber=changed).",
+    )
+    parser.add_argument("old", help="Old version of the file")
+    parser.add_argument("new", help="New version of the file")
+    parser.add_argument("-o", "--output", default=None, help="Output file path")
+    parser.add_argument("-l", "--layout", choices=["hierarchical", "grid", "phased"], default="hierarchical")
+    parser.add_argument("-f", "--format", choices=["excalidraw", "svg", "mermaid"], default="excalidraw")
+    parser.add_argument("--profile", default="generic")
+    parser.add_argument("-t", "--title", default=None)
+    parser.add_argument("--theme", choices=["light", "dark"], default="light")
+    parser.add_argument("--no-legend", action="store_true")
+    parser.add_argument("--seed", type=int, default=None)
+    parser.add_argument("--detail", choices=["low", "med", "high"], default="high")
+    args = parser.parse_args(argv)
+
+    old_p = Path(args.old)
+    new_p = Path(args.new)
+    for path in (old_p, new_p):
+        if not path.exists():
+            print(f"Error: file not found: {path}", file=sys.stderr)
+            sys.exit(1)
+
+    from agentflow.diff import diff_files
+
+    try:
+        graph = diff_files(str(old_p), str(new_p), profile=args.profile)
+    except ValueError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(1)
+    if args.title:
+        graph.title = args.title
+
+    if args.format == "svg":
+        from agentflow.svg import save_svg, to_svg
+
+        if args.output:
+            path = save_svg(graph, args.output, layout=args.layout, theme=args.theme,
+                            legend=not args.no_legend, detail=args.detail)
+            print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
+        else:
+            sys.stdout.write(to_svg(graph, layout=args.layout, theme=args.theme,
+                                    legend=not args.no_legend, detail=args.detail))
+        return
+    if args.format == "mermaid":
+        from agentflow.mermaid import save_mermaid, to_mermaid
+
+        if args.output:
+            path = save_mermaid(graph, args.output, layout=args.layout, detail=args.detail)
+            print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
+        else:
+            sys.stdout.write(to_mermaid(graph, layout=args.layout, detail=args.detail))
+        return
+    from agentflow.excalidraw import save_excalidraw, to_excalidraw
+
+    if args.output:
+        path = save_excalidraw(graph, args.output, layout=args.layout, theme=args.theme,
+                               legend=not args.no_legend, seed=args.seed, detail=args.detail)
+        print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
+    else:
+        doc = to_excalidraw(graph, layout=args.layout, theme=args.theme,
+                            legend=not args.no_legend, seed=args.seed, detail=args.detail)
+        json.dump(doc, sys.stdout, indent=2, ensure_ascii=False)
+        sys.stdout.write("\n")
+
+
 def main(argv: list[str] | None = None) -> None:
+    _raw = argv if argv is not None else sys.argv[1:]
+    if _raw and _raw[0] == "diff":
+        _handle_diff(_raw[1:])
+        return
+
     parser = argparse.ArgumentParser(
         prog="agentflow",
         description="Parse AI agent control flows and generate Excalidraw diagrams.",

@@ -29,6 +29,17 @@ from agentflow.layouts import (
 )
 from agentflow.models import FlowGraph, NodeType
 
+_DIFF_NODE_COLORS = {
+    "added": {"background": "#a7f3d0", "stroke": "#065f46"},
+    "removed": {"background": "#fecaca", "stroke": "#991b1b"},
+    "changed": {"background": "#fef3c7", "stroke": "#92400e"},
+}
+_DIFF_EDGE_COLORS = {
+    "added": "#065f46",
+    "removed": "#991b1b",
+    "changed": "#92400e",
+}
+
 FONT_STACK = "'Comic Shanns','Virgil','Segoe UI',system-ui,sans-serif"
 
 
@@ -43,11 +54,17 @@ def _poly_points(points: list[list[float]], ox: float, oy: float) -> str:
 
 def _shape_svg(pos: PositionedNode, pal: dict) -> str:
     """SVG shape for a node, without its text."""
-    colors = pal["node_colors"].get(
-        pos.node.node_type, {"background": "#e9ecef", "stroke": "#495057"}
-    )
+    diff = pos.node.diff_status
+    if diff in _DIFF_NODE_COLORS:
+        colors = _DIFF_NODE_COLORS[diff]
+    else:
+        colors = pal["node_colors"].get(
+            pos.node.node_type, {"background": "#e9ecef", "stroke": "#495057"}
+        )
     fill = colors["background"]
     stroke = colors["stroke"]
+    diff_stroke_dash = ' stroke-dasharray="7 5"' if diff == "removed" else ""
+    # Removed nodes: dashed stroke, lower opacity handled via shape style
     t = pos.node.node_type
 
     if t == NodeType.EVOLUTION:
@@ -61,7 +78,7 @@ def _shape_svg(pos: PositionedNode, pal: dict) -> str:
     if t in (NodeType.START, NodeType.END):
         rx, ry = pos.width / 2, pos.height / 2
         cx, cy = pos.x + rx, pos.y + ry
-        return f'<ellipse cx="{_fmt(cx)}" cy="{_fmt(cy)}" rx="{_fmt(rx)}" ry="{_fmt(ry)}" {common}/>'
+        return f'<ellipse cx="{_fmt(cx)}" cy="{_fmt(cy)}" rx="{_fmt(rx)}" ry="{_fmt(ry)}" {common}{diff_stroke_dash}/>'
 
     if t == NodeType.DECISION:
         cx, cy = pos.x + pos.width / 2, pos.y + pos.height / 2
@@ -69,11 +86,11 @@ def _shape_svg(pos: PositionedNode, pal: dict) -> str:
             f"{_fmt(cx)},{_fmt(pos.y)} {_fmt(pos.x + pos.width)},{_fmt(cy)} "
             f"{_fmt(cx)},{_fmt(pos.y + pos.height)} {_fmt(pos.x)},{_fmt(cy)}"
         )
-        return f'<polygon points="{pts}" {common}/>'
+        return f'<polygon points="{pts}" {common}{diff_stroke_dash}/>'
 
     return (
         f'<rect x="{_fmt(pos.x)}" y="{_fmt(pos.y)}" '
-        f'width="{_fmt(pos.width)}" height="{_fmt(pos.height)}" rx="8" {common}/>'
+        f'width="{_fmt(pos.width)}" height="{_fmt(pos.height)}" rx="8" {common}{diff_stroke_dash}/>'
     )
 
 
@@ -186,7 +203,9 @@ def to_svg(
 
     for key, edge in edges_by_pair.items():
         sx, sy, pts = routed_points(pos_lookup[key[0]], pos_lookup[key[1]])
-        parts.append(_arrow_path(pts, sx, sy, pal["arrow"], dashed=False))
+        edge_color = _DIFF_EDGE_COLORS.get(edge.diff_status, pal["arrow"])
+        is_dashed = edge.diff_status == "removed" or edge.style == "dashed"
+        parts.append(_arrow_path(pts, sx, sy, edge_color, dashed=is_dashed))
         if edge.label:
             mx = sx + (pts[-1][0]) / 2
             my = sy + (pts[-1][1]) / 2 - 12
