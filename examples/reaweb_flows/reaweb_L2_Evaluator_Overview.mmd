@@ -1,0 +1,34 @@
+%% ReaWeb · L2 · Evaluator (overview)
+%%{init: {'securityLevel':'loose'}}%%
+flowchart TD
+    classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    subgraph n_1 ["FASE 1 · PREPARACIÓN"]
+    n_start(["Start"])
+    end
+    subgraph n_2 ["FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)"]
+    group_0[["Visual Checks"]]
+    group_1[["Requirements & Sections"]]
+    group_2[["Subtasks"]]
+    group_3[["Novelty"]]
+    group_4[["Gating & Evaluate"]]
+    group_5[["Metrics I/O"]]
+    end
+    subgraph n_3 ["FASE 3 · CIERRE"]
+    n_end(["End"])
+    end
+    n_start --> group_0
+    group_0 --> group_1
+    group_1 --> group_2
+    group_2 --> group_3
+    group_3 --> group_4
+    group_4 --> group_5
+    group_5 --> n_end
+    click group_0 href "reaweb_L3_Evaluator_visual_checks.html" "Abrir detalle"
+    click group_1 href "reaweb_L3_Evaluator_requirements_sections.html" "Abrir detalle"
+    click group_2 href "reaweb_L3_Evaluator_subtasks.html" "Abrir detalle"
+    click group_3 href "reaweb_L3_Evaluator_novelty.html" "Abrir detalle"
+    click group_4 href "reaweb_L3_Evaluator_gating_evaluate.html" "Abrir detalle"
+    click group_5 href "reaweb_L3_Evaluator_metrics_i_o.html" "Abrir detalle"

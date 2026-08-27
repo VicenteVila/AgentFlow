@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ReaWeb · L0 · Phased</title>
+  <title>ReaWeb · L3 · Evaluator · Metrics I/O</title>
   <style>
     body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
     h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
@@ -14,40 +14,42 @@
   </style>
 </head>
 <body>
-  <h1>ReaWeb · L0 · Phased</h1>
+  <h1>ReaWeb · L3 · Evaluator · Metrics I/O</h1>
   <p class="note">Click en los modulos con cursor mano para drill-down.</p>
   <div id="diagram"><pre class="mermaid">
-%% ReaWeb · L0 · Phased
-%%{init: {'securityLevel':'loose'}}%%
+%% ReaWeb · L3 · Evaluator · Metrics I/O
 flowchart TD
     classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
     classDef added fill:#a7f3d0,stroke:#065f46
     classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
     classDef changed fill:#fde68a,stroke:#92400e
     subgraph n_1 ["FASE 1 · PREPARACIÓN"]
-    n_start(["Start"])
-    comp_0[["Agent Core"]]
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    dec_945{"start == -1<br><i>Condición en línea 945:<br>start == -1</i>"}
     end
     subgraph n_2 ["FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)"]
-    comp_1[["Tools (17)"]]
-    comp_2[["Evaluator"]]
-    comp_3[["Memory/State"]]
-    comp_4[["Scripts/CLI"]]
+    loop_929["For loop"]
+    dec_930{"isinstance(v, (int, float,<br>bool, str)) or v is None<br><i>Condición en línea 930:<br>isinstance(v, (int, float, bool, str)) or v is None</i>"}
+    dec_932{"isinstance(v, list)<br><i>Condición en línea 932:<br>isinstance(v, list)</i>"}
+    dec_934{"cl<br><i>Condición en línea 934:<br>cl</i>"}
+    fn_metrics_block[["Metrics Block"]]
+    fn_parse_metrics_block[["Parse Metrics Block"]]
+    fn__clean_923[["Clean"]]
     end
     subgraph n_3 ["FASE 3 · CIERRE"]
-    n_end(["End"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_949{"end == -1<br><i>Condición en línea 949:<br>end == -1</i>"}
     end
-    n_start --> comp_0
-    comp_0 --> comp_1
-    comp_1 --> comp_2
-    comp_2 --> comp_3
-    comp_3 --> comp_4
-    comp_4 --> n_end
-    click comp_0 href "reaweb_L1_Agent.html" "Abrir detalle"
-    click comp_1 href "reaweb_L2_Tools.html" "Abrir detalle"
-    click comp_2 href "reaweb_L2_Evaluator_Overview.html" "Abrir detalle"
-    click comp_3 href "reaweb_L2_Memory.html" "Abrir detalle"
-    click comp_4 href "reaweb_L2_Scripts.html" "Abrir detalle"
+    n_start --> fn_metrics_block
+    fn_metrics_block --> fn__clean_923
+    loop_929 --> dec_930
+    dec_930 --> dec_932
+    dec_932 --> dec_934
+    n_start --> fn_parse_metrics_block
+    dec_945 --> dec_949
+    fn__clean_923 -.-> loop_929
+    dec_934 -. "loop" .-> loop_929
+    fn_parse_metrics_block -.-> dec_945
 
   </pre></div>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>

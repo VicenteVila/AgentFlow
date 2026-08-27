@@ -1,0 +1,33 @@
+%% ReaWeb · L3 · Evaluator · Metrics I/O
+flowchart TD
+    classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    subgraph n_1 ["FASE 1 · PREPARACIÓN"]
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    dec_945{"start == -1<br><i>Condición en línea 945:<br>start == -1</i>"}
+    end
+    subgraph n_2 ["FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)"]
+    loop_929["For loop"]
+    dec_930{"isinstance(v, (int, float,<br>bool, str)) or v is None<br><i>Condición en línea 930:<br>isinstance(v, (int, float, bool, str)) or v is None</i>"}
+    dec_932{"isinstance(v, list)<br><i>Condición en línea 932:<br>isinstance(v, list)</i>"}
+    dec_934{"cl<br><i>Condición en línea 934:<br>cl</i>"}
+    fn_metrics_block[["Metrics Block"]]
+    fn_parse_metrics_block[["Parse Metrics Block"]]
+    fn__clean_923[["Clean"]]
+    end
+    subgraph n_3 ["FASE 3 · CIERRE"]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_949{"end == -1<br><i>Condición en línea 949:<br>end == -1</i>"}
+    end
+    n_start --> fn_metrics_block
+    fn_metrics_block --> fn__clean_923
+    loop_929 --> dec_930
+    dec_930 --> dec_932
+    dec_932 --> dec_934
+    n_start --> fn_parse_metrics_block
+    dec_945 --> dec_949
+    fn__clean_923 -.-> loop_929
+    dec_934 -. "loop" .-> loop_929
+    fn_parse_metrics_block -.-> dec_945

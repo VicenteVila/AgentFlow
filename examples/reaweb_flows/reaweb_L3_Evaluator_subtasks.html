@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ReaWeb · L0 · Phased</title>
+  <title>ReaWeb · L3 · Evaluator · Subtasks</title>
   <style>
     body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
     h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
@@ -14,40 +14,48 @@
   </style>
 </head>
 <body>
-  <h1>ReaWeb · L0 · Phased</h1>
+  <h1>ReaWeb · L3 · Evaluator · Subtasks</h1>
   <p class="note">Click en los modulos con cursor mano para drill-down.</p>
   <div id="diagram"><pre class="mermaid">
-%% ReaWeb · L0 · Phased
-%%{init: {'securityLevel':'loose'}}%%
+%% ReaWeb · L3 · Evaluator · Subtasks
 flowchart TD
     classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
     classDef added fill:#a7f3d0,stroke:#065f46
     classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
     classDef changed fill:#fde68a,stroke:#92400e
     subgraph n_1 ["FASE 1 · PREPARACIÓN"]
-    n_start(["Start"])
-    comp_0[["Agent Core"]]
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    dec_510{"sid.startswith('seccion:')<br><i>Condición en línea 510:<br>sid.startswith('seccion:')</i>"}
+    dec_514{"sid.startswith('literal:')<br><i>Condición en línea 514:<br>sid.startswith('literal:')</i>"}
+    dec_518{"sid.startswith('funcional:')<br><i>Condición en línea 518:<br>sid.startswith('funcional:')</i>"}
     end
     subgraph n_2 ["FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)"]
-    comp_1[["Tools (17)"]]
-    comp_2[["Evaluator"]]
-    comp_3[["Memory/State"]]
-    comp_4[["Scripts/CLI"]]
+    loop_476["For each key"]
+    loop_543["For loop"]
+    loop_483["For loop"]
+    loop_489["For each req"]
+    loop_508["For each sub"]
+    dec_521{"t is None<br><i>Condición en línea 521:<br>t is None</i>"}
+    fn_extract_subtasks[["Extract Subtasks"]]
+    fn_subtasks_status[["Subtasks Status"]]
+    fn_format_subtasks_status[["Format Subtasks Status"]]
     end
     subgraph n_3 ["FASE 3 · CIERRE"]
-    n_end(["End"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
     end
-    n_start --> comp_0
-    comp_0 --> comp_1
-    comp_1 --> comp_2
-    comp_2 --> comp_3
-    comp_3 --> comp_4
-    comp_4 --> n_end
-    click comp_0 href "reaweb_L1_Agent.html" "Abrir detalle"
-    click comp_1 href "reaweb_L2_Tools.html" "Abrir detalle"
-    click comp_2 href "reaweb_L2_Evaluator_Overview.html" "Abrir detalle"
-    click comp_3 href "reaweb_L2_Memory.html" "Abrir detalle"
-    click comp_4 href "reaweb_L2_Scripts.html" "Abrir detalle"
+    n_start --> fn_extract_subtasks
+    loop_476 --> loop_483
+    loop_483 --> loop_489
+    n_start --> fn_subtasks_status
+    fn_subtasks_status --> loop_508
+    dec_510 --> dec_514
+    dec_514 --> dec_518
+    dec_518 -- "YES" --> dec_521
+    dec_518 -- "loop" --> loop_508
+    n_start --> fn_format_subtasks_status
+    fn_extract_subtasks -.-> loop_476
+    loop_508 -.-> dec_510
+    fn_format_subtasks_status -.-> loop_543
 
   </pre></div>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>

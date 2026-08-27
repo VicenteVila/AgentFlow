@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReaWeb · L3 · Evaluator · Visual Checks</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+  <h1>ReaWeb · L3 · Evaluator · Visual Checks</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% ReaWeb · L3 · Evaluator · Visual Checks
+flowchart TD
+    classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    subgraph n_1 ["FASE 1 · PREPARACIÓN"]
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    end
+    subgraph n_2 ["FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)"]
+    dec_184{"'requestAnimationFrame' not<br>in c or 'getContext' not in c<br><i>Condición en línea 184:<br>'requestAnimationFrame' not in c or 'getContext' not in c</i>"}
+    dec_230{"re.search(':(active|focus)\\b', c)<br><i>Condición en línea 230:<br>re.search(':(active|focus)\\b', c) and 'transition' in c</i>"}
+    dec_241{"sections >= 3<br><i>Condición en línea 241:<br>sections >= 3</i>"}
+    dec_186{"not<br>c)<br><i>Condición en línea 186:<br>not re.search('(?:fillRect|strokeRect|clearRect|arc\\(|fill\</i>"}
+    dec_232{"c)<br><i>Condición en línea 232:<br>re.search('addEventListener\\s*\\(\\s*(\'\\')(mousemove|poin</i>"}
+    loop_151["For each name in names"]
+    dec_152{"+ re.escape(name) + '\\b', c)<br><i>Condición en línea 152:<br>re.search('(?:animation|animation-name)\\s*:(^;())*\\b' + re</i>"}
+    fn__strip_js_comments[["Strip Js Comments"]]
+    fn__has_real_css_animations[["Has Real Css Animations"]]
+    fn__has_real_transitions[["Has Real Transitions"]]
+    fn__has_real_gradients[["Has Real Gradients"]]
+    fn__has_animated_canvas[["Has Animated Canvas"]]
+    fn__no_dead_canvas[["No Dead Canvas"]]
+    fn__has_dark_mode[["Has Dark Mode"]]
+    fn__has_scroll_reveal[["Has Scroll Reveal"]]
+    fn__has_hover_effects[["Has Hover Effects"]]
+    fn__has_microinteractions[["Has Microinteractions"]]
+    fn__has_content_richness[["Has Content Richness"]]
+    end
+    subgraph n_3 ["FASE 3 · CIERRE"]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    end
+    n_start --> fn__strip_js_comments
+    n_start --> fn__has_real_css_animations
+    fn__has_real_css_animations --> loop_151
+    loop_151 --> dec_152
+    n_start --> fn__has_real_transitions
+    n_start --> fn__has_real_gradients
+    n_start --> fn__has_animated_canvas
+    dec_184 --> dec_186
+    n_start --> fn__no_dead_canvas
+    n_start --> fn__has_dark_mode
+    n_start --> fn__has_scroll_reveal
+    n_start --> fn__has_hover_effects
+    n_start --> fn__has_microinteractions
+    dec_230 --> dec_232
+    n_start --> fn__has_content_richness
+    dec_152 -. "loop" .-> loop_151
+    fn__has_animated_canvas -.-> dec_184
+    fn__has_microinteractions -.-> dec_230
+    fn__has_content_richness -.-> dec_241
+
+  </pre></div>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

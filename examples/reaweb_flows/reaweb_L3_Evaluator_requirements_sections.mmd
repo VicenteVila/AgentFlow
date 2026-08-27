@@ -1,0 +1,94 @@
+%% ReaWeb · L3 · Evaluator · Requirements & Sections
+flowchart TD
+    classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    subgraph n_1 ["FASE 1 · PREPARACIÓN"]
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    end
+    subgraph n_2 ["FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)"]
+    dec_338{"not inputs<br><i>Condición en línea 338:<br>not inputs</i>"}
+    dec_373{"not imgs<br><i>Condición en línea 373:<br>not imgs</i>"}
+    loop_258["For each m"]
+    dec_260{"'<' in url or '$(' in url or<br>'(' in url<br><i>Condición en línea 260:<br>'<' in url or '$(' in url or '(' in url</i>"}
+    dec_262{"any((h in url for h in<br>('github.com', 'gitlab.com',<br><i>Condición en línea 262:<br>any((h in url for h in ('github.com', 'gitlab.com', 'bitbuck</i>"}
+    dec_263{"url not in reqs<br><i>Condición en línea 263:<br>url not in reqs</i>"}
+    loop_268["For each m"]
+    dec_270{"owner<br><i>Condición en línea 270:<br>owner</i>"}
+    loop_272["For each owner"]
+    dec_274{"not any((f'(base)/' in r for<br>r in reqs)) and base not in reqs<br><i>Condición en línea 274:<br>not any((f'(base)/' in r for r in reqs)) and base not in req</i>"}
+    dec_278{"owners<br><i>Condición en línea 278:<br>owners</i>"}
+    loop_324["For each m"]
+    dec_326{"name in seen or name in skip<br>or len(name) < 4<br><i>Condición en línea 326:<br>name in seen or name in skip or len(name) < 4</i>"}
+    dec_329{"name not in reqs<br><i>Condición en línea 329:<br>name not in reqs</i>"}
+    dec_331{"len(reqs) >= max_items<br><i>Condición en línea 331:<br>len(reqs) >= max_items</i>"}
+    loop_340["For each attrs in inputs"]
+    dec_341{"re.search('aria-label=('\\\')',<br><i>Condición en línea 341:<br>re.search('aria-label=('\\\')', attrs)</i>"}
+    dec_344{"'type='hidden'' in attrs<br><i>Condición en línea 344:<br>'type='hidden'' in attrs</i>"}
+    dec_348{"not m<br><i>Condición en línea 348:<br>not m</i>"}
+    dec_351{"not<br>+ re.escape(fid) + '('\\\')', h)<br><i>Condición en línea 351:<br>not re.search('<label\\b(^>)*\\bfor=('\\\')' + re.escape(fid</i>"}
+    loop_376["For each attrs in imgs"]
+    dec_377{"'width=' in attrs or<br>'max-width' in attrs or 'height='<br><i>Condición en línea 377:<br>'width=' in attrs or 'max-width' in attrs or 'height=' in at</i>"}
+    loop_428["For each key in priority"]
+    dec_431{"any((a in task_low for a in<br>aliases))<br><i>Condición en línea 431:<br>any((a in task_low for a in aliases))</i>"}
+    dec_433{"key not in found<br><i>Condición en línea 433:<br>key not in found</i>"}
+    loop_446["For each a in aliases"]
+    dec_447{"a in h_low<br><i>Condición en línea 447:<br>a in h_low</i>"}
+    fn_extract_requirements[["Extract Requirements"]]
+    fn__inputs_labeled[["Inputs Labeled"]]
+    fn__has_modern_images[["Has Modern Images"]]
+    fn__scripts_async[["Scripts Async"]]
+    fn__img_responsive[["Img Responsive"]]
+    fn__score[["Score"]]
+    fn_extract_sections[["Extract Sections"]]
+    fn__html_has_section[["Html Has Section"]]
+    fn_novelty_score[["Novelty Score"]]
+    end
+    subgraph n_3 ["FASE 3 · CIERRE"]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    end
+    n_start --> fn_extract_requirements
+    fn_extract_requirements --> loop_258
+    loop_258 --> dec_260
+    dec_260 --> dec_262
+    dec_262 --> dec_263
+    loop_258 --> loop_268
+    loop_268 --> dec_270
+    loop_268 --> loop_272
+    loop_272 --> dec_274
+    loop_272 --> dec_278
+    dec_278 --> loop_324
+    loop_324 --> dec_326
+    dec_326 --> dec_329
+    dec_329 --> dec_331
+    n_start --> fn__inputs_labeled
+    dec_338 --> loop_340
+    loop_340 --> dec_341
+    dec_341 --> dec_344
+    dec_344 --> dec_348
+    dec_348 --> dec_351
+    n_start --> fn__has_modern_images
+    n_start --> fn__scripts_async
+    n_start --> fn__img_responsive
+    dec_373 --> loop_376
+    loop_376 --> dec_377
+    n_start --> fn__score
+    n_start --> fn_extract_sections
+    fn_extract_sections --> loop_428
+    loop_428 --> dec_431
+    dec_431 --> dec_433
+    n_start --> fn__html_has_section
+    fn__html_has_section --> loop_446
+    loop_446 --> dec_447
+    n_start --> fn_novelty_score
+    dec_263 -. "loop" .-> loop_258
+    dec_270 -. "loop" .-> loop_268
+    dec_274 -. "loop" .-> loop_272
+    dec_331 -. "loop" .-> loop_324
+    fn__inputs_labeled -.-> dec_338
+    dec_351 -. "loop" .-> loop_340
+    fn__img_responsive -.-> dec_373
+    dec_377 -. "loop" .-> loop_376
+    dec_433 -. "loop" .-> loop_428
+    dec_447 -. "loop" .-> loop_446
