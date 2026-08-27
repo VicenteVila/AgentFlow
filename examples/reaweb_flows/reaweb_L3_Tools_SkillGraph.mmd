@@ -1,0 +1,78 @@
+%% ReaWeb · L3 · Tools · SkillGraph
+flowchart TD
+    classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    subgraph n_1 ["FASE 1 · PREPARACIÓN"]
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    fn_deps_warnings[["Deps Warnings"]]
+    fn_deps_pending[["Deps Pending"]]
+    fn_deps_edges_summary[["Deps Edges Summary"]]
+    fn__pos_60[["Pos"]]
+    end
+    subgraph n_2 ["FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)"]
+    loop_63["For loop"]
+    dec_64{"not isinstance(spec, dict)<br><i>Condición en línea 64:<br>not isinstance(spec, dict)</i>"}
+    loop_67["For each pre"]
+    dec_68{"tool in seen and pre not in<br>seen<br><i>Condición en línea 68:<br>tool in seen and pre not in seen</i>"}
+    loop_75["For each other"]
+    dec_77{"tool in seen and other in<br>seen and (f'(pair(0))+(pair(1)) in<br><i>Condición en línea 77:<br>tool in seen and other in seen and (f'(pair(0))+(pair(1)) co</i>"}
+    dec_84{"spec.get('repeat_guard')<br><i>Condición en línea 84:<br>spec.get('repeat_guard')</i>"}
+    loop_86["For loop"]
+    dec_88{"MUTATOR_TOOL not in between<br><i>Condición en línea 88:<br>MUTATOR_TOOL not in between</i>"}
+    loop_106["For loop"]
+    dec_107{"tool in seen<br><i>Condición en línea 107:<br>tool in seen</i>"}
+    dec_109{"not isinstance(spec, dict)<br><i>Condición en línea 109:<br>not isinstance(spec, dict)</i>"}
+    dec_113{"missing<br><i>Condición en línea 113:<br>missing</i>"}
+    loop_125["For loop"]
+    dec_126{"not isinstance(spec, dict)<br><i>Condición en línea 126:<br>not isinstance(spec, dict)</i>"}
+    dec_130{"pres<br><i>Condición en línea 130:<br>pres</i>"}
+    dec_132{"spec.get('repeat_guard')<br><i>Condición en línea 132:<br>spec.get('repeat_guard')</i>"}
+    dec_134{"parts<br><i>Condición en línea 134:<br>parts</i>"}
+    end
+    subgraph n_3 ["FASE 3 · CIERRE"]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_42{"not f.exists()<br><i>Condición en línea 42:<br>not f.exists()</i>"}
+    dec_146{"not warns and (not pending)<br>and (not edges)<br><i>Condición en línea 146:<br>not warns and (not pending) and (not edges)</i>"}
+    dec_149{"warns<br><i>Condición en línea 149:<br>warns</i>"}
+    dec_152{"pending<br><i>Condición en línea 152:<br>pending</i>"}
+    dec_155{"edges<br><i>Condición en línea 155:<br>edges</i>"}
+    fn_load_deps[["Load Deps"]]
+    fn_deps_block[["Deps Block"]]
+    end
+    n_start --> fn_load_deps
+    fn_load_deps --> dec_42
+    n_start --> fn_deps_warnings
+    fn_deps_warnings --> fn__pos_60
+    fn__pos_60 --> loop_63
+    loop_63 --> dec_64
+    dec_64 --> loop_67
+    loop_67 --> dec_68
+    loop_67 --> loop_75
+    loop_75 --> dec_77
+    loop_75 --> dec_84
+    dec_84 --> loop_86
+    loop_86 --> dec_88
+    n_start --> fn_deps_pending
+    fn_deps_pending --> loop_106
+    loop_106 --> dec_107
+    dec_107 --> dec_109
+    dec_109 --> dec_113
+    n_start --> fn_deps_edges_summary
+    fn_deps_edges_summary --> loop_125
+    loop_125 --> dec_126
+    dec_126 --> dec_130
+    dec_130 --> dec_132
+    dec_132 --> dec_134
+    n_start --> fn_deps_block
+    fn_deps_block --> dec_146
+    dec_146 --> dec_149
+    dec_149 --> dec_152
+    dec_152 --> dec_155
+    dec_68 -. "loop" .-> loop_67
+    dec_77 -. "loop" .-> loop_75
+    dec_88 -. "loop" .-> loop_86
+    loop_86 -. "loop" .-> loop_63
+    dec_113 -. "loop" .-> loop_106
+    dec_134 -. "loop" .-> loop_125

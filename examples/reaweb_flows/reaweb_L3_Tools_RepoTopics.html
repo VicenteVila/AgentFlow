@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ReaWeb · L2 · WebGenerator (phased)</title>
+  <title>ReaWeb · L3 · RepoTopics</title>
   <style>
     body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
     h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
@@ -16,32 +16,44 @@
 </head>
 <body>
 <a class="back-link" href="reaweb_L2_Tools.html">← Volver</a>
-  <h1>ReaWeb · L2 · WebGenerator (phased)</h1>
+  <h1>ReaWeb · L3 · RepoTopics</h1>
   <p class="note">Click en los modulos con cursor mano para drill-down.</p>
   <div id="diagram"><pre class="mermaid">
-%% ReaWeb · L2 · WebGenerator (phased)
+%% ReaWeb · L3 · RepoTopics
 flowchart TD
     classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
     classDef added fill:#a7f3d0,stroke:#065f46
     classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
     classDef changed fill:#fde68a,stroke:#92400e
     subgraph n_1 ["FASE 1 · PREPARACIÓN"]
-    n_start(["Start<br><i>Agent.run() invoked</i>"])
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    init["Init Agent<br><i>Configura dependencias<br>de forma automática</i>"]
+    main_loop["Main Loop<br><i>while True:<br>  turn += 1<br>  register_evaluation()<br>  budget.done()?</i>"]
+    dec_90{"repos is None<br><i>Condición en línea 90:<br>repos is None</i>"}
+    dec_92{"not repos<br><i>Condición en línea 92:<br>not repos</i>"}
     end
     subgraph n_2 ["FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)"]
-    main_loop["Main Loop<br><i>while True:</i>"]
-    dec_130{"not base.exists()<br><i>Condición en línea 130:</i>"}
-    loop_133["For each fname"]
-    dec_135{"f.exists()<br><i>Condición en línea 135:</i>"}
+    loop_104["For each repo in repos"]
+    dec_106{"topics is None<br><i>Condición en línea 106:<br>topics is None</i>"}
     end
     subgraph n_3 ["FASE 3 · CIERRE"]
-    n_end(["End<br><i>db.close()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_111{"not graph('repos')<br><i>Condición en línea 111:<br>not graph('repos')</i>"}
+    dec_118{"ref_dir<br><i>Condición en línea 118:<br>ref_dir</i>"}
+    loop_125["For each r"]
+    dec_128{"errors<br><i>Condición en línea 128:<br>errors</i>"}
     end
-    n_start --> main_loop
-    main_loop --> dec_130
-    dec_130 --> loop_133
-    loop_133 --> dec_135
-    dec_135 -. "loop" .-> loop_133
+    n_start --> init
+    init --> main_loop
+    main_loop --> dec_90
+    dec_90 --> dec_92
+    dec_92 --> loop_104
+    loop_104 --> dec_106
+    loop_104 --> dec_111
+    dec_111 --> dec_118
+    dec_118 --> loop_125
+    loop_125 --> dec_128
+    dec_106 -. "loop" .-> loop_104
 
   </pre></div>
   <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>

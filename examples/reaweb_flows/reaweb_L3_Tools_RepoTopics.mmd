@@ -1,0 +1,35 @@
+%% ReaWeb · L3 · Tools · RepoTopics
+flowchart TD
+    classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    subgraph n_1 ["FASE 1 · PREPARACIÓN"]
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    init["Init Agent<br><i>Configura dependencias<br>de forma automática</i>"]
+    main_loop["Main Loop<br><i>while True:<br>  turn += 1<br>  register_evaluation()<br>  budget.done()?</i>"]
+    dec_90{"repos is None<br><i>Condición en línea 90:<br>repos is None</i>"}
+    dec_92{"not repos<br><i>Condición en línea 92:<br>not repos</i>"}
+    end
+    subgraph n_2 ["FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)"]
+    loop_104["For each repo in repos"]
+    dec_106{"topics is None<br><i>Condición en línea 106:<br>topics is None</i>"}
+    end
+    subgraph n_3 ["FASE 3 · CIERRE"]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_111{"not graph('repos')<br><i>Condición en línea 111:<br>not graph('repos')</i>"}
+    dec_118{"ref_dir<br><i>Condición en línea 118:<br>ref_dir</i>"}
+    loop_125["For each r"]
+    dec_128{"errors<br><i>Condición en línea 128:<br>errors</i>"}
+    end
+    n_start --> init
+    init --> main_loop
+    main_loop --> dec_90
+    dec_90 --> dec_92
+    dec_92 --> loop_104
+    loop_104 --> dec_106
+    loop_104 --> dec_111
+    dec_111 --> dec_118
+    dec_118 --> loop_125
+    loop_125 --> dec_128
+    dec_106 -. "loop" .-> loop_104

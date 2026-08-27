@@ -114,6 +114,90 @@ def _handle_diff(argv: list[str]) -> None:
         sys.stdout.write("\n")
 
 
+def _handle_drilldown(args, input_path: Path) -> None:
+    """Generate the full drill-down hierarchy: L0 → L1 → L2 → L3."""
+    from agentflow.layouts import with_detail_level
+    from agentflow.mermaid import save_mermaid, save_mermaid_html
+    from agentflow.parser import parse_file
+    from agentflow.repo import build_repo_overview
+
+    out_dir = Path(args.output_dir) if args.output_dir else Path("drilldown_output")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    prefix = args.title or "agentflow"
+    profile = args.profile
+
+    print(f"Drill-down: {input_path} → {out_dir}/ ({prefix}_L*)")
+
+    def _sav(name, g, layout="phased", detail="high", links=None, back=None, title=None):
+        save_mermaid(g, out_dir / f"{prefix}_{name}.mmd", layout=layout, detail=detail,
+                     links=links, title=title or f"{prefix} · {name}")
+        save_mermaid_html(g, out_dir / f"{prefix}_{name}.html", layout=layout, detail=detail,
+                          links=links, back_link=back, title=title or f"{prefix} · {name}")
+
+    if input_path.is_dir():
+        # L0: repo overview
+        g0 = build_repo_overview(input_path, profile=profile, title=f"{prefix} · L0 · Overview")
+        g0 = with_detail_level(g0, "low")
+        _sav("L0_Overview", g0, detail="low", title=f"{prefix} · L0 · Overview")
+        print(f"  L0: {g0.node_count} nodes")
+
+        # L1: each source file
+        source_files = sorted(input_path.rglob("*.py"))
+        source_files = [f for f in source_files
+                        if "__pycache__" not in str(f)
+                        and f.name != "__init__.py"
+                        and ".venv" not in str(f)]
+        for sf in source_files:
+            try:
+                g1 = parse_file(str(sf), profile=profile)
+            except (ValueError, SyntaxError):
+                continue
+            g1 = with_detail_level(g1, "med")
+            name = f"L1_{sf.stem}"
+            _sav(name, g1, detail="med", back=f"{prefix}_L0_Overview.html",
+                 title=f"{prefix} · {name}")
+            print(f"  {name}: {g1.node_count} nodes")
+
+        # L2: tools/ directory
+        tools_dir = input_path / "tools"
+        if tools_dir.is_dir():
+            gt = build_repo_overview(tools_dir, profile=profile, title=f"{prefix} · L2 · Tools")
+            gt = with_detail_level(gt, "low")
+            _sav("L2_Tools", gt, detail="low", back=f"{prefix}_L0_Overview.html",
+                 title=f"{prefix} · L2 · Tools")
+            print(f"  L2_Tools: {gt.node_count} nodes")
+
+            # L3: each tool
+            for tf in sorted(tools_dir.rglob("*.py")):
+                if tf.name == "__init__.py" or "__pycache__" in str(tf):
+                    continue
+                try:
+                    g3 = parse_file(str(tf), profile=profile)
+                except (ValueError, SyntaxError):
+                    continue
+                g3 = with_detail_level(g3, "high")
+                name = f"L3_Tools_{tf.stem.title()}"
+                _sav(name, g3, detail="high", back=f"{prefix}_L2_Tools.html",
+                     title=f"{prefix} · {name}")
+                print(f"  {name}: {g3.node_count} nodes")
+    else:
+        # Single file: L0 + L1
+        g0 = parse_file(str(input_path), profile=profile)
+        g0 = with_detail_level(g0, "high")
+        _sav("L1_Main", g0, detail="high",
+             title=f"{prefix} · L1 · {input_path.stem}")
+        print(f"  L1: {g0.node_count} nodes")
+
+    # Copy assets dir for offline mermaid
+    assets_src = Path(__file__).parent.parent / "examples" / "reaweb_flows" / "assets"
+    assets_dst = out_dir / "assets"
+    if assets_src.is_dir() and not assets_dst.is_dir():
+        import shutil
+        shutil.copytree(assets_src, assets_dst)
+
+    print(f"Done. Open {out_dir / f'{prefix}_L0_Overview.html' if input_path.is_dir() else out_dir / f'{prefix}_L1_Main.html'} in a browser.")
+
+
 def main(argv: list[str] | None = None) -> None:
     _raw = argv if argv is not None else sys.argv[1:]
     if _raw and _raw[0] == "diff":
@@ -201,6 +285,16 @@ def main(argv: list[str] | None = None) -> None:
         action="store_true",
         help="Print graph summary instead of generating diagram",
     )
+    parser.add_argument(
+        "--drilldown",
+        action="store_true",
+        help="Generate the full drill-down hierarchy (L0→L1→L2→L3) as .mmd + .html files",
+    )
+    parser.add_argument(
+        "--output-dir",
+        default=None,
+        help="Output directory for --drilldown mode (default: ./drilldown_output)",
+    )
 
     args = parser.parse_args(argv)
     if getattr(args, "palette", None):
@@ -239,6 +333,10 @@ def main(argv: list[str] | None = None) -> None:
 
     if args.summary:
         print(graph.summary())
+        return
+
+    if args.drilldown:
+        _handle_drilldown(args, input_path)
         return
 
     # Generate output (detail level applied inside renderers)

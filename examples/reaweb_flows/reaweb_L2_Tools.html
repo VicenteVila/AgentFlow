@@ -8,16 +8,19 @@
     body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
     h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
     .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
     #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
     .mermaid { display: flex; justify-content: center; }
     #diagram pre.mermaid { margin: 0; background: transparent; }
   </style>
 </head>
 <body>
+<a class="back-link" href="reaweb_L0_Phased.html">← Volver</a>
   <h1>ReaWeb · L2 · Tools (phased)</h1>
   <p class="note">Click en los modulos con cursor mano para drill-down.</p>
   <div id="diagram"><pre class="mermaid">
 %% ReaWeb · L2 · Tools (phased)
+%%{init: {'securityLevel':'loose'}}%%
 flowchart TD
     classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
     classDef added fill:#a7f3d0,stroke:#065f46
@@ -66,9 +69,26 @@ flowchart TD
     mod_domain_visual_critic --> mod_domain_web_generator
     mod_domain_web_generator --> mod_file_io
     mod_file_io --> n_end
+    click mod_base href "reaweb_L3_Tools_Base.html" "Abrir detalle"
+    click mod_file_io href "reaweb_L3_Tools_FileIo.html" "Abrir detalle"
+    click mod_code_exec href "reaweb_L3_Tools_CodeExec.html" "Abrir detalle"
+    click mod_domain_bundle_analyzer href "reaweb_L3_Tools_BundleAnalyzer.html" "Abrir detalle"
+    click mod_domain_creative_critic href "reaweb_L3_Tools_CreativeCritic.html" "Abrir detalle"
+    click mod_domain_deployer href "reaweb_L3_Tools_Deployer.html" "Abrir detalle"
+    click mod_domain_evaluator href "reaweb_L2_Evaluator_Overview.html" "Abrir detalle"
+    click mod_domain_functional_tester href "reaweb_L3_Tools_FunctionalTester.html" "Abrir detalle"
+    click mod_domain_meta_editor href "reaweb_L3_Tools_MetaEditor.html" "Abrir detalle"
+    click mod_domain_readme_fetcher href "reaweb_L3_Tools_ReadmeFetcher.html" "Abrir detalle"
+    click mod_domain_repo_topics href "reaweb_L3_Tools_RepoTopics.html" "Abrir detalle"
+    click mod_domain_skill_auditor href "reaweb_L3_Tools_SkillAuditor.html" "Abrir detalle"
+    click mod_domain_skill_graph href "reaweb_L3_Tools_SkillGraph.html" "Abrir detalle"
+    click mod_domain_task_coevolve href "reaweb_L3_Tools_TaskCoevolve.html" "Abrir detalle"
+    click mod_domain_truth_audit href "reaweb_L3_Tools_TruthAudit.html" "Abrir detalle"
+    click mod_domain_visual_critic href "reaweb_L3_Tools_VisualCritic.html" "Abrir detalle"
+    click mod_domain_web_generator href "reaweb_L2_WebGenerator.html" "Abrir detalle"
 
   </pre></div>
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
   <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
 </body>
 </html>

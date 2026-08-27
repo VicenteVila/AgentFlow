@@ -1,0 +1,26 @@
+%% ReaWeb · L3 · Tools · FunctionalTester
+flowchart TD
+    classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    subgraph n_1 ["FASE 1 · PREPARACIÓN"]
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    end
+    subgraph n_2 ["FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)"]
+    dec_150{"not chrome<br><i>Condición en línea 150:<br>not chrome</i>"}
+    dec_156{"'</body>' not in html<br><i>Condición en línea 156:<br>'</body>' not in html</i>"}
+    dec_166{"Path('/usr/bin/wslpath').exists()<br><i>Condición en línea 166:<br>Path('/usr/bin/wslpath').exists()</i>"}
+    dec_191{"not m<br><i>Condición en línea 191:<br>not m</i>"}
+    dec_200{"out_path.exists()<br><i>Condición en línea 200:<br>out_path.exists()</i>"}
+    fn_run_functional_test[["Run Functional Test"]]
+    end
+    subgraph n_3 ["FASE 3 · CIERRE"]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    end
+    n_start --> fn_run_functional_test
+    dec_150 --> dec_156
+    dec_156 --> dec_166
+    dec_166 --> dec_191
+    dec_191 --> dec_200
+    fn_run_functional_test -.-> dec_150

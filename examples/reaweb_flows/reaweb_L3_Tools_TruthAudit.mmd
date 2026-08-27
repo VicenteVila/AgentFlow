@@ -1,0 +1,34 @@
+%% ReaWeb · L3 · Tools · TruthAudit
+flowchart TD
+    classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    subgraph n_1 ["FASE 1 · PREPARACIÓN"]
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    end
+    subgraph n_2 ["FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)"]
+    init["Init Agent<br><i>Configura dependencias<br>de forma automática</i>"]
+    main_loop["Main Loop<br><i>while True:<br>  turn += 1<br>  register_evaluation()<br>  budget.done()?</i>"]
+    dec_146{"not (target /<br>'index.html').exists()<br><i>Condición en línea 146:<br>not (target / 'index.html').exists()</i>"}
+    dec_155{"parts('orphan_repos')<br><i>Condición en línea 155:<br>parts('orphan_repos')</i>"}
+    dec_157{"parts('broken_links')<br><i>Condición en línea 157:<br>parts('broken_links')</i>"}
+    dec_159{"parts('missing_sections')<br><i>Condición en línea 159:<br>parts('missing_sections')</i>"}
+    dec_169{"not ok<br><i>Condición en línea 169:<br>not ok</i>"}
+    dec_171{"not refs<br><i>Condición en línea 171:<br>not refs</i>"}
+    dec_181{"missing<br><i>Condición en línea 181:<br>missing</i>"}
+    dec_183{"suggestions<br><i>Condición en línea 183:<br>suggestions</i>"}
+    end
+    subgraph n_3 ["FASE 3 · CIERRE"]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    end
+    n_start --> init
+    init --> main_loop
+    main_loop --> dec_146
+    dec_146 --> dec_155
+    dec_155 --> dec_157
+    dec_157 --> dec_159
+    dec_159 --> dec_169
+    dec_169 --> dec_171
+    dec_171 --> dec_181
+    dec_181 --> dec_183

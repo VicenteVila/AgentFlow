@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ReaWeb · L2 · WebGenerator (phased)</title>
+  <title>ReaWeb · L3 · MetaEditor</title>
   <style>
     body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
     h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
@@ -16,32 +16,37 @@
 </head>
 <body>
 <a class="back-link" href="reaweb_L2_Tools.html">← Volver</a>
-  <h1>ReaWeb · L2 · WebGenerator (phased)</h1>
+  <h1>ReaWeb · L3 · MetaEditor</h1>
   <p class="note">Click en los modulos con cursor mano para drill-down.</p>
   <div id="diagram"><pre class="mermaid">
-%% ReaWeb · L2 · WebGenerator (phased)
+%% ReaWeb · L3 · MetaEditor
 flowchart TD
     classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
     classDef added fill:#a7f3d0,stroke:#065f46
     classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
     classDef changed fill:#fde68a,stroke:#92400e
     subgraph n_1 ["FASE 1 · PREPARACIÓN"]
-    n_start(["Start<br><i>Agent.run() invoked</i>"])
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
     end
     subgraph n_2 ["FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)"]
-    main_loop["Main Loop<br><i>while True:</i>"]
-    dec_130{"not base.exists()<br><i>Condición en línea 130:</i>"}
-    loop_133["For each fname"]
-    dec_135{"f.exists()<br><i>Condición en línea 135:</i>"}
+    main_loop["Main Loop<br><i>while True:<br>  turn += 1<br>  register_evaluation()<br>  budget.done()?</i>"]
+    dec_102{"comp is None<br><i>Condición en línea 102:<br>comp is None</i>"}
+    dec_104{"comp != component<br><i>Condición en línea 104:<br>comp != component</i>"}
+    dec_108{"not<br><i>Condición en línea 108:<br>not str(target).startswith(str(PATHS('domain').resolve()))</i>"}
+    dec_114{"mode == 'append'<br><i>Condición en línea 114:<br>mode == 'append'</i>"}
+    dec_119{"not isinstance(parsed, dict)<br><i>Condición en línea 119:<br>not isinstance(parsed, dict)</i>"}
+    dec_128{"not<br>_is_well_shaped(parsed_after)<br><i>Condición en línea 128:<br>not _is_well_shaped(parsed_after)</i>"}
     end
     subgraph n_3 ["FASE 3 · CIERRE"]
-    n_end(["End<br><i>db.close()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
     end
     n_start --> main_loop
-    main_loop --> dec_130
-    dec_130 --> loop_133
-    loop_133 --> dec_135
-    dec_135 -. "loop" .-> loop_133
+    main_loop --> dec_102
+    dec_102 --> dec_104
+    dec_104 --> dec_108
+    dec_108 --> dec_114
+    dec_114 -- "NO" --> dec_119
+    dec_119 --> dec_128
 
   </pre></div>
   <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>

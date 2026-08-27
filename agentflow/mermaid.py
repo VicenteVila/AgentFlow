@@ -247,18 +247,20 @@ _MERMAID_HTML_TEMPLATE = """\
     body {{ margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }}
     h1 {{ font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }}
     .note {{ font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }}
+    .back-link {{ font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }}
     #diagram {{ background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }}
     .mermaid {{ display: flex; justify-content: center; }}
     #diagram pre.mermaid {{ margin: 0; background: transparent; }}
   </style>
 </head>
 <body>
+{back_link}
   <h1>{title}</h1>
   <p class="note">Click en los modulos con cursor mano para drill-down.</p>
   <div id="diagram"><pre class="mermaid">
 {mmd_content}
   </pre></div>
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
   <script>mermaid.initialize({{startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{{useMaxWidth:false,htmlLabels:true,curve:'basis'}}}});</script>
 </body>
 </html>
@@ -271,11 +273,19 @@ def to_mermaid_html(
     detail: str = "high",
     links: dict[str, str] | None = None,
     title: str | None = None,
+    back_link: str | None = None,
 ) -> str:
     """Wrap ``to_mermaid`` output in a standalone HTML with mermaid.js CDN."""
     mmd = to_mermaid(graph, layout=layout, detail=detail, links=links, title=title)
     resolved_title = title or graph.title
-    return _MERMAID_HTML_TEMPLATE.format(title=resolved_title, mmd_content=mmd)
+    back_link_html = ""
+    if back_link:
+        back_link_html = f'<a class="back-link" href="{back_link}">\u2190 Volver</a>'
+    return _MERMAID_HTML_TEMPLATE.format(
+        title=resolved_title,
+        mmd_content=mmd,
+        back_link=back_link_html,
+    )
 
 
 def save_mermaid_html(
@@ -285,12 +295,20 @@ def save_mermaid_html(
     detail: str = "high",
     links: dict[str, str] | None = None,
     title: str | None = None,
+    back_link: str | None = None,
 ) -> Path:
     """Save mermaid HTML wrapper (CDN + loose) to *output_path*."""
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        to_mermaid_html(graph, layout=layout, detail=detail, links=links, title=title),
+        to_mermaid_html(
+            graph,
+            layout=layout,
+            detail=detail,
+            links=links,
+            title=title,
+            back_link=back_link,
+        ),
         encoding="utf-8",
     )
     return path
