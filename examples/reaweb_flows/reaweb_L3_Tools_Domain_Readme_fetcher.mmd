@@ -1,0 +1,43 @@
+%% Readme Fetcher
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    init["Init Agent<br><i>Configura LLM, budget, memory,<br>context manager, harness snapshot</i>"]
+    main_loop["Main Loop<br><i>while True:<br>  turn += 1<br>  register_evaluation()<br>  budget.done()?</i>"]
+    dec_249{"repos is None<br><i>Condición en línea 249:<br>repos is None</i>"}
+    dec_251{"not repos<br><i>Condición en línea 251:<br>not repos</i>"}
+    loop_258["For each repo in repos"]
+    dec_260{"page is None<br><i>Condición en línea 260:<br>page is None</i>"}
+    loop_268["For each name"]
+    dec_270{"ok<br><i>Condición en línea 270:<br>ok</i>"}
+    dec_275{"not generated<br><i>Condición en línea 275:<br>not generated</i>"}
+    dec_278{"errors<br><i>Condición en línea 278:<br>errors</i>"}
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    n_start --> init
+    init --> main_loop
+    main_loop --> dec_249
+    dec_249 --> dec_251
+    dec_251 --> loop_258
+    loop_258 --> dec_260
+    dec_260 --> loop_268
+    loop_268 --> dec_270
+    dec_270 -- "loop" --> loop_268
+    loop_268 -- "loop" --> loop_258
+    loop_258 --> dec_275
+    dec_275 --> dec_278
+    class n_start node-start
+    class init node-process
+    class main_loop,loop_258,loop_268 node-loop
+    class dec_249,dec_251,dec_260,dec_270,dec_275,dec_278 node-decision
+    class n_end node-end

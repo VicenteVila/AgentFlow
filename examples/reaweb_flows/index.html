@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>reaweb · Drill-down completo</title>
+  <style>
+    body { margin: 0; padding: 28px; font-family: system-ui,-apple-system,sans-serif;
+            background: #0b0b0f; color: #e0e0e0; }
+    h1 { font-size: 1.4rem; color: #00ff88; margin: 0 0 4px 0; }
+    p.lead { font-size: 0.9rem; color: #94a3b8; margin: 0 0 22px 0; }
+    section.lvl { margin-bottom: 22px; }
+    h2 { font-size: 1rem; color: #facc15; border-bottom: 1px solid #2a2a35;
+          padding-bottom: 6px; }
+    ul { list-style: none; padding: 0; display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 6px; }
+    li {
+      background: #16161d; border: 1px solid #26262f; border-radius: 8px;
+      padding: 8px 12px; font-size: 0.85rem;
+    }
+    li:hover { border-color: #8b5cf6; }
+    a { color: #8b5cf6; text-decoration: none; font-weight: 600; }
+    a:hover { text-decoration: underline; color: #a78bfa; }
+    .t { color: #94a3b8; margin-left: 8px; }
+  </style>
+</head>
+<body>
+  <h1>reaweb · Drill-down completo</h1>
+  <p class="lead">Cada gráfica es un flujograma Mermaid. Haz click en los nodos de
+  una vista para bajar de nivel; cada página incluye un &laquo;Volver&raquo; al padre.</p>
+  <section class='lvl'>
+    <h2>Nivel L0</h2>
+    <ul>
+      <li><a href="reaweb_L0_Overview.html">reaweb_L0_Overview</a><span class='t'>reaweb</span></li>
+    </ul>
+  </section>
+  <section class='lvl'>
+    <h2>Nivel L1</h2>
+    <ul>
+      <li><a href="reaweb_L1_Agent.html">reaweb_L1_Agent</a><span class='t'>reaweb · agent</span></li>
+      <li><a href="reaweb_L1_Config.html">reaweb_L1_Config</a><span class='t'>Config</span></li>
+      <li><a href="reaweb_L1_Scripts.html">reaweb_L1_Scripts</a><span class='t'>reaweb · scripts</span></li>
+      <li><a href="reaweb_L1_Tools.html">reaweb_L1_Tools</a><span class='t'>reaweb · tools</span></li>
+    </ul>
+  </section>
+  <section class='lvl'>
+    <h2>Nivel L2</h2>
+    <ul>
+      <li><a href="reaweb_L2_Agent_Agent.html">reaweb_L2_Agent_Agent</a><span class='t'>Agent</span></li>
+      <li><a href="reaweb_L2_Agent_Budget_tracker.html">reaweb_L2_Agent_Budget_tracker</a><span class='t'>Budget Tracker</span></li>
+      <li><a href="reaweb_L2_Agent_Harness_snapshot.html">reaweb_L2_Agent_Harness_snapshot</a><span class='t'>Harness Snapshot</span></li>
+      <li><a href="reaweb_L2_Agent_Llm.html">reaweb_L2_Agent_Llm</a><span class='t'>Llm</span></li>
+      <li><a href="reaweb_L2_Agent_Llm_cache.html">reaweb_L2_Agent_Llm_cache</a><span class='t'>Llm Cache</span></li>
+      <li><a href="reaweb_L2_Agent_Memory_db.html">reaweb_L2_Agent_Memory_db</a><span class='t'>Memory Db</span></li>
+      <li><a href="reaweb_L2_Agent_State.html">reaweb_L2_Agent_State</a><span class='t'>State</span></li>
+      <li><a href="reaweb_L2_Scripts_Backfill_memory.html">reaweb_L2_Scripts_Backfill_memory</a><span class='t'>Backfill Memory</span></li>
+      <li><a href="reaweb_L2_Scripts_Cleanup_runs.html">reaweb_L2_Scripts_Cleanup_runs</a><span class='t'>Cleanup Runs</span></li>
+      <li><a href="reaweb_L2_Scripts_Export_candidate.html">reaweb_L2_Scripts_Export_candidate</a><span class='t'>Export Candidate</span></li>
+      <li><a href="reaweb_L2_Scripts_Gate_harness_edit.html">reaweb_L2_Scripts_Gate_harness_edit</a><span class='t'>Gate Harness Edit</span></li>
+      <li><a href="reaweb_L2_Scripts_Gen_cards.html">reaweb_L2_Scripts_Gen_cards</a><span class='t'>Gen Cards</span></li>
+      <li><a href="reaweb_L2_Scripts_Merge_lessons.html">reaweb_L2_Scripts_Merge_lessons</a><span class='t'>Merge Lessons</span></li>
+      <li><a href="reaweb_L2_Scripts_Reaweb_cli.html">reaweb_L2_Scripts_Reaweb_cli</a><span class='t'>Reaweb Cli</span></li>
+      <li><a href="reaweb_L2_Scripts_Render_dashboard.html">reaweb_L2_Scripts_Render_dashboard</a><span class='t'>Render Dashboard</span></li>
+      <li><a href="reaweb_L2_Scripts_Run_agent.html">reaweb_L2_Scripts_Run_agent</a><span class='t'>Run Agent</span></li>
+      <li><a href="reaweb_L2_Scripts_Run_battery.html">reaweb_L2_Scripts_Run_battery</a><span class='t'>Run Battery</span></li>
+      <li><a href="reaweb_L2_Scripts_Run_benchmark.html">reaweb_L2_Scripts_Run_benchmark</a><span class='t'>Run Benchmark</span></li>
+      <li><a href="reaweb_L2_Scripts_Run_misevo.html">reaweb_L2_Scripts_Run_misevo</a><span class='t'>Run Misevo</span></li>
+      <li><a href="reaweb_L2_Scripts_Seed_from_docs.html">reaweb_L2_Scripts_Seed_from_docs</a><span class='t'>Seed From Docs</span></li>
+      <li><a href="reaweb_L2_Scripts_Trend_evolution.html">reaweb_L2_Scripts_Trend_evolution</a><span class='t'>Trend Evolution</span></li>
+      <li><a href="reaweb_L2_Scripts__common.html">reaweb_L2_Scripts__common</a><span class='t'> Common</span></li>
+      <li><a href="reaweb_L2_Tools_Base.html">reaweb_L2_Tools_Base</a><span class='t'>Base</span></li>
+      <li><a href="reaweb_L2_Tools_Code_exec.html">reaweb_L2_Tools_Code_exec</a><span class='t'>Code Exec</span></li>
+      <li><a href="reaweb_L2_Tools_Domain.html">reaweb_L2_Tools_Domain</a><span class='t'>reaweb · tools · domain</span></li>
+      <li><a href="reaweb_L2_Tools_File_io.html">reaweb_L2_Tools_File_io</a><span class='t'>File Io</span></li>
+    </ul>
+  </section>
+  <section class='lvl'>
+    <h2>Nivel L3</h2>
+    <ul>
+      <li><a href="reaweb_L3_Agent_Agent_Audits.html">reaweb_L3_Agent_Agent_Audits</a><span class='t'>Agent · Audits</span></li>
+      <li><a href="reaweb_L3_Agent_Agent_Finalize.html">reaweb_L3_Agent_Agent_Finalize</a><span class='t'>Agent · Finalize</span></li>
+      <li><a href="reaweb_L3_Agent_Agent_Init.html">reaweb_L3_Agent_Agent_Init</a><span class='t'>Agent · Init</span></li>
+      <li><a href="reaweb_L3_Agent_Agent_Iterations.html">reaweb_L3_Agent_Agent_Iterations</a><span class='t'>Agent · Iterations</span></li>
+      <li><a href="reaweb_L3_Agent_Agent_Lessons.html">reaweb_L3_Agent_Agent_Lessons</a><span class='t'>Agent · Lessons</span></li>
+      <li><a href="reaweb_L3_Tools_Domain_Bundle_analyzer.html">reaweb_L3_Tools_Domain_Bundle_analyzer</a><span class='t'>Bundle Analyzer</span></li>
+      <li><a href="reaweb_L3_Tools_Domain_Creative_critic.html">reaweb_L3_Tools_Domain_Creative_critic</a><span class='t'>Creative Critic</span></li>
+      <li><a href="reaweb_L3_Tools_Domain_Deployer.html">reaweb_L3_Tools_Domain_Deployer</a><span class='t'>Deployer</span></li>
+      <li><a href="reaweb_L3_Tools_Domain_Evaluator.html">reaweb_L3_Tools_Domain_Evaluator</a><span class='t'>Evaluator</span></li>
+      <li><a href="reaweb_L3_Tools_Domain_Functional_tester.html">reaweb_L3_Tools_Domain_Functional_tester</a><span class='t'>Functional Tester</span></li>
+      <li><a href="reaweb_L3_Tools_Domain_Meta_editor.html">reaweb_L3_Tools_Domain_Meta_editor</a><span class='t'>Meta Editor</span></li>
+      <li><a href="reaweb_L3_Tools_Domain_Readme_fetcher.html">reaweb_L3_Tools_Domain_Readme_fetcher</a><span class='t'>Readme Fetcher</span></li>
+      <li><a href="reaweb_L3_Tools_Domain_Repo_topics.html">reaweb_L3_Tools_Domain_Repo_topics</a><span class='t'>Repo Topics</span></li>
+      <li><a href="reaweb_L3_Tools_Domain_Skill_auditor.html">reaweb_L3_Tools_Domain_Skill_auditor</a><span class='t'>Skill Auditor</span></li>
+      <li><a href="reaweb_L3_Tools_Domain_Skill_graph.html">reaweb_L3_Tools_Domain_Skill_graph</a><span class='t'>Skill Graph</span></li>
+      <li><a href="reaweb_L3_Tools_Domain_Task_coevolve.html">reaweb_L3_Tools_Domain_Task_coevolve</a><span class='t'>Task Coevolve</span></li>
+      <li><a href="reaweb_L3_Tools_Domain_Truth_audit.html">reaweb_L3_Tools_Domain_Truth_audit</a><span class='t'>Truth Audit</span></li>
+      <li><a href="reaweb_L3_Tools_Domain_Visual_critic.html">reaweb_L3_Tools_Domain_Visual_critic</a><span class='t'>Visual Critic</span></li>
+      <li><a href="reaweb_L3_Tools_Domain_Web_generator.html">reaweb_L3_Tools_Domain_Web_generator</a><span class='t'>Web Generator</span></li>
+    </ul>
+  </section>
+  <section class='lvl'>
+    <h2>Nivel L4</h2>
+    <ul>
+      <li><a href="reaweb_L4_Tools_Domain_Evaluator_Gating.html">reaweb_L4_Tools_Domain_Evaluator_Gating</a><span class='t'>Evaluator · Gating</span></li>
+      <li><a href="reaweb_L4_Tools_Domain_Evaluator_Novelty.html">reaweb_L4_Tools_Domain_Evaluator_Novelty</a><span class='t'>Evaluator · Novelty</span></li>
+      <li><a href="reaweb_L4_Tools_Domain_Evaluator_RequirementsSections.html">reaweb_L4_Tools_Domain_Evaluator_RequirementsSections</a><span class='t'>Evaluator · RequirementsSections</span></li>
+      <li><a href="reaweb_L4_Tools_Domain_Evaluator_Scoring.html">reaweb_L4_Tools_Domain_Evaluator_Scoring</a><span class='t'>Evaluator · Scoring</span></li>
+      <li><a href="reaweb_L4_Tools_Domain_Evaluator_Subtasks.html">reaweb_L4_Tools_Domain_Evaluator_Subtasks</a><span class='t'>Evaluator · Subtasks</span></li>
+      <li><a href="reaweb_L4_Tools_Domain_Evaluator_VisualChecks.html">reaweb_L4_Tools_Domain_Evaluator_VisualChecks</a><span class='t'>Evaluator · VisualChecks</span></li>
+      <li><a href="reaweb_L4_Tools_Domain_Evaluator_VisualTotal.html">reaweb_L4_Tools_Domain_Evaluator_VisualTotal</a><span class='t'>Evaluator · VisualTotal</span></li>
+      <li><a href="reaweb_L4_Tools_Domain_Web_generator_AuditPage.html">reaweb_L4_Tools_Domain_Web_generator_AuditPage</a><span class='t'>Web Generator · AuditPage</span></li>
+      <li><a href="reaweb_L4_Tools_Domain_Web_generator_FetchUrl.html">reaweb_L4_Tools_Domain_Web_generator_FetchUrl</a><span class='t'>Web Generator · FetchUrl</span></li>
+      <li><a href="reaweb_L4_Tools_Domain_Web_generator_GenerateCandidate.html">reaweb_L4_Tools_Domain_Web_generator_GenerateCandidate</a><span class='t'>Web Generator · GenerateCandidate</span></li>
+      <li><a href="reaweb_L4_Tools_Domain_Web_generator_InspectArchetype.html">reaweb_L4_Tools_Domain_Web_generator_InspectArchetype</a><span class='t'>Web Generator · InspectArchetype</span></li>
+      <li><a href="reaweb_L4_Tools_Domain_Web_generator_RevertWorkspace.html">reaweb_L4_Tools_Domain_Web_generator_RevertWorkspace</a><span class='t'>Web Generator · RevertWorkspace</span></li>
+      <li><a href="reaweb_L4_Tools_Domain_Web_generator_SelectFinal.html">reaweb_L4_Tools_Domain_Web_generator_SelectFinal</a><span class='t'>Web Generator · SelectFinal</span></li>
+      <li><a href="reaweb_L4_Tools_Domain_Web_generator_UpdateLessons.html">reaweb_L4_Tools_Domain_Web_generator_UpdateLessons</a><span class='t'>Web Generator · UpdateLessons</span></li>
+    </ul>
+  </section>
+
+</body>
+</html>

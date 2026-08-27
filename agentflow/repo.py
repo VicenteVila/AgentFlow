@@ -12,6 +12,7 @@ import dependencies.
 from __future__ import annotations
 
 import ast
+import os
 from pathlib import Path
 
 from agentflow.models import Edge, FlowGraph, Node, NodeType
@@ -21,25 +22,52 @@ _EXCLUDE_DIRS = {".git", ".venv", "venv", "__pycache__", ".pytest_cache",
                  "node_modules", ".mypy_cache", ".ruff_cache", "dist", "build",
                  "htmlcov", ".tox", "eggs", "*.egg-info"}
 
-_EXCLUDE_SUFFIXES = {".pyc"}
 
+def collect_python_files(root: Path, exclude: set[str] | None = None,
+                         include_hidden: bool = False) -> list[Path]:
+    """Recursively collect ``*.py`` files under *root*, skipping noise dirs.
 
-def collect_python_files(root: Path, exclude: set[str] | None = None) -> list[Path]:
-    """Recursively collect ``*.py`` files under *root*, skipping noise dirs."""
+    When *include_hidden* is True, dot-directories (e.g. ``.agent/``) and
+    directory symlinks are also scanned, so hidden agent cores are found.
+    """
     excl = _EXCLUDE_DIRS | (exclude or set())
     files: list[Path] = []
-    for p in root.rglob("*.py"):
-        if any(part in excl or part.startswith(".") for part in p.relative_to(root).parts):
-            continue
-        if any(str(p).endswith(suf) for suf in _EXCLUDE_SUFFIXES):
-            continue
-        # skip empty / tiny files
-        try:
-            if p.stat().st_size < 20:
+    seen: set[Path] = set()
+    for dirpath, dirnames, filenames in os.walk(root, followlinks=True):
+        # prune noise dirs in place
+        kept = []
+        for d in dirnames:
+            full = Path(dirpath) / d
+            rel_parts = full.relative_to(root).parts
+            if any(part in excl for part in rel_parts):
                 continue
-        except OSError:
-            continue
-        files.append(p)
+            if (not include_hidden) and any(part.startswith(".") for part in rel_parts):
+                continue
+            kept.append(d)
+        for d in dirnames:
+            if d not in kept:
+                dirnames.remove(d)
+        for fn in sorted(filenames):
+            if not fn.endswith(".py"):
+                continue
+            full = Path(dirpath) / fn
+            if any(
+                part in excl or ((not include_hidden) and part.startswith("."))
+                for part in full.relative_to(root).parts
+            ):
+                continue
+            if str(full).endswith(".pyc"):
+                continue
+            try:
+                if full.stat().st_size < 20:
+                    continue
+            except OSError:
+                continue
+            resolved = full.resolve()
+            if resolved in seen:
+                continue
+            seen.add(resolved)
+            files.append(full)
     return sorted(files)
 
 
@@ -89,18 +117,20 @@ def build_repo_overview(
     profile: str | object | None = None,
     include_imports: bool = False,
     title: str | None = None,
+    include_hidden: bool = False,
 ) -> FlowGraph:
     """Scan *root* and return an overview FlowGraph.
 
     Each Python file with >2 nodes becomes one overview node. When
     *include_imports* is True, import edges between overview nodes are added
-    as dashed edges.
+    as dashed edges. Set *include_hidden* to also scan dot-directories
+    (e.g. ``.agent/``) via :func:`collect_python_files`.
     """
     root = Path(root).resolve()
     if not root.is_dir():
         raise ValueError(f"Not a directory: {root}")
 
-    files = collect_python_files(root)
+    files = collect_python_files(root, include_hidden=include_hidden)
     # Parse each file; keep only non-trivial graphs
     file_graphs: list[tuple[Path, FlowGraph]] = []
     for f in files:

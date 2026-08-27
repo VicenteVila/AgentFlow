@@ -1881,3 +1881,160 @@ class Agent:
     graph = parse_source(src)
     labels = [n.label.lower() for n in graph.nodes]
     assert any("match" in lbl for lbl in labels)
+
+
+# ── Function-level parsing ────────────────────────────────────────────
+
+
+def _write_tmp_module(tmpdir, code):
+    path = Path(tmpdir) / "mod.py"
+    path.write_text(code, encoding="utf-8")
+    return path
+
+
+_FUNC_MODULE = '''
+def _score(checks, context):
+    total = 0
+    for check in checks:
+        if check:
+            total += 1
+    return total
+
+def evaluate(project_dir):
+    result = _score(["a"], "html")
+    if result > 10:
+        return "high"
+    return "low"
+
+def _apply_blocking_gates(total, ceiling):
+    if total > ceiling:
+        return ceiling
+    return total
+'''
+
+
+def test_parse_functions_subset():
+    from agentflow.parser import parse_functions
+
+    with tempfile.TemporaryDirectory() as tmp:
+        path = _write_tmp_module(tmp, _FUNC_MODULE)
+        g = parse_functions(path, ["evaluate", "_apply_blocking_gates"])
+        ids = [n.id for n in g.nodes]
+        assert "fn_evaluate" in ids
+        assert "fn__apply_blocking_gates" in ids
+        # fn__score NOT selected -> absent
+        assert "fn__score" not in ids
+
+
+def test_parse_functions_crosslink():
+    """A call to a sibling selected function becomes an edge to its node."""
+    from agentflow.parser import parse_functions
+
+    with tempfile.TemporaryDirectory() as tmp:
+        path = _write_tmp_module(tmp, _FUNC_MODULE)
+        g = parse_functions(path, ["_score", "evaluate"])
+        assert g.edge_count >= 1
+        hits = [e for e in g.edges if e.target == "fn__score"]
+        assert hits, "evaluate() should wire to fn__score node"
+
+
+def test_parse_class_methods():
+    from agentflow.parser import parse_class_methods
+
+    code = '''
+class Tool:
+    def _helper(self, value):
+        if value:
+            return value
+    def run(self, objective):
+        data = self._helper(objective)
+        if not data:
+            return "empty"
+        return data
+'''
+    with tempfile.TemporaryDirectory() as tmp:
+        path = _write_tmp_module(tmp, code)
+        g = parse_class_methods(path, "Tool")
+        ids = [n.id for n in g.nodes]
+        assert "fn_run" in ids
+        assert "fn__helper" in ids
+
+
+def test_collect_python_files_include_hidden():
+    from agentflow.repo import collect_python_files
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        (root / ".agent").mkdir()
+        (root / "tools").mkdir()
+        (root / ".agent" / "core.py").write_text("x = 1\n" * 5)
+        (root / "tools" / "tool.py").write_text("x = 1\n" * 5)
+
+        hidden = collect_python_files(root, include_hidden=True)
+        visible = collect_python_files(root, include_hidden=False)
+        assert any(".agent" in str(f) for f in hidden)
+        assert not any(".agent" in str(f) for f in visible)
+
+
+def test_drilldown_recursive():
+    from agentflow.drilldown import run_drilldown
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp) / "mini_repo"
+        (root / "agent").mkdir(parents=True)
+        (root / "tools").mkdir()
+        (root / "config.py").write_text(
+            "def main():\n    if x:\n        run()\n    return\n")
+        (root / "agent" / "agent.py").write_text(_FUNC_MODULE + TRIGGER_AGENT)
+        (root / "agent" / "budget.py").write_text(
+            "def done():\n    if spent > cap:\n        return True\n")
+        (root / "tools" / "base.py").write_text(_FUNC_MODULE)
+
+        out = Path(tmp) / "drill_out"
+        entries = run_drilldown(root, out_dir=out, prefix="mini",
+                                profile="generic", include_hidden=True)
+        names = {e["name"] for e in entries}
+        assert any(n.endswith("L0_Overview") for n in names)
+        assert any("L1_Agent" in n for n in names)
+        assert any("L1_Tools" in n for n in names)
+        assert (out / "index.html").exists()
+        # overviews carry click links and back links
+        agent_html = next(p for p in out.glob("*L1_Agent.html"))
+        content = agent_html.read_text(encoding="utf-8")
+        assert "click " in content
+        assert "Volver" in content
+
+
+TRIGGER_AGENT = '''
+class Agent:
+    def run(self):
+        while True:
+            if self.budget.done():
+                break
+'''
+
+
+def test_cli_drilldown_theme_no_phases():
+    import subprocess
+    import sys
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp) / "proj"
+        (root / "tools").mkdir(parents=True)
+        (root / "tools" / "evaluator.py").write_text(_FUNC_MODULE)
+        (root / "main.py").write_text(
+            "def go():\n    if a:\n        step()\n    while b:\n        loop()\n")
+        out = Path(tmp) / "out"
+
+        result = subprocess.run(
+            [sys.executable, "-m", "agentflow.cli", "-i", str(root), "--drilldown",
+             "--theme", "neon", "--no-phases", "--title", "proj",
+             "--output-dir", str(out)],
+            capture_output=True, text=True,
+        )
+        assert result.returncode == 0, result.stderr
+        mmd = next(out.glob("*L0_Overview.mmd")).read_text(encoding="utf-8")
+        assert "flowchart LR" in mmd
+        assert "subgraph" not in mmd
+        assert "classDef node-process fill:#000000,stroke:#8b5cf6" in mmd
+        assert (out / "index.html").exists()

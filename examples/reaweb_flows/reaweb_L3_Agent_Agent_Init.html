@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent · Init</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="reaweb_L2_Agent_Agent.html">← Volver</a>
+  <h1>Agent · Init</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Agent · Init
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    fn___init__[["Init"]]
+    dec_120{"not (src /<br>'index.html').exists()<br><i>Condición en línea 120:<br>not (src / 'index.html').exists()</i>"}
+    dec_141{"not target.exists()<br><i>Condición en línea 141:<br>not target.exists()</i>"}
+    dec_158{"not target.exists()<br><i>Condición en línea 158:<br>not target.exists()</i>"}
+    dec_183{"not isinstance(blk, dict)<br><i>Condición en línea 183:<br>not isinstance(blk, dict)</i>"}
+    dec_211{"best<br><i>Condición en línea 211:<br>best</i>"}
+    dec_93{"self.quick<br><i>Condición en línea 93:<br>self.quick</i>"}
+    dec_124{"dst.exists()<br><i>Condición en línea 124:<br>dst.exists()</i>"}
+    dec_187{"isinstance(issues, list) or<br>isinstance(sugs, list)<br><i>Condición en línea 187:<br>isinstance(issues, list) or isinstance(sugs, list)</i>"}
+    dec_216{"sections and<br>html_path.exists()<br><i>Condición en línea 216:<br>sections and html_path.exists()</i>"}
+    dec_100{"Target H<br>reached?<br><i>hypothesis_count ≤ target_h?<br>→ continuar generando</i>"}
+    dec_231{"best<br><i>Condición en línea 231:<br>best</i>"}
+    dec_111{"self.rules<br><i>Condición en línea 111:<br>self.rules</i>"}
+    dec_234{"repos_dir.is_dir()<br><i>Condición en línea 234:<br>repos_dir.is_dir()</i>"}
+    dec_241{"orphan<br><i>Condición en línea 241:<br>orphan</i>"}
+    loop_252["For each exp"]
+    loop_127["For each f"]
+    dec_128{"f.is_file()<br><i>Condición en línea 128:<br>f.is_file()</i>"}
+    dec_130{"f.is_dir()<br><i>Condición en línea 130:<br>f.is_dir()</i>"}
+    loop_143["For each f"]
+    dec_144{"f.is_file()<br><i>Condición en línea 144:<br>f.is_file()</i>"}
+    loop_160["For each f"]
+    dec_161{"f.is_file()<br><i>Condición en línea 161:<br>f.is_file()</i>"}
+    loop_168["For each fname"]
+    dec_171{"old is None<br><i>Condición en línea 171:<br>old is None</i>"}
+    dec_173{"new is None<br><i>Condición en línea 173:<br>new is None</i>"}
+    dec_175{"new != old<br><i>Condición en línea 175:<br>new != old</i>"}
+    fn__system_prompt[["System Prompt"]]
+    fn__snapshot[["Snapshot"]]
+    fn__snapshot_workspace[["Snapshot Workspace"]]
+    fn__stash_vlm[["Stash Vlm"]]
+    fn__render_state[["Render State"]]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_91{"NOT allow_meta_edits?<br><i>Niega allow_meta_edits<br>para lógica invertida</i>"}
+    fn__workspace_diff_summary[["Workspace Diff Summary"]]
+    n_start --> fn___init__
+    n_start --> fn__system_prompt
+    fn__system_prompt --> dec_91
+    dec_91 --> dec_93
+    dec_93 --> dec_100
+    dec_100 --> dec_111
+    n_start --> fn__snapshot
+    fn__snapshot --> dec_120
+    dec_120 --> dec_124
+    dec_124 --> loop_127
+    loop_127 --> dec_128
+    dec_128 --> dec_130
+    dec_130 -- "loop" --> loop_127
+    n_start --> fn__snapshot_workspace
+    fn__snapshot_workspace --> dec_141
+    dec_141 --> loop_143
+    loop_143 --> dec_144
+    dec_144 -- "loop" --> loop_143
+    n_start --> fn__workspace_diff_summary
+    fn__workspace_diff_summary --> dec_158
+    dec_158 --> loop_160
+    loop_160 --> dec_161
+    dec_161 -- "loop" --> loop_160
+    loop_160 --> loop_168
+    loop_168 --> dec_171
+    dec_171 --> dec_173
+    dec_173 --> dec_175
+    dec_175 -- "loop" --> loop_168
+    n_start --> fn__stash_vlm
+    fn__stash_vlm --> dec_183
+    dec_183 --> dec_187
+    n_start --> fn__render_state
+    fn__render_state --> dec_211
+    dec_211 --> dec_216
+    dec_216 --> dec_231
+    dec_231 --> dec_234
+    dec_234 --> dec_241
+    dec_241 --> loop_252
+    class n_start node-start
+    class fn___init__,fn__system_prompt,fn__snapshot,fn__snapshot_workspace,fn__workspace_diff_summary,fn__stash_vlm,fn__render_state node-subprocess
+    class dec_91,dec_93,dec_100,dec_111,dec_120,dec_124,dec_128,dec_130,dec_141,dec_144,dec_158,dec_161,dec_171,dec_173,dec_175,dec_183,dec_187,dec_211,dec_216,dec_231,dec_234,dec_241 node-decision
+    class loop_127,loop_143,loop_160,loop_168,loop_252 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

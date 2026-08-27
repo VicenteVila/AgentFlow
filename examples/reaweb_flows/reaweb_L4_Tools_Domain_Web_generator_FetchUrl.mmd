@@ -1,0 +1,53 @@
+%% Web Generator · FetchUrl
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    dec_24{"not re.match('^https?://',<br>url)<br><i>Condición en línea 24:<br>not re.match('^https?://', url)</i>"}
+    dec_28{"parsed.scheme not in<br>('http', 'https') or not<br><i>Condición en línea 28:<br>parsed.scheme not in ('http', 'https') or not parsed.netloc</i>"}
+    dec_80{"t<br><i>Condición en línea 80:<br>t</i>"}
+    loop_82["For each m"]
+    loop_84["For each m"]
+    dec_86{"txt<br><i>Condición en línea 86:<br>txt</i>"}
+    dec_89{"nav<br><i>Condición en línea 89:<br>nav</i>"}
+    dec_92{"nav_links<br><i>Condición en línea 92:<br>nav_links</i>"}
+    dec_96{"m<br><i>Condición en línea 96:<br>m</i>"}
+    dec_102{"text<br><i>Condición en línea 102:<br>text</i>"}
+    dec_105{"classes<br><i>Condición en línea 105:<br>classes</i>"}
+    fn_schema[["Schema"]]
+    fn_run[["Run"]]
+    fn__excerpt[["excerpt = Excerpt"]]
+    fn_strip_75[["Strip"]]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    n_start --> fn_schema
+    n_start --> fn_run
+    fn_run --> dec_24
+    dec_24 --> dec_28
+    dec_28 --> fn__excerpt
+    n_start --> fn__excerpt
+    fn__excerpt --> fn_strip_75
+    fn_strip_75 --> dec_80
+    dec_80 --> loop_82
+    loop_82 --> loop_84
+    loop_84 --> dec_86
+    dec_86 -- "loop" --> loop_84
+    loop_84 --> dec_89
+    dec_89 --> dec_92
+    dec_92 --> dec_96
+    dec_96 --> dec_102
+    dec_102 --> dec_105
+    class n_start node-start
+    class fn_schema,fn_run,fn__excerpt,fn_strip_75 node-subprocess
+    class dec_24,dec_28,dec_80,dec_86,dec_89,dec_92,dec_96,dec_102,dec_105 node-decision
+    class loop_82,loop_84 node-loop
+    class n_end node-end

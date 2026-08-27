@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>reaweb · agent</title>
+  <title>Web Generator · AuditPage</title>
   <style>
     body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
     h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
@@ -15,12 +15,12 @@
   </style>
 </head>
 <body>
-<a class="back-link" href="reaweb_L0_Overview.html">← Volver</a>
-  <h1>reaweb · agent</h1>
+<a class="back-link" href="reaweb_L3_Tools_Domain_Web_generator.html">← Volver</a>
+  <h1>Web Generator · AuditPage</h1>
   <p class="note">Click en los modulos con cursor mano para drill-down.</p>
   <div id="diagram"><pre class="mermaid">
-%% reaweb · agent
-%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+%% Web Generator · AuditPage
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
 flowchart LR
     classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
     classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
@@ -33,34 +33,40 @@ flowchart LR
     classDef added fill:#a7f3d0,stroke:#065f46
     classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
     classDef changed fill:#fde68a,stroke:#92400e
-    n_start(["Start"])
-    mod_agent["Agent<br><i>29 nodos, 30 enlaces</i>"]
-    mod_budget_tracker["Budget Tracker<br><i>18 nodos, 16 enlaces</i>"]
-    mod_harness_snapshot["Harness Snapshot<br><i>14 nodos, 13 enlaces</i>"]
-    mod_llm["Llm<br><i>36 nodos, 38 enlaces</i>"]
-    mod_llm_cache["Llm Cache<br><i>29 nodos, 28 enlaces</i>"]
-    mod_memory_db["Memory Db<br><i>52 nodos, 52 enlaces</i>"]
-    mod_state["State<br><i>29 nodos, 29 enlaces</i>"]
-    n_end(["End"])
-    n_start --> mod_agent
-    mod_agent --> mod_budget_tracker
-    mod_budget_tracker --> mod_harness_snapshot
-    mod_harness_snapshot --> mod_llm
-    mod_llm --> mod_llm_cache
-    mod_llm_cache --> mod_memory_db
-    mod_memory_db --> mod_state
-    mod_state --> n_end
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    dec_20{"not (target /<br>'index.html').exists()<br><i>Condición en línea 20:<br>not (target / 'index.html').exists()</i>"}
+    dec_25{"verify<br><i>Condición en línea 25:<br>verify</i>"}
+    loop_27["For each k"]
+    dec_28{"k in m1 and k in m2 and<br>(m1.get(k) is not None) and is not<br><i>Condición en línea 28:<br>k in m1 and k in m2 and (m1.get(k) is not None) and (m2.get(</i>"}
+    loop_37["For loop"]
+    dec_38{"lst<br><i>Condición en línea 38:<br>lst</i>"}
+    loop_44["For loop"]
+    dec_45{"lst<br><i>Condición en línea 45:<br>lst</i>"}
+    dec_52{"gate_lines<br><i>Condición en línea 52:<br>gate_lines</i>"}
+    dec_54{"fail_lines<br><i>Condición en línea 54:<br>fail_lines</i>"}
+    fn_schema[["Schema"]]
+    fn_run[["Run"]]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    n_start --> fn_schema
+    n_start --> fn_run
+    fn_run --> dec_20
+    dec_20 --> dec_25
+    dec_25 -- "YES" --> loop_27
+    loop_27 --> dec_28
+    dec_28 -- "loop" --> loop_27
+    dec_25 --> loop_37
+    loop_37 --> dec_38
+    dec_38 -- "loop" --> loop_37
+    loop_37 --> loop_44
+    loop_44 --> dec_45
+    dec_45 -- "loop" --> loop_44
+    loop_44 --> dec_52
+    dec_52 --> dec_54
     class n_start node-start
-    class mod_agent,mod_harness_snapshot,mod_llm,mod_llm_cache,mod_memory_db,mod_state node-loop
-    class mod_budget_tracker node-process
+    class fn_schema,fn_run node-subprocess
+    class dec_20,dec_25,dec_28,dec_38,dec_45,dec_52,dec_54 node-decision
+    class loop_27,loop_37,loop_44 node-loop
     class n_end node-end
-    click mod_agent href "reaweb_L2_Agent_Agent.html" "Abrir detalle"
-    click mod_budget_tracker href "reaweb_L2_Agent_Budget_tracker.html" "Abrir detalle"
-    click mod_harness_snapshot href "reaweb_L2_Agent_Harness_snapshot.html" "Abrir detalle"
-    click mod_llm href "reaweb_L2_Agent_Llm.html" "Abrir detalle"
-    click mod_llm_cache href "reaweb_L2_Agent_Llm_cache.html" "Abrir detalle"
-    click mod_memory_db href "reaweb_L2_Agent_Memory_db.html" "Abrir detalle"
-    click mod_state href "reaweb_L2_Agent_State.html" "Abrir detalle"
 
   </pre></div>
   <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Generator · GenerateCandidate</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="reaweb_L3_Tools_Domain_Web_generator.html">← Volver</a>
+  <h1>Web Generator · GenerateCandidate</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Web Generator · GenerateCandidate
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    dec_203{"fname.startswith('.') or '/'<br>in fname or '\\' in fname<br><i>Condición en línea 203:<br>fname.startswith('.') or '/' in fname or '\\' in fname</i>"}
+    fn__seed_workspace[["Seed Workspace"]]
+    dec_102{"(target /<br>'index.html').exists()<br><i>Condición en línea 102:<br>(target / 'index.html').exists()</i>"}
+    dec_141{"ref_path.exists()<br><i>Condición en línea 141:<br>ref_path.exists()</i>"}
+    dec_105{"not src.exists()<br><i>Condición en línea 105:<br>not src.exists()</i>"}
+    dec_149{"graph_path.exists() and (not<br>explore)<br><i>Condición en línea 149:<br>graph_path.exists() and (not explore)</i>"}
+    dec_155{"explore<br><i>Condición en línea 155:<br>explore</i>"}
+    dec_30{"len(blocks) > 1<br><i>Condición en línea 30:<br>len(blocks) > 1</i>"}
+    dec_183{"not files<br><i>Condición en línea 183:<br>not files</i>"}
+    dec_47{"not files<br><i>Condición en línea 47:<br>not files</i>"}
+    dec_187{"not files or 'index.html'<br>not in files<br><i>Condición en línea 187:<br>not files or 'index.html' not in files</i>"}
+    dec_192{"explore<br><i>Condición en línea 192:<br>explore</i>"}
+    loop_31["For each block"]
+    dec_33{"not body<br><i>Condición en línea 33:<br>not body</i>"}
+    dec_38{"_is_safe_filename(fname)<br><i>Condición en línea 38:<br>_is_safe_filename(fname)</i>"}
+    dec_44{"inferred<br><i>Condición en línea 44:<br>inferred</i>"}
+    loop_61["For each m"]
+    dec_63{"name and<br>_is_safe_filename(name)<br><i>Condición en línea 63:<br>name and _is_safe_filename(name)</i>"}
+    dec_67{"inferred<br><i>Condición en línea 67:<br>inferred</i>"}
+    loop_71["For loop"]
+    dec_76{"fname in files<br><i>Condición en línea 76:<br>fname in files</i>"}
+    dec_78{"re.search(pattern, text,<br>re.I | re.S)<br><i>Condición en línea 78:<br>re.search(pattern, text, re.I | re.S)</i>"}
+    loop_88["For each fname"]
+    dec_90{"f.exists()<br><i>Condición en línea 90:<br>f.exists()</i>"}
+    dec_93{"not parts<br><i>Condición en línea 93:<br>not parts</i>"}
+    loop_108["For each fname"]
+    dec_110{"f.exists()<br><i>Condición en línea 110:<br>f.exists()</i>"}
+    loop_196["For each _f"]
+    dec_197{"_f.is_file()<br><i>Condición en línea 197:<br>_f.is_file()</i>"}
+    dec_199{"_f.is_dir()<br><i>Condición en línea 199:<br>_f.is_dir()</i>"}
+    loop_201["For loop"]
+    loop_229["For loop"]
+    dec_230{"lst<br><i>Condición en línea 230:<br>lst</i>"}
+    dec_232{"gate_lines<br><i>Condición en línea 232:<br>gate_lines</i>"}
+    dec_234{"vuln_files<br><i>Condición en línea 234:<br>vuln_files</i>"}
+    fn_schema[["Schema"]]
+    fn_run[["Run"]]
+    fn__build_current_code[["Build Current Code"]]
+    fn__parse_files[["Parse Files"]]
+    fn__parse_files_fallback[["Parse Files Fallback"]]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    n_start --> fn_schema
+    n_start --> fn__parse_files
+    fn__parse_files --> dec_30
+    dec_30 --> loop_31
+    loop_31 --> dec_33
+    dec_33 --> dec_38
+    dec_38 -- "NO" --> dec_44
+    dec_44 -- "loop" --> loop_31
+    dec_30 --> dec_47
+    n_start --> fn__parse_files_fallback
+    fn__parse_files_fallback --> loop_61
+    loop_61 --> dec_63
+    dec_63 --> dec_67
+    dec_67 -- "loop" --> loop_61
+    loop_61 --> loop_71
+    loop_71 --> dec_76
+    dec_76 --> dec_78
+    dec_78 -- "loop" --> loop_71
+    n_start --> fn__build_current_code
+    fn__build_current_code --> loop_88
+    loop_88 --> dec_90
+    dec_90 -- "loop" --> loop_88
+    loop_88 --> dec_93
+    n_start --> fn__seed_workspace
+    fn__seed_workspace --> dec_102
+    dec_102 --> dec_105
+    dec_105 --> loop_108
+    loop_108 --> dec_110
+    dec_110 -- "loop" --> loop_108
+    n_start --> fn_run
+    fn_run --> fn__seed_workspace
+    fn__seed_workspace --> dec_141
+    dec_141 --> dec_149
+    dec_149 --> dec_155
+    dec_155 -- "NO" --> fn__build_current_code
+    fn__build_current_code --> fn__parse_files
+    fn__parse_files --> dec_183
+    dec_183 --> fn__parse_files_fallback
+    fn__parse_files_fallback --> dec_187
+    dec_187 --> dec_192
+    dec_192 --> loop_196
+    loop_196 --> dec_197
+    dec_197 --> dec_199
+    dec_199 -- "loop" --> loop_196
+    loop_196 --> loop_201
+    loop_201 --> dec_203
+    dec_203 -- "loop" --> loop_201
+    loop_201 --> loop_229
+    loop_229 --> dec_230
+    dec_230 -- "loop" --> loop_229
+    loop_229 --> dec_232
+    dec_232 --> dec_234
+    class n_start node-start
+    class fn_schema,fn__parse_files,fn__parse_files_fallback,fn__build_current_code,fn__seed_workspace,fn_run node-subprocess
+    class dec_30,dec_33,dec_38,dec_44,dec_47,dec_63,dec_67,dec_76,dec_78,dec_90,dec_93,dec_102,dec_105,dec_110,dec_141,dec_149,dec_155,dec_183,dec_187,dec_192,dec_197,dec_199,dec_203,dec_230,dec_232,dec_234 node-decision
+    class loop_31,loop_61,loop_71,loop_88,loop_108,loop_196,loop_201,loop_229 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

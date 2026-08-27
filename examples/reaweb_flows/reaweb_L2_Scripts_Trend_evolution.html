@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trend Evolution</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="reaweb_L1_Scripts.html">← Volver</a>
+  <h1>Trend Evolution</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Trend Evolution
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    dec_59{"not r.get('archetype') or<br>run_id.startswith(('t-', 'tmp-'))<br><i>Condición en línea 59:<br>not r.get('archetype') or run_id.startswith(('t-', 'tmp-'))</i>"}
+    dec_40{"Has nodes?<br><i>Search tree tiene nodos?<br>→ evaluar candidato</i>"}
+    dec_204{"args.json<br><i>Condición en línea 204:<br>args.json</i>"}
+    dec_43{"roots<br><i>Condición en línea 43:<br>roots</i>"}
+    loop_56["For each r"]
+    loop_99["For each r in rows"]
+    dec_102{"r('baseline') is not None<br>and r('best') is not None<br><i>Condición en línea 102:<br>r('baseline') is not None and r('best') is not None</i>"}
+    dec_105{"r('harness_hash')<br><i>Condición en línea 105:<br>r('harness_hash')</i>"}
+    dec_107{"r('harness_diff')<br><i>Condición en línea 107:<br>r('harness_diff')</i>"}
+    loop_122["For each r in rows"]
+    dec_123{"r('harness_hash')<br><i>Condición en línea 123:<br>r('harness_hash')</i>"}
+    dec_125{"not groups<br><i>Condición en línea 125:<br>not groups</i>"}
+    loop_128["For loop"]
+    loop_130["For each r in rows"]
+    dec_131{"r('harness_diff')<br><i>Condición en línea 131:<br>r('harness_diff')</i>"}
+    loop_146["For each r in rows"]
+    loop_147["For loop"]
+    loop_149["For each cat"]
+    dec_150{"agg(cat)<br><i>Condición en línea 150:<br>agg(cat)</i>"}
+    dec_152{"not agg<br><i>Condición en línea 152:<br>not agg</i>"}
+    dec_156{"benchmark_hash<br><i>Condición en línea 156:<br>benchmark_hash</i>"}
+    loop_161["For each r in bench"]
+    dec_163{"r('baseline') is not None<br>and r('best') is not None<br><i>Condición en línea 163:<br>r('baseline') is not None and r('best') is not None</i>"}
+    dec_171{"len(valid) >= 2<br><i>Condición en línea 171:<br>len(valid) >= 2</i>"}
+    fn__baseline[["Baseline"]]
+    fn_collect[["Collect"]]
+    fn__fmt_num[["Fmt Num"]]
+    fn_render_markdown[["Render Markdown"]]
+    fn_main[["Main"]]
+    fn__num_46[["Num"]]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_136{"not meta_rows<br><i>Condición en línea 136:<br>not meta_rows</i>"}
+    loop_139["For each r in meta_rows"]
+    n_start --> fn__baseline
+    fn__baseline --> dec_40
+    dec_40 --> dec_43
+    dec_43 --> fn__num_46
+    n_start --> fn_collect
+    fn_collect --> loop_56
+    loop_56 --> dec_59
+    dec_59 -- "loop" --> loop_56
+    n_start --> fn__fmt_num
+    n_start --> fn_render_markdown
+    fn_render_markdown --> loop_99
+    loop_99 --> dec_102
+    dec_102 --> dec_105
+    dec_105 --> dec_107
+    dec_107 -- "loop" --> loop_99
+    loop_99 --> loop_122
+    loop_122 --> dec_123
+    dec_123 -- "loop" --> loop_122
+    loop_122 --> dec_125
+    dec_125 -- "NO" --> loop_128
+    loop_128 --> loop_130
+    loop_130 --> dec_131
+    dec_131 -- "loop" --> loop_130
+    loop_130 --> dec_136
+    dec_136 -- "NO" --> loop_139
+    loop_139 --> loop_146
+    loop_146 --> loop_147
+    loop_147 -- "loop" --> loop_146
+    loop_146 --> loop_149
+    loop_149 --> dec_150
+    dec_150 -- "loop" --> loop_149
+    loop_149 --> dec_152
+    dec_152 --> dec_156
+    dec_156 --> loop_161
+    loop_161 --> dec_163
+    dec_163 -- "loop" --> loop_161
+    loop_161 --> dec_171
+    n_start --> fn_main
+    fn_main --> dec_204
+    class n_start node-start
+    class fn__baseline,fn__num_46,fn_collect,fn__fmt_num,fn_render_markdown,fn_main node-subprocess
+    class dec_40,dec_43,dec_59,dec_102,dec_105,dec_107,dec_123,dec_125,dec_131,dec_136,dec_150,dec_152,dec_156,dec_163,dec_171,dec_204 node-decision
+    class loop_56,loop_99,loop_122,loop_128,loop_130,loop_139,loop_146,loop_147,loop_149,loop_161 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

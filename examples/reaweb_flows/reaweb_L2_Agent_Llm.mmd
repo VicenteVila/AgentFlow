@@ -1,0 +1,93 @@
+%% Llm
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    dec_44{"raw is None<br><i>Condición en línea 44:<br>raw is None</i>"}
+    dec_81{"isinstance(contents, str)<br><i>Condición en línea 81:<br>isinstance(contents, str)</i>"}
+    dec_46{"isinstance(raw, dict)<br><i>Condición en línea 46:<br>isinstance(raw, dict)</i>"}
+    dec_105{"not tools<br><i>Condición en línea 105:<br>not tools</i>"}
+    loop_108["For each t in tools"]
+    dec_196{"cache is not None<br><i>Condición en línea 196:<br>cache is not None</i>"}
+    dec_199{"hit is not None<br><i>Condición en línea 199:<br>hit is not None</i>"}
+    dec_201{"Has tool<br>calls?<br><i>LLM devolvió tool_calls?<br>→ iterar sobre cada una</i>"}
+    loop_84["For each part in contents"]
+    dec_85{"isinstance(part, str)<br><i>Condición en línea 85:<br>isinstance(part, str)</i>"}
+    dec_89{"txt<br><i>Condición en línea 89:<br>txt</i>"}
+    dec_93{"data<br><i>Condición en línea 93:<br>data</i>"}
+    loop_122["For loop"]
+    dec_127{"spec.get('type') == 'array'<br>and spec.get('items')<br><i>Condición en línea 127:<br>spec.get('type') == 'array' and spec.get('items')</i>"}
+    dec_134{"spec.get('required')<br><i>Condición en línea 134:<br>spec.get('required')</i>"}
+    loop_215["For each model in _chain"]
+    dec_222{"model != self._chain(0)<br><i>Condición en línea 222:<br>model != self._chain(0)</i>"}
+    dec_235{"resp.candidates<br><i>Condición en línea 235:<br>resp.candidates</i>"}
+    dec_237{"cand.content and<br>cand.content.parts<br><i>Condición en línea 237:<br>cand.content and cand.content.parts</i>"}
+    loop_238["For each part in parts"]
+    dec_239{"part.text is not None<br><i>Condición en línea 239:<br>part.text is not None</i>"}
+    dec_241{"part.function_call is not<br>None<br><i>Condición en línea 241:<br>part.function_call is not None</i>"}
+    dec_247{"usage is not None<br><i>Condición en línea 247:<br>usage is not None</i>"}
+    dec_254{"Has tool<br>calls?<br><i>LLM devolvió tool_calls?<br>→ iterar sobre cada una</i>"}
+    fn__convert_args[["Convert Args"]]
+    fn_llm__cache_key[["Cache Key"]]
+    fn_llm__tools[["Tools"]]
+    fn_llm__params[["Params"]]
+    fn_llm__type[["Type"]]
+    fn_llm_generate[["Generate"]]
+    fn_llm_generate_vision[["Generate Vision"]]
+    fn_llm__complete[["Complete"]]
+    fn_llm_count_tokens[["Count Tokens"]]
+    fn_llm_estimate_cost[["Estimate Cost"]]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    n_start --> fn__convert_args
+    fn__convert_args --> dec_44
+    dec_44 --> dec_46
+    n_start --> fn_llm__cache_key
+    fn_llm__cache_key --> dec_81
+    dec_81 -- "NO" --> loop_84
+    loop_84 --> dec_85
+    dec_85 --> dec_89
+    dec_89 --> dec_93
+    dec_93 -- "loop" --> loop_84
+    fn_llm__cache_key --> fn_llm__tools
+    fn_llm__tools --> dec_105
+    dec_105 --> loop_108
+    fn_llm__tools --> fn_llm__params
+    fn_llm__params --> loop_122
+    loop_122 --> dec_127
+    dec_127 --> dec_134
+    dec_134 -- "loop" --> loop_122
+    fn_llm__params --> fn_llm__type
+    fn_llm__type --> fn_llm_generate
+    fn_llm_generate --> fn_llm_generate_vision
+    fn_llm_generate_vision --> fn_llm__complete
+    fn_llm__complete --> dec_196
+    dec_196 --> dec_199
+    dec_199 --> dec_201
+    dec_201 --> loop_215
+    loop_215 --> dec_222
+    dec_222 -- "loop" --> loop_215
+    loop_215 --> dec_235
+    dec_235 --> dec_237
+    dec_237 --> loop_238
+    loop_238 --> dec_239
+    dec_239 --> dec_241
+    dec_241 -- "loop" --> loop_238
+    loop_238 --> dec_247
+    dec_247 --> dec_254
+    fn_llm__complete --> fn_llm_count_tokens
+    fn_llm_count_tokens --> fn_llm_estimate_cost
+    class n_start node-start
+    class fn__convert_args,fn_llm__cache_key,fn_llm__tools,fn_llm__params,fn_llm__type,fn_llm_generate,fn_llm_generate_vision,fn_llm__complete,fn_llm_count_tokens,fn_llm_estimate_cost node-subprocess
+    class dec_44,dec_46,dec_81,dec_85,dec_89,dec_93,dec_105,dec_127,dec_134,dec_196,dec_199,dec_201,dec_222,dec_235,dec_237,dec_239,dec_241,dec_247,dec_254 node-decision
+    class loop_84,loop_108,loop_122,loop_215,loop_238 node-loop
+    class n_end node-end

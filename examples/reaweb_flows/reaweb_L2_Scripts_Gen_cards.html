@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>reaweb · agent</title>
+  <title>Gen Cards</title>
   <style>
     body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
     h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
@@ -15,12 +15,12 @@
   </style>
 </head>
 <body>
-<a class="back-link" href="reaweb_L0_Overview.html">← Volver</a>
-  <h1>reaweb · agent</h1>
+<a class="back-link" href="reaweb_L1_Scripts.html">← Volver</a>
+  <h1>Gen Cards</h1>
   <p class="note">Click en los modulos con cursor mano para drill-down.</p>
   <div id="diagram"><pre class="mermaid">
-%% reaweb · agent
-%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+%% Gen Cards
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
 flowchart LR
     classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
     classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
@@ -33,34 +33,36 @@ flowchart LR
     classDef added fill:#a7f3d0,stroke:#065f46
     classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
     classDef changed fill:#fde68a,stroke:#92400e
-    n_start(["Start"])
-    mod_agent["Agent<br><i>29 nodos, 30 enlaces</i>"]
-    mod_budget_tracker["Budget Tracker<br><i>18 nodos, 16 enlaces</i>"]
-    mod_harness_snapshot["Harness Snapshot<br><i>14 nodos, 13 enlaces</i>"]
-    mod_llm["Llm<br><i>36 nodos, 38 enlaces</i>"]
-    mod_llm_cache["Llm Cache<br><i>29 nodos, 28 enlaces</i>"]
-    mod_memory_db["Memory Db<br><i>52 nodos, 52 enlaces</i>"]
-    mod_state["State<br><i>29 nodos, 29 enlaces</i>"]
-    n_end(["End"])
-    n_start --> mod_agent
-    mod_agent --> mod_budget_tracker
-    mod_budget_tracker --> mod_harness_snapshot
-    mod_harness_snapshot --> mod_llm
-    mod_llm --> mod_llm_cache
-    mod_llm_cache --> mod_memory_db
-    mod_memory_db --> mod_state
-    mod_state --> n_end
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    dec_34{"not chrome<br><i>Condición en línea 34:<br>not chrome</i>"}
+    dec_37{"Path('/usr/bin/wslpath').exists()<br><i>Condición en línea 37:<br>Path('/usr/bin/wslpath').exists()</i>"}
+    loop_47["For each m"]
+    dec_49{"not m<br><i>Condición en línea 49:<br>not m</i>"}
+    loop_82["For loop"]
+    dec_85{"not src.exists()<br><i>Condición en línea 85:<br>not src.exists()</i>"}
+    dec_89{"not vok<br><i>Condición en línea 89:<br>not vok</i>"}
+    dec_94{"render_src_to_png(src, png)<br><i>Condición en línea 94:<br>render_src_to_png(src, png)</i>"}
+    fn_verify_layout[["Verify Layout"]]
+    fn_render_src_to_png[["Render Src To Png"]]
+    fn_main[["Main"]]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    n_start --> fn_verify_layout
+    fn_verify_layout --> dec_34
+    dec_34 --> dec_37
+    dec_37 --> loop_47
+    loop_47 --> dec_49
+    n_start --> fn_render_src_to_png
+    n_start --> fn_main
+    fn_main --> loop_82
+    loop_82 --> dec_85
+    dec_85 --> dec_89
+    dec_89 --> dec_94
+    dec_94 -- "loop" --> loop_82
     class n_start node-start
-    class mod_agent,mod_harness_snapshot,mod_llm,mod_llm_cache,mod_memory_db,mod_state node-loop
-    class mod_budget_tracker node-process
+    class fn_verify_layout,fn_render_src_to_png,fn_main node-subprocess
+    class dec_34,dec_37,dec_49,dec_85,dec_89,dec_94 node-decision
+    class loop_47,loop_82 node-loop
     class n_end node-end
-    click mod_agent href "reaweb_L2_Agent_Agent.html" "Abrir detalle"
-    click mod_budget_tracker href "reaweb_L2_Agent_Budget_tracker.html" "Abrir detalle"
-    click mod_harness_snapshot href "reaweb_L2_Agent_Harness_snapshot.html" "Abrir detalle"
-    click mod_llm href "reaweb_L2_Agent_Llm.html" "Abrir detalle"
-    click mod_llm_cache href "reaweb_L2_Agent_Llm_cache.html" "Abrir detalle"
-    click mod_memory_db href "reaweb_L2_Agent_Memory_db.html" "Abrir detalle"
-    click mod_state href "reaweb_L2_Agent_State.html" "Abrir detalle"
 
   </pre></div>
   <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>

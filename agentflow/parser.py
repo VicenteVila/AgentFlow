@@ -33,11 +33,13 @@ def _unwrap_call(expr: object):
 class ParseContext:
     """Carries the profile and target graph through the parse pipeline."""
 
-    __slots__ = ("prof", "graph")
+    __slots__ = ("prof", "graph", "known_functions")
 
-    def __init__(self, prof: Profile, graph: FlowGraph) -> None:
+    def __init__(self, prof: Profile, graph: FlowGraph,
+                 known_functions: set[str] | None = None) -> None:
         self.prof = prof
         self.graph = graph
+        self.known_functions = known_functions or set()
 
 
 def parse_file(filepath: str | Path, profile: str | Profile | None = None) -> FlowGraph:
@@ -51,6 +53,7 @@ def parse_source(
     source: str,
     title: str = "Agent Flow",
     profile: str | Profile | None = None,
+    known_functions: set[str] | None = None,
 ) -> FlowGraph:
     """Parse Python source code and extract the agent flow graph."""
     prof = get_profile(profile)
@@ -64,10 +67,10 @@ def parse_source(
 
     agent_cls = _find_agent_class(tree, prof)
     if agent_cls:
-        _parse_agent_class(agent_cls, ParseContext(prof, graph))
+        _parse_agent_class(agent_cls, ParseContext(prof, graph, known_functions))
     else:
         # No agent class: treat top-level functions and class methods as entry points.
-        ctx = ParseContext(prof, graph)
+        ctx = ParseContext(prof, graph, known_functions)
         top_funcs = [n for n in tree.body if isinstance(n, _FUNC_TYPES)]
         for fn in top_funcs:
             fid = f"fn_{fn.name}"
@@ -106,6 +109,96 @@ def parse_source(
 
 
 # ── Phase assignment ──────────────────────────────────────────────────
+
+
+def _find_function_def(tree: ast.Module, name: str) -> list[ast.FunctionDef | ast.AsyncFunctionDef]:
+    """Return every top-level function/method (across classes) named *name*."""
+    found: list[ast.FunctionDef | ast.AsyncFunctionDef] = []
+    for node in ast.walk(tree):
+        if isinstance(node, _FUNC_TYPES) and node.name == name:
+            found.append(node)
+    return found
+
+
+def _find_class_def(tree: ast.Module, name: str) -> ast.ClassDef | None:
+    for node in tree.body:
+        if isinstance(node, ast.ClassDef) and node.name == name:
+            return node
+    return None
+
+
+def parse_functions(
+    filepath: str | Path,
+    func_names: list[str],
+    profile: str | Profile | None = None,
+    title: str | None = None,
+) -> FlowGraph:
+    """Parse a subset of the functions/methods in *filepath* as one flow.
+
+    Each named top-level function or method is extracted (``ast.get_source_segment``)
+    and parsed together; calls between the selected functions become flow edges
+    (cross-links), so the sub-flow mirrors the real call graph.
+    """
+    path = Path(filepath)
+    source = path.read_text(encoding="utf-8")
+    tree = ast.parse(source)
+
+    segments: list[str] = []
+    names: list[str] = []
+    seen: set[str] = set()
+    for name in func_names:
+        if name in seen:
+            continue
+        seen.add(name)
+        defs = _find_function_def(tree, name)
+        if not defs:
+            continue
+        segment = ast.get_source_segment(source, defs[0])
+        if segment:
+            segments.append(segment)
+            names.append(name)
+
+    label = title or f"Flow: {path.stem} · {', '.join(names)}"
+    return parse_source("\n\n".join(segments), title=label, profile=profile,
+                        known_functions=set(names))
+
+
+def parse_class_methods(
+    filepath: str | Path,
+    class_name: str,
+    methods: list[str] | None = None,
+    profile: str | Profile | None = None,
+    title: str | None = None,
+) -> FlowGraph:
+    """Parse the methods of one class from *filepath* as a single flow."""
+    path = Path(filepath)
+    source = path.read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    cls = _find_class_def(tree, class_name)
+    if cls is None:
+        raise ValueError(
+            f"Class '{class_name}' not found in {path}"
+        )
+
+    method_defs = [
+        item for item in cls.body
+        if isinstance(item, _FUNC_TYPES) and not item.name.startswith("__")
+    ]
+    if methods is not None:
+        keep = set(methods)
+        method_defs = [m for m in method_defs if m.name in keep]
+
+    names: list[str] = []
+    segments: list[str] = []
+    for m in method_defs:
+        segment = ast.get_source_segment(source, m)
+        if segment:
+            segments.append(segment)
+            names.append(m.name)
+
+    label = title or f"Flow: {path.stem} · {class_name}"
+    return parse_source("\n\n".join(segments), title=label, profile=profile,
+                        known_functions=set(names))
 
 
 def _apply_phase_patterns(graph: FlowGraph, prof: Profile) -> None:
@@ -364,7 +457,7 @@ def _parse_for(ctx: ParseContext, stmt: ast.For | ast.AsyncFor, parent_id: str, 
 def _parse_expr_stmt(ctx: ParseContext, stmt: ast.Expr, parent_id: str) -> str:
     inner = _unwrap_call(stmt.value)
     if isinstance(inner, ast.Call):
-        call_info = _extract_call_info(inner, ctx.prof)
+        call_info = _extract_call_info(inner, ctx)
         if call_info:
             node_id, label, node_type, detail = call_info
             ctx.graph.add_node(Node(
@@ -379,7 +472,7 @@ def _parse_expr_stmt(ctx: ParseContext, stmt: ast.Expr, parent_id: str) -> str:
 def _parse_assign(ctx: ParseContext, stmt: ast.Assign, parent_id: str) -> str:
     inner = _unwrap_call(stmt.value)
     if isinstance(inner, ast.Call):
-        call_info = _extract_call_info(inner, ctx.prof)
+        call_info = _extract_call_info(inner, ctx)
         if call_info:
             node_id, label, node_type, detail = call_info
             if stmt.targets and isinstance(stmt.targets[0], ast.Name):
@@ -491,9 +584,10 @@ def _scan_handle_eval_for_tools(method: ast.FunctionDef | ast.AsyncFunctionDef, 
 
 
 def _extract_call_info(
-    call: ast.Call, prof: Profile
+    call: ast.Call, ctx: ParseContext
 ) -> tuple[str, str, NodeType, str] | None:
     """Extract (node_id, label, type, detail) from a function call."""
+    prof = ctx.prof
     func = call.func
 
     if isinstance(func, ast.Attribute):
@@ -550,6 +644,23 @@ def _extract_call_info(
             label,
             NodeType.TOOL,
             detail,
+        )
+
+    # Cross-links: calls to sibling functions parsed together in the same
+    # sub-flow (parse_functions / parse_class_methods) become flow edges to
+    # the sibling's fn_<name> node.
+    target = None
+    if isinstance(func, ast.Name):
+        target = func.id
+    elif isinstance(func, ast.Attribute) and isinstance(func.value, ast.Name) \
+            and func.value.id in ("self", "cls"):
+        target = func.attr
+    if target and target in ctx.known_functions:
+        return (
+            f"fn_{target}",
+            target.lstrip("_").replace("_", " ").title(),
+            NodeType.SUBPROCESS,
+            "",
         )
 
     return None

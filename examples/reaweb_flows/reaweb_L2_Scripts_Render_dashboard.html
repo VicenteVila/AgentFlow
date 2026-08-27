@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Render Dashboard</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="reaweb_L1_Scripts.html">← Volver</a>
+  <h1>Render Dashboard</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Render Dashboard
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    dec_93{"not tree_path.exists()<br><i>Condición en línea 93:<br>not tree_path.exists()</i>"}
+    loop_128["For loop"]
+    dec_137{"Has nodes?<br><i>Search tree tiene nodos?<br>→ evaluar candidato</i>"}
+    dec_145{"ymax == ymin<br><i>Condición en línea 145:<br>ymax == ymin</i>"}
+    loop_153["For each gy"]
+    loop_158["For loop"]
+    loop_98["For loop"]
+    dec_100{"m.get('total') is None<br><i>Condición en línea 100:<br>m.get('total') is None</i>"}
+    dec_113{"cand_dir.exists()<br><i>Condición en línea 113:<br>cand_dir.exists()</i>"}
+    dec_115{"html.exists()<br><i>Condición en línea 115:<br>html.exists()</i>"}
+    loop_280["For each d"]
+    dec_281{"not d.is_dir()<br><i>Condición en línea 281:<br>not d.is_dir()</i>"}
+    dec_283{"args.run and args.run not in<br>(d.name, d.name.split('—')(-1))<br><i>Condición en línea 283:<br>args.run and args.run not in (d.name, d.name.split('—')(-1)</i>"}
+    dec_286{"info and info('nodes')<br><i>Condición en línea 286:<br>info and info('nodes')</i>"}
+    dec_289{"not runs<br><i>Condición en línea 289:<br>not runs</i>"}
+    dec_294{"chrome<br><i>Condición en línea 294:<br>chrome</i>"}
+    dec_296{"NOT no_screenshots?<br><i>Niega no_screenshots<br>para lógica invertida</i>"}
+    dec_301{"args.run<br><i>Condición en línea 301:<br>args.run</i>"}
+    loop_304["For each d"]
+    dec_305{"d.is_dir() and args.run in<br>(d.name, d.name.split('—')(-1))<br><i>Condición en línea 305:<br>d.is_dir() and args.run in (d.name, d.name.split('—')(-1))</i>"}
+    fn_find_chrome[["Find Chrome"]]
+    fn_render_screenshot[["Render Screenshot"]]
+    fn_img_to_data_uri[["Img To Data Uri"]]
+    fn_body_excerpt[["Body Excerpt"]]
+    fn_load_run[["Load Run"]]
+    fn_radar_points[["Radar Points"]]
+    fn_curve_svg[["Curve Svg"]]
+    fn_render_dashboard[["Render Dashboard"]]
+    fn_main[["Main"]]
+    fn_px_147[["Px"]]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    n_start --> fn_find_chrome
+    n_start --> fn_render_screenshot
+    n_start --> fn_img_to_data_uri
+    n_start --> fn_body_excerpt
+    n_start --> fn_load_run
+    fn_load_run --> dec_93
+    dec_93 --> loop_98
+    loop_98 --> dec_100
+    dec_100 --> dec_113
+    dec_113 --> dec_115
+    dec_115 -- "loop" --> loop_98
+    n_start --> fn_radar_points
+    fn_radar_points --> loop_128
+    n_start --> fn_curve_svg
+    fn_curve_svg --> dec_137
+    dec_137 --> dec_145
+    dec_145 --> fn_px_147
+    fn_px_147 --> loop_153
+    loop_153 --> loop_158
+    n_start --> fn_render_dashboard
+    n_start --> fn_main
+    fn_main --> loop_280
+    loop_280 --> dec_281
+    dec_281 --> dec_283
+    dec_283 --> dec_286
+    dec_286 -- "loop" --> loop_280
+    loop_280 --> dec_289
+    dec_289 --> dec_294
+    dec_294 --> dec_296
+    dec_296 --> dec_301
+    dec_301 -- "YES" --> loop_304
+    loop_304 --> dec_305
+    dec_305 -- "loop" --> loop_304
+    class n_start node-start
+    class fn_find_chrome,fn_render_screenshot,fn_img_to_data_uri,fn_body_excerpt,fn_load_run,fn_radar_points,fn_curve_svg,fn_px_147,fn_render_dashboard,fn_main node-subprocess
+    class dec_93,dec_100,dec_113,dec_115,dec_137,dec_145,dec_281,dec_283,dec_286,dec_289,dec_294,dec_296,dec_301,dec_305 node-decision
+    class loop_98,loop_128,loop_153,loop_158,loop_280,loop_304 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

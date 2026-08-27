@@ -1,0 +1,109 @@
+%% Run Benchmark
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    dec_37{"roots<br><i>Condición en línea 37:<br>roots</i>"}
+    loop_116["For each run_id"]
+    dec_155{"args.suite<br><i>Condición en línea 155:<br>args.suite</i>"}
+    dec_239{"not suite_file.exists()<br><i>Condición en línea 239:<br>not suite_file.exists()</i>"}
+    dec_365{"json_path.exists()<br><i>Condición en línea 365:<br>json_path.exists()</i>"}
+    dec_158{"args.compare<br><i>Condición en línea 158:<br>args.compare</i>"}
+    dec_248{"args.full<br><i>Condición en línea 248:<br>args.full</i>"}
+    dec_379{"agg.get('rho') is not None<br>and agg('rho') < 1.0<br><i>Condición en línea 379:<br>agg.get('rho') is not None and agg('rho') < 1.0</i>"}
+    dec_44{"Has nodes?<br><i>Search tree tiene nodos?<br>→ evaluar candidato</i>"}
+    dec_167{"args.leaderboard<br><i>Condición en línea 167:<br>args.leaderboard</i>"}
+    dec_250{"not args.rho and (not<br>TASK_COEVOLVE_ENABLED)<br><i>Condición en línea 250:<br>not args.rho and (not TASK_COEVOLVE_ENABLED)</i>"}
+    dec_184{"args.json_out<br><i>Condición en línea 184:<br>args.json_out</i>"}
+    dec_255{"rho < 1.0<br><i>Condición en línea 255:<br>rho < 1.0</i>"}
+    dec_190{"not args.archetype or not<br>args.task<br><i>Condición en línea 190:<br>not args.archetype or not args.task</i>"}
+    loop_67["For each r in hist"]
+    dec_70{"base is not None and<br>r.get('best_score') is not None<br><i>Condición en línea 70:<br>base is not None and r.get('best_score') is not None</i>"}
+    dec_72{"r.get('best_score') is not<br>None<br><i>Condición en línea 72:<br>r.get('best_score') is not None</i>"}
+    dec_78{"current<br><i>Condición en línea 78:<br>current</i>"}
+    dec_80{"baseline is not None and<br>current.get('best_score') is not<br><i>Condición en línea 80:<br>baseline is not None and current.get('best_score') is not No</i>"}
+    dec_82{"current.get('best_score') is<br>not None<br><i>Condición en línea 82:<br>current.get('best_score') is not None</i>"}
+    dec_90{"best_scores<br><i>Condición en línea 90:<br>best_scores</i>"}
+    dec_95{"len(best_scores) >= 2<br><i>Condición en línea 95:<br>len(best_scores) >= 2</i>"}
+    dec_100{"current<br><i>Condición en línea 100:<br>current</i>"}
+    dec_102{"b is not None and<br>best_scores<br><i>Condición en línea 102:<br>b is not None and best_scores</i>"}
+    loop_119["For each r"]
+    dec_120{"r.get('task_hash') != th<br><i>Condición en línea 120:<br>r.get('task_hash') != th</i>"}
+    loop_270["For each task_def in suite"]
+    dec_273{"not sampled<br><i>Condición en línea 273:<br>not sampled</i>"}
+    dec_345{"args.json_out<br><i>Condición en línea 345:<br>args.json_out</i>"}
+    dec_351{"args.leaderboard<br><i>Condición en línea 351:<br>args.leaderboard</i>"}
+    loop_387["For each r"]
+    dec_389{"r.get('best') is not None<br>and r.get('baseline') is not None<br><i>Condición en línea 389:<br>r.get('best') is not None and r.get('baseline') is not None</i>"}
+    dec_396{"prev_mean is not None<br><i>Condición en línea 396:<br>prev_mean is not None</i>"}
+    fn__baseline[["Baseline"]]
+    fn__f[["F"]]
+    fn_render[["Render"]]
+    fn_load_benchmark[["Load Benchmark"]]
+    fn_main[["Main"]]
+    fn__run_suite[["Run Suite"]]
+    fn__write_leaderboard[["Write Leaderboard"]]
+    fn__num_40[["Num"]]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_336{"selector is not None and sel<br>is not None<br><i>Condición en línea 336:<br>selector is not None and sel is not None</i>"}
+    n_start --> fn__baseline
+    fn__baseline --> dec_37
+    dec_37 --> fn__num_40
+    fn__num_40 --> dec_44
+    n_start --> fn__f
+    n_start --> fn_render
+    fn_render --> loop_67
+    loop_67 --> dec_70
+    dec_70 --> dec_72
+    dec_72 -- "loop" --> loop_67
+    loop_67 --> dec_78
+    dec_78 --> dec_80
+    dec_80 --> dec_82
+    dec_82 --> dec_90
+    dec_90 --> dec_95
+    dec_95 --> dec_100
+    dec_100 -- "YES" --> dec_102
+    n_start --> fn_load_benchmark
+    fn_load_benchmark --> loop_116
+    loop_116 --> loop_119
+    loop_119 --> dec_120
+    dec_120 -- "loop" --> loop_119
+    n_start --> fn_main
+    fn_main --> dec_155
+    dec_155 --> dec_158
+    dec_158 --> dec_167
+    dec_167 --> dec_184
+    dec_184 --> dec_190
+    n_start --> fn__run_suite
+    fn__run_suite --> dec_239
+    dec_239 --> dec_248
+    dec_248 --> dec_250
+    dec_250 --> dec_255
+    dec_255 --> loop_270
+    loop_270 --> dec_273
+    dec_273 -- "loop" --> loop_270
+    loop_270 --> dec_336
+    dec_336 --> dec_345
+    dec_345 --> dec_351
+    n_start --> fn__write_leaderboard
+    fn__write_leaderboard --> dec_365
+    dec_365 --> dec_379
+    dec_379 --> loop_387
+    loop_387 --> dec_389
+    dec_389 -- "loop" --> loop_387
+    loop_387 --> dec_396
+    class n_start node-start
+    class fn__baseline,fn__num_40,fn__f,fn_render,fn_load_benchmark,fn_main,fn__run_suite,fn__write_leaderboard node-subprocess
+    class dec_37,dec_44,dec_70,dec_72,dec_78,dec_80,dec_82,dec_90,dec_95,dec_100,dec_102,dec_120,dec_155,dec_158,dec_167,dec_184,dec_190,dec_239,dec_248,dec_250,dec_255,dec_273,dec_336,dec_345,dec_351,dec_365,dec_379,dec_389,dec_396 node-decision
+    class loop_67,loop_116,loop_119,loop_270,loop_387 node-loop
+    class n_end node-end

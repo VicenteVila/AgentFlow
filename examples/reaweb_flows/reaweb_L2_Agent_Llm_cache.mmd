@@ -1,0 +1,76 @@
+%% Llm Cache
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    dec_33{"_NP is None<br><i>Condición en línea 33:<br>_NP is None</i>"}
+    dec_246{"not LLM_CACHE_ENABLED<br><i>Condición en línea 246:<br>not LLM_CACHE_ENABLED</i>"}
+    loop_88["For each i"]
+    dec_174{"self._index is None or not<br>self._index_ids<br><i>Condición en línea 174:<br>self._index is None or not self._index_ids</i>"}
+    dec_180{"best_score < self.threshold<br><i>Condición en línea 180:<br>best_score < self.threshold</i>"}
+    dec_187{"row is None<br><i>Condición en línea 187:<br>row is None</i>"}
+    dec_190{"self.ttl_days and<br>row('created_ts') and (time.time()<br><i>Condición en línea 190:<br>self.ttl_days and row('created_ts') and (time.time() - row('</i>"}
+    loop_136["For each r in rows"]
+    dec_137{"r('embedding') is None<br><i>Condición en línea 137:<br>r('embedding') is None</i>"}
+    dec_140{"v.size == 0<br><i>Condición en línea 140:<br>v.size == 0</i>"}
+    dec_144{"vecs<br><i>Condición en línea 144:<br>vecs</i>"}
+    fn__np[["Np"]]
+    fn_default_cache[["Default Cache"]]
+    fn_llmcache__ensure_schema[["Ensure Schema"]]
+    fn_llmcache__embed_local[["Embed Local"]]
+    fn_llmcache__embed[["Embed"]]
+    fn_llmcache__prompt_hash[["Prompt Hash"]]
+    fn_llmcache__norm[["Norm"]]
+    fn_llmcache__build_index[["Build Index"]]
+    fn_llmcache__ensure_index[["Ensure Index"]]
+    fn_llmcache__n_rows[["N Rows"]]
+    fn_llmcache_get[["Get"]]
+    fn_llmcache_put[["Put"]]
+    fn_llmcache_stats[["Stats"]]
+    fn_llmcache_close[["Close"]]
+    fn_llmcache___enter__[["Enter"]]
+    fn_llmcache___exit__[["Exit"]]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    n_start --> fn__np
+    fn__np --> dec_33
+    n_start --> fn_default_cache
+    fn_default_cache --> dec_246
+    n_start --> fn_llmcache__ensure_schema
+    fn_llmcache__ensure_schema --> fn_llmcache__embed_local
+    fn_llmcache__embed_local --> loop_88
+    fn_llmcache__embed_local --> fn_llmcache__embed
+    fn_llmcache__embed --> fn_llmcache__prompt_hash
+    fn_llmcache__prompt_hash --> fn_llmcache__norm
+    fn_llmcache__norm --> fn_llmcache__build_index
+    fn_llmcache__build_index --> loop_136
+    loop_136 --> dec_137
+    dec_137 --> dec_140
+    dec_140 -- "loop" --> loop_136
+    loop_136 --> dec_144
+    fn_llmcache__build_index --> fn_llmcache__ensure_index
+    fn_llmcache__ensure_index --> fn_llmcache__n_rows
+    fn_llmcache__n_rows --> fn_llmcache_get
+    fn_llmcache_get --> dec_174
+    dec_174 --> dec_180
+    dec_180 --> dec_187
+    dec_187 --> dec_190
+    fn_llmcache_get --> fn_llmcache_put
+    fn_llmcache_put --> fn_llmcache_stats
+    fn_llmcache_stats --> fn_llmcache_close
+    fn_llmcache_close --> fn_llmcache___enter__
+    fn_llmcache___enter__ --> fn_llmcache___exit__
+    class n_start node-start
+    class fn__np,fn_default_cache,fn_llmcache__ensure_schema,fn_llmcache__embed_local,fn_llmcache__embed,fn_llmcache__prompt_hash,fn_llmcache__norm,fn_llmcache__build_index,fn_llmcache__ensure_index,fn_llmcache__n_rows,fn_llmcache_get,fn_llmcache_put,fn_llmcache_stats,fn_llmcache_close,fn_llmcache___enter__,fn_llmcache___exit__ node-subprocess
+    class dec_33,dec_246,dec_137,dec_140,dec_144,dec_174,dec_180,dec_187,dec_190 node-decision
+    class loop_88,loop_136 node-loop
+    class n_end node-end

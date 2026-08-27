@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Run Battery</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="reaweb_L1_Scripts.html">← Volver</a>
+  <h1>Run Battery</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Run Battery
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    dec_50{"not trans.exists()<br><i>Condición en línea 50:<br>not trans.exists()</i>"}
+    loop_114["For each r in results"]
+    dec_148{"args.config<br><i>Condición en línea 148:<br>args.config</i>"}
+    loop_124["For each r in results"]
+    dec_152{"not runs<br><i>Condición en línea 152:<br>not runs</i>"}
+    loop_156["For loop"]
+    dec_176{"args.gate<br><i>Condición en línea 176:<br>args.gate</i>"}
+    loop_31["For each item in runs"]
+    dec_33{"not archetype<br><i>Condición en línea 33:<br>not archetype</i>"}
+    loop_52["For each line"]
+    dec_57{"e.get('kind') == 'eval' and<br>e.get('total') is not None<br><i>Condición en línea 57:<br>e.get('kind') == 'eval' and e.get('total') is not None</i>"}
+    loop_61["For each c in curve"]
+    fn_parse_cli_runs[["Parse Cli Runs"]]
+    fn_load_runs_config[["Load Runs Config"]]
+    fn_curve_from_transcript[["Curve From Transcript"]]
+    fn_summarize_run[["Summarize Run"]]
+    fn_render_report[["Render Report"]]
+    fn_main[["Main"]]
+    fn__sort_key_64[["Sort Key"]]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    n_start --> fn_parse_cli_runs
+    fn_parse_cli_runs --> loop_31
+    loop_31 --> dec_33
+    dec_33 -- "loop" --> loop_31
+    n_start --> fn_load_runs_config
+    n_start --> fn_curve_from_transcript
+    fn_curve_from_transcript --> dec_50
+    dec_50 --> loop_52
+    loop_52 --> dec_57
+    dec_57 -- "loop" --> loop_52
+    loop_52 --> loop_61
+    loop_61 --> fn__sort_key_64
+    n_start --> fn_summarize_run
+    n_start --> fn_render_report
+    fn_render_report --> loop_114
+    loop_114 --> loop_124
+    n_start --> fn_main
+    fn_main --> dec_148
+    dec_148 --> dec_152
+    dec_152 --> loop_156
+    loop_156 --> dec_176
+    class n_start node-start
+    class fn_parse_cli_runs,fn_load_runs_config,fn_curve_from_transcript,fn__sort_key_64,fn_summarize_run,fn_render_report,fn_main node-subprocess
+    class loop_31,loop_52,loop_61,loop_114,loop_124,loop_156 node-loop
+    class dec_33,dec_50,dec_57,dec_148,dec_152,dec_176 node-decision
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+%% Evaluator · Novelty
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    loop_65["For each cls"]
+    dec_32{"r_size == 0 and c_size == 0<br><i>Condición en línea 32:<br>r_size == 0 and c_size == 0</i>"}
+    dec_34{"r_size == 0 or c_size == 0<br><i>Condición en línea 34:<br>r_size == 0 or c_size == 0</i>"}
+    dec_45{"not a and (not b)<br><i>Condición en línea 45:<br>not a and (not b)</i>"}
+    fn_novelty_score[["Novelty Score"]]
+    fn__palette[["Palette"]]
+    fn__dom_structure[["Dom Structure"]]
+    fn__read_13[["Read"]]
+    fn__jaccard[["dom_sim = Jaccard"]]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    n_start --> fn_novelty_score
+    fn_novelty_score --> fn__read_13
+    fn__read_13 --> fn__jaccard
+    fn__jaccard --> fn__jaccard
+    fn__jaccard --> dec_32
+    dec_32 --> dec_34
+    n_start --> fn__jaccard
+    fn__jaccard --> dec_45
+    n_start --> fn__palette
+    n_start --> fn__dom_structure
+    fn__dom_structure --> loop_65
+    class n_start node-start
+    class fn_novelty_score,fn__read_13,fn__jaccard,fn__palette,fn__dom_structure node-subprocess
+    class dec_32,dec_34,dec_45 node-decision
+    class loop_65 node-loop
+    class n_end node-end

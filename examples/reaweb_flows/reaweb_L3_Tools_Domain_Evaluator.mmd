@@ -1,0 +1,274 @@
+%% Evaluator
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    dec_945{"start == -1<br><i>Condición en línea 945:<br>start == -1</i>"}
+    dec_510{"sid.startswith('seccion:')<br><i>Condición en línea 510:<br>sid.startswith('seccion:')</i>"}
+    dec_514{"sid.startswith('literal:')<br><i>Condición en línea 514:<br>sid.startswith('literal:')</i>"}
+    dec_518{"sid.startswith('funcional:')<br><i>Condición en línea 518:<br>sid.startswith('funcional:')</i>"}
+    dec_184{"'requestAnimationFrame' not<br>in c or 'getContext' not in c<br><i>Condición en línea 184:<br>'requestAnimationFrame' not in c or 'getContext' not in c</i>"}
+    dec_230{"re.search(':(active|focus)\\b', c)<br><i>Condición en línea 230:<br>re.search(':(active|focus)\\b', c) and 'transition' in c</i>"}
+    dec_241{"sections >= 3<br><i>Condición en línea 241:<br>sections >= 3</i>"}
+    dec_338{"not inputs<br><i>Condición en línea 338:<br>not inputs</i>"}
+    dec_373{"not imgs<br><i>Condición en línea 373:<br>not imgs</i>"}
+    loop_476["For each key"]
+    loop_543["For loop"]
+    dec_554{"not a and (not b)<br><i>Condición en línea 554:<br>not a and (not b)</i>"}
+    loop_576["For each cls"]
+    dec_643{"not gates<br><i>Condición en línea 643:<br>not gates</i>"}
+    dec_679{"not html_files<br><i>Condición en línea 679:<br>not html_files</i>"}
+    dec_833{"total is None<br><i>Condición en línea 833:<br>total is None</i>"}
+    dec_900{"not weak<br><i>Condición en línea 900:<br>not weak</i>"}
+    dec_186{"not<br>c)<br><i>Condición en línea 186:<br>not re.search('(?:fillRect|strokeRect|clearRect|arc\\(|fill\</i>"}
+    dec_232{"c)<br><i>Condición en línea 232:<br>re.search('addEventListener\\s*\\(\\s*(\'\\')(mousemove|poin</i>"}
+    loop_483["For loop"]
+    dec_614{"r_size == 0 and c_size == 0<br><i>Condición en línea 614:<br>r_size == 0 and c_size == 0</i>"}
+    dec_720{"run_functional<br><i>Condición en línea 720:<br>run_functional</i>"}
+    dec_837{"not has_vlm and (not<br>has_creativity)<br><i>Condición en línea 837:<br>not has_vlm and (not has_creativity)</i>"}
+    loop_489["For each req"]
+    dec_616{"r_size == 0 or c_size == 0<br><i>Condición en línea 616:<br>r_size == 0 or c_size == 0</i>"}
+    dec_724{"_ft.get('ok') and<br>_ft.get('functional') is not None<br><i>Condición en línea 724:<br>_ft.get('ok') and _ft.get('functional') is not None</i>"}
+    dec_841{"has_vlm<br><i>Condición en línea 841:<br>has_vlm</i>"}
+    dec_740{"task is not None<br><i>Condición en línea 740:<br>task is not None</i>"}
+    dec_843{"has_creativity<br><i>Condición en línea 843:<br>has_creativity</i>"}
+    dec_742{"structure_score is not None<br><i>Condición en línea 742:<br>structure_score is not None</i>"}
+    dec_744{"functional is not None<br><i>Condición en línea 744:<br>functional is not None</i>"}
+    dec_755{"structure_fails<br><i>Condición en línea 755:<br>structure_fails</i>"}
+    dec_762{"functional is not None and<br>functional < 60<br><i>Condición en línea 762:<br>functional is not None and functional < 60</i>"}
+    dec_769{"repos_dir.is_dir()<br><i>Condición en línea 769:<br>repos_dir.is_dir()</i>"}
+    dec_781{"orphan<br><i>Condición en línea 781:<br>orphan</i>"}
+    loop_151["For each name in names"]
+    dec_152{"+ re.escape(name) + '\\b', c)<br><i>Condición en línea 152:<br>re.search('(?:animation|animation-name)\\s*:(^;())*\\b' + re</i>"}
+    loop_258["For each m"]
+    dec_260{"'<' in url or '$(' in url or<br>'(' in url<br><i>Condición en línea 260:<br>'<' in url or '$(' in url or '(' in url</i>"}
+    dec_262{"any((h in url for h in<br>('github.com', 'gitlab.com',<br><i>Condición en línea 262:<br>any((h in url for h in ('github.com', 'gitlab.com', 'bitbuck</i>"}
+    dec_263{"url not in reqs<br><i>Condición en línea 263:<br>url not in reqs</i>"}
+    loop_268["For each m"]
+    dec_270{"owner<br><i>Condición en línea 270:<br>owner</i>"}
+    loop_272["For each owner"]
+    dec_274{"not any((f'(base)/' in r for<br>r in reqs)) and base not in reqs<br><i>Condición en línea 274:<br>not any((f'(base)/' in r for r in reqs)) and base not in req</i>"}
+    dec_278{"owners<br><i>Condición en línea 278:<br>owners</i>"}
+    loop_324["For each m"]
+    dec_326{"name in seen or name in skip<br>or len(name) < 4<br><i>Condición en línea 326:<br>name in seen or name in skip or len(name) < 4</i>"}
+    dec_329{"name not in reqs<br><i>Condición en línea 329:<br>name not in reqs</i>"}
+    dec_331{"len(reqs) >= max_items<br><i>Condición en línea 331:<br>len(reqs) >= max_items</i>"}
+    loop_340["For each attrs in inputs"]
+    dec_341{"re.search('aria-label=('\\\')',<br><i>Condición en línea 341:<br>re.search('aria-label=('\\\')', attrs)</i>"}
+    dec_344{"'type='hidden'' in attrs<br><i>Condición en línea 344:<br>'type='hidden'' in attrs</i>"}
+    dec_348{"not m<br><i>Condición en línea 348:<br>not m</i>"}
+    dec_351{"not<br>+ re.escape(fid) + '('\\\')', h)<br><i>Condición en línea 351:<br>not re.search('<label\\b(^>)*\\bfor=('\\\')' + re.escape(fid</i>"}
+    loop_376["For each attrs in imgs"]
+    dec_377{"'width=' in attrs or<br>'max-width' in attrs or 'height='<br><i>Condición en línea 377:<br>'width=' in attrs or 'max-width' in attrs or 'height=' in at</i>"}
+    loop_428["For each key in priority"]
+    dec_431{"any((a in task_low for a in<br>aliases))<br><i>Condición en línea 431:<br>any((a in task_low for a in aliases))</i>"}
+    dec_433{"key not in found<br><i>Condición en línea 433:<br>key not in found</i>"}
+    loop_446["For each a in aliases"]
+    dec_447{"a in h_low<br><i>Condición en línea 447:<br>a in h_low</i>"}
+    loop_508["For each sub"]
+    dec_521{"t is None<br><i>Condición en línea 521:<br>t is None</i>"}
+    loop_853["For each key"]
+    dec_854{"metrics.get(key) is not None<br><i>Condición en línea 854:<br>metrics.get(key) is not None</i>"}
+    dec_861{"gates<br><i>Condición en línea 861:<br>gates</i>"}
+    loop_929["For loop"]
+    dec_930{"isinstance(v, (int, float,<br>bool, str)) or v is None<br><i>Condición en línea 930:<br>isinstance(v, (int, float, bool, str)) or v is None</i>"}
+    dec_932{"isinstance(v, list)<br><i>Condición en línea 932:<br>isinstance(v, list)</i>"}
+    dec_934{"cl<br><i>Condición en línea 934:<br>cl</i>"}
+    fn__strip_js_comments[["Strip Js Comments"]]
+    fn__has_real_css_animations[["Has Real Css Animations"]]
+    fn__has_real_transitions[["Has Real Transitions"]]
+    fn__has_real_gradients[["Has Real Gradients"]]
+    fn__has_animated_canvas[["Has Animated Canvas"]]
+    fn__no_dead_canvas[["No Dead Canvas"]]
+    fn__has_dark_mode[["Has Dark Mode"]]
+    fn__has_scroll_reveal[["Has Scroll Reveal"]]
+    fn__has_hover_effects[["Has Hover Effects"]]
+    fn__has_microinteractions[["Has Microinteractions"]]
+    fn__has_content_richness[["Has Content Richness"]]
+    fn_extract_requirements[["Extract Requirements"]]
+    fn__inputs_labeled[["Inputs Labeled"]]
+    fn__has_modern_images[["Has Modern Images"]]
+    fn__scripts_async[["Scripts Async"]]
+    fn__img_responsive[["Img Responsive"]]
+    fn__score[["Score"]]
+    fn_extract_sections[["Extract Sections"]]
+    fn__html_has_section[["Html Has Section"]]
+    fn_extract_subtasks[["Extract Subtasks"]]
+    fn_subtasks_status[["Subtasks Status"]]
+    fn_format_subtasks_status[["Format Subtasks Status"]]
+    fn__jaccard[["Jaccard"]]
+    fn__palette[["Palette"]]
+    fn__dom_structure[["Dom Structure"]]
+    fn_novelty_score[["Novelty Score"]]
+    fn__apply_blocking_gates[["Apply Blocking Gates"]]
+    fn_evaluate[["Evaluate"]]
+    fn_detect_root_cause[["Detect Root Cause"]]
+    fn_metrics_block[["Metrics Block"]]
+    fn_parse_metrics_block[["Parse Metrics Block"]]
+    fn__read_595[["Read"]]
+    fn__clean_923[["Clean"]]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_949{"end == -1<br><i>Condición en línea 949:<br>end == -1</i>"}
+    fn_blend_visual_total[["Blend Visual Total"]]
+    n_start --> fn__strip_js_comments
+    n_start --> fn__has_real_css_animations
+    fn__has_real_css_animations --> loop_151
+    loop_151 --> dec_152
+    dec_152 -- "loop" --> loop_151
+    n_start --> fn__has_real_transitions
+    n_start --> fn__has_real_gradients
+    n_start --> fn__has_animated_canvas
+    fn__has_animated_canvas --> dec_184
+    dec_184 --> dec_186
+    n_start --> fn__no_dead_canvas
+    n_start --> fn__has_dark_mode
+    n_start --> fn__has_scroll_reveal
+    n_start --> fn__has_hover_effects
+    n_start --> fn__has_microinteractions
+    fn__has_microinteractions --> dec_230
+    dec_230 --> dec_232
+    n_start --> fn__has_content_richness
+    fn__has_content_richness --> dec_241
+    n_start --> fn_extract_requirements
+    fn_extract_requirements --> loop_258
+    loop_258 --> dec_260
+    dec_260 --> dec_262
+    dec_262 --> dec_263
+    dec_263 -- "loop" --> loop_258
+    loop_258 --> loop_268
+    loop_268 --> dec_270
+    dec_270 -- "loop" --> loop_268
+    loop_268 --> loop_272
+    loop_272 --> dec_274
+    dec_274 -- "loop" --> loop_272
+    loop_272 --> dec_278
+    dec_278 --> loop_324
+    loop_324 --> dec_326
+    dec_326 --> dec_329
+    dec_329 --> dec_331
+    dec_331 -- "loop" --> loop_324
+    n_start --> fn__inputs_labeled
+    fn__inputs_labeled --> dec_338
+    dec_338 --> loop_340
+    loop_340 --> dec_341
+    dec_341 --> dec_344
+    dec_344 --> dec_348
+    dec_348 --> dec_351
+    dec_351 -- "loop" --> loop_340
+    n_start --> fn__has_modern_images
+    n_start --> fn__scripts_async
+    n_start --> fn__img_responsive
+    fn__img_responsive --> dec_373
+    dec_373 --> loop_376
+    loop_376 --> dec_377
+    dec_377 -- "loop" --> loop_376
+    n_start --> fn__score
+    n_start --> fn_extract_sections
+    fn_extract_sections --> loop_428
+    loop_428 --> dec_431
+    dec_431 --> dec_433
+    dec_433 -- "loop" --> loop_428
+    n_start --> fn__html_has_section
+    fn__html_has_section --> loop_446
+    loop_446 --> dec_447
+    dec_447 -- "loop" --> loop_446
+    n_start --> fn_extract_subtasks
+    fn_extract_subtasks --> loop_476
+    loop_476 --> loop_483
+    loop_483 --> loop_489
+    n_start --> fn_subtasks_status
+    fn_subtasks_status --> loop_508
+    loop_508 --> dec_510
+    dec_510 --> dec_514
+    dec_514 --> dec_518
+    dec_518 -- "YES" --> dec_521
+    dec_518 -- "loop" --> loop_508
+    n_start --> fn_format_subtasks_status
+    fn_format_subtasks_status --> loop_543
+    n_start --> fn__jaccard
+    fn__jaccard --> dec_554
+    n_start --> fn__palette
+    n_start --> fn__dom_structure
+    fn__dom_structure --> loop_576
+    n_start --> fn_novelty_score
+    fn_novelty_score --> fn__read_595
+    fn__read_595 --> dec_614
+    dec_614 --> dec_616
+    n_start --> fn__apply_blocking_gates
+    fn__apply_blocking_gates --> dec_643
+    n_start --> fn_evaluate
+    fn_evaluate --> dec_679
+    dec_679 --> dec_720
+    dec_720 --> dec_724
+    dec_724 --> dec_740
+    dec_740 --> dec_742
+    dec_742 --> dec_744
+    dec_744 --> dec_755
+    dec_755 --> dec_762
+    dec_762 --> dec_769
+    dec_769 --> dec_781
+    n_start --> fn_blend_visual_total
+    fn_blend_visual_total --> dec_833
+    dec_833 --> dec_837
+    dec_837 --> dec_841
+    dec_841 --> dec_843
+    dec_843 --> loop_853
+    loop_853 --> dec_854
+    dec_854 -- "loop" --> loop_853
+    loop_853 --> dec_861
+    n_start --> fn_detect_root_cause
+    fn_detect_root_cause --> dec_900
+    n_start --> fn_metrics_block
+    fn_metrics_block --> fn__clean_923
+    fn__clean_923 --> loop_929
+    loop_929 --> dec_930
+    dec_930 --> dec_932
+    dec_932 --> dec_934
+    dec_934 -- "loop" --> loop_929
+    n_start --> fn_parse_metrics_block
+    fn_parse_metrics_block --> dec_945
+    dec_945 --> dec_949
+    class n_start node-start
+    class fn__strip_js_comments,fn__has_real_css_animations,fn__has_real_transitions,fn__has_real_gradients,fn__has_animated_canvas,fn__no_dead_canvas,fn__has_dark_mode,fn__has_scroll_reveal,fn__has_hover_effects,fn__has_microinteractions,fn__has_content_richness,fn_extract_requirements,fn__inputs_labeled,fn__has_modern_images,fn__scripts_async,fn__img_responsive,fn__score,fn_extract_sections,fn__html_has_section,fn_extract_subtasks,fn_subtasks_status,fn_format_subtasks_status,fn__jaccard,fn__palette,fn__dom_structure,fn_novelty_score,fn__read_595,fn__apply_blocking_gates,fn_evaluate,fn_blend_visual_total,fn_detect_root_cause,fn_metrics_block,fn__clean_923,fn_parse_metrics_block node-subprocess
+    class loop_151,loop_258,loop_268,loop_272,loop_324,loop_340,loop_376,loop_428,loop_446,loop_476,loop_483,loop_489,loop_508,loop_543,loop_576,loop_853,loop_929 node-loop
+    class dec_152,dec_184,dec_186,dec_230,dec_232,dec_241,dec_260,dec_262,dec_263,dec_270,dec_274,dec_278,dec_326,dec_329,dec_331,dec_338,dec_341,dec_344,dec_348,dec_351,dec_373,dec_377,dec_431,dec_433,dec_447,dec_510,dec_514,dec_518,dec_521,dec_554,dec_614,dec_616,dec_643,dec_679,dec_720,dec_724,dec_740,dec_742,dec_744,dec_755,dec_762,dec_769,dec_781,dec_833,dec_837,dec_841,dec_843,dec_854,dec_861,dec_900,dec_930,dec_932,dec_934,dec_945,dec_949 node-decision
+    class n_end node-end
+    click fn_evaluate href "reaweb_L4_Tools_Domain_Evaluator_Gating.html" "Abrir detalle"
+    click fn__apply_blocking_gates href "reaweb_L4_Tools_Domain_Evaluator_Gating.html" "Abrir detalle"
+    click fn__score href "reaweb_L4_Tools_Domain_Evaluator_Scoring.html" "Abrir detalle"
+    click fn__strip_js_comments href "reaweb_L4_Tools_Domain_Evaluator_Scoring.html" "Abrir detalle"
+    click fn_blend_visual_total href "reaweb_L4_Tools_Domain_Evaluator_VisualTotal.html" "Abrir detalle"
+    click fn_extract_requirements href "reaweb_L4_Tools_Domain_Evaluator_RequirementsSections.html" "Abrir detalle"
+    click fn_extract_sections href "reaweb_L4_Tools_Domain_Evaluator_RequirementsSections.html" "Abrir detalle"
+    click fn__html_has_section href "reaweb_L4_Tools_Domain_Evaluator_RequirementsSections.html" "Abrir detalle"
+    click fn_extract_subtasks href "reaweb_L4_Tools_Domain_Evaluator_Subtasks.html" "Abrir detalle"
+    click fn_subtasks_status href "reaweb_L4_Tools_Domain_Evaluator_Subtasks.html" "Abrir detalle"
+    click fn_format_subtasks_status href "reaweb_L4_Tools_Domain_Evaluator_Subtasks.html" "Abrir detalle"
+    click fn_novelty_score href "reaweb_L4_Tools_Domain_Evaluator_Novelty.html" "Abrir detalle"
+    click fn__jaccard href "reaweb_L4_Tools_Domain_Evaluator_Novelty.html" "Abrir detalle"
+    click fn__palette href "reaweb_L4_Tools_Domain_Evaluator_Novelty.html" "Abrir detalle"
+    click fn__dom_structure href "reaweb_L4_Tools_Domain_Evaluator_Novelty.html" "Abrir detalle"
+    click fn__has_real_css_animations href "reaweb_L4_Tools_Domain_Evaluator_VisualChecks.html" "Abrir detalle"
+    click fn__has_real_transitions href "reaweb_L4_Tools_Domain_Evaluator_VisualChecks.html" "Abrir detalle"
+    click fn__has_real_gradients href "reaweb_L4_Tools_Domain_Evaluator_VisualChecks.html" "Abrir detalle"
+    click fn__has_animated_canvas href "reaweb_L4_Tools_Domain_Evaluator_VisualChecks.html" "Abrir detalle"
+    click fn__no_dead_canvas href "reaweb_L4_Tools_Domain_Evaluator_VisualChecks.html" "Abrir detalle"
+    click fn__has_dark_mode href "reaweb_L4_Tools_Domain_Evaluator_VisualChecks.html" "Abrir detalle"
+    click fn__has_scroll_reveal href "reaweb_L4_Tools_Domain_Evaluator_VisualChecks.html" "Abrir detalle"
+    click fn__has_hover_effects href "reaweb_L4_Tools_Domain_Evaluator_VisualChecks.html" "Abrir detalle"
+    click fn__has_microinteractions href "reaweb_L4_Tools_Domain_Evaluator_VisualChecks.html" "Abrir detalle"
+    click fn__has_content_richness href "reaweb_L4_Tools_Domain_Evaluator_VisualChecks.html" "Abrir detalle"
+    click fn__inputs_labeled href "reaweb_L4_Tools_Domain_Evaluator_VisualChecks.html" "Abrir detalle"
+    click fn__has_modern_images href "reaweb_L4_Tools_Domain_Evaluator_VisualChecks.html" "Abrir detalle"
+    click fn__scripts_async href "reaweb_L4_Tools_Domain_Evaluator_VisualChecks.html" "Abrir detalle"
+    click fn__img_responsive href "reaweb_L4_Tools_Domain_Evaluator_VisualChecks.html" "Abrir detalle"

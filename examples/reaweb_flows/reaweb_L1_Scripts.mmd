@@ -1,0 +1,66 @@
+%% reaweb · scripts
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start"])
+    mod__common["Common<br><i>12 nodos, 10 enlaces</i>"]
+    mod_backfill_memory["Backfill Memory<br><i>33 nodos, 36 enlaces</i>"]
+    mod_cleanup_runs["Cleanup Runs<br><i>21 nodos, 20 enlaces</i>"]
+    mod_export_candidate["Export Candidate<br><i>6 nodos, 4 enlaces</i>"]
+    mod_gate_harness_edit["Gate Harness Edit<br><i>27 nodos, 25 enlaces</i>"]
+    mod_gen_cards["Gen Cards<br><i>13 nodos, 12 enlaces</i>"]
+    mod_merge_lessons["Merge Lessons<br><i>10 nodos, 10 enlaces</i>"]
+    mod_reaweb_cli["Reaweb Cli<br><i>4 nodos, 2 enlaces</i>"]
+    mod_render_dashboard["Render Dashboard<br><i>32 nodos, 33 enlaces</i>"]
+    mod_run_agent["Run Agent<br><i>4 nodos, 2 enlaces</i>"]
+    mod_run_battery["Run Battery<br><i>21 nodos, 21 enlaces</i>"]
+    mod_run_benchmark["Run Benchmark<br><i>44 nodos, 46 enlaces</i>"]
+    mod_run_misevo["Run Misevo<br><i>19 nodos, 19 enlaces</i>"]
+    mod_seed_from_docs["Seed From Docs<br><i>14 nodos, 13 enlaces</i>"]
+    mod_trend_evolution["Trend Evolution<br><i>34 nodos, 39 enlaces</i>"]
+    n_end(["End"])
+    n_start --> mod__common
+    mod__common --> mod_backfill_memory
+    mod_backfill_memory --> mod_cleanup_runs
+    mod_cleanup_runs --> mod_export_candidate
+    mod_export_candidate --> mod_gate_harness_edit
+    mod_gate_harness_edit --> mod_gen_cards
+    mod_gen_cards --> mod_merge_lessons
+    mod_merge_lessons --> mod_reaweb_cli
+    mod_reaweb_cli --> mod_render_dashboard
+    mod_render_dashboard --> mod_run_agent
+    mod_run_agent --> mod_run_battery
+    mod_run_battery --> mod_run_benchmark
+    mod_run_benchmark --> mod_run_misevo
+    mod_run_misevo --> mod_seed_from_docs
+    mod_seed_from_docs --> mod_trend_evolution
+    mod_trend_evolution --> n_end
+    class n_start node-start
+    class mod__common,mod_backfill_memory,mod_cleanup_runs,mod_gate_harness_edit,mod_gen_cards,mod_merge_lessons,mod_render_dashboard,mod_run_battery,mod_run_benchmark,mod_run_misevo,mod_seed_from_docs,mod_trend_evolution node-loop
+    class mod_export_candidate,mod_reaweb_cli,mod_run_agent node-process
+    class n_end node-end
+    click mod__common href "reaweb_L2_Scripts__common.html" "Abrir detalle"
+    click mod_backfill_memory href "reaweb_L2_Scripts_Backfill_memory.html" "Abrir detalle"
+    click mod_cleanup_runs href "reaweb_L2_Scripts_Cleanup_runs.html" "Abrir detalle"
+    click mod_export_candidate href "reaweb_L2_Scripts_Export_candidate.html" "Abrir detalle"
+    click mod_gate_harness_edit href "reaweb_L2_Scripts_Gate_harness_edit.html" "Abrir detalle"
+    click mod_gen_cards href "reaweb_L2_Scripts_Gen_cards.html" "Abrir detalle"
+    click mod_merge_lessons href "reaweb_L2_Scripts_Merge_lessons.html" "Abrir detalle"
+    click mod_reaweb_cli href "reaweb_L2_Scripts_Reaweb_cli.html" "Abrir detalle"
+    click mod_render_dashboard href "reaweb_L2_Scripts_Render_dashboard.html" "Abrir detalle"
+    click mod_run_agent href "reaweb_L2_Scripts_Run_agent.html" "Abrir detalle"
+    click mod_run_battery href "reaweb_L2_Scripts_Run_battery.html" "Abrir detalle"
+    click mod_run_benchmark href "reaweb_L2_Scripts_Run_benchmark.html" "Abrir detalle"
+    click mod_run_misevo href "reaweb_L2_Scripts_Run_misevo.html" "Abrir detalle"
+    click mod_seed_from_docs href "reaweb_L2_Scripts_Seed_from_docs.html" "Abrir detalle"
+    click mod_trend_evolution href "reaweb_L2_Scripts_Trend_evolution.html" "Abrir detalle"

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gate Harness Edit</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="reaweb_L1_Scripts.html">← Volver</a>
+  <h1>Gate Harness Edit</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Gate Harness Edit
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    dec_147{"not TASK_COEVOLVE_ENABLED<br><i>Condición en línea 147:<br>not TASK_COEVOLVE_ENABLED</i>"}
+    dec_179{"args.proposal<br><i>Condición en línea 179:<br>args.proposal</i>"}
+    dec_89{"not dry_run<br><i>Condición en línea 89:<br>not dry_run</i>"}
+    dec_185{"NOT fixed_tasks?<br><i>Niega fixed_tasks<br>para lógica invertida</i>"}
+    dec_94{"before('train') is None or<br>after('train') is None<br><i>Condición en línea 94:<br>before('train') is None or after('train') is None</i>"}
+    dec_187{"len(picked) >= 2<br><i>Condición en línea 187:<br>len(picked) >= 2</i>"}
+    dec_96{"after('train') <=<br>before('train')<br><i>Condición en línea 96:<br>after('train') <= before('train')</i>"}
+    dec_198{"not edits<br><i>Condición en línea 198:<br>not edits</i>"}
+    dec_98{"before('dev') is not None<br>and after('dev') is not None and <<br><i>Condición en línea 98:<br>before('dev') is not None and after('dev') is not None and (</i>"}
+    loop_203["For each edit in edits"]
+    dec_108{"not accept<br><i>Condición en línea 108:<br>not accept</i>"}
+    loop_231["For each r in results"]
+    dec_109{"before('train') is None or<br>after('train') is None<br><i>Condición en línea 109:<br>before('train') is None or after('train') is None</i>"}
+    dec_111{"after('dev') is not None and<br>before('dev') is not None and < ><br><i>Condición en línea 111:<br>after('dev') is not None and before('dev') is not None and (</i>"}
+    dec_115{"not dry_run<br><i>Condición en línea 115:<br>not dry_run</i>"}
+    dec_116{"not accept<br><i>Condición en línea 116:<br>not accept</i>"}
+    fn__short_run_score[["Short Run Score"]]
+    fn__apply_after[["Apply After"]]
+    fn__revert[["Revert"]]
+    fn_gate_proposal[["Gate Proposal"]]
+    fn__persist[["Persist"]]
+    fn__adaptive_train_dev[["Adaptive Train Dev"]]
+    fn__cleanup_staging[["Cleanup Staging"]]
+    fn_main[["Main"]]
+    fn_J_84[["J"]]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    n_start --> fn__short_run_score
+    n_start --> fn__apply_after
+    n_start --> fn__revert
+    n_start --> fn_gate_proposal
+    fn_gate_proposal --> fn_J_84
+    fn_J_84 --> dec_89
+    dec_89 --> dec_94
+    dec_94 --> dec_96
+    dec_96 --> dec_98
+    dec_98 --> dec_108
+    dec_108 --> dec_109
+    dec_109 --> dec_111
+    dec_111 --> dec_115
+    dec_115 --> dec_116
+    n_start --> fn__persist
+    n_start --> fn__adaptive_train_dev
+    fn__adaptive_train_dev --> dec_147
+    n_start --> fn__cleanup_staging
+    n_start --> fn_main
+    fn_main --> dec_179
+    dec_179 --> dec_185
+    dec_185 --> dec_187
+    dec_187 --> dec_198
+    dec_198 --> loop_203
+    loop_203 --> loop_231
+    class n_start node-start
+    class fn__short_run_score,fn__apply_after,fn__revert,fn_gate_proposal,fn_J_84,fn__persist,fn__adaptive_train_dev,fn__cleanup_staging,fn_main node-subprocess
+    class dec_89,dec_94,dec_96,dec_98,dec_108,dec_109,dec_111,dec_115,dec_116,dec_147,dec_179,dec_185,dec_187,dec_198 node-decision
+    class loop_203,loop_231 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

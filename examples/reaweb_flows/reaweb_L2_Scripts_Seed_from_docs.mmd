@@ -1,0 +1,46 @@
+%% Seed From Docs
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    dec_31{"s.startswith('# ') and (not<br>s.startswith('## ')) and (not '))<br><i>Condición en línea 31:<br>s.startswith('# ') and (not s.startswith('## ')) and (not s.</i>"}
+    dec_34{"s.startswith('## ')<br><i>Condición en línea 34:<br>s.startswith('## ')</i>"}
+    dec_36{"current_key and (not<br>current_key.startswith('#'))<br><i>Condición en línea 36:<br>current_key and (not current_key.startswith('#'))</i>"}
+    dec_41{"s.startswith('### ')<br><i>Condición en línea 41:<br>s.startswith('### ')</i>"}
+    fn_seed_global[["Seed Global"]]
+    loop_26["For each line"]
+    dec_28{"not s<br><i>Condición en línea 28:<br>not s</i>"}
+    dec_43{"current_key<br><i>Condición en línea 43:<br>current_key</i>"}
+    dec_46{"current_key<br><i>Condición en línea 46:<br>current_key</i>"}
+    dec_47{"list)<br><i>Condición en línea 47:<br>isinstance(result.get(current_key), list)</i>"}
+    fn__md_to_yaml[["Md To Yaml"]]
+    fn_main[["Main"]]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    n_start --> fn__md_to_yaml
+    fn__md_to_yaml --> loop_26
+    loop_26 --> dec_28
+    dec_28 --> dec_31
+    dec_31 --> dec_34
+    dec_34 --> dec_36
+    dec_36 --> dec_41
+    dec_41 --> dec_43
+    dec_43 --> dec_46
+    dec_46 --> dec_47
+    dec_47 -- "loop" --> loop_26
+    n_start --> fn_seed_global
+    n_start --> fn_main
+    class n_start node-start
+    class fn__md_to_yaml,fn_seed_global,fn_main node-subprocess
+    class loop_26 node-loop
+    class dec_28,dec_31,dec_34,dec_36,dec_41,dec_43,dec_46,dec_47 node-decision
+    class n_end node-end
