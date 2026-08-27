@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ascii</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="agentflow_L1_Agentflow.html">← Volver</a>
+  <h1>Ascii</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Ascii
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_40{"node.detail and detail_level<br>!= 'low'<br><i>Condición en línea 40:<br>node.detail and detail_level != 'low'</i>"}
+    dec_53{"detail != 'high'<br><i>Condición en línea 53:<br>detail != 'high'</i>"}
+    loop_66["For each e in edges"]
+    loop_69["For each e in edges"]
+    dec_70{"e.target in incoming<br><i>Condición en línea 70:<br>e.target in incoming</i>"}
+    dec_77{"not queue<br><i>Condición en línea 77:<br>not queue</i>"}
+    loop_80["while queue"]
+    dec_82{"nid in visited<br><i>Condición en línea 82:<br>nid in visited</i>"}
+    loop_86["For each e"]
+    dec_87{"e.target not in visited and<br>e.target not in queue<br><i>Condición en línea 87:<br>e.target not in visited and e.target not in queue</i>"}
+    loop_90["For each n in nodes"]
+    dec_91{"n.id not in visited<br><i>Condición en línea 91:<br>n.id not in visited</i>"}
+    loop_96["For each nid in order"]
+    dec_98{"not node<br><i>Condición en línea 98:<br>not node</i>"}
+    dec_102{"not outs<br><i>Condición en línea 102:<br>not outs</i>"}
+    dec_105{"len(outs) == 1<br><i>Condición en línea 105:<br>len(outs) == 1</i>"}
+    loop_113["For each e in outs"]
+    dec_119{"e.label == 'YES'<br><i>Condición en línea 119:<br>e.label == 'YES'</i>"}
+    dec_121{"e.label == 'NO'<br><i>Condición en línea 121:<br>e.label == 'NO'</i>"}
+    dec_123{"e.label<br><i>Condición en línea 123:<br>e.label</i>"}
+    fn__node_line[["Node Line"]]
+    fn_to_ascii[["To Ascii"]]
+    fn_save_ascii[["Save Ascii"]]
+    n_start --> fn__node_line
+    fn__node_line --> dec_40
+    n_start --> fn_to_ascii
+    fn_to_ascii --> dec_53
+    dec_53 --> loop_66
+    loop_66 --> loop_69
+    loop_69 --> dec_70
+    dec_70 -- "loop" --> loop_69
+    loop_69 --> dec_77
+    dec_77 --> loop_80
+    loop_80 --> dec_82
+    dec_82 --> loop_86
+    loop_86 --> dec_87
+    dec_87 -- "loop" --> loop_86
+    loop_86 -- "loop" --> loop_80
+    loop_80 --> loop_90
+    loop_90 --> dec_91
+    dec_91 -- "loop" --> loop_90
+    loop_90 --> loop_96
+    loop_96 --> dec_98
+    dec_98 --> dec_102
+    dec_102 --> dec_105
+    dec_105 -- "NO" --> loop_113
+    loop_113 --> dec_119
+    dec_119 --> dec_121
+    dec_121 --> dec_123
+    dec_123 -- "loop" --> loop_113
+    loop_113 -- "loop" --> loop_96
+    n_start --> fn_save_ascii
+    class n_start node-start
+    class fn__node_line,fn_to_ascii,fn_save_ascii node-subprocess
+    class dec_40,dec_53,dec_70,dec_77,dec_82,dec_87,dec_91,dec_98,dec_102,dec_105,dec_119,dec_121,dec_123 node-decision
+    class loop_66,loop_69,loop_80,loop_86,loop_90,loop_96,loop_113 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

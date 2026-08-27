@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mermaid</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="agentflow_L1_Agentflow.html">← Volver</a>
+  <h1>Mermaid</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Mermaid
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_58{"sanitized and<br>sanitized(0).isdigit()<br><i>Condición en línea 58:<br>sanitized and sanitized(0).isdigit()</i>"}
+    loop_75["For loop"]
+    dec_86{"node.detail<br><i>Condición en línea 86:<br>node.detail</i>"}
+    dec_102{"node.diff_status in<br>('added', 'removed', 'changed')<br><i>Condición en línea 102:<br>node.diff_status in ('added', 'removed', 'changed')</i>"}
+    dec_114{"label<br><i>Condición en línea 114:<br>label</i>"}
+    dec_145{"detail != 'high'<br><i>Condición en línea 145:<br>detail != 'high'</i>"}
+    dec_60{"sanitized in<br>_MERMAID_RESERVED<br><i>Condición en línea 60:<br>sanitized in _MERMAID_RESERVED</i>"}
+    dec_90{"node.detail<br><i>Condición en línea 90:<br>node.detail</i>"}
+    dec_104{"node.node_type ==<br>NodeType.EVOLUTION<br><i>Condición en línea 104:<br>node.node_type == NodeType.EVOLUTION</i>"}
+    dec_116{"dashed<br><i>Condición en línea 116:<br>dashed</i>"}
+    dec_148{"layout == 'grid'<br><i>Condición en línea 148:<br>layout == 'grid'</i>"}
+    dec_348{"back_link<br><i>Condición en línea 348:<br>back_link</i>"}
+    dec_93{"len(combined) > 200<br><i>Condición en línea 93:<br>len(combined) > 200</i>"}
+    dec_119{"dashed<br><i>Condición en línea 119:<br>dashed</i>"}
+    dec_150{"layout == 'phased'<br><i>Condición en línea 150:<br>layout == 'phased'</i>"}
+    dec_152{"layout ==<br>'phased-horizontal'<br><i>Condición en línea 152:<br>layout == 'phased-horizontal'</i>"}
+    dec_154{"layout == 'radial'<br><i>Condición en línea 154:<br>layout == 'radial'</i>"}
+    dec_156{"layout == 'swimlane'<br><i>Condición en línea 156:<br>layout == 'swimlane'</i>"}
+    dec_159{"layout == 'vertical'<br><i>Condición en línea 159:<br>layout == 'vertical'</i>"}
+    dec_169{"links<br><i>Condición en línea 169:<br>links</i>"}
+    dec_171{"theme<br><i>Condición en línea 171:<br>theme</i>"}
+    dec_173{"init<br><i>Condición en línea 173:<br>init</i>"}
+    dec_175{"layout == 'vertical'<br><i>Condición en línea 175:<br>layout == 'vertical'</i>"}
+    dec_177{"no_phases or layout ==<br>'phased-horizontal'<br><i>Condición en línea 177:<br>no_phases or layout == 'phased-horizontal'</i>"}
+    loop_183["For each nt"]
+    dec_196{"layout in ('phased',<br>'phased-horizontal')<br><i>Condición en línea 196:<br>layout in ('phased', 'phased-horizontal')</i>"}
+    dec_198{"layout == 'swimlane'<br><i>Condición en línea 198:<br>layout == 'swimlane'</i>"}
+    dec_203{"boxes and (not no_phases)<br><i>Condición en línea 203:<br>boxes and (not no_phases)</i>"}
+    dec_207{"layout in ('phased',<br>'phased-horizontal')<br><i>Condición en línea 207:<br>layout in ('phased', 'phased-horizontal')</i>"}
+    loop_248["For each p in positioned"]
+    loop_208["For each p in positioned"]
+    loop_224["For each p in positioned"]
+    loop_254["For each edge"]
+    loop_257["For each fb in feedback_arrows"]
+    dec_261{"theme<br><i>Condición en línea 261:<br>theme</i>"}
+    loop_210["For each pb in phase_boxes"]
+    dec_213{"not members<br><i>Condición en línea 213:<br>not members</i>"}
+    loop_217["For each nid in members"]
+    dec_220{"node<br><i>Condición en línea 220:<br>node</i>"}
+    loop_229["For each box in box_list"]
+    dec_233{"not members<br><i>Condición en línea 233:<br>not members</i>"}
+    loop_237["For each nid in members"]
+    dec_239{"node<br><i>Condición en línea 239:<br>node</i>"}
+    loop_244["For each p in positioned"]
+    dec_245{"p.node.id not in boxed_ids<br><i>Condición en línea 245:<br>p.node.id not in boxed_ids</i>"}
+    loop_263["For each gnode in nodes"]
+    dec_264{"gnode.diff_status or<br>gnode.node_type ==<br><i>Condición en línea 264:<br>gnode.diff_status or gnode.node_type == NodeType.EVOLUTION</i>"}
+    dec_266{"gnode.node_type not in<br>_ME_CLASS<br><i>Condición en línea 266:<br>gnode.node_type not in _ME_CLASS</i>"}
+    loop_269["For loop"]
+    dec_273{"links<br><i>Condición en línea 273:<br>links</i>"}
+    loop_274["For loop"]
+    fn__sanitize_id[["Sanitize Id"]]
+    fn__escape_label[["Escape Label"]]
+    fn__node_label[["Node Label"]]
+    fn__node_definition[["Node Definition"]]
+    fn__edge_line[["Edge Line"]]
+    fn_to_mermaid[["To Mermaid"]]
+    fn_save_mermaid[["Save Mermaid"]]
+    fn_to_mermaid_html[["To Mermaid Html"]]
+    fn_save_mermaid_html[["Save Mermaid Html"]]
+    tool_to_mermaid_344["mmd = Render Mermaid<br><i>Serializa el flujo a texto<br>Mermaid (markdown)</i>"]
+    n_start --> fn__sanitize_id
+    fn__sanitize_id --> dec_58
+    dec_58 --> dec_60
+    n_start --> fn__escape_label
+    fn__escape_label --> loop_75
+    n_start --> fn__node_label
+    fn__node_label --> dec_86
+    dec_86 --> dec_90
+    dec_90 --> dec_93
+    n_start --> fn__node_definition
+    fn__node_definition --> dec_102
+    dec_102 --> dec_104
+    n_start --> fn__edge_line
+    fn__edge_line --> dec_114
+    dec_114 --> dec_116
+    dec_116 --> dec_119
+    n_start --> fn_to_mermaid
+    fn_to_mermaid --> dec_145
+    dec_145 --> dec_148
+    dec_148 --> dec_150
+    dec_150 --> dec_152
+    dec_152 --> dec_154
+    dec_154 --> dec_156
+    dec_156 --> dec_159
+    dec_159 --> dec_169
+    dec_169 --> dec_171
+    dec_171 --> dec_173
+    dec_173 --> dec_175
+    dec_175 --> dec_177
+    dec_177 --> loop_183
+    loop_183 --> dec_196
+    dec_196 --> dec_198
+    dec_198 --> dec_203
+    dec_203 --> dec_207
+    dec_207 --> loop_208
+    loop_208 --> loop_210
+    loop_210 --> dec_213
+    dec_213 --> loop_217
+    loop_217 --> dec_220
+    dec_220 -- "loop" --> loop_217
+    loop_217 -- "loop" --> loop_210
+    dec_207 --> loop_224
+    loop_224 --> loop_229
+    loop_229 --> dec_233
+    dec_233 --> loop_237
+    loop_237 --> dec_239
+    dec_239 -- "loop" --> loop_237
+    loop_237 -- "loop" --> loop_229
+    loop_229 --> loop_244
+    loop_244 --> dec_245
+    dec_245 -- "loop" --> loop_244
+    dec_203 -- "NO" --> loop_248
+    loop_248 --> loop_254
+    loop_254 --> loop_257
+    loop_257 --> dec_261
+    dec_261 --> loop_263
+    loop_263 --> dec_264
+    dec_264 --> dec_266
+    dec_266 -- "loop" --> loop_263
+    loop_263 --> loop_269
+    loop_269 --> dec_273
+    dec_273 --> loop_274
+    n_start --> fn_save_mermaid
+    n_start --> fn_to_mermaid_html
+    fn_to_mermaid_html --> tool_to_mermaid_344
+    tool_to_mermaid_344 --> dec_348
+    n_start --> fn_save_mermaid_html
+    class n_start node-start
+    class fn__sanitize_id,fn__escape_label,fn__node_label,fn__node_definition,fn__edge_line,fn_to_mermaid,fn_save_mermaid,fn_to_mermaid_html,fn_save_mermaid_html node-subprocess
+    class dec_58,dec_60,dec_86,dec_90,dec_93,dec_102,dec_104,dec_114,dec_116,dec_119,dec_145,dec_148,dec_150,dec_152,dec_154,dec_156,dec_159,dec_169,dec_171,dec_173,dec_175,dec_177,dec_196,dec_198,dec_203,dec_207,dec_213,dec_220,dec_233,dec_239,dec_245,dec_261,dec_264,dec_266,dec_273,dec_348 node-decision
+    class loop_75,loop_183,loop_208,loop_210,loop_217,loop_224,loop_229,loop_237,loop_244,loop_248,loop_254,loop_257,loop_263,loop_269,loop_274 node-loop
+    class tool_to_mermaid_344 node-tool
+    class n_end node-end
+    click fn__sanitize_id href "agentflow_L3_Agentflow_Mermaid_Labels.html" "Abrir detalle"
+    click fn__escape_label href "agentflow_L3_Agentflow_Mermaid_Labels.html" "Abrir detalle"
+    click fn__node_label href "agentflow_L3_Agentflow_Mermaid_Labels.html" "Abrir detalle"
+    click fn__node_definition href "agentflow_L3_Agentflow_Mermaid_Labels.html" "Abrir detalle"
+    click fn__edge_line href "agentflow_L3_Agentflow_Mermaid_Labels.html" "Abrir detalle"
+    click fn_to_mermaid href "agentflow_L3_Agentflow_Mermaid_Export.html" "Abrir detalle"
+    click fn_save_mermaid href "agentflow_L3_Agentflow_Mermaid_Export.html" "Abrir detalle"
+    click fn_to_mermaid_html href "agentflow_L3_Agentflow_Mermaid_Export.html" "Abrir detalle"
+    click fn_save_mermaid_html href "agentflow_L3_Agentflow_Mermaid_Export.html" "Abrir detalle"
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

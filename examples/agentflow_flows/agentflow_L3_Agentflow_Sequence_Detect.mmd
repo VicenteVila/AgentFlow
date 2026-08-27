@@ -1,0 +1,62 @@
+%% Sequence · Detect
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_28{"depth > 6<br><i>Condición en línea 28:<br>depth > 6</i>"}
+    dec_82{"low.startswith('isinstance') or<br><i>Condición en línea 82:<br>low.startswith('isinstance') or low.startswith('hasattr')</i>"}
+    dec_85{"low.startswith('not ') and '<br>' not in low(4:)<br><i>Condición en línea 85:<br>low.startswith('not ') and ' ' not in low(4:)</i>"}
+    dec_87{"low in ('true', 'false',<br>'none')<br><i>Condición en línea 87:<br>low in ('true', 'false', 'none')</i>"}
+    dec_91{"'==' in low and any((k in<br>low for k in ('format', 'type',<br><i>Condición en línea 91:<br>'==' in low and any((k in low for k in ('format', 'type', 'm</i>"}
+    dec_93{"low.endswith('in available')<br>or low.endswith('in expected')<br><i>Condición en línea 93:<br>low.endswith('in available') or low.endswith('in expected')</i>"}
+    dec_96{"'output' in low and ('get('<br>in low or 'dict' in low or in low<br><i>Condición en línea 96:<br>'output' in low and ('get(' in low or 'dict' in low or 'succ</i>"}
+    dec_99{"low in ('valid', 'ok',<br>'result', 'done', 'success',<br><i>Condición en línea 99:<br>low in ('valid', 'ok', 'result', 'done', 'success', 'passed'</i>"}
+    loop_34["while current"]
+    dec_38{"len(orelse) == 1 and<br>isinstance(orelse(0), ast.If)<br><i>Condición en línea 38:<br>len(orelse) == 1 and isinstance(orelse(0), ast.If)</i>"}
+    dec_40{"orelse<br><i>Condición en línea 40:<br>orelse</i>"}
+    loop_47["For loop"]
+    dec_48{"i == 0<br><i>Condición en línea 48:<br>i == 0</i>"}
+    fn__is_actor_class_name[["Is Actor Class Name"]]
+    fn__looks_like_actor[["Looks Like Actor"]]
+    fn__try_unwrap_call[["Try Unwrap Call"]]
+    fn__extract_fragments_from_if[["Extract Fragments From If"]]
+    fn__is_significant_condition[["Is Significant Condition"]]
+    fn__collect_fragments[["Collect Fragments"]]
+    n_start --> fn__is_actor_class_name
+    n_start --> fn__looks_like_actor
+    n_start --> fn__try_unwrap_call
+    n_start --> fn__extract_fragments_from_if
+    fn__extract_fragments_from_if --> dec_28
+    dec_28 --> loop_34
+    loop_34 --> dec_38
+    dec_38 --> dec_40
+    dec_40 -- "loop" --> loop_34
+    loop_34 --> loop_47
+    loop_47 --> dec_48
+    dec_48 --> fn__collect_fragments
+    fn__collect_fragments -- "loop" --> loop_47
+    n_start --> fn__collect_fragments
+    n_start --> fn__is_significant_condition
+    fn__is_significant_condition --> dec_82
+    dec_82 --> dec_85
+    dec_85 --> dec_87
+    dec_87 --> dec_91
+    dec_91 --> dec_93
+    dec_93 --> dec_96
+    dec_96 --> dec_99
+    class n_start node-start
+    class fn__is_actor_class_name,fn__looks_like_actor,fn__try_unwrap_call,fn__extract_fragments_from_if,fn__collect_fragments,fn__is_significant_condition node-subprocess
+    class dec_28,dec_38,dec_40,dec_48,dec_82,dec_85,dec_87,dec_91,dec_93,dec_96,dec_99 node-decision
+    class loop_34,loop_47 node-loop
+    class n_end node-end

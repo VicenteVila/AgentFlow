@@ -1,0 +1,135 @@
+%% Sequence · Extract
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    loop_12["For each node"]
+    dec_13{"isinstance(node,<br>ast.ClassDef) and or or node.name<br><i>Condición en línea 13:<br>isinstance(node, ast.ClassDef) and (_is_actor_class_name(nod</i>"}
+    dec_23{"short not in<br>interactions.actors<br><i>Condición en línea 23:<br>short not in interactions.actors</i>"}
+    loop_28["For each node"]
+    dec_29{"isinstance(node, ast.Assign)<br>and isinstance(node.value,<br><i>Condición en línea 29:<br>isinstance(node, ast.Assign) and isinstance(node.value, ast.</i>"}
+    dec_32{"isinstance(func, ast.Name)<br><i>Condición en línea 32:<br>isinstance(func, ast.Name)</i>"}
+    dec_34{"isinstance(func,<br>ast.Attribute)<br><i>Condición en línea 34:<br>isinstance(func, ast.Attribute)</i>"}
+    dec_36{"cls_name and<br>(cls_name(:1).isupper() and or or<br><i>Condición en línea 36:<br>cls_name and (cls_name(:1).isupper() and (_is_actor_class_na</i>"}
+    loop_44["For each target in targets"]
+    dec_45{"isinstance(target, ast.Name)<br><i>Condición en línea 45:<br>isinstance(target, ast.Name)</i>"}
+    dec_51{"short not in<br>interactions.actors<br><i>Condición en línea 51:<br>short not in interactions.actors</i>"}
+    dec_53{"isinstance(target,<br>ast.Attribute) and ast.Name)<br><i>Condición en línea 53:<br>isinstance(target, ast.Attribute) and isinstance(target.valu</i>"}
+    dec_61{"short not in<br>interactions.actors<br><i>Condición en línea 61:<br>short not in interactions.actors</i>"}
+    loop_66["For each node"]
+    dec_67{"isinstance(node,<br>ast.ImportFrom) and node.module<br><i>Condición en línea 67:<br>isinstance(node, ast.ImportFrom) and node.module</i>"}
+    loop_70["For each hint in _ACTOR_NAME_HINTS"]
+    dec_71{"hint in mod_low<br><i>Condición en línea 71:<br>hint in mod_low</i>"}
+    loop_72["For each seg"]
+    dec_73{"hint in seg.lower()<br><i>Condición en línea 73:<br>hint in seg.lower()</i>"}
+    dec_77{"hit<br><i>Condición en línea 77:<br>hit</i>"}
+    dec_80{"actor.lower() == 'llm'<br><i>Condición en línea 80:<br>actor.lower() == 'llm'</i>"}
+    loop_82["For each alias in names"]
+    dec_84{"actor not in<br>interactions.actors<br><i>Condición en línea 84:<br>actor not in interactions.actors</i>"}
+    dec_89{"not sender<br><i>Condición en línea 89:<br>not sender</i>"}
+    dec_90{"class_names<br><i>Condición en línea 90:<br>class_names</i>"}
+    dec_95{"sender not in<br>interactions.actors<br><i>Condición en línea 95:<br>sender not in interactions.actors</i>"}
+    loop_140["For each node"]
+    dec_141{"isinstance(node,<br>(ast.FunctionDef,<br><i>Condición en línea 141:<br>isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))</i>"}
+    loop_145["For each cls"]
+    dec_146{"isinstance(cls,<br>ast.ClassDef)<br><i>Condición en línea 146:<br>isinstance(cls, ast.ClassDef)</i>"}
+    loop_148["For each item in body"]
+    dec_149{"isinstance(item,<br>(ast.FunctionDef,<br><i>Condición en línea 149:<br>isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef))</i>"}
+    loop_162["For each f"]
+    dec_164{"key in seen_f<br><i>Condición en línea 164:<br>key in seen_f</i>"}
+    dec_167{"f.type == 'alt' and (not<br><i>Condición en línea 167:<br>f.type == 'alt' and (not _is_significant_condition(f.label))</i>"}
+    loop_174["For loop"]
+    loop_186["For each f in frag_deduped"]
+    dec_187{"f.type == 'else' and (not<br>any((af.type == 'alt' and < for af<br><i>Condición en línea 187:<br>f.type == 'else' and (not any((af.type == 'alt' and af.begin</i>"}
+    loop_215["For each p in paths"]
+    dec_217{"not path.exists()<br><i>Condición en línea 217:<br>not path.exists()</i>"}
+    loop_230["For each msg in messages"]
+    dec_231{"msg.sender in import_map<br><i>Condición en línea 231:<br>msg.sender in import_map</i>"}
+    dec_233{"msg.receiver in import_map<br><i>Condición en línea 233:<br>msg.receiver in import_map</i>"}
+    fn_extract_interactions[["Extract Interactions"]]
+    fn_extract_from_file[["Extract From File"]]
+    fn_extract_interactions_multi[["Extract Interactions Multi"]]
+    fn_extract_interactions_from_dir[["Extract Interactions From Dir"]]
+    fn__extract_message_102[["Extract Message"]]
+    fn_visit_body_129[["Visit Body"]]
+    tool_extract_interactions_225["ix = Extract Interactions<br><i>Extrae mensajes actor-a-actor<br>de un fuente</i>"]
+    n_start --> fn_extract_interactions
+    fn_extract_interactions --> loop_12
+    loop_12 --> dec_13
+    dec_13 --> dec_23
+    dec_23 -- "loop" --> loop_12
+    loop_12 --> loop_28
+    loop_28 --> dec_29
+    dec_29 --> dec_32
+    dec_32 --> dec_34
+    dec_34 --> dec_36
+    dec_36 --> loop_44
+    loop_44 --> dec_45
+    dec_45 --> dec_51
+    dec_45 --> dec_53
+    dec_53 --> dec_61
+    dec_61 -- "loop" --> loop_44
+    loop_44 -- "loop" --> loop_28
+    loop_28 --> loop_66
+    loop_66 --> dec_67
+    dec_67 --> loop_70
+    loop_70 --> dec_71
+    dec_71 --> loop_72
+    loop_72 --> dec_73
+    dec_73 -- "loop" --> loop_72
+    loop_72 -- "loop" --> loop_70
+    loop_70 --> dec_77
+    dec_77 --> dec_80
+    dec_80 --> loop_82
+    loop_82 --> dec_84
+    dec_84 -- "loop" --> loop_66
+    loop_66 --> dec_89
+    dec_89 --> dec_90
+    dec_90 --> dec_95
+    dec_95 --> fn__extract_message_102
+    fn__extract_message_102 --> fn_visit_body_129
+    fn_visit_body_129 --> loop_140
+    loop_140 --> dec_141
+    dec_141 -- "loop" --> loop_140
+    loop_140 --> loop_145
+    loop_145 --> dec_146
+    dec_146 --> loop_148
+    loop_148 --> dec_149
+    dec_149 -- "loop" --> loop_148
+    loop_148 -- "loop" --> loop_145
+    loop_145 --> loop_162
+    loop_162 --> dec_164
+    dec_164 --> dec_167
+    dec_167 -- "loop" --> loop_162
+    loop_162 --> loop_174
+    loop_174 --> loop_186
+    loop_186 --> dec_187
+    dec_187 -- "loop" --> loop_186
+    n_start --> fn_extract_from_file
+    n_start --> fn_extract_interactions_multi
+    fn_extract_interactions_multi --> loop_215
+    loop_215 --> dec_217
+    dec_217 --> tool_extract_interactions_225
+    tool_extract_interactions_225 --> loop_230
+    loop_230 --> dec_231
+    dec_231 --> dec_233
+    dec_233 -- "loop" --> loop_230
+    loop_230 -- "loop" --> loop_215
+    n_start --> fn_extract_interactions_from_dir
+    class n_start node-start
+    class fn_extract_interactions,fn__extract_message_102,fn_visit_body_129,fn_extract_from_file,fn_extract_interactions_multi,fn_extract_interactions_from_dir node-subprocess
+    class loop_12,loop_28,loop_44,loop_66,loop_70,loop_72,loop_82,loop_140,loop_145,loop_148,loop_162,loop_174,loop_186,loop_215,loop_230 node-loop
+    class dec_13,dec_23,dec_29,dec_32,dec_34,dec_36,dec_45,dec_51,dec_53,dec_61,dec_67,dec_71,dec_73,dec_77,dec_80,dec_84,dec_89,dec_90,dec_95,dec_141,dec_146,dec_149,dec_164,dec_167,dec_187,dec_217,dec_231,dec_233 node-decision
+    class tool_extract_interactions_225 node-tool
+    class n_end node-end

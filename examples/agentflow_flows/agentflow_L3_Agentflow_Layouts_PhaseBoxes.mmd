@@ -1,0 +1,48 @@
+%% Layouts · PhaseBoxes
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    loop_10["For each p in positioned"]
+    loop_52["For each p in positioned"]
+    loop_13["For each phase"]
+    dec_15{"not nodes<br><i>Condición en línea 15:<br>not nodes</i>"}
+    loop_55["For loop"]
+    dec_56{"not nodes<br><i>Condición en línea 56:<br>not nodes</i>"}
+    loop_86["For each edge in edges"]
+    dec_87{"edge.source in pos_lookup<br>and edge.target in pos_lookup<br><i>Condición en línea 87:<br>edge.source in pos_lookup and edge.target in pos_lookup</i>"}
+    dec_91{"tgt.y < src.y - 50<br><i>Condición en línea 91:<br>tgt.y < src.y - 50</i>"}
+    fn__compute_phase_boxes[["Compute Phase Boxes"]]
+    fn__compute_group_boxes[["Compute Group Boxes"]]
+    fn__identify_feedback_arrows[["Identify Feedback Arrows"]]
+    n_start --> fn__compute_phase_boxes
+    fn__compute_phase_boxes --> loop_10
+    loop_10 --> loop_13
+    loop_13 --> dec_15
+    dec_15 -- "loop" --> loop_13
+    n_start --> fn__compute_group_boxes
+    fn__compute_group_boxes --> loop_52
+    loop_52 --> loop_55
+    loop_55 --> dec_56
+    dec_56 -- "loop" --> loop_55
+    n_start --> fn__identify_feedback_arrows
+    fn__identify_feedback_arrows --> loop_86
+    loop_86 --> dec_87
+    dec_87 --> dec_91
+    dec_91 -- "loop" --> loop_86
+    class n_start node-start
+    class fn__compute_phase_boxes,fn__compute_group_boxes,fn__identify_feedback_arrows node-subprocess
+    class loop_10,loop_13,loop_52,loop_55,loop_86 node-loop
+    class dec_15,dec_56,dec_87,dec_91 node-decision
+    class n_end node-end

@@ -212,7 +212,7 @@ def main(argv: list[str] | None = None) -> None:
         "--profile",
         default="generic",
         help="Domain profile: 'generic', 'reaweb', 'reagame', 'traceforge', 'asubarnipal', "
-             "'cogniteam', or path to a .py file defining a PROFILE dict "
+             "'cogniteam', 'agentflow', or path to a .py file defining a PROFILE dict "
              "(default: generic)",
     )
     parser.add_argument(

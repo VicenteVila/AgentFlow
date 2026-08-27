@@ -1,0 +1,117 @@
+%% Repo
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_79{"parts(-1) == '__init__'<br><i>Condición en línea 79:<br>parts(-1) == '__init__'</i>"}
+    dec_103{"NodeType.LOOP in types<br><i>Condición en línea 103:<br>NodeType.LOOP in types</i>"}
+    dec_131{"not root.is_dir()<br><i>Condición en línea 131:<br>not root.is_dir()</i>"}
+    dec_105{"NodeType.TOOL in types<br><i>Condición en línea 105:<br>NodeType.TOOL in types</i>"}
+    dec_107{"NodeType.DECISION in types<br><i>Condición en línea 107:<br>NodeType.DECISION in types</i>"}
+    dec_111{"sub >= 5<br><i>Condición en línea 111:<br>sub >= 5</i>"}
+    loop_37["For loop"]
+    loop_40["For each d in dirnames"]
+    dec_43{"any((part in excl for part<br>in rel_parts))<br><i>Condición en línea 43:<br>any((part in excl for part in rel_parts))</i>"}
+    dec_45{"not include_hidden and<br>any((part.startswith('.') for part<br><i>Condición en línea 45:<br>not include_hidden and any((part.startswith('.') for part in</i>"}
+    loop_48["For each d in dirnames"]
+    dec_49{"d not in kept<br><i>Condición en línea 49:<br>d not in kept</i>"}
+    loop_51["For each fn"]
+    dec_52{"not fn.endswith('.py')<br><i>Condición en línea 52:<br>not fn.endswith('.py')</i>"}
+    dec_55{"any((part in excl or (not<br>include_hidden and for part in<br><i>Condición en línea 55:<br>any((part in excl or (not include_hidden and part.startswith</i>"}
+    dec_60{"str(full).endswith('.pyc')<br><i>Condición en línea 60:<br>str(full).endswith('.pyc')</i>"}
+    dec_63{"full.stat().st_size < 20<br><i>Condición en línea 63:<br>full.stat().st_size < 20</i>"}
+    dec_68{"resolved in seen<br><i>Condición en línea 68:<br>resolved in seen</i>"}
+    loop_91["For each node"]
+    dec_92{"isinstance(node, ast.Import)<br><i>Condición en línea 92:<br>isinstance(node, ast.Import)</i>"}
+    loop_93["For each alias in names"]
+    dec_95{"isinstance(node,<br>ast.ImportFrom) and node.module<br><i>Condición en línea 95:<br>isinstance(node, ast.ImportFrom) and node.module</i>"}
+    loop_137["For each f in files"]
+    dec_143{"g.node_count <= 2<br><i>Condición en línea 143:<br>g.node_count <= 2</i>"}
+    dec_150{"not has_flow and<br>g.node_count < 5<br><i>Condición en línea 150:<br>not has_flow and g.node_count < 5</i>"}
+    dec_154{"not file_graphs<br><i>Condición en línea 154:<br>not file_graphs</i>"}
+    loop_166["For loop"]
+    dec_181{"ordered_ids<br><i>Condición en línea 181:<br>ordered_ids</i>"}
+    loop_183["For loop"]
+    dec_188{"include_imports<br><i>Condición en línea 188:<br>include_imports</i>"}
+    loop_189["For loop"]
+    dec_192{"not src_id<br><i>Condición en línea 192:<br>not src_id</i>"}
+    loop_194["For each imp"]
+    loop_196["For loop"]
+    dec_197{"imp == target_mod or<br>imp.startswith(target_mod + '.') +<br><i>Condición en línea 197:<br>imp == target_mod or imp.startswith(target_mod + '.') or tar</i>"}
+    dec_198{"target_id != src_id<br><i>Condición en línea 198:<br>target_id != src_id</i>"}
+    fn_collect_python_files[["Collect Python Files"]]
+    fn__module_name[["Module Name"]]
+    fn__parse_imports[["Parse Imports"]]
+    fn__classify_file_graph[["Classify File Graph"]]
+    fn_build_repo_overview[["Build Repo Overview"]]
+    tool_collect_python_files_134["files = Collect Python Files<br><i>Rastrea ficheros .py<br>excluyendo venvs/cachés</i>"]
+    tool_parse_file_139["g = Parse File<br><i>Parsear fichero completo<br>(agent flow)</i>"]
+    n_start --> fn_collect_python_files
+    fn_collect_python_files --> loop_37
+    loop_37 --> loop_40
+    loop_40 --> dec_43
+    dec_43 --> dec_45
+    dec_45 -- "loop" --> loop_40
+    loop_40 --> loop_48
+    loop_48 --> dec_49
+    dec_49 -- "loop" --> loop_48
+    loop_48 --> loop_51
+    loop_51 --> dec_52
+    dec_52 --> dec_55
+    dec_55 --> dec_60
+    dec_60 --> dec_63
+    dec_63 --> dec_68
+    dec_68 -- "loop" --> loop_51
+    loop_51 -- "loop" --> loop_37
+    n_start --> fn__module_name
+    fn__module_name --> dec_79
+    n_start --> fn__parse_imports
+    fn__parse_imports --> loop_91
+    loop_91 --> dec_92
+    dec_92 --> loop_93
+    dec_92 --> dec_95
+    dec_95 -- "loop" --> loop_91
+    n_start --> fn__classify_file_graph
+    fn__classify_file_graph --> dec_103
+    dec_103 --> dec_105
+    dec_105 --> dec_107
+    dec_107 --> dec_111
+    n_start --> fn_build_repo_overview
+    fn_build_repo_overview --> dec_131
+    dec_131 --> tool_collect_python_files_134
+    tool_collect_python_files_134 --> loop_137
+    loop_137 --> tool_parse_file_139
+    tool_parse_file_139 --> dec_143
+    dec_143 --> dec_150
+    dec_150 -- "loop" --> loop_137
+    loop_137 --> dec_154
+    dec_154 --> loop_166
+    loop_166 --> dec_181
+    dec_181 --> loop_183
+    loop_183 --> dec_188
+    dec_188 --> loop_189
+    loop_189 --> dec_192
+    dec_192 --> loop_194
+    loop_194 --> loop_196
+    loop_196 --> dec_197
+    dec_197 --> dec_198
+    dec_198 -- "loop" --> loop_196
+    loop_196 -- "loop" --> loop_194
+    loop_194 -- "loop" --> loop_189
+    class n_start node-start
+    class fn_collect_python_files,fn__module_name,fn__parse_imports,fn__classify_file_graph,fn_build_repo_overview node-subprocess
+    class loop_37,loop_40,loop_48,loop_51,loop_91,loop_93,loop_137,loop_166,loop_183,loop_189,loop_194,loop_196 node-loop
+    class dec_43,dec_45,dec_49,dec_52,dec_55,dec_60,dec_63,dec_68,dec_79,dec_92,dec_95,dec_103,dec_105,dec_107,dec_111,dec_131,dec_143,dec_150,dec_154,dec_181,dec_188,dec_192,dec_197,dec_198 node-decision
+    class tool_collect_python_files_134,tool_parse_file_139 node-tool
+    class n_end node-end

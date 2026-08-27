@@ -1,0 +1,128 @@
+%% Drilldown · Emit
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    loop_165["For loop"]
+    loop_195["For each e in index"]
+    dec_232{"not repo_root.is_dir()<br><i>Condición en línea 232:<br>not repo_root.is_dir()</i>"}
+    dec_235{"out_dir is None<br><i>Condición en línea 235:<br>out_dir is None</i>"}
+    dec_241{"assets_src.is_dir() and (not<br>(out_dir / 'assets').is_dir())<br><i>Condición en línea 241:<br>assets_src.is_dir() and (not (out_dir / 'assets').is_dir())</i>"}
+    dec_7{"level > _MAX_DEPTH<br><i>Condición en línea 7:<br>level > _MAX_DEPTH</i>"}
+    loop_17["For each d"]
+    dec_18{"not _flow_files_in(ctx, d,<br>recursive=True)<br><i>Condición en línea 18:<br>not _flow_files_in(ctx, d, recursive=True)</i>"}
+    dec_20{"_warrants_overview(ctx, d)<br><i>Condición en línea 20:<br>_warrants_overview(ctx, d)</i>"}
+    loop_23["For each f"]
+    dec_25{"r in seen_files<br><i>Condición en línea 25:<br>r in seen_files</i>"}
+    loop_30["For each f"]
+    dec_32{"r in seen_files<br><i>Condición en línea 32:<br>r in seen_files</i>"}
+    loop_41["For loop"]
+    loop_48["For loop"]
+    dec_53{"not segments<br><i>Condición en línea 53:<br>not segments</i>"}
+    dec_56{"module in<br>profile.function_splits or module<br><i>Condición en línea 56:<br>module in profile.function_splits or module in profile.class</i>"}
+    loop_59["For loop"]
+    loop_69["For each cls"]
+    dec_82{"module in<br>profile.function_splits or module<br><i>Condición en línea 82:<br>module in profile.function_splits or module in profile.class</i>"}
+    dec_85{"father is not None<br><i>Condición en línea 85:<br>father is not None</i>"}
+    loop_88["For each n in nodes"]
+    dec_89{"not n.id.startswith('fn_')<br>or n.id in matched<br><i>Condición en línea 89:<br>not n.id.startswith('fn_') or n.id in matched</i>"}
+    loop_92["For loop"]
+    dec_93{"any((f'fn_(func)' == n.id or<br>n.id.endswith(f'_(func)') for func<br><i>Condición en línea 93:<br>any((f'fn_(func)' == n.id or n.id.endswith(f'_(func)') for f</i>"}
+    dec_109{"links<br><i>Condición en línea 109:<br>links</i>"}
+    dec_122{"g is None<br><i>Condición en línea 122:<br>g is None</i>"}
+    fn__build_overview_129["overview = Build Overview<br><i>Arma el overview con nodos por<br>actor (módulo/directorio)</i>"]
+    dec_130{"overview is None<br><i>Condición en línea 130:<br>overview is None</i>"}
+    dec_135{"segments<br><i>Condición en línea 135:<br>segments</i>"}
+    loop_169["For loop"]
+    dec_171{"g is None<br><i>Condición en línea 171:<br>g is None</i>"}
+    dec_176{"not actors<br><i>Condición en línea 176:<br>not actors</i>"}
+    loop_181["For loop"]
+    loop_199["For each level"]
+    loop_203["For each e"]
+    fn__write_index_258["Write Index<br><i>Genera index.html con la lista<br>jerárquica de todas las vistas</i>"]
+    fn__handle_dir_shallow[["Handle Dir Shallow"]]
+    fn__build_overview[["Build Overview"]]
+    fn__safe_mod[["Safe Mod"]]
+    fn__write_index[["Write Index"]]
+    fn_run_drilldown[["Run Drilldown"]]
+    fn__handle_dir[["Handle Dir"]]
+    tool_get_profile_10["profile = Load Profile<br><i>Carga perfil de dominio<br>(herramientas/etiquetas)</i>"]
+    tool_parse_functions_61["sub = Parse Functions<br><i>Sub-flujo de un subconjunto<br>de funciones escogidas</i>"]
+    tool_parse_class_methods_71["sub = Parse Class Methods<br><i>Sub-flujo de los métodos<br>de una clase</i>"]
+    n_start --> fn__handle_dir
+    fn__handle_dir --> dec_7
+    dec_7 --> tool_get_profile_10
+    tool_get_profile_10 --> loop_17
+    loop_17 --> dec_18
+    dec_18 --> dec_20
+    dec_20 -- "NO" --> loop_23
+    loop_23 --> dec_25
+    dec_25 -- "loop" --> loop_23
+    loop_23 -- "loop" --> loop_17
+    loop_17 --> loop_30
+    loop_30 --> dec_32
+    dec_32 -- "loop" --> loop_30
+    loop_30 --> loop_41
+    loop_41 --> fn__handle_dir
+    fn__handle_dir -- "loop" --> loop_41
+    loop_41 --> loop_48
+    loop_48 --> dec_53
+    dec_53 --> dec_56
+    dec_56 --> loop_59
+    loop_59 --> tool_parse_functions_61
+    tool_parse_functions_61 -- "loop" --> loop_59
+    loop_59 --> loop_69
+    loop_69 --> tool_parse_class_methods_71
+    tool_parse_class_methods_71 -- "loop" --> loop_69
+    loop_69 --> dec_82
+    dec_82 --> dec_85
+    dec_85 --> loop_88
+    loop_88 --> dec_89
+    dec_89 --> loop_92
+    loop_92 --> dec_93
+    dec_93 -- "loop" --> loop_92
+    loop_92 -- "loop" --> loop_88
+    loop_88 --> dec_109
+    dec_82 -- "NO" --> dec_122
+    dec_122 -- "loop" --> loop_48
+    loop_48 --> fn__build_overview_129
+    fn__build_overview_129 --> dec_130
+    dec_130 --> dec_135
+    n_start --> fn__handle_dir_shallow
+    n_start --> fn__build_overview
+    fn__build_overview --> loop_165
+    loop_165 --> loop_169
+    loop_169 --> dec_171
+    dec_171 -- "loop" --> loop_169
+    loop_169 --> dec_176
+    dec_176 --> loop_181
+    n_start --> fn__safe_mod
+    n_start --> fn__write_index
+    fn__write_index --> loop_195
+    loop_195 --> loop_199
+    loop_199 --> loop_203
+    loop_203 -- "loop" --> loop_199
+    n_start --> fn_run_drilldown
+    fn_run_drilldown --> dec_232
+    dec_232 --> dec_235
+    dec_235 --> dec_241
+    dec_241 --> fn__handle_dir
+    fn__handle_dir --> fn__write_index_258
+    class n_start node-start
+    class fn__handle_dir,fn__handle_dir_shallow,fn__build_overview,fn__safe_mod,fn__write_index,fn_run_drilldown node-subprocess
+    class dec_7,dec_18,dec_20,dec_25,dec_32,dec_53,dec_56,dec_82,dec_85,dec_89,dec_93,dec_109,dec_122,dec_130,dec_135,dec_171,dec_176,dec_232,dec_235,dec_241 node-decision
+    class tool_get_profile_10,tool_parse_functions_61,tool_parse_class_methods_71 node-tool
+    class loop_17,loop_23,loop_30,loop_41,loop_48,loop_59,loop_69,loop_88,loop_92,loop_165,loop_169,loop_181,loop_195,loop_199,loop_203 node-loop
+    class fn__build_overview_129,fn__write_index_258 node-process
+    class n_end node-end

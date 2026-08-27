@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sequence · Render</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="agentflow_L2_Agentflow_Sequence.html">← Volver</a>
+  <h1>Sequence · Render</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Sequence · Render
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_22{"title<br><i>Condición en línea 22:<br>title</i>"}
+    loop_28["For each p in participants"]
+    loop_43["For loop"]
+    loop_49["For each frag in frags"]
+    dec_52{"not inner_lines<br><i>Condición en línea 52:<br>not inner_lines</i>"}
+    loop_76["For loop"]
+    loop_119["For each node"]
+    dec_120{"isinstance(node,<br>ast.ImportFrom) and node.module<br><i>Condición en línea 120:<br>isinstance(node, ast.ImportFrom) and node.module</i>"}
+    loop_123["For each hint in _ACTOR_NAME_HINTS"]
+    dec_124{"hint in mod_low<br><i>Condición en línea 124:<br>hint in mod_low</i>"}
+    dec_127{"actor_hint is None<br><i>Condición en línea 127:<br>actor_hint is None</i>"}
+    loop_131["For each seg"]
+    dec_132{"actor_hint in seg.lower()<br><i>Condición en línea 132:<br>actor_hint in seg.lower()</i>"}
+    dec_136{"actor.lower() == 'llm'<br><i>Condición en línea 136:<br>actor.lower() == 'llm'</i>"}
+    loop_138["For each alias in names"]
+    loop_152["For each ix in interactions_list"]
+    loop_153["For each actor in actors"]
+    dec_154{"actor not in seen_actors<br><i>Condición en línea 154:<br>actor not in seen_actors</i>"}
+    loop_157["For each msg in messages"]
+    dec_159{"key not in seen_messages<br><i>Condición en línea 159:<br>key not in seen_messages</i>"}
+    loop_162["For each frag in fragments"]
+    fn_to_sequence_svg[["To Sequence Svg"]]
+    fn_save_sequence_svg[["Save Sequence Svg"]]
+    fn_to_sequence_html[["To Sequence Html"]]
+    fn__build_import_actor_map[["Build Import Actor Map"]]
+    fn_merge_interactions[["Merge Interactions"]]
+    n_start --> fn_to_sequence_svg
+    fn_to_sequence_svg --> dec_22
+    dec_22 --> loop_28
+    loop_28 --> loop_43
+    loop_43 --> loop_49
+    loop_49 --> dec_52
+    dec_52 -- "loop" --> loop_49
+    loop_49 --> loop_76
+    n_start --> fn_save_sequence_svg
+    n_start --> fn_to_sequence_html
+    n_start --> fn__build_import_actor_map
+    fn__build_import_actor_map --> loop_119
+    loop_119 --> dec_120
+    dec_120 --> loop_123
+    loop_123 --> dec_124
+    dec_124 -- "loop" --> loop_123
+    loop_123 --> dec_127
+    dec_127 --> loop_131
+    loop_131 --> dec_132
+    dec_132 -- "loop" --> loop_131
+    loop_131 --> dec_136
+    dec_136 --> loop_138
+    loop_138 -- "loop" --> loop_119
+    n_start --> fn_merge_interactions
+    fn_merge_interactions --> loop_152
+    loop_152 --> loop_153
+    loop_153 --> dec_154
+    dec_154 -- "loop" --> loop_153
+    loop_153 --> loop_157
+    loop_157 --> dec_159
+    dec_159 -- "loop" --> loop_157
+    loop_157 --> loop_162
+    loop_162 -- "loop" --> loop_152
+    class n_start node-start
+    class fn_to_sequence_svg,fn_save_sequence_svg,fn_to_sequence_html,fn__build_import_actor_map,fn_merge_interactions node-subprocess
+    class dec_22,dec_52,dec_120,dec_124,dec_127,dec_132,dec_136,dec_154,dec_159 node-decision
+    class loop_28,loop_43,loop_49,loop_76,loop_119,loop_123,loop_131,loop_138,loop_152,loop_153,loop_157,loop_162 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

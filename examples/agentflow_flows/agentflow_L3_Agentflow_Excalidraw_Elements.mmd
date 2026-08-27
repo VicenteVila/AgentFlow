@@ -1,0 +1,40 @@
+%% Excalidraw · Elements
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    loop_192["For loop"]
+    dec_300{"label and label_id<br><i>Condición en línea 300:<br>label and label_id</i>"}
+    dec_14{"center is not None<br><i>Condición en línea 14:<br>center is not None</i>"}
+    fn__make_title[["Make Title"]]
+    fn__make_box_with_label[["Make Box With Label"]]
+    fn__make_legend[["Make Legend"]]
+    fn__make_arrow[["Make Arrow"]]
+    fn__bind_arrow[["Bind Arrow"]]
+    fn__make_text[["Make Text"]]
+    n_start --> fn__make_text
+    fn__make_text --> dec_14
+    n_start --> fn__make_title
+    n_start --> fn__make_box_with_label
+    n_start --> fn__make_legend
+    fn__make_legend --> loop_192
+    n_start --> fn__make_arrow
+    fn__make_arrow --> dec_300
+    dec_300 --> fn__make_text
+    n_start --> fn__bind_arrow
+    class n_start node-start
+    class fn__make_text,fn__make_title,fn__make_box_with_label,fn__make_legend,fn__make_arrow,fn__bind_arrow node-subprocess
+    class dec_14,dec_300 node-decision
+    class loop_192 node-loop
+    class n_end node-end

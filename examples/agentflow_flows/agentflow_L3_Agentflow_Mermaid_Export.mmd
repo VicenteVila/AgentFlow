@@ -1,0 +1,118 @@
+%% Mermaid · Export
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_22{"detail != 'high'<br><i>Condición en línea 22:<br>detail != 'high'</i>"}
+    dec_25{"layout == 'grid'<br><i>Condición en línea 25:<br>layout == 'grid'</i>"}
+    dec_192{"back_link<br><i>Condición en línea 192:<br>back_link</i>"}
+    dec_27{"layout == 'phased'<br><i>Condición en línea 27:<br>layout == 'phased'</i>"}
+    dec_29{"layout ==<br>'phased-horizontal'<br><i>Condición en línea 29:<br>layout == 'phased-horizontal'</i>"}
+    dec_31{"layout == 'radial'<br><i>Condición en línea 31:<br>layout == 'radial'</i>"}
+    dec_33{"layout == 'swimlane'<br><i>Condición en línea 33:<br>layout == 'swimlane'</i>"}
+    dec_36{"layout == 'vertical'<br><i>Condición en línea 36:<br>layout == 'vertical'</i>"}
+    dec_46{"links<br><i>Condición en línea 46:<br>links</i>"}
+    dec_48{"theme<br><i>Condición en línea 48:<br>theme</i>"}
+    dec_50{"init<br><i>Condición en línea 50:<br>init</i>"}
+    dec_52{"layout == 'vertical'<br><i>Condición en línea 52:<br>layout == 'vertical'</i>"}
+    dec_54{"no_phases or layout ==<br>'phased-horizontal'<br><i>Condición en línea 54:<br>no_phases or layout == 'phased-horizontal'</i>"}
+    loop_60["For each nt"]
+    dec_73{"layout in ('phased',<br>'phased-horizontal')<br><i>Condición en línea 73:<br>layout in ('phased', 'phased-horizontal')</i>"}
+    dec_75{"layout == 'swimlane'<br><i>Condición en línea 75:<br>layout == 'swimlane'</i>"}
+    dec_80{"boxes and (not no_phases)<br><i>Condición en línea 80:<br>boxes and (not no_phases)</i>"}
+    dec_84{"layout in ('phased',<br>'phased-horizontal')<br><i>Condición en línea 84:<br>layout in ('phased', 'phased-horizontal')</i>"}
+    loop_125["For each p in positioned"]
+    loop_85["For each p in positioned"]
+    loop_101["For each p in positioned"]
+    loop_131["For each edge"]
+    loop_134["For each fb in feedback_arrows"]
+    dec_138{"theme<br><i>Condición en línea 138:<br>theme</i>"}
+    loop_87["For each pb in phase_boxes"]
+    dec_90{"not members<br><i>Condición en línea 90:<br>not members</i>"}
+    loop_94["For each nid in members"]
+    dec_97{"node<br><i>Condición en línea 97:<br>node</i>"}
+    loop_106["For each box in box_list"]
+    dec_110{"not members<br><i>Condición en línea 110:<br>not members</i>"}
+    loop_114["For each nid in members"]
+    dec_116{"node<br><i>Condición en línea 116:<br>node</i>"}
+    loop_121["For each p in positioned"]
+    dec_122{"p.node.id not in boxed_ids<br><i>Condición en línea 122:<br>p.node.id not in boxed_ids</i>"}
+    loop_140["For each gnode in nodes"]
+    dec_141{"gnode.diff_status or<br>gnode.node_type ==<br><i>Condición en línea 141:<br>gnode.diff_status or gnode.node_type == NodeType.EVOLUTION</i>"}
+    dec_143{"gnode.node_type not in<br>_ME_CLASS<br><i>Condición en línea 143:<br>gnode.node_type not in _ME_CLASS</i>"}
+    loop_146["For loop"]
+    dec_150{"links<br><i>Condición en línea 150:<br>links</i>"}
+    loop_151["For loop"]
+    fn_to_mermaid[["To Mermaid"]]
+    fn_save_mermaid[["Save Mermaid"]]
+    fn_to_mermaid_html[["To Mermaid Html"]]
+    fn_save_mermaid_html[["Save Mermaid Html"]]
+    tool_to_mermaid_188["mmd = Render Mermaid<br><i>Serializa el flujo a texto<br>Mermaid (markdown)</i>"]
+    n_start --> fn_to_mermaid
+    fn_to_mermaid --> dec_22
+    dec_22 --> dec_25
+    dec_25 --> dec_27
+    dec_27 --> dec_29
+    dec_29 --> dec_31
+    dec_31 --> dec_33
+    dec_33 --> dec_36
+    dec_36 --> dec_46
+    dec_46 --> dec_48
+    dec_48 --> dec_50
+    dec_50 --> dec_52
+    dec_52 --> dec_54
+    dec_54 --> loop_60
+    loop_60 --> dec_73
+    dec_73 --> dec_75
+    dec_75 --> dec_80
+    dec_80 --> dec_84
+    dec_84 --> loop_85
+    loop_85 --> loop_87
+    loop_87 --> dec_90
+    dec_90 --> loop_94
+    loop_94 --> dec_97
+    dec_97 -- "loop" --> loop_94
+    loop_94 -- "loop" --> loop_87
+    dec_84 --> loop_101
+    loop_101 --> loop_106
+    loop_106 --> dec_110
+    dec_110 --> loop_114
+    loop_114 --> dec_116
+    dec_116 -- "loop" --> loop_114
+    loop_114 -- "loop" --> loop_106
+    loop_106 --> loop_121
+    loop_121 --> dec_122
+    dec_122 -- "loop" --> loop_121
+    dec_80 -- "NO" --> loop_125
+    loop_125 --> loop_131
+    loop_131 --> loop_134
+    loop_134 --> dec_138
+    dec_138 --> loop_140
+    loop_140 --> dec_141
+    dec_141 --> dec_143
+    dec_143 -- "loop" --> loop_140
+    loop_140 --> loop_146
+    loop_146 --> dec_150
+    dec_150 --> loop_151
+    n_start --> fn_save_mermaid
+    n_start --> fn_to_mermaid_html
+    fn_to_mermaid_html --> tool_to_mermaid_188
+    tool_to_mermaid_188 --> dec_192
+    n_start --> fn_save_mermaid_html
+    class n_start node-start
+    class fn_to_mermaid,fn_save_mermaid,fn_to_mermaid_html,fn_save_mermaid_html node-subprocess
+    class dec_22,dec_25,dec_27,dec_29,dec_31,dec_33,dec_36,dec_46,dec_48,dec_50,dec_52,dec_54,dec_73,dec_75,dec_80,dec_84,dec_90,dec_97,dec_110,dec_116,dec_122,dec_138,dec_141,dec_143,dec_150,dec_192 node-decision
+    class loop_60,loop_85,loop_87,loop_94,loop_101,loop_106,loop_114,loop_121,loop_125,loop_131,loop_134,loop_140,loop_146,loop_151 node-loop
+    class tool_to_mermaid_188 node-tool
+    class n_end node-end

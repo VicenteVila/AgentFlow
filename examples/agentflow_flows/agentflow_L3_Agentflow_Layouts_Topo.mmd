@@ -1,0 +1,127 @@
+%% Layouts · Topo
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_33{"any((n.phase for n in<br>graph.nodes))<br><i>Condición en línea 33:<br>any((n.phase for n in graph.nodes))</i>"}
+    dec_105{"node.node_type ==<br>NodeType.START<br><i>Condición en línea 105:<br>node.node_type == NodeType.START</i>"}
+    loop_34["For each node in nodes"]
+    dec_45{"not cyc<br><i>Condición en línea 45:<br>not cyc</i>"}
+    dec_107{"node.node_type ==<br>NodeType.END<br><i>Condición en línea 107:<br>node.node_type == NodeType.END</i>"}
+    loop_47["For each node in nodes"]
+    loop_10["For each node_id in order"]
+    dec_12{"node is None<br><i>Condición en línea 12:<br>node is None</i>"}
+    dec_15{"node.node_type in<br>(NodeType.TOOL,<br><i>Condición en línea 15:<br>node.node_type in (NodeType.TOOL, NodeType.SUBPROCESS)</i>"}
+    dec_17{"node.node_type ==<br>NodeType.EVOLUTION<br><i>Condición en línea 17:<br>node.node_type == NodeType.EVOLUTION</i>"}
+    loop_53["For each node in nodes"]
+    dec_54{"node.id in cyc<br><i>Condición en línea 54:<br>node.id in cyc</i>"}
+    dec_56{"node.id in ancestors<br><i>Condición en línea 56:<br>node.id in ancestors</i>"}
+    loop_66["For each e in edges"]
+    dec_67{"e.source in adj and e.target<br>in adj<br><i>Condición en línea 67:<br>e.source in adj and e.target in adj</i>"}
+    loop_71["For loop"]
+    loop_75["Loop"]
+    dec_77{"cur == start<br><i>Condición en línea 77:<br>cur == start</i>"}
+    dec_80{"cur in seen<br><i>Condición en línea 80:<br>cur in seen</i>"}
+    loop_89["For each e in edges"]
+    dec_90{"e.source in radj and<br>e.target in radj<br><i>Condición en línea 90:<br>e.source in radj and e.target in radj</i>"}
+    loop_95["while stack"]
+    loop_97["For each prev"]
+    dec_98{"prev not in found and prev<br>not in targets<br><i>Condición en línea 98:<br>prev not in found and prev not in targets</i>"}
+    loop_119["For each nid in node_ids"]
+    dec_121{"node is None<br><i>Condición en línea 121:<br>node is None</i>"}
+    dec_123{"node.node_type in<br>(NodeType.TOOL,<br><i>Condición en línea 123:<br>node.node_type in (NodeType.TOOL, NodeType.SUBPROCESS)</i>"}
+    dec_125{"node.node_type ==<br>NodeType.EVOLUTION<br><i>Condición en línea 125:<br>node.node_type == NodeType.EVOLUTION</i>"}
+    loop_143["For each e in edges"]
+    dec_144{"e.target in in_degree<br><i>Condición en línea 144:<br>e.target in in_degree</i>"}
+    dec_146{"e.source in adj<br><i>Condición en línea 146:<br>e.source in adj</i>"}
+    loop_152["while queue"]
+    loop_155["For each neighbor"]
+    dec_157{"in_degree(neighbor) == 0<br><i>Condición en línea 157:<br>in_degree(neighbor) == 0</i>"}
+    loop_160["For each n in nodes"]
+    dec_161{"n.id not in order<br><i>Condición en línea 161:<br>n.id not in order</i>"}
+    fn__assign_rows[["Assign Rows"]]
+    fn__phase_groups[["Phase Groups"]]
+    fn__structural_phase_groups[["Structural Phase Groups"]]
+    fn__ancestors_of[["Ancestors Of"]]
+    fn__default_phase[["Default Phase"]]
+    fn__classify_phase_nodes[["Classify Phase Nodes"]]
+    fn__topo_order_filtered[["Topo Order Filtered"]]
+    fn__nodes_in_cycles[["cyc = Nodes In Cycles"]]
+    fn__topological_sort[["order = Topological Sort"]]
+    n_start --> fn__assign_rows
+    fn__assign_rows --> fn__topological_sort
+    fn__topological_sort --> loop_10
+    loop_10 --> dec_12
+    dec_12 --> dec_15
+    dec_15 --> dec_17
+    dec_17 -- "loop" --> loop_10
+    n_start --> fn__phase_groups
+    fn__phase_groups --> dec_33
+    dec_33 --> loop_34
+    n_start --> fn__structural_phase_groups
+    fn__structural_phase_groups --> fn__nodes_in_cycles
+    fn__nodes_in_cycles --> dec_45
+    dec_45 --> loop_47
+    loop_47 --> loop_53
+    loop_53 --> dec_54
+    dec_54 --> dec_56
+    dec_56 -- "loop" --> loop_53
+    n_start --> fn__nodes_in_cycles
+    fn__nodes_in_cycles --> loop_66
+    loop_66 --> dec_67
+    dec_67 -- "loop" --> loop_66
+    loop_66 --> loop_71
+    loop_71 --> loop_75
+    loop_75 --> dec_77
+    dec_77 --> dec_80
+    dec_80 -- "loop" --> loop_75
+    loop_75 -- "loop" --> loop_71
+    n_start --> fn__ancestors_of
+    fn__ancestors_of --> loop_89
+    loop_89 --> dec_90
+    dec_90 -- "loop" --> loop_89
+    loop_89 --> loop_95
+    loop_95 --> loop_97
+    loop_97 --> dec_98
+    dec_98 -- "loop" --> loop_97
+    loop_97 -- "loop" --> loop_95
+    n_start --> fn__default_phase
+    fn__default_phase --> dec_105
+    dec_105 --> dec_107
+    n_start --> fn__classify_phase_nodes
+    fn__classify_phase_nodes --> loop_119
+    loop_119 --> dec_121
+    dec_121 --> dec_123
+    dec_123 --> dec_125
+    dec_125 -- "loop" --> loop_119
+    n_start --> fn__topo_order_filtered
+    fn__topo_order_filtered --> fn__topological_sort
+    n_start --> fn__topological_sort
+    fn__topological_sort --> loop_143
+    loop_143 --> dec_144
+    dec_144 --> dec_146
+    dec_146 -- "loop" --> loop_143
+    loop_143 --> loop_152
+    loop_152 --> loop_155
+    loop_155 --> dec_157
+    dec_157 -- "loop" --> loop_155
+    loop_155 -- "loop" --> loop_152
+    loop_152 --> loop_160
+    loop_160 --> dec_161
+    dec_161 -- "loop" --> loop_160
+    class n_start node-start
+    class fn__assign_rows,fn__topological_sort,fn__phase_groups,fn__structural_phase_groups,fn__nodes_in_cycles,fn__ancestors_of,fn__default_phase,fn__classify_phase_nodes,fn__topo_order_filtered node-subprocess
+    class loop_10,loop_34,loop_47,loop_53,loop_66,loop_71,loop_75,loop_89,loop_95,loop_97,loop_119,loop_143,loop_152,loop_155,loop_160 node-loop
+    class dec_12,dec_15,dec_17,dec_33,dec_45,dec_54,dec_56,dec_67,dec_77,dec_80,dec_90,dec_98,dec_105,dec_107,dec_121,dec_123,dec_125,dec_144,dec_146,dec_157,dec_161 node-decision
+    class n_end node-end

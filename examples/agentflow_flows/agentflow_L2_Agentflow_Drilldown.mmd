@@ -1,0 +1,212 @@
+%% Drilldown
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_98{"parts and<br>parts(0).startswith('.')<br><i>Condición en línea 98:<br>parts and parts(0).startswith('.')</i>"}
+    dec_155{"recursive<br><i>Condición en línea 155:<br>recursive</i>"}
+    dec_173{"len(immediate) >= 2<br><i>Condición en línea 173:<br>len(immediate) >= 2</i>"}
+    loop_194["For loop"]
+    dec_245{"level > _MAX_DEPTH<br><i>Condición en línea 245:<br>level > _MAX_DEPTH</i>"}
+    loop_405["For loop"]
+    loop_437["For each e in index"]
+    dec_512{"not repo_root.is_dir()<br><i>Condición en línea 512:<br>not repo_root.is_dir()</i>"}
+    dec_65{"resolved in self.graph_cache<br><i>Condición en línea 65:<br>resolved in self.graph_cache</i>"}
+    dec_100{"parts and parts(-1) ==<br>'__init__'<br><i>Condición en línea 100:<br>parts and parts(-1) == '__init__'</i>"}
+    dec_176{"any((_flow_files_in(ctx, d,<br>recursive=True) for d in subdirs))<br><i>Condición en línea 176:<br>any((_flow_files_in(ctx, d, recursive=True) for d in subdirs</i>"}
+    dec_201{"nid_key<br><i>Condición en línea 201:<br>nid_key</i>"}
+    dec_515{"out_dir is None<br><i>Condición en línea 515:<br>out_dir is None</i>"}
+    dec_521{"assets_src.is_dir() and (not<br>(out_dir / 'assets').is_dir())<br><i>Condición en línea 521:<br>assets_src.is_dir() and (not (out_dir / 'assets').is_dir())</i>"}
+    dec_71{"g is not None and<br>g.node_count <= 2<br><i>Condición en línea 71:<br>g is not None and g.node_count <= 2</i>"}
+    fn__write_index_538["Write Index<br><i>Genera index.html con la lista<br>jerárquica de todas las vistas</i>"]
+    loop_108["For each p"]
+    dec_109{"not p.is_dir() or p.name in<br>_SKIP_DIRS<br><i>Condición en línea 109:<br>not p.is_dir() or p.name in _SKIP_DIRS</i>"}
+    dec_111{"not ctx.include_hidden and<br>p.name.startswith('.')<br><i>Condición en línea 111:<br>not ctx.include_hidden and p.name.startswith('.')</i>"}
+    dec_115{"cur is None or (not<br>p.name.startswith('.') and<br><i>Condición en línea 115:<br>cur is None or (not p.name.startswith('.') and cur.name.star</i>"}
+    loop_129["while stack"]
+    dec_132{"real in visited<br><i>Condición en línea 132:<br>real in visited</i>"}
+    loop_159["For each p"]
+    dec_160{"p.name == '__init__.py' or<br>p.name.startswith('.')<br><i>Condición en línea 160:<br>p.name == '__init__.py' or p.name.startswith('.')</i>"}
+    dec_163{"resolved in seen<br><i>Condición en línea 163:<br>resolved in seen</i>"}
+    dec_166{"ctx.graph_of(p) is not None<br><i>Condición en línea 166:<br>ctx.graph_of(p) is not None</i>"}
+    loop_255["For each d"]
+    dec_256{"not _flow_files_in(ctx, d,<br>recursive=True)<br><i>Condición en línea 256:<br>not _flow_files_in(ctx, d, recursive=True)</i>"}
+    dec_258{"_warrants_overview(ctx, d)<br><i>Condición en línea 258:<br>_warrants_overview(ctx, d)</i>"}
+    loop_261["For each f"]
+    dec_263{"r in seen_files<br><i>Condición en línea 263:<br>r in seen_files</i>"}
+    loop_268["For each f"]
+    dec_270{"r in seen_files<br><i>Condición en línea 270:<br>r in seen_files</i>"}
+    loop_279["For loop"]
+    loop_286["For loop"]
+    dec_291{"not segments<br><i>Condición en línea 291:<br>not segments</i>"}
+    dec_294{"module in<br>profile.function_splits or module<br><i>Condición en línea 294:<br>module in profile.function_splits or module in profile.class</i>"}
+    loop_297["For loop"]
+    loop_307["For each cls"]
+    dec_320{"module in<br>profile.function_splits or module<br><i>Condición en línea 320:<br>module in profile.function_splits or module in profile.class</i>"}
+    dec_323{"father is not None<br><i>Condición en línea 323:<br>father is not None</i>"}
+    loop_326["For each n in nodes"]
+    dec_327{"not n.id.startswith('fn_')<br>or n.id in matched<br><i>Condición en línea 327:<br>not n.id.startswith('fn_') or n.id in matched</i>"}
+    loop_330["For loop"]
+    dec_331{"any((f'fn_(func)' == n.id or<br>n.id.endswith(f'_(func)') for func<br><i>Condición en línea 331:<br>any((f'fn_(func)' == n.id or n.id.endswith(f'_(func)') for f</i>"}
+    dec_347{"links<br><i>Condición en línea 347:<br>links</i>"}
+    dec_360{"g is None<br><i>Condición en línea 360:<br>g is None</i>"}
+    fn__build_overview_367["overview = Build Overview<br><i>Arma el overview con nodos por<br>actor (módulo/directorio)</i>"]
+    dec_368{"overview is None<br><i>Condición en línea 368:<br>overview is None</i>"}
+    dec_373{"segments<br><i>Condición en línea 373:<br>segments</i>"}
+    loop_409["For loop"]
+    dec_411{"g is None<br><i>Condición en línea 411:<br>g is None</i>"}
+    dec_416{"not actors<br><i>Condición en línea 416:<br>not actors</i>"}
+    loop_421["For loop"]
+    loop_441["For each level"]
+    loop_445["For each e"]
+    fn__title_segments[["Title Segments"]]
+    fn__level_name[["Level Name"]]
+    fn__display_title[["Display Title"]]
+    fn__module_name[["Module Name"]]
+    fn__rel_segments[["Rel Segments"]]
+    fn__collect_dirs[["Collect Dirs"]]
+    fn__iter_py_recurse[["Iter Py Recurse"]]
+    fn__flow_files_in[["Flow Files In"]]
+    fn__warrants_overview[["Warrants Overview"]]
+    fn__split_overview_father[["Split Overview Father"]]
+    fn__parent_href[["Parent Href"]]
+    fn__save_artifact[["Save Artifact"]]
+    fn__handle_dir[["Handle Dir"]]
+    fn__handle_dir_shallow[["Handle Dir Shallow"]]
+    fn__build_overview[["Build Overview"]]
+    fn__safe_mod[["Safe Mod"]]
+    fn__write_index[["Write Index"]]
+    fn_run_drilldown[["Run Drilldown"]]
+    fn__ctx_graph_of[["Graph Of"]]
+    tool_get_profile_248["profile = Load Profile<br><i>Carga perfil de dominio<br>(herramientas/etiquetas)</i>"]
+    tool_parse_file_68["g = Parse File<br><i>Parsear fichero completo<br>(agent flow)</i>"]
+    tool_parse_functions_299["sub = Parse Functions<br><i>Sub-flujo de un subconjunto<br>de funciones escogidas</i>"]
+    tool_parse_class_methods_309["sub = Parse Class Methods<br><i>Sub-flujo de los métodos<br>de una clase</i>"]
+    n_start --> fn__title_segments
+    n_start --> fn__level_name
+    n_start --> fn__display_title
+    n_start --> fn__module_name
+    n_start --> fn__rel_segments
+    fn__rel_segments --> dec_98
+    dec_98 --> dec_100
+    n_start --> fn__collect_dirs
+    fn__collect_dirs --> loop_108
+    loop_108 --> dec_109
+    dec_109 --> dec_111
+    dec_111 --> dec_115
+    dec_115 -- "loop" --> loop_108
+    n_start --> fn__iter_py_recurse
+    fn__iter_py_recurse --> loop_129
+    loop_129 --> dec_132
+    dec_132 -- "loop" --> loop_129
+    n_start --> fn__flow_files_in
+    fn__flow_files_in --> dec_155
+    dec_155 --> loop_159
+    loop_159 --> dec_160
+    dec_160 --> dec_163
+    dec_163 --> dec_166
+    dec_166 -- "loop" --> loop_159
+    n_start --> fn__warrants_overview
+    fn__warrants_overview --> dec_173
+    dec_173 --> dec_176
+    n_start --> fn__split_overview_father
+    fn__split_overview_father --> loop_194
+    loop_194 --> dec_201
+    n_start --> fn__parent_href
+    n_start --> fn__save_artifact
+    n_start --> fn__handle_dir
+    fn__handle_dir --> dec_245
+    dec_245 --> tool_get_profile_248
+    tool_get_profile_248 --> loop_255
+    loop_255 --> dec_256
+    dec_256 --> dec_258
+    dec_258 -- "NO" --> loop_261
+    loop_261 --> dec_263
+    dec_263 -- "loop" --> loop_261
+    loop_261 -- "loop" --> loop_255
+    loop_255 --> loop_268
+    loop_268 --> dec_270
+    dec_270 -- "loop" --> loop_268
+    loop_268 --> loop_279
+    loop_279 --> loop_286
+    loop_286 --> dec_291
+    dec_291 --> dec_294
+    dec_294 --> loop_297
+    loop_297 --> tool_parse_functions_299
+    tool_parse_functions_299 -- "loop" --> loop_297
+    loop_297 --> loop_307
+    loop_307 --> tool_parse_class_methods_309
+    tool_parse_class_methods_309 -- "loop" --> loop_307
+    loop_307 --> dec_320
+    dec_320 --> dec_323
+    dec_323 --> loop_326
+    loop_326 --> dec_327
+    dec_327 --> loop_330
+    loop_330 --> dec_331
+    dec_331 -- "loop" --> loop_330
+    loop_330 -- "loop" --> loop_326
+    loop_326 --> dec_347
+    dec_320 -- "NO" --> dec_360
+    dec_360 -- "loop" --> loop_286
+    loop_286 --> fn__build_overview_367
+    fn__build_overview_367 --> dec_368
+    dec_368 --> dec_373
+    n_start --> fn__handle_dir_shallow
+    n_start --> fn__build_overview
+    fn__build_overview --> loop_405
+    loop_405 --> loop_409
+    loop_409 --> dec_411
+    dec_411 -- "loop" --> loop_409
+    loop_409 --> dec_416
+    dec_416 --> loop_421
+    n_start --> fn__safe_mod
+    n_start --> fn__write_index
+    fn__write_index --> loop_437
+    loop_437 --> loop_441
+    loop_441 --> loop_445
+    loop_445 -- "loop" --> loop_441
+    n_start --> fn_run_drilldown
+    fn_run_drilldown --> dec_512
+    dec_512 --> dec_515
+    dec_515 --> dec_521
+    dec_521 --> fn__write_index_538
+    n_start --> fn__ctx_graph_of
+    fn__ctx_graph_of --> dec_65
+    dec_65 --> tool_parse_file_68
+    tool_parse_file_68 --> dec_71
+    class n_start node-start
+    class fn__title_segments,fn__level_name,fn__display_title,fn__module_name,fn__rel_segments,fn__collect_dirs,fn__iter_py_recurse,fn__flow_files_in,fn__warrants_overview,fn__split_overview_father,fn__parent_href,fn__save_artifact,fn__handle_dir,fn__handle_dir_shallow,fn__build_overview,fn__safe_mod,fn__write_index,fn_run_drilldown,fn__ctx_graph_of node-subprocess
+    class dec_98,dec_100,dec_109,dec_111,dec_115,dec_132,dec_155,dec_160,dec_163,dec_166,dec_173,dec_176,dec_201,dec_245,dec_256,dec_258,dec_263,dec_270,dec_291,dec_294,dec_320,dec_323,dec_327,dec_331,dec_347,dec_360,dec_368,dec_373,dec_411,dec_416,dec_512,dec_515,dec_521,dec_65,dec_71 node-decision
+    class loop_108,loop_129,loop_159,loop_194,loop_255,loop_261,loop_268,loop_279,loop_286,loop_297,loop_307,loop_326,loop_330,loop_405,loop_409,loop_421,loop_437,loop_441,loop_445 node-loop
+    class tool_get_profile_248,tool_parse_functions_299,tool_parse_class_methods_309,tool_parse_file_68 node-tool
+    class fn__build_overview_367,fn__write_index_538 node-process
+    class n_end node-end
+    click fn__title_segments href "agentflow_L3_Agentflow_Drilldown_Walk.html" "Abrir detalle"
+    click fn__level_name href "agentflow_L3_Agentflow_Drilldown_Walk.html" "Abrir detalle"
+    click fn__display_title href "agentflow_L3_Agentflow_Drilldown_Walk.html" "Abrir detalle"
+    click fn__module_name href "agentflow_L3_Agentflow_Drilldown_Walk.html" "Abrir detalle"
+    click fn__rel_segments href "agentflow_L3_Agentflow_Drilldown_Walk.html" "Abrir detalle"
+    click fn__collect_dirs href "agentflow_L3_Agentflow_Drilldown_Walk.html" "Abrir detalle"
+    click fn__iter_py_recurse href "agentflow_L3_Agentflow_Drilldown_Walk.html" "Abrir detalle"
+    click fn__flow_files_in href "agentflow_L3_Agentflow_Drilldown_Walk.html" "Abrir detalle"
+    click fn__warrants_overview href "agentflow_L3_Agentflow_Drilldown_Walk.html" "Abrir detalle"
+    click fn__split_overview_father href "agentflow_L3_Agentflow_Drilldown_Split.html" "Abrir detalle"
+    click fn__parent_href href "agentflow_L3_Agentflow_Drilldown_Split.html" "Abrir detalle"
+    click fn__save_artifact href "agentflow_L3_Agentflow_Drilldown_Split.html" "Abrir detalle"
+    click fn__handle_dir href "agentflow_L3_Agentflow_Drilldown_Emit.html" "Abrir detalle"
+    click fn__handle_dir_shallow href "agentflow_L3_Agentflow_Drilldown_Emit.html" "Abrir detalle"
+    click fn__build_overview href "agentflow_L3_Agentflow_Drilldown_Emit.html" "Abrir detalle"
+    click fn__safe_mod href "agentflow_L3_Agentflow_Drilldown_Emit.html" "Abrir detalle"
+    click fn__write_index href "agentflow_L3_Agentflow_Drilldown_Emit.html" "Abrir detalle"
+    click fn_run_drilldown href "agentflow_L3_Agentflow_Drilldown_Emit.html" "Abrir detalle"

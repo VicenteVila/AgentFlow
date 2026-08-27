@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dot</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="agentflow_L1_Agentflow.html">← Volver</a>
+  <h1>Dot</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Dot
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_57{"node.detail<br><i>Condición en línea 57:<br>node.detail</i>"}
+    dec_87{"label<br><i>Condición en línea 87:<br>label</i>"}
+    dec_113{"detail != 'high'<br><i>Condición en línea 113:<br>detail != 'high'</i>"}
+    dec_62{"node.diff_status in<br>_DOT_DIFF_FILL<br><i>Condición en línea 62:<br>node.diff_status in _DOT_DIFF_FILL</i>"}
+    dec_90{"diff_status in ('added',<br>'removed', 'changed')<br><i>Condición en línea 90:<br>diff_status in ('added', 'removed', 'changed')</i>"}
+    loop_131["For each node in nodes"]
+    dec_67{"pal is not None<br><i>Condición en línea 67:<br>pal is not None</i>"}
+    dec_93{"diff_status == 'removed'<br><i>Condición en línea 93:<br>diff_status == 'removed'</i>"}
+    dec_95{"label in<br>EDGE_SEMANTIC_COLORS<br><i>Condición en línea 95:<br>label in EDGE_SEMANTIC_COLORS</i>"}
+    loop_136["For each edge in edges"]
+    dec_70{"isinstance(colors, dict)<br><i>Condición en línea 70:<br>isinstance(colors, dict)</i>"}
+    dec_77{"node.node_type ==<br>NodeType.EVOLUTION<br><i>Condición en línea 77:<br>node.node_type == NodeType.EVOLUTION</i>"}
+    dec_98{"label == 'loop'<br><i>Condición en línea 98:<br>label == 'loop'</i>"}
+    dec_100{"style == 'dashed'<br><i>Condición en línea 100:<br>style == 'dashed'</i>"}
+    dec_80{"shape == 'box'<br><i>Condición en línea 80:<br>shape == 'box'</i>"}
+    fn__dot_escape[["Dot Escape"]]
+    fn__node_attrs[["Node Attrs"]]
+    fn__edge_attrs[["Edge Attrs"]]
+    fn_to_dot[["To Dot"]]
+    fn_save_dot[["Save Dot"]]
+    n_start --> fn__dot_escape
+    n_start --> fn__node_attrs
+    fn__node_attrs --> dec_57
+    dec_57 --> dec_62
+    dec_62 --> dec_67
+    dec_67 -- "YES" --> dec_70
+    dec_67 --> dec_77
+    dec_77 --> dec_80
+    n_start --> fn__edge_attrs
+    fn__edge_attrs --> dec_87
+    dec_87 --> dec_90
+    dec_90 --> dec_93
+    dec_90 --> dec_95
+    dec_95 --> dec_98
+    dec_95 --> dec_100
+    n_start --> fn_to_dot
+    fn_to_dot --> dec_113
+    dec_113 --> loop_131
+    loop_131 --> loop_136
+    n_start --> fn_save_dot
+    class n_start node-start
+    class fn__dot_escape,fn__node_attrs,fn__edge_attrs,fn_to_dot,fn_save_dot node-subprocess
+    class dec_57,dec_62,dec_67,dec_70,dec_77,dec_80,dec_87,dec_90,dec_93,dec_95,dec_98,dec_100,dec_113 node-decision
+    class loop_131,loop_136 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

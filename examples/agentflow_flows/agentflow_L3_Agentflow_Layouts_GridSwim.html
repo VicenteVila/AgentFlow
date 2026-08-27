@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layouts · GridSwim</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="agentflow_L2_Agentflow_Layouts.html">← Volver</a>
+  <h1>Layouts · GridSwim</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Layouts · GridSwim
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_12{"NOT nodes?<br><i>Niega nodes<br>para lógica invertida</i>"}
+    loop_17["For each node in nodes"]
+    loop_31["For each lane in ordered_lanes"]
+    loop_45["For each nid in topo"]
+    dec_47{"node is None<br><i>Condición en línea 47:<br>node is None</i>"}
+    dec_50{"lane not in lane_x<br><i>Condición en línea 50:<br>lane not in lane_x</i>"}
+    loop_64["For each lane in ordered_lanes"]
+    dec_66{"not nodes_in_lane<br><i>Condición en línea 66:<br>not nodes_in_lane</i>"}
+    dec_97{"'planner' in combined<br><i>Condición en línea 97:<br>'planner' in combined</i>"}
+    dec_99{"'developer' in combined or<br>'coder' in combined<br><i>Condición en línea 99:<br>'developer' in combined or 'coder' in combined</i>"}
+    dec_101{"'debugger' in combined or<br>'repair' in combined<br><i>Condición en línea 101:<br>'debugger' in combined or 'repair' in combined</i>"}
+    dec_103{"'designer' in combined or<br>'ui_' in combined<br><i>Condición en línea 103:<br>'designer' in combined or 'ui_' in combined</i>"}
+    dec_105{"node.node_type ==<br>NodeType.TOOL<br><i>Condición en línea 105:<br>node.node_type == NodeType.TOOL</i>"}
+    dec_107{"node.node_type ==<br>NodeType.EVOLUTION<br><i>Condición en línea 107:<br>node.node_type == NodeType.EVOLUTION</i>"}
+    dec_109{"node.node_type ==<br>NodeType.SUBPROCESS<br><i>Condición en línea 109:<br>node.node_type == NodeType.SUBPROCESS</i>"}
+    dec_111{"node.node_type ==<br>NodeType.START<br><i>Condición en línea 111:<br>node.node_type == NodeType.START</i>"}
+    dec_113{"node.node_type ==<br>NodeType.END<br><i>Condición en línea 113:<br>node.node_type == NodeType.END</i>"}
+    fn_grid_layout[["Grid Layout"]]
+    fn_swimlane_layout[["Swimlane Layout"]]
+    fn__assign_lane[["lane = Assign Lane"]]
+    n_start --> fn_grid_layout
+    n_start --> fn_swimlane_layout
+    fn_swimlane_layout --> dec_12
+    dec_12 --> loop_17
+    loop_17 --> fn__assign_lane
+    fn__assign_lane -- "loop" --> loop_17
+    loop_17 --> loop_31
+    loop_31 --> loop_45
+    loop_45 --> dec_47
+    dec_47 --> fn__assign_lane
+    fn__assign_lane --> dec_50
+    dec_50 -- "loop" --> loop_45
+    loop_45 --> loop_64
+    loop_64 --> dec_66
+    dec_66 -- "loop" --> loop_64
+    n_start --> fn__assign_lane
+    fn__assign_lane --> dec_97
+    dec_97 --> dec_99
+    dec_99 --> dec_101
+    dec_101 --> dec_103
+    dec_103 --> dec_105
+    dec_105 --> dec_107
+    dec_107 --> dec_109
+    dec_109 --> dec_111
+    dec_111 --> dec_113
+    class n_start node-start
+    class fn_grid_layout,fn_swimlane_layout,fn__assign_lane node-subprocess
+    class dec_12,dec_47,dec_50,dec_66,dec_97,dec_99,dec_101,dec_103,dec_105,dec_107,dec_109,dec_111,dec_113 node-decision
+    class loop_17,loop_31,loop_45,loop_64 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

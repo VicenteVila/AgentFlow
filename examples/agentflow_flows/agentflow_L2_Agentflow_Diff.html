@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diff</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="agentflow_L1_Agentflow.html">← Volver</a>
+  <h1>Diff</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Diff
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    loop_35["For each nid in all_ids"]
+    dec_36{"nid in old_by_id and nid not<br>in new_by_id<br><i>Condición en línea 36:<br>nid in old_by_id and nid not in new_by_id</i>"}
+    dec_43{"nid in new_by_id and nid not<br>in old_by_id<br><i>Condición en línea 43:<br>nid in new_by_id and nid not in old_by_id</i>"}
+    loop_68["For each key"]
+    dec_69{"key in old_edges and key not<br>in new_edges<br><i>Condición en línea 69:<br>key in old_edges and key not in new_edges</i>"}
+    dec_73{"key in new_edges and key not<br>in old_edges<br><i>Condición en línea 73:<br>key in new_edges and key not in old_edges</i>"}
+    fn__node_changed[["Node Changed"]]
+    fn_diff_graphs[["Diff Graphs"]]
+    fn_diff_files[["Diff Files"]]
+    tool_parse_file_91["old = Parse File<br><i>Parsear fichero completo<br>(agent flow)</i>"]
+    tool_parse_file_92["new = Parse File<br><i>Parsear fichero completo<br>(agent flow)</i>"]
+    fn_edge_key_61[["Edge Key"]]
+    n_start --> fn__node_changed
+    n_start --> fn_diff_graphs
+    fn_diff_graphs --> loop_35
+    loop_35 --> dec_36
+    dec_36 --> dec_43
+    dec_43 -- "loop" --> loop_35
+    loop_35 --> fn_edge_key_61
+    fn_edge_key_61 --> loop_68
+    loop_68 --> dec_69
+    dec_69 --> dec_73
+    dec_73 -- "loop" --> loop_68
+    n_start --> fn_diff_files
+    fn_diff_files --> tool_parse_file_91
+    tool_parse_file_91 --> tool_parse_file_92
+    class n_start node-start
+    class fn__node_changed,fn_diff_graphs,fn_edge_key_61,fn_diff_files node-subprocess
+    class loop_35,loop_68 node-loop
+    class dec_36,dec_43,dec_69,dec_73 node-decision
+    class tool_parse_file_91,tool_parse_file_92 node-tool
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

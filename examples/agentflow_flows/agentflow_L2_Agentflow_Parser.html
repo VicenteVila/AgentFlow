@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parser</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="agentflow_L1_Agentflow.html">← Volver</a>
+  <h1>Parser</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Parser
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_28{"isinstance(expr, _ast.Await)<br><i>Condición en línea 28:<br>isinstance(expr, _ast.Await)</i>"}
+    dec_178{"cls is None<br><i>Condición en línea 178:<br>cls is None</i>"}
+    dec_234{"profile and hasattr(profile,<br>'agent_class_names')<br><i>Condición en línea 234:<br>profile and hasattr(profile, 'agent_class_names')</i>"}
+    dec_329{"depth > 10<br><i>Condición en línea 329:<br>depth > 10</i>"}
+    fn__parse_block_362["last_in_body = Parse Block<br><i>Recorre el cuerpo de una función<br>registrando nodos/aristas</i>"]
+    fn__detect_tool_dispatch_370["tool_from_dispatch = Detect Tool Dispatch<br><i>Reconoce despachos de herramientas<br>(tool.dispatch / dispatch_attr)</i>"]
+    dec_411{"isinstance(test,<br>ast.Compare) and ast.Eq) and == 1)<br><i>Condición en línea 411:<br>isinstance(test, ast.Compare) and isinstance(test.ops(0), as</i>"}
+    dec_433{"isinstance(target, ast.Name)<br><i>Condición en línea 433:<br>isinstance(target, ast.Name)</i>"}
+    fn__parse_block_489["last = Parse Block<br><i>Recorre el cuerpo de una función<br>registrando nodos/aristas</i>"]
+    dec_530{"method.body and<br>isinstance(method.body(0), and and<br><i>Condición en línea 530:<br>method.body and isinstance(method.body(0), ast.Expr) and isi</i>"}
+    dec_590{"isinstance(func,<br>ast.Attribute)<br><i>Condición en línea 590:<br>isinstance(func, ast.Attribute)</i>"}
+    dec_693{"isinstance(test,<br>ast.UnaryOp) and ast.Not) and<br><i>Condición en línea 693:<br>isinstance(test, ast.UnaryOp) and isinstance(test.op, ast.No</i>"}
+    dec_731{"isinstance(test,<br>ast.Constant) and test.value is<br><i>Condición en línea 731:<br>isinstance(test, ast.Constant) and test.value is True</i>"}
+    dec_69{"agent_cls<br><i>Condición en línea 69:<br>agent_cls</i>"}
+    dec_187{"methods is not None<br><i>Condición en línea 187:<br>methods is not None</i>"}
+    dec_363{"last_in_body != loop_id<br><i>Condición en línea 363:<br>last_in_body != loop_id</i>"}
+    dec_379{"tool_from_dispatch<br><i>Condición en línea 379:<br>tool_from_dispatch</i>"}
+    dec_417{"not isinstance(left,<br>ast.Attribute) or left.attr !=<br><i>Condición en línea 417:<br>not isinstance(left, ast.Attribute) or left.attr != prof.dis</i>"}
+    dec_435{"isinstance(stmt.iter,<br>ast.Name)<br><i>Condición en línea 435:<br>isinstance(stmt.iter, ast.Name)</i>"}
+    fn__parse_block_447["last_in_body = Parse Block<br><i>Recorre el cuerpo de una función<br>registrando nodos/aristas</i>"]
+    dec_594{"method_name in<br>prof.tool_names<br><i>Condición en línea 594:<br>method_name in prof.tool_names</i>"}
+    dec_704{"isinstance(test,<br>ast.Compare)<br><i>Condición en línea 704:<br>isinstance(test, ast.Compare)</i>"}
+    dec_734{"isinstance(test, ast.Name)<br><i>Condición en línea 734:<br>isinstance(test, ast.Name)</i>"}
+    fn__parse_block_391["last_yes = Parse Block<br><i>Recorre el cuerpo de una función<br>registrando nodos/aristas</i>"]
+    dec_421{"not isinstance(comparator,<br>ast.Constant) or not str)<br><i>Condición en línea 421:<br>not isinstance(comparator, ast.Constant) or not isinstance(c</i>"}
+    dec_437{"isinstance(stmt.iter,<br>ast.Attribute)<br><i>Condición en línea 437:<br>isinstance(stmt.iter, ast.Attribute)</i>"}
+    dec_448{"last_in_body != loop_id<br><i>Condición en línea 448:<br>last_in_body != loop_id</i>"}
+    dec_604{"method_name in<br>prof.evolution_methods<br><i>Condición en línea 604:<br>method_name in prof.evolution_methods</i>"}
+    dec_706{"isinstance(left,<br>ast.Attribute) and left.attr ==<br><i>Condición en línea 706:<br>isinstance(left, ast.Attribute) and left.attr == prof.dispat</i>"}
+    dec_393{"stmt.orelse<br><i>Condición en línea 393:<br>stmt.orelse</i>"}
+    dec_425{"tool_name in prof.tool_names<br><i>Condición en línea 425:<br>tool_name in prof.tool_names</i>"}
+    dec_440{"iter_name<br><i>Condición en línea 440:<br>iter_name</i>"}
+    dec_614{"method_name in<br>prof.special_calls<br><i>Condición en línea 614:<br>method_name in prof.special_calls</i>"}
+    dec_394{"len(stmt.orelse) == 1 and<br>isinstance(stmt.orelse(0), ast.If)<br><i>Condición en línea 394:<br>len(stmt.orelse) == 1 and isinstance(stmt.orelse(0), ast.If)</i>"}
+    dec_616{"not label<br><i>Condición en línea 616:<br>not label</i>"}
+    fn__parse_block_397["last_no = Parse Block<br><i>Recorre el cuerpo de una función<br>registrando nodos/aristas</i>"]
+    dec_626{"isinstance(func, ast.Name)<br>and func.id in prof.special_calls<br><i>Condición en línea 626:<br>isinstance(func, ast.Name) and func.id in prof.special_calls</i>"}
+    dec_628{"not label<br><i>Condición en línea 628:<br>not label</i>"}
+    dec_637{"isinstance(func, ast.Name)<br>and func.id in prof.tool_names<br><i>Condición en línea 637:<br>isinstance(func, ast.Name) and func.id in prof.tool_names</i>"}
+    dec_650{"isinstance(func, ast.Name)<br><i>Condición en línea 650:<br>isinstance(func, ast.Name)</i>"}
+    dec_652{"isinstance(func,<br>ast.Attribute) and ast.Name) and<br><i>Condición en línea 652:<br>isinstance(func, ast.Attribute) and isinstance(func.value, a</i>"}
+    dec_655{"target and target in<br>ctx.known_functions<br><i>Condición en línea 655:<br>target and target in ctx.known_functions</i>"}
+    loop_75["For each fn in top_funcs"]
+    dec_80{"len(fn.body) > 3<br><i>Condición en línea 80:<br>len(fn.body) > 3</i>"}
+    fn__parse_block_81["Parse Block<br><i>Recorre el cuerpo de una función<br>registrando nodos/aristas</i>"]
+    loop_83["For each node in body"]
+    dec_84{"isinstance(node,<br>ast.ClassDef) and node.name !=<br><i>Condición en línea 84:<br>isinstance(node, ast.ClassDef) and node.name != _find_agent_</i>"}
+    loop_90["For each meth in methods"]
+    dec_95{"len(meth.body) > 3<br><i>Condición en línea 95:<br>len(meth.body) > 3</i>"}
+    fn__parse_block_96["Parse Block<br><i>Recorre el cuerpo de una función<br>registrando nodos/aristas</i>"]
+    dec_99{"not any((n.node_type ==<br>NodeType.END for n in<br><i>Condición en línea 99:<br>not any((n.node_type == NodeType.END for n in graph.nodes))</i>"}
+    loop_117["For each node"]
+    dec_118{"isinstance(node,<br>_FUNC_TYPES) and node.name == name<br><i>Condición en línea 118:<br>isinstance(node, _FUNC_TYPES) and node.name == name</i>"}
+    loop_149["For each name in func_names"]
+    dec_150{"name in seen<br><i>Condición en línea 150:<br>name in seen</i>"}
+    dec_154{"not defs<br><i>Condición en línea 154:<br>not defs</i>"}
+    dec_157{"segment<br><i>Condición en línea 157:<br>segment</i>"}
+    loop_193["For each m in method_defs"]
+    dec_195{"segment<br><i>Condición en línea 195:<br>segment</i>"}
+    loop_237["For each node"]
+    dec_238{"isinstance(node,<br>ast.ClassDef)<br><i>Condición en línea 238:<br>isinstance(node, ast.ClassDef)</i>"}
+    dec_240{"'agent' in name_lower or<br>node.name in if profile else ())<br><i>Condición en línea 240:<br>'agent' in name_lower or node.name in (profile.agent_class_n</i>"}
+    loop_257["For each item in body"]
+    dec_258{"isinstance(item,<br>_FUNC_TYPES)<br><i>Condición en línea 258:<br>isinstance(item, _FUNC_TYPES)</i>"}
+    dec_259{"Tool:<br>run?<br><i>Dispatch run</i>"}
+    dec_261{"Tool:<br>__init__?<br><i>Dispatch __init__</i>"}
+    dec_263{"Tool:<br>_handle_eval_result?<br><i>Dispatch _handle_eval_result</i>"}
+    dec_267{"init_method<br><i>Condición en línea 267:<br>init_method</i>"}
+    dec_272{"run_method<br><i>Condición en línea 272:<br>run_method</i>"}
+    dec_274{"handle_eval<br><i>Condición en línea 274:<br>handle_eval</i>"}
+    loop_279["For each item in candidates"]
+    dec_283{"item.body and<br>isinstance(item.body(0), ast.Expr)<br><i>Condición en línea 283:<br>item.body and isinstance(item.body(0), ast.Expr) and isinsta</i>"}
+    dec_290{"len(item.body) > 3<br><i>Condición en línea 290:<br>len(item.body) > 3</i>"}
+    fn__parse_block_291["Parse Block<br><i>Recorre el cuerpo de una función<br>registrando nodos/aristas</i>"]
+    loop_296["For each stmt in body"]
+    dec_297{"isinstance(stmt, ast.Assign)<br><i>Condición en línea 297:<br>isinstance(stmt, ast.Assign)</i>"}
+    loop_298["For each target in targets"]
+    dec_299{"isinstance(target, ast.Name)<br><i>Condición en línea 299:<br>isinstance(target, ast.Name)</i>"}
+    dec_301{"isinstance(stmt, ast.Expr)<br>and isinstance(stmt.value,<br><i>Condición en línea 301:<br>isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Ca</i>"}
+    dec_303{"isinstance(func,<br>ast.Attribute)<br><i>Condición en línea 303:<br>isinstance(func, ast.Attribute)</i>"}
+    loop_333["For each stmt in stmts"]
+    dec_334{"isinstance(stmt, ast.While)<br><i>Condición en línea 334:<br>isinstance(stmt, ast.While)</i>"}
+    dec_336{"isinstance(stmt, ast.If)<br><i>Condición en línea 336:<br>isinstance(stmt, ast.If)</i>"}
+    dec_338{"isinstance(stmt, ast.For)<br><i>Condición en línea 338:<br>isinstance(stmt, ast.For)</i>"}
+    dec_340{"isinstance(stmt, ast.Expr)<br><i>Condición en línea 340:<br>isinstance(stmt, ast.Expr)</i>"}
+    dec_342{"isinstance(stmt, ast.Assign)<br><i>Condición en línea 342:<br>isinstance(stmt, ast.Assign)</i>"}
+    dec_344{"isinstance(stmt, ast.Try)<br><i>Condición en línea 344:<br>isinstance(stmt, ast.Try)</i>"}
+    dec_346{"hasattr(ast, 'Match') and<br>isinstance(stmt, ast.Match)<br><i>Condición en línea 346:<br>hasattr(ast, 'Match') and isinstance(stmt, ast.Match)</i>"}
+    dec_348{"isinstance(stmt,<br>_FUNC_TYPES)<br><i>Condición en línea 348:<br>isinstance(stmt, _FUNC_TYPES)</i>"}
+    dec_350{"isinstance(stmt,<br>ast.AsyncFor)<br><i>Condición en línea 350:<br>isinstance(stmt, ast.AsyncFor)</i>"}
+    dec_352{"isinstance(stmt,<br>ast.AsyncWith)<br><i>Condición en línea 352:<br>isinstance(stmt, ast.AsyncWith)</i>"}
+    loop_398["For each e in edges"]
+    dec_399{"e.source == dec_id and<br>e.target == last_yes and (not<br><i>Condición en línea 399:<br>e.source == dec_id and e.target == last_yes and (not e.label</i>"}
+    dec_401{"e.source == dec_id and<br>e.target == last_no and (not<br><i>Condición en línea 401:<br>e.source == dec_id and e.target == last_no and (not e.label)</i>"}
+    loop_490["For each handler in handlers"]
+    fn__parse_block_491["last = Parse Block<br><i>Recorre el cuerpo de una función<br>registrando nodos/aristas</i>"]
+    dec_492{"stmt.finalbody<br><i>Condición en línea 492:<br>stmt.finalbody</i>"}
+    fn__parse_block_493["last = Parse Block<br><i>Recorre el cuerpo de una función<br>registrando nodos/aristas</i>"]
+    loop_509["For each case in cases"]
+    fn__parse_block_520["case_last = Parse Block<br><i>Recorre el cuerpo de una función<br>registrando nodos/aristas</i>"]
+    dec_521{"case_last != case_id<br><i>Condición en línea 521:<br>case_last != case_id</i>"}
+    loop_557["For each n in nodes"]
+    dec_558{"n.node_type == NodeType.LOOP<br>and 'tool_calls' in<br><i>Condición en línea 558:<br>n.node_type == NodeType.LOOP and 'tool_calls' in n.label.low</i>"}
+    dec_561{"not for_loop_id<br><i>Condición en línea 561:<br>not for_loop_id</i>"}
+    loop_564["For each node"]
+    dec_565{"isinstance(node, ast.If)<br><i>Condición en línea 565:<br>isinstance(node, ast.If)</i>"}
+    fn__detect_tool_dispatch_566["tool_name = Detect Tool Dispatch<br><i>Reconoce despachos de herramientas<br>(tool.dispatch / dispatch_attr)</i>"]
+    dec_567{"tool_name and (not<br>for n in ctx.graph.nodes)))<br><i>Condición en línea 567:<br>tool_name and (not any((n.id.startswith(f'tool_(tool_name)_'</i>"}
+    loop_676["For each w in words"]
+    dec_677{"len(lines(-1)) + len(w) + 1<br>> 28 and len(lines) < 2<br><i>Condición en línea 677:<br>len(lines(-1)) + len(w) + 1 > 28 and len(lines) < 2</i>"}
+    dec_679{"len(lines(-1)) + len(w) + 1<br><= 34<br><i>Condición en línea 679:<br>len(lines(-1)) + len(w) + 1 <= 34</i>"}
+    loop_681["Loop"]
+    loop_707["For each comp in comparators"]
+    dec_708{"isinstance(comp,<br>ast.Constant) and str)<br><i>Condición en línea 708:<br>isinstance(comp, ast.Constant) and isinstance(comp.value, st</i>"}
+    dec_710{"tool_name in prof.tool_names<br><i>Condición en línea 710:<br>tool_name in prof.tool_names</i>"}
+    loop_721["For loop"]
+    dec_722{"needle in raw<br><i>Condición en línea 722:<br>needle in raw</i>"}
+    fn__unwrap_call[["Unwrap Call"]]
+    fn_parse_file[["Parse File"]]
+    fn_parse_source[["Parse Source"]]
+    fn__find_function_def[["Find Function Def"]]
+    fn__find_class_def[["Find Class Def"]]
+    fn_parse_functions[["Parse Functions"]]
+    fn_parse_class_methods[["Parse Class Methods"]]
+    fn__apply_phase_patterns[["Apply Phase Patterns"]]
+    fn__find_agent_class[["Find Agent Class"]]
+    fn__parse_agent_class[["Parse Agent Class"]]
+    fn__parse_init[["Parse Init"]]
+    fn__parse_run_method[["Parse Run Method"]]
+    fn__parse_block[["Parse Block"]]
+    fn__parse_while[["Parse While"]]
+    fn__parse_if[["Parse If"]]
+    fn__detect_tool_dispatch[["Detect Tool Dispatch"]]
+    fn__parse_for[["Parse For"]]
+    fn__parse_expr_stmt[["Parse Expr Stmt"]]
+    fn__parse_assign[["Parse Assign"]]
+    fn__parse_try[["Parse Try"]]
+    fn__parse_match[["Parse Match"]]
+    fn__parse_local_function[["Parse Local Function"]]
+    fn__parse_function[["Parse Function"]]
+    fn__scan_handle_eval_for_tools[["Scan Handle Eval For Tools"]]
+    fn__extract_call_info[["Extract Call Info"]]
+    fn__generic_if_label[["Generic If Label"]]
+    fn__if_label_and_detail[["If Label And Detail"]]
+    fn__while_label[["While Label"]]
+    tool_get_profile_59["prof = Load Profile<br><i>Carga perfil de dominio<br>(herramientas/etiquetas)</i>"]
+    n_start --> fn__unwrap_call
+    fn__unwrap_call --> dec_28
+    n_start --> fn_parse_file
+    n_start --> fn_parse_source
+    fn_parse_source --> tool_get_profile_59
+    tool_get_profile_59 --> dec_69
+    dec_69 --> loop_75
+    loop_75 --> dec_80
+    dec_80 --> fn__parse_block_81
+    fn__parse_block_81 -- "loop" --> loop_75
+    loop_75 --> loop_83
+    loop_83 --> dec_84
+    dec_84 --> loop_90
+    loop_90 --> dec_95
+    dec_95 --> fn__parse_block_96
+    fn__parse_block_96 -- "loop" --> loop_90
+    loop_90 -- "loop" --> loop_83
+    loop_83 --> dec_99
+    n_start --> fn__find_function_def
+    fn__find_function_def --> loop_117
+    loop_117 --> dec_118
+    dec_118 -- "loop" --> loop_117
+    n_start --> fn__find_class_def
+    n_start --> fn_parse_functions
+    fn_parse_functions --> loop_149
+    loop_149 --> dec_150
+    dec_150 --> dec_154
+    dec_154 --> dec_157
+    dec_157 -- "loop" --> loop_149
+    n_start --> fn_parse_class_methods
+    fn_parse_class_methods --> dec_178
+    dec_178 --> dec_187
+    dec_187 --> loop_193
+    loop_193 --> dec_195
+    dec_195 -- "loop" --> loop_193
+    n_start --> fn__apply_phase_patterns
+    n_start --> fn__find_agent_class
+    fn__find_agent_class --> dec_234
+    dec_234 --> loop_237
+    loop_237 --> dec_238
+    dec_238 --> dec_240
+    dec_240 -- "loop" --> loop_237
+    n_start --> fn__parse_agent_class
+    fn__parse_agent_class --> loop_257
+    loop_257 --> dec_258
+    dec_258 --> dec_259
+    dec_259 --> dec_261
+    dec_261 --> dec_263
+    dec_263 -- "loop" --> loop_257
+    loop_257 --> dec_267
+    dec_267 --> dec_272
+    dec_272 -- "YES" --> dec_274
+    dec_272 -- "NO" --> loop_279
+    loop_279 --> dec_283
+    dec_283 --> dec_290
+    dec_290 --> fn__parse_block_291
+    fn__parse_block_291 -- "loop" --> loop_279
+    n_start --> fn__parse_init
+    fn__parse_init --> loop_296
+    loop_296 --> dec_297
+    dec_297 --> loop_298
+    loop_298 --> dec_299
+    dec_299 -- "loop" --> loop_298
+    dec_297 --> dec_301
+    dec_301 --> dec_303
+    dec_303 -- "loop" --> loop_296
+    n_start --> fn__parse_run_method
+    n_start --> fn__parse_block
+    fn__parse_block --> dec_329
+    dec_329 --> loop_333
+    loop_333 --> dec_334
+    dec_334 --> dec_336
+    dec_336 --> dec_338
+    dec_338 --> dec_340
+    dec_340 --> dec_342
+    dec_342 --> dec_344
+    dec_344 --> dec_346
+    dec_346 --> dec_348
+    dec_348 --> dec_350
+    dec_350 --> dec_352
+    dec_352 -- "loop" --> loop_333
+    n_start --> fn__parse_while
+    fn__parse_while --> fn__parse_block_362
+    fn__parse_block_362 --> dec_363
+    n_start --> fn__parse_if
+    fn__parse_if --> fn__detect_tool_dispatch_370
+    fn__detect_tool_dispatch_370 --> dec_379
+    dec_379 --> fn__parse_block_391
+    fn__parse_block_391 --> dec_393
+    dec_393 --> dec_394
+    dec_394 --> fn__parse_block_397
+    fn__parse_block_397 --> loop_398
+    loop_398 --> dec_399
+    dec_399 --> dec_401
+    dec_401 -- "loop" --> loop_398
+    n_start --> fn__detect_tool_dispatch
+    fn__detect_tool_dispatch --> dec_411
+    dec_411 --> dec_417
+    dec_417 --> dec_421
+    dec_421 --> dec_425
+    n_start --> fn__parse_for
+    fn__parse_for --> dec_433
+    dec_433 --> dec_435
+    dec_435 --> dec_437
+    dec_437 --> dec_440
+    dec_433 --> fn__parse_block_447
+    fn__parse_block_447 --> dec_448
+    n_start --> fn__parse_expr_stmt
+    n_start --> fn__parse_assign
+    n_start --> fn__parse_try
+    fn__parse_try --> fn__parse_block_489
+    fn__parse_block_489 --> loop_490
+    loop_490 --> fn__parse_block_491
+    fn__parse_block_491 -- "loop" --> loop_490
+    loop_490 --> dec_492
+    dec_492 --> fn__parse_block_493
+    n_start --> fn__parse_match
+    fn__parse_match --> loop_509
+    loop_509 --> fn__parse_block_520
+    fn__parse_block_520 --> dec_521
+    dec_521 -- "loop" --> loop_509
+    n_start --> fn__parse_local_function
+    fn__parse_local_function --> dec_530
+    n_start --> fn__parse_function
+    n_start --> fn__scan_handle_eval_for_tools
+    fn__scan_handle_eval_for_tools --> loop_557
+    loop_557 --> dec_558
+    dec_558 -- "loop" --> loop_557
+    loop_557 --> dec_561
+    dec_561 --> loop_564
+    loop_564 --> dec_565
+    dec_565 --> fn__detect_tool_dispatch_566
+    fn__detect_tool_dispatch_566 --> dec_567
+    dec_567 -- "loop" --> loop_564
+    n_start --> fn__extract_call_info
+    fn__extract_call_info --> dec_590
+    dec_590 --> dec_594
+    dec_594 --> dec_604
+    dec_604 --> dec_614
+    dec_614 --> dec_616
+    dec_616 --> dec_626
+    dec_626 --> dec_628
+    dec_628 --> dec_637
+    dec_637 --> dec_650
+    dec_650 --> dec_652
+    dec_652 --> dec_655
+    n_start --> fn__generic_if_label
+    fn__generic_if_label --> loop_676
+    loop_676 --> dec_677
+    dec_677 --> dec_679
+    dec_679 -- "loop" --> loop_676
+    loop_676 --> loop_681
+    n_start --> fn__if_label_and_detail
+    fn__if_label_and_detail --> dec_693
+    dec_693 --> dec_704
+    dec_704 --> dec_706
+    dec_706 --> loop_707
+    loop_707 --> dec_708
+    dec_708 --> dec_710
+    dec_710 -- "loop" --> loop_707
+    loop_707 --> loop_721
+    loop_721 --> dec_722
+    dec_722 -- "loop" --> loop_721
+    n_start --> fn__while_label
+    fn__while_label --> dec_731
+    dec_731 --> dec_734
+    class n_start node-start
+    class fn__unwrap_call,fn_parse_file,fn_parse_source,fn__find_function_def,fn__find_class_def,fn_parse_functions,fn_parse_class_methods,fn__apply_phase_patterns,fn__find_agent_class,fn__parse_agent_class,fn__parse_init,fn__parse_run_method,fn__parse_block,fn__parse_while,fn__parse_if,fn__detect_tool_dispatch,fn__parse_for,fn__parse_expr_stmt,fn__parse_assign,fn__parse_try,fn__parse_match,fn__parse_local_function,fn__parse_function,fn__scan_handle_eval_for_tools,fn__extract_call_info,fn__generic_if_label,fn__if_label_and_detail,fn__while_label node-subprocess
+    class dec_28,dec_69,dec_80,dec_84,dec_95,dec_99,dec_118,dec_150,dec_154,dec_157,dec_178,dec_187,dec_195,dec_234,dec_238,dec_240,dec_258,dec_259,dec_261,dec_263,dec_267,dec_272,dec_274,dec_283,dec_290,dec_297,dec_299,dec_301,dec_303,dec_329,dec_334,dec_336,dec_338,dec_340,dec_342,dec_344,dec_346,dec_348,dec_350,dec_352,dec_363,dec_379,dec_393,dec_394,dec_399,dec_401,dec_411,dec_417,dec_421,dec_425,dec_433,dec_435,dec_437,dec_440,dec_448,dec_492,dec_521,dec_530,dec_558,dec_561,dec_565,dec_567,dec_590,dec_594,dec_604,dec_614,dec_616,dec_626,dec_628,dec_637,dec_650,dec_652,dec_655,dec_677,dec_679,dec_693,dec_704,dec_706,dec_708,dec_710,dec_722,dec_731,dec_734 node-decision
+    class tool_get_profile_59 node-tool
+    class loop_75,loop_83,loop_90,loop_117,loop_149,loop_193,loop_237,loop_257,loop_279,loop_296,loop_298,loop_333,loop_398,loop_490,loop_509,loop_557,loop_564,loop_676,loop_681,loop_707,loop_721 node-loop
+    class fn__parse_block_81,fn__parse_block_96,fn__parse_block_291,fn__parse_block_362,fn__detect_tool_dispatch_370,fn__parse_block_391,fn__parse_block_397,fn__parse_block_447,fn__parse_block_489,fn__parse_block_491,fn__parse_block_493,fn__parse_block_520,fn__detect_tool_dispatch_566 node-process
+    class n_end node-end
+    click fn_parse_file href "agentflow_L3_Agentflow_Parser_Entry.html" "Abrir detalle"
+    click fn_parse_source href "agentflow_L3_Agentflow_Parser_Entry.html" "Abrir detalle"
+    click fn__unwrap_call href "agentflow_L3_Agentflow_Parser_Entry.html" "Abrir detalle"
+    click fn_parse_functions href "agentflow_L3_Agentflow_Parser_Entry.html" "Abrir detalle"
+    click fn_parse_class_methods href "agentflow_L3_Agentflow_Parser_Entry.html" "Abrir detalle"
+    click fn__find_agent_class href "agentflow_L3_Agentflow_Parser_Agent.html" "Abrir detalle"
+    click fn__parse_agent_class href "agentflow_L3_Agentflow_Parser_Agent.html" "Abrir detalle"
+    click fn__parse_init href "agentflow_L3_Agentflow_Parser_Agent.html" "Abrir detalle"
+    click fn__parse_run_method href "agentflow_L3_Agentflow_Parser_Agent.html" "Abrir detalle"
+    click fn__parse_block href "agentflow_L3_Agentflow_Parser_Block.html" "Abrir detalle"
+    click fn__parse_while href "agentflow_L3_Agentflow_Parser_Block.html" "Abrir detalle"
+    click fn__parse_if href "agentflow_L3_Agentflow_Parser_Block.html" "Abrir detalle"
+    click fn__parse_for href "agentflow_L3_Agentflow_Parser_Block.html" "Abrir detalle"
+    click fn__parse_expr_stmt href "agentflow_L3_Agentflow_Parser_Block.html" "Abrir detalle"
+    click fn__parse_assign href "agentflow_L3_Agentflow_Parser_Block.html" "Abrir detalle"
+    click fn__parse_try href "agentflow_L3_Agentflow_Parser_Block.html" "Abrir detalle"
+    click fn__parse_match href "agentflow_L3_Agentflow_Parser_Block.html" "Abrir detalle"
+    click fn__parse_local_function href "agentflow_L3_Agentflow_Parser_Block.html" "Abrir detalle"
+    click fn__parse_block_96 href "agentflow_L3_Agentflow_Parser_Block.html" "Abrir detalle"
+    click fn__parse_function href "agentflow_L3_Agentflow_Parser_Block.html" "Abrir detalle"
+    click fn__detect_tool_dispatch href "agentflow_L3_Agentflow_Parser_Tools.html" "Abrir detalle"
+    click fn__scan_handle_eval_for_tools href "agentflow_L3_Agentflow_Parser_Tools.html" "Abrir detalle"
+    click fn__extract_call_info href "agentflow_L3_Agentflow_Parser_Tools.html" "Abrir detalle"
+    click fn__generic_if_label href "agentflow_L3_Agentflow_Parser_Labels.html" "Abrir detalle"
+    click fn__if_label_and_detail href "agentflow_L3_Agentflow_Parser_Labels.html" "Abrir detalle"
+    click fn__while_label href "agentflow_L3_Agentflow_Parser_Labels.html" "Abrir detalle"
+    click fn__apply_phase_patterns href "agentflow_L3_Agentflow_Parser_Labels.html" "Abrir detalle"
+    click fn__find_function_def href "agentflow_L3_Agentflow_Parser_Labels.html" "Abrir detalle"
+    click fn__find_class_def href "agentflow_L3_Agentflow_Parser_Labels.html" "Abrir detalle"
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

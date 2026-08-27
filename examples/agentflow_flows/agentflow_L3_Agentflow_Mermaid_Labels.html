@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mermaid · Labels</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="agentflow_L2_Agentflow_Mermaid.html">← Volver</a>
+  <h1>Mermaid · Labels</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Mermaid · Labels
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    loop_20["For loop"]
+    dec_4{"sanitized and<br>sanitized(0).isdigit()<br><i>Condición en línea 4:<br>sanitized and sanitized(0).isdigit()</i>"}
+    dec_6{"sanitized in<br>_MERMAID_RESERVED<br><i>Condición en línea 6:<br>sanitized in _MERMAID_RESERVED</i>"}
+    dec_30{"node.detail<br><i>Condición en línea 30:<br>node.detail</i>"}
+    dec_34{"node.detail<br><i>Condición en línea 34:<br>node.detail</i>"}
+    dec_37{"len(combined) > 200<br><i>Condición en línea 37:<br>len(combined) > 200</i>"}
+    dec_45{"node.diff_status in<br>('added', 'removed', 'changed')<br><i>Condición en línea 45:<br>node.diff_status in ('added', 'removed', 'changed')</i>"}
+    dec_47{"node.node_type ==<br>NodeType.EVOLUTION<br><i>Condición en línea 47:<br>node.node_type == NodeType.EVOLUTION</i>"}
+    dec_56{"label<br><i>Condición en línea 56:<br>label</i>"}
+    dec_58{"dashed<br><i>Condición en línea 58:<br>dashed</i>"}
+    dec_61{"dashed<br><i>Condición en línea 61:<br>dashed</i>"}
+    fn__escape_label[["Escape Label"]]
+    fn__node_definition[["Node Definition"]]
+    fn__edge_line[["Edge Line"]]
+    fn__sanitize_id[["Sanitize Id"]]
+    fn__node_label[["Node Label"]]
+    n_start --> fn__sanitize_id
+    fn__sanitize_id --> dec_4
+    dec_4 --> dec_6
+    n_start --> fn__escape_label
+    fn__escape_label --> loop_20
+    n_start --> fn__node_label
+    fn__node_label --> dec_30
+    dec_30 --> dec_34
+    dec_34 --> dec_37
+    n_start --> fn__node_definition
+    fn__node_definition --> fn__sanitize_id
+    fn__sanitize_id --> fn__node_label
+    fn__node_label --> dec_45
+    dec_45 --> dec_47
+    n_start --> fn__edge_line
+    fn__edge_line --> fn__sanitize_id
+    fn__sanitize_id --> fn__sanitize_id
+    fn__sanitize_id --> dec_56
+    dec_56 --> dec_58
+    dec_58 --> dec_61
+    class n_start node-start
+    class fn__sanitize_id,fn__escape_label,fn__node_label,fn__node_definition,fn__edge_line node-subprocess
+    class dec_4,dec_6,dec_30,dec_34,dec_37,dec_45,dec_47,dec_56,dec_58,dec_61 node-decision
+    class loop_20 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

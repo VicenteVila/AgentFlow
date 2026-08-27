@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parser · Block</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="agentflow_L2_Agentflow_Parser.html">← Volver</a>
+  <h1>Parser · Block</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Parser · Block
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_3{"depth > 10<br><i>Condición en línea 3:<br>depth > 10</i>"}
+    loop_7["For each stmt in stmts"]
+    dec_8{"isinstance(stmt, ast.While)<br><i>Condición en línea 8:<br>isinstance(stmt, ast.While)</i>"}
+    dec_10{"isinstance(stmt, ast.If)<br><i>Condición en línea 10:<br>isinstance(stmt, ast.If)</i>"}
+    dec_12{"isinstance(stmt, ast.For)<br><i>Condición en línea 12:<br>isinstance(stmt, ast.For)</i>"}
+    dec_14{"isinstance(stmt, ast.Expr)<br><i>Condición en línea 14:<br>isinstance(stmt, ast.Expr)</i>"}
+    dec_16{"isinstance(stmt, ast.Assign)<br><i>Condición en línea 16:<br>isinstance(stmt, ast.Assign)</i>"}
+    dec_18{"isinstance(stmt, ast.Try)<br><i>Condición en línea 18:<br>isinstance(stmt, ast.Try)</i>"}
+    dec_20{"hasattr(ast, 'Match') and<br>isinstance(stmt, ast.Match)<br><i>Condición en línea 20:<br>hasattr(ast, 'Match') and isinstance(stmt, ast.Match)</i>"}
+    dec_22{"isinstance(stmt,<br>_FUNC_TYPES)<br><i>Condición en línea 22:<br>isinstance(stmt, _FUNC_TYPES)</i>"}
+    dec_24{"isinstance(stmt,<br>ast.AsyncFor)<br><i>Condición en línea 24:<br>isinstance(stmt, ast.AsyncFor)</i>"}
+    dec_26{"isinstance(stmt,<br>ast.AsyncWith)<br><i>Condición en línea 26:<br>isinstance(stmt, ast.AsyncWith)</i>"}
+    fn__parse_block_35["last_in_body = Parse Block<br><i>Recorre el cuerpo de una función<br>registrando nodos/aristas</i>"]
+    dec_36{"last_in_body != loop_id<br><i>Condición en línea 36:<br>last_in_body != loop_id</i>"}
+    fn__detect_tool_dispatch_42["tool_from_dispatch = Detect Tool Dispatch<br><i>Reconoce despachos de herramientas<br>(tool.dispatch / dispatch_attr)</i>"]
+    dec_51{"tool_from_dispatch<br><i>Condición en línea 51:<br>tool_from_dispatch</i>"}
+    fn__parse_block_63["last_yes = Parse Block<br><i>Recorre el cuerpo de una función<br>registrando nodos/aristas</i>"]
+    dec_65{"stmt.orelse<br><i>Condición en línea 65:<br>stmt.orelse</i>"}
+    dec_66{"len(stmt.orelse) == 1 and<br>isinstance(stmt.orelse(0), ast.If)<br><i>Condición en línea 66:<br>len(stmt.orelse) == 1 and isinstance(stmt.orelse(0), ast.If)</i>"}
+    fn__parse_block_69["last_no = Parse Block<br><i>Recorre el cuerpo de una función<br>registrando nodos/aristas</i>"]
+    loop_70["For each e in edges"]
+    dec_71{"e.source == dec_id and<br>e.target == last_yes and (not<br><i>Condición en línea 71:<br>e.source == dec_id and e.target == last_yes and (not e.label</i>"}
+    dec_73{"e.source == dec_id and<br>e.target == last_no and (not<br><i>Condición en línea 73:<br>e.source == dec_id and e.target == last_no and (not e.label)</i>"}
+    dec_82{"isinstance(target, ast.Name)<br><i>Condición en línea 82:<br>isinstance(target, ast.Name)</i>"}
+    dec_84{"isinstance(stmt.iter,<br>ast.Name)<br><i>Condición en línea 84:<br>isinstance(stmt.iter, ast.Name)</i>"}
+    dec_86{"isinstance(stmt.iter,<br>ast.Attribute)<br><i>Condición en línea 86:<br>isinstance(stmt.iter, ast.Attribute)</i>"}
+    dec_89{"iter_name<br><i>Condición en línea 89:<br>iter_name</i>"}
+    fn__parse_block_96["last_in_body = Parse Block<br><i>Recorre el cuerpo de una función<br>registrando nodos/aristas</i>"]
+    dec_97{"last_in_body != loop_id<br><i>Condición en línea 97:<br>last_in_body != loop_id</i>"}
+    fn__parse_block_103["last = Parse Block<br><i>Recorre el cuerpo de una función<br>registrando nodos/aristas</i>"]
+    loop_104["For each handler in handlers"]
+    fn__parse_block_105["last = Parse Block<br><i>Recorre el cuerpo de una función<br>registrando nodos/aristas</i>"]
+    dec_106{"stmt.finalbody<br><i>Condición en línea 106:<br>stmt.finalbody</i>"}
+    fn__parse_block_107["last = Parse Block<br><i>Recorre el cuerpo de una función<br>registrando nodos/aristas</i>"]
+    loop_122["For each case in cases"]
+    fn__parse_block_133["case_last = Parse Block<br><i>Recorre el cuerpo de una función<br>registrando nodos/aristas</i>"]
+    dec_134{"case_last != case_id<br><i>Condición en línea 134:<br>case_last != case_id</i>"}
+    dec_174{"method.body and<br>isinstance(method.body(0), and and<br><i>Condición en línea 174:<br>method.body and isinstance(method.body(0), ast.Expr) and isi</i>"}
+    fn__parse_block[["Parse Block"]]
+    fn__parse_function[["Parse Function"]]
+    fn__parse_while[["current = Parse While"]]
+    fn__parse_if[["current = Parse If"]]
+    fn__parse_for[["current = Parse For"]]
+    fn__parse_expr_stmt[["current = Parse Expr Stmt"]]
+    fn__parse_assign[["current = Parse Assign"]]
+    fn__parse_try[["current = Parse Try"]]
+    fn__parse_match[["current = Parse Match"]]
+    fn__parse_local_function[["current = Parse Local Function"]]
+    n_start --> fn__parse_block
+    fn__parse_block --> dec_3
+    dec_3 --> loop_7
+    loop_7 --> dec_8
+    dec_8 --> fn__parse_while
+    dec_8 --> dec_10
+    dec_10 --> fn__parse_if
+    dec_10 --> dec_12
+    dec_12 --> fn__parse_for
+    dec_12 --> dec_14
+    dec_14 --> fn__parse_expr_stmt
+    dec_14 --> dec_16
+    dec_16 --> fn__parse_assign
+    dec_16 --> dec_18
+    dec_18 --> fn__parse_try
+    dec_18 --> dec_20
+    dec_20 --> fn__parse_match
+    dec_20 --> dec_22
+    dec_22 --> fn__parse_local_function
+    dec_22 --> dec_24
+    dec_24 --> fn__parse_for
+    dec_24 --> dec_26
+    dec_26 -- "loop" --> loop_7
+    n_start --> fn__parse_while
+    fn__parse_while --> fn__parse_block_35
+    fn__parse_block_35 --> dec_36
+    n_start --> fn__parse_if
+    fn__parse_if --> fn__detect_tool_dispatch_42
+    fn__detect_tool_dispatch_42 --> dec_51
+    dec_51 --> fn__parse_block_63
+    fn__parse_block_63 --> dec_65
+    dec_65 --> dec_66
+    dec_66 -- "YES" --> fn__parse_if
+    dec_66 --> fn__parse_block_69
+    fn__parse_block_69 --> loop_70
+    loop_70 --> dec_71
+    dec_71 --> dec_73
+    dec_73 -- "loop" --> loop_70
+    n_start --> fn__parse_for
+    fn__parse_for --> dec_82
+    dec_82 --> dec_84
+    dec_84 --> dec_86
+    dec_86 --> dec_89
+    dec_82 --> fn__parse_block_96
+    fn__parse_block_96 --> dec_97
+    n_start --> fn__parse_try
+    fn__parse_try --> fn__parse_block_103
+    fn__parse_block_103 --> loop_104
+    loop_104 --> fn__parse_block_105
+    fn__parse_block_105 -- "loop" --> loop_104
+    loop_104 --> dec_106
+    dec_106 --> fn__parse_block_107
+    n_start --> fn__parse_match
+    fn__parse_match --> loop_122
+    loop_122 --> fn__parse_block_133
+    fn__parse_block_133 --> dec_134
+    dec_134 -- "loop" --> loop_122
+    n_start --> fn__parse_assign
+    n_start --> fn__parse_expr_stmt
+    n_start --> fn__parse_local_function
+    fn__parse_local_function --> dec_174
+    n_start --> fn__parse_function
+    class n_start node-start
+    class fn__parse_block,fn__parse_while,fn__parse_if,fn__parse_for,fn__parse_expr_stmt,fn__parse_assign,fn__parse_try,fn__parse_match,fn__parse_local_function,fn__parse_function node-subprocess
+    class dec_3,dec_8,dec_10,dec_12,dec_14,dec_16,dec_18,dec_20,dec_22,dec_24,dec_26,dec_36,dec_51,dec_65,dec_66,dec_71,dec_73,dec_82,dec_84,dec_86,dec_89,dec_97,dec_106,dec_134,dec_174 node-decision
+    class loop_7,loop_70,loop_104,loop_122 node-loop
+    class fn__parse_block_35,fn__detect_tool_dispatch_42,fn__parse_block_63,fn__parse_block_69,fn__parse_block_96,fn__parse_block_103,fn__parse_block_105,fn__parse_block_107,fn__parse_block_133 node-process
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

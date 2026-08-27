@@ -1,0 +1,156 @@
+%% Cli
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_41{"args.palette<br><i>Condición en línea 41:<br>args.palette</i>"}
+    dec_144{"input_path.is_dir()<br><i>Condición en línea 144:<br>input_path.is_dir()</i>"}
+    dec_176{"_raw and _raw(0) == 'diff'<br><i>Condición en línea 176:<br>_raw and _raw(0) == 'diff'</i>"}
+    fn__handle_diff_177["Handle Diff<br><i>Subcomando CLI: compara dos<br>flujos y pinta cambios</i>"]
+    dec_155{"overview<br><i>Condición en línea 155:<br>overview</i>"}
+    dec_280{"getattr(args, 'palette',<br>None)<br><i>Condición en línea 280:<br>getattr(args, 'palette', None)</i>"}
+    dec_284{"not input_path.exists()<br><i>Condición en línea 284:<br>not input_path.exists()</i>"}
+    dec_288{"args.drilldown<br><i>Condición en línea 288:<br>args.drilldown</i>"}
+    fn__handle_drilldown_289["Handle Drill-Down<br><i>Subcomando CLI: lanza el<br>drill-down completo</i>"]
+    dec_293{"input_path.is_dir()<br><i>Condición en línea 293:<br>input_path.is_dir()</i>"}
+    dec_318{"args.summary<br><i>Condición en línea 318:<br>args.summary</i>"}
+    dec_323{"args.format == 'svg'<br><i>Condición en línea 323:<br>args.format == 'svg'</i>"}
+    dec_326{"args.output<br><i>Condición en línea 326:<br>args.output</i>"}
+    dec_336{"args.format == 'mermaid'<br><i>Condición en línea 336:<br>args.format == 'mermaid'</i>"}
+    dec_339{"args.output<br><i>Condición en línea 339:<br>args.output</i>"}
+    dec_347{"args.format ==<br>'mermaid-html'<br><i>Condición en línea 347:<br>args.format == 'mermaid-html'</i>"}
+    dec_350{"args.output<br><i>Condición en línea 350:<br>args.output</i>"}
+    dec_358{"args.format == 'html'<br><i>Condición en línea 358:<br>args.format == 'html'</i>"}
+    dec_361{"args.output<br><i>Condición en línea 361:<br>args.output</i>"}
+    dec_368{"args.format == 'ascii'<br><i>Condición en línea 368:<br>args.format == 'ascii'</i>"}
+    dec_371{"args.output<br><i>Condición en línea 371:<br>args.output</i>"}
+    dec_378{"args.format == 'dot'<br><i>Condición en línea 378:<br>args.format == 'dot'</i>"}
+    dec_381{"args.output<br><i>Condición en línea 381:<br>args.output</i>"}
+    dec_388{"args.format in ('sequence',<br>'mermaid-seq', 'sequence-html')<br><i>Condición en línea 388:<br>args.format in ('sequence', 'mermaid-seq', 'sequence-html')</i>"}
+    dec_398{"args.format == 'sequence'<br><i>Condición en línea 398:<br>args.format == 'sequence'</i>"}
+    dec_407{"args.format ==<br>'sequence-html'<br><i>Condición en línea 407:<br>args.format == 'sequence-html'</i>"}
+    dec_400{"args.output<br><i>Condición en línea 400:<br>args.output</i>"}
+    dec_418{"args.output<br><i>Condición en línea 418:<br>args.output</i>"}
+    dec_409{"args.output<br><i>Condición en línea 409:<br>args.output</i>"}
+    dec_429{"args.output<br><i>Condición en línea 429:<br>args.output</i>"}
+    loop_46["For each path"]
+    dec_47{"not path.exists()<br><i>Condición en línea 47:<br>not path.exists()</i>"}
+    dec_58{"args.title<br><i>Condición en línea 58:<br>args.title</i>"}
+    dec_61{"args.format == 'svg'<br><i>Condición en línea 61:<br>args.format == 'svg'</i>"}
+    dec_64{"args.output<br><i>Condición en línea 64:<br>args.output</i>"}
+    dec_72{"args.format == 'mermaid'<br><i>Condición en línea 72:<br>args.format == 'mermaid'</i>"}
+    dec_75{"args.output<br><i>Condición en línea 75:<br>args.output</i>"}
+    dec_84{"args.format ==<br>'mermaid-html'<br><i>Condición en línea 84:<br>args.format == 'mermaid-html'</i>"}
+    dec_87{"args.output<br><i>Condición en línea 87:<br>args.output</i>"}
+    dec_96{"args.format == 'html'<br><i>Condición en línea 96:<br>args.format == 'html'</i>"}
+    dec_99{"args.output<br><i>Condición en línea 99:<br>args.output</i>"}
+    dec_105{"args.format == 'ascii'<br><i>Condición en línea 105:<br>args.format == 'ascii'</i>"}
+    dec_107{"args.output<br><i>Condición en línea 107:<br>args.output</i>"}
+    dec_113{"args.format == 'dot'<br><i>Condición en línea 113:<br>args.format == 'dot'</i>"}
+    dec_115{"args.output<br><i>Condición en línea 115:<br>args.output</i>"}
+    dec_123{"args.output<br><i>Condición en línea 123:<br>args.output</i>"}
+    fn__handle_diff[["Handle Diff"]]
+    fn__handle_drilldown[["Handle Drilldown"]]
+    fn_main[["Main"]]
+    tool_run_drilldown_145["entries = Run Drill-Down<br><i>Genera la jerarquía completa<br>L0→Ln de un repositorio</i>"]
+    tool_parse_file_164["g0 = Parse File<br><i>Parsear fichero completo<br>(agent flow)</i>"]
+    tool_build_repo_overview_298["graph = Repo Overview<br><i>Overview de un repositorio<br>(imports + módulos)</i>"]
+    tool_parse_file_312["graph = Parse File<br><i>Parsear fichero completo<br>(agent flow)</i>"]
+    tool_save_svg_327["path = Save SVG<br><i>Escribe el fichero .svg</i>"]
+    tool_to_svg_331["svg_text = Render SVG<br><i>Renderizado vectorial SVG<br>del flujo (neon/dark/...)</i>"]
+    tool_save_html_362["path = Save HTML<br><i>Escribe el fichero .html</i>"]
+    tool_save_dot_382["path = Save DOT<br><i>Escribe el fichero .dot</i>"]
+    tool_to_sequence_svg_399["svg_text = Sequence SVG<br><i>Diagrama de secuencia<br>SVG desde interacciones</i>"]
+    tool_to_sequence_html_408["html_text = Sequence HTML<br><i>Diagrama de secuencia<br>HTML interactivo</i>"]
+    tool_save_excalidraw_430["path = Save Excalidraw<br><i>Escribe el fichero .excalidraw</i>"]
+    tool_to_excalidraw_437["doc = Excalidraw<br><i>Exporta geometría del flujo<br>a .excalidraw</i>"]
+    tool_save_svg_65["path = Save SVG<br><i>Escribe el fichero .svg</i>"]
+    tool_save_html_100["path = Save HTML<br><i>Escribe el fichero .html</i>"]
+    tool_save_dot_116["path = Save DOT<br><i>Escribe el fichero .dot</i>"]
+    tool_save_excalidraw_124["path = Save Excalidraw<br><i>Escribe el fichero .excalidraw</i>"]
+    tool_to_excalidraw_128["doc = Excalidraw<br><i>Exporta geometría del flujo<br>a .excalidraw</i>"]
+    n_start --> fn__handle_diff
+    fn__handle_diff --> dec_41
+    dec_41 --> loop_46
+    loop_46 --> dec_47
+    dec_47 -- "loop" --> loop_46
+    loop_46 --> dec_58
+    dec_58 --> dec_61
+    dec_61 --> dec_64
+    dec_64 -- "YES" --> tool_save_svg_65
+    dec_64 --> dec_72
+    dec_72 --> dec_75
+    dec_75 --> dec_84
+    dec_84 --> dec_87
+    dec_87 --> dec_96
+    dec_96 --> dec_99
+    dec_99 -- "YES" --> tool_save_html_100
+    dec_99 --> dec_105
+    dec_105 --> dec_107
+    dec_107 --> dec_113
+    dec_113 --> dec_115
+    dec_115 -- "YES" --> tool_save_dot_116
+    dec_115 --> dec_123
+    dec_123 -- "YES" --> tool_save_excalidraw_124
+    dec_123 -- "NO" --> tool_to_excalidraw_128
+    n_start --> fn__handle_drilldown
+    fn__handle_drilldown --> dec_144
+    dec_144 --> tool_run_drilldown_145
+    tool_run_drilldown_145 --> dec_155
+    dec_155 --> tool_parse_file_164
+    n_start --> fn_main
+    fn_main --> dec_176
+    dec_176 --> fn__handle_diff_177
+    fn__handle_diff_177 --> dec_280
+    dec_280 --> dec_284
+    dec_284 --> dec_288
+    dec_288 --> fn__handle_drilldown_289
+    fn__handle_drilldown_289 --> dec_293
+    dec_293 -- "YES" --> tool_build_repo_overview_298
+    dec_293 -- "NO" --> tool_parse_file_312
+    tool_parse_file_312 --> dec_318
+    dec_318 --> dec_323
+    dec_323 --> dec_326
+    dec_326 -- "YES" --> tool_save_svg_327
+    dec_326 -- "NO" --> tool_to_svg_331
+    tool_to_svg_331 --> dec_336
+    dec_336 --> dec_339
+    dec_339 --> dec_347
+    dec_347 --> dec_350
+    dec_350 --> dec_358
+    dec_358 --> dec_361
+    dec_361 -- "YES" --> tool_save_html_362
+    dec_361 --> dec_368
+    dec_368 --> dec_371
+    dec_371 --> dec_378
+    dec_378 --> dec_381
+    dec_381 -- "YES" --> tool_save_dot_382
+    dec_381 --> dec_388
+    dec_388 --> dec_398
+    dec_398 --> tool_to_sequence_svg_399
+    tool_to_sequence_svg_399 --> dec_400
+    dec_398 --> dec_407
+    dec_407 --> tool_to_sequence_html_408
+    tool_to_sequence_html_408 --> dec_409
+    dec_407 -- "NO" --> dec_418
+    dec_418 --> dec_429
+    dec_429 -- "YES" --> tool_save_excalidraw_430
+    dec_429 -- "NO" --> tool_to_excalidraw_437
+    class n_start node-start
+    class fn__handle_diff,fn__handle_drilldown,fn_main node-subprocess
+    class dec_41,dec_47,dec_58,dec_61,dec_64,dec_72,dec_75,dec_84,dec_87,dec_96,dec_99,dec_105,dec_107,dec_113,dec_115,dec_123,dec_144,dec_155,dec_176,dec_280,dec_284,dec_288,dec_293,dec_318,dec_323,dec_326,dec_336,dec_339,dec_347,dec_350,dec_358,dec_361,dec_368,dec_371,dec_378,dec_381,dec_388,dec_398,dec_400,dec_407,dec_409,dec_418,dec_429 node-decision
+    class loop_46 node-loop
+    class tool_save_svg_65,tool_save_html_100,tool_save_dot_116,tool_save_excalidraw_124,tool_to_excalidraw_128,tool_run_drilldown_145,tool_parse_file_164,tool_build_repo_overview_298,tool_parse_file_312,tool_save_svg_327,tool_to_svg_331,tool_save_html_362,tool_save_dot_382,tool_to_sequence_svg_399,tool_to_sequence_html_408,tool_save_excalidraw_430,tool_to_excalidraw_437 node-tool
+    class fn__handle_diff_177,fn__handle_drilldown_289 node-process
+    class n_end node-end

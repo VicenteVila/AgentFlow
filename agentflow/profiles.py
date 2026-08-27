@@ -11,6 +11,7 @@ Built-in profiles are provided:
 - TRACEFORGE: labels for the TraceForge LLM-tracing library.
 - ASUBARNIPAL: labels for the Asubarnipal wiki/RAG assistant (Telegram + FastAPI).
 - COGNITEAM: labels for the CogniTeam multi-agent orchestration framework.
+- AGENTFLOW: labels for this tool itself (parse → layout → render pipelines).
 
 Custom profiles can be loaded from an external Python file exposing a
 ``PROFILE`` dict (see :func:`load_profile`).
@@ -1500,6 +1501,140 @@ COGNITEAM_PROFILE = Profile(
 )
 
 
+# ── AgentFlow profile (el propio generador de flujogramas) ─────────────
+
+_AGENTFLOW_TOOL_INFO: dict[str, tuple[str, str]] = {
+    "parse_source": ("Parse Source", "Analiza código Python\n→ grafo de flujo"),
+    "parse_file": ("Parse File", "Parsear fichero completo\n(agent flow)"),
+    "parse_functions": ("Parse Functions", "Sub-flujo de un subconjunto\nde funciones escogidas"),
+    "parse_class_methods": ("Parse Class Methods", "Sub-flujo de los métodos\nde una clase"),
+    "get_profile": ("Load Profile", "Carga perfil de dominio\n(herramientas/etiquetas)"),
+    "run_drilldown": ("Run Drill-Down", "Genera la jerarquía completa\nL0→Ln de un repositorio"),
+    "build_repo_overview": ("Repo Overview", "Overview de un repositorio\n(imports + módulos)"),
+    "collect_python_files": ("Collect Python Files", "Rastrea ficheros .py\nexcluyendo venvs/cachés"),
+    "to_mermaid": ("Render Mermaid", "Serializa el flujo a texto\nMermaid (markdown)"),
+    "to_mermaid_html": ("Interactive HTML", "HTML interactivo Mermaid\n(zoom + clicks)"),
+    "to_sequence_svg": ("Sequence SVG", "Diagrama de secuencia\nSVG desde interacciones"),
+    "to_sequence_html": ("Sequence HTML", "Diagrama de secuencia\nHTML interactivo"),
+    "extract_interactions": ("Extract Interactions", "Extrae mensajes actor-a-actor\nde un fuente"),
+    "extract_interactions_from_dir": ("Extract Interactions Dir", "Secuencias de todo un\nrepositorio"),
+    "extract_interactions_multi": ("Extract Interactions Multi", "Extrae secuencias de varios\nmódulos"),
+    "merge_interactions": ("Merge Interactions", "Fusiona secuencias por actor\n(imports)"),
+    "to_excalidraw": ("Excalidraw", "Exporta geometría del flujo\na .excalidraw"),
+    "save_excalidraw": ("Save Excalidraw", "Escribe el fichero .excalidraw"),
+    "to_dot": ("Graphviz DOT", "Texto DOT para renderización\ncon graphviz"),
+    "save_dot": ("Save DOT", "Escribe el fichero .dot"),
+    "to_ascii": ("ASCII Art", "Renderizado en texto plano\ndel flujo"),
+    "to_svg": ("Render SVG", "Renderizado vectorial SVG\ndel flujo (neon/dark/...)"),
+    "save_svg": ("Save SVG", "Escribe el fichero .svg"),
+    "to_html": ("Render HTML", "HTML autocontenido del flujo"),
+    "save_html": ("Save HTML", "Escribe el fichero .html"),
+    "save_sequence_svg": ("Save Sequence SVG", "Escribe el SVG de secuencia"),
+}
+
+_AGENTFLOW_SPECIAL_CALLS: dict[str, tuple[str, str, NodeType]] = {
+    "_parse_block": (
+        "Parse Block",
+        "Recorre el cuerpo de una función\nregistrando nodos/aristas",
+        NodeType.PROCESS,
+    ),
+    "_detect_tool_dispatch": (
+        "Detect Tool Dispatch",
+        "Reconoce despachos de herramientas\n(tool.dispatch / dispatch_attr)",
+        NodeType.PROCESS,
+    ),
+    "_build_overview": (
+        "Build Overview",
+        "Arma el overview con nodos por\nactor (módulo/directorio)",
+        NodeType.PROCESS,
+    ),
+    "_write_index": (
+        "Write Index",
+        "Genera index.html con la lista\njerárquica de todas las vistas",
+        NodeType.PROCESS,
+    ),
+    "_handle_diff": (
+        "Handle Diff",
+        "Subcomando CLI: compara dos\nflujos y pinta cambios",
+        NodeType.PROCESS,
+    ),
+    "_handle_drilldown": (
+        "Handle Drill-Down",
+        "Subcomando CLI: lanza el\ndrill-down completo",
+        NodeType.PROCESS,
+    ),
+}
+
+_AGENTFLOW_FUNCTION_SPLITS: dict[str, list[tuple[str, list[str]]]] = {
+    "agentflow.parser": [
+        ("Entry", ["parse_file", "parse_source", "_unwrap_call", "parse_functions", "parse_class_methods"]),
+        ("Agent", ["_find_agent_class", "_parse_agent_class", "_parse_init", "_parse_run_method"]),
+        ("Block", [
+            "_parse_block", "_parse_while", "_parse_if", "_parse_for",
+            "_parse_try", "_parse_match", "_parse_assign", "_parse_expr_stmt",
+            "_parse_local_function", "_parse_function",
+        ]),
+        ("Tools", ["_detect_tool_dispatch", "_scan_handle_eval_for_tools", "_extract_call_info"]),
+        ("Labels", [
+            "_generic_if_label", "_if_label_and_detail", "_while_label",
+            "_apply_phase_patterns", "_find_function_def", "_find_class_def",
+        ]),
+    ],
+    "agentflow.layouts": [
+        ("Measure", ["_char_em_width", "measure_text", "node_size", "get_theme", "with_detail_level"]),
+        ("Topo", [
+            "_assign_rows", "_phase_groups", "_structural_phase_groups",
+            "_nodes_in_cycles", "_ancestors_of", "_default_phase",
+            "_classify_phase_nodes", "_topo_order_filtered", "_topological_sort",
+        ]),
+        ("PhaseBoxes", [
+            "_compute_phase_boxes", "_compute_group_boxes", "_identify_feedback_arrows",
+        ]),
+        ("Linear", ["hierarchical_layout"]),
+        ("Phased", ["phased_layout", "phased_horizontal_layout"]),
+        ("GridSwim", ["grid_layout", "swimlane_layout", "_assign_lane"]),
+        ("Radial", ["_radial_center", "_radial_levels", "radial_layout"]),
+    ],
+    "agentflow.sequence": [
+        ("Detect", [
+            "_is_actor_class_name", "_looks_like_actor", "_try_unwrap_call",
+            "_extract_fragments_from_if", "_collect_fragments", "_is_significant_condition",
+        ]),
+        ("Extract", ["extract_interactions", "extract_from_file", "extract_interactions_multi", "extract_interactions_from_dir"]),
+        ("Mermaid", ["to_mermaid_sequence", "_emit_mermaid_msg"]),
+        ("Render", ["to_sequence_svg", "save_sequence_svg", "to_sequence_html", "_build_import_actor_map", "merge_interactions"]),
+    ],
+    "agentflow.excalidraw": [
+        ("Geometry", ["_set_seed", "_rid", "_base_element", "_make_shape"]),
+        ("Elements", ["_make_text", "_make_title", "_make_box_with_label", "_make_legend", "_make_arrow", "_bind_arrow"]),
+        ("Export", ["to_excalidraw", "save_excalidraw"]),
+    ],
+    "agentflow.drilldown": [
+        ("Walk", [
+            "_title_segments", "_level_name", "_display_title", "_module_name",
+            "_rel_segments", "_collect_dirs", "_iter_py_recurse", "_flow_files_in",
+            "_warrants_overview",
+        ]),
+        ("Split", ["_split_overview_father", "_parent_href", "_save_artifact"]),
+        ("Emit", [
+            "_handle_dir", "_handle_dir_shallow", "_build_overview", "_safe_mod",
+            "_write_index", "run_drilldown",
+        ]),
+    ],
+    "agentflow.mermaid": [
+        ("Labels", ["_sanitize_id", "_escape_label", "_node_label", "_node_definition", "_edge_line"]),
+        ("Export", ["to_mermaid", "save_mermaid", "to_mermaid_html", "save_mermaid_html"]),
+    ],
+}
+
+AGENTFLOW_PROFILE = Profile(
+    name="agentflow",
+    tool_names=_AGENTFLOW_TOOL_INFO,
+    special_calls=_AGENTFLOW_SPECIAL_CALLS,
+    function_splits=_AGENTFLOW_FUNCTION_SPLITS,
+)
+
+
 # ── LangChain profile ─────────────────────────────────────────────────
 
 LANGCHAIN_PROFILE = Profile(
@@ -1652,6 +1787,7 @@ PROFILES: dict[str, Profile] = {
     "traceforge": TRACEFORGE_PROFILE,
     "asubarnipal": ASUBARNIPAL_PROFILE,
     "cogniteam": COGNITEAM_PROFILE,
+    "agentflow": AGENTFLOW_PROFILE,
     "langchain": LANGCHAIN_PROFILE,
     "crewai": CREWAI_PROFILE,
     "autogen": AUTOGEN_PROFILE,
