@@ -1,0 +1,49 @@
+%% ReaWeb · L2 · Tools (phased)
+flowchart TD
+    classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    subgraph n_1 ["FASE 1 · PREPARACIÓN"]
+    n_start(["Start"])
+    end
+    subgraph n_2 ["FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)"]
+    mod_base["Base"]
+    mod_code_exec["Code Exec"]
+    mod_domain_bundle_analyzer["Bundle Analyzer"]
+    mod_domain_creative_critic["Creative Critic"]
+    mod_domain_deployer["Deployer"]
+    mod_domain_evaluator["Evaluator"]
+    mod_domain_functional_tester["Functional Tester"]
+    mod_domain_meta_editor["Meta Editor"]
+    mod_domain_readme_fetcher["Readme Fetcher"]
+    mod_domain_repo_topics["Repo Topics"]
+    mod_domain_skill_auditor["Skill Auditor"]
+    mod_domain_skill_graph["Skill Graph"]
+    mod_domain_task_coevolve["Task Coevolve"]
+    mod_domain_truth_audit["Truth Audit"]
+    mod_domain_visual_critic["Visual Critic"]
+    mod_domain_web_generator["Web Generator"]
+    mod_file_io["File Io"]
+    end
+    subgraph n_3 ["FASE 3 · CIERRE"]
+    n_end(["End"])
+    end
+    n_start --> mod_base
+    mod_base --> mod_code_exec
+    mod_code_exec --> mod_domain_bundle_analyzer
+    mod_domain_bundle_analyzer --> mod_domain_creative_critic
+    mod_domain_creative_critic --> mod_domain_deployer
+    mod_domain_deployer --> mod_domain_evaluator
+    mod_domain_evaluator --> mod_domain_functional_tester
+    mod_domain_functional_tester --> mod_domain_meta_editor
+    mod_domain_meta_editor --> mod_domain_readme_fetcher
+    mod_domain_readme_fetcher --> mod_domain_repo_topics
+    mod_domain_repo_topics --> mod_domain_skill_auditor
+    mod_domain_skill_auditor --> mod_domain_skill_graph
+    mod_domain_skill_graph --> mod_domain_task_coevolve
+    mod_domain_task_coevolve --> mod_domain_truth_audit
+    mod_domain_truth_audit --> mod_domain_visual_critic
+    mod_domain_visual_critic --> mod_domain_web_generator
+    mod_domain_web_generator --> mod_file_io
+    mod_file_io --> n_end

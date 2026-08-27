@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReaWeb · L2 · Tools (phased)</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+  <h1>ReaWeb · L2 · Tools (phased)</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% ReaWeb · L2 · Tools (phased)
+flowchart TD
+    classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    subgraph n_1 ["FASE 1 · PREPARACIÓN"]
+    n_start(["Start"])
+    end
+    subgraph n_2 ["FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)"]
+    mod_base["Base"]
+    mod_code_exec["Code Exec"]
+    mod_domain_bundle_analyzer["Bundle Analyzer"]
+    mod_domain_creative_critic["Creative Critic"]
+    mod_domain_deployer["Deployer"]
+    mod_domain_evaluator["Evaluator"]
+    mod_domain_functional_tester["Functional Tester"]
+    mod_domain_meta_editor["Meta Editor"]
+    mod_domain_readme_fetcher["Readme Fetcher"]
+    mod_domain_repo_topics["Repo Topics"]
+    mod_domain_skill_auditor["Skill Auditor"]
+    mod_domain_skill_graph["Skill Graph"]
+    mod_domain_task_coevolve["Task Coevolve"]
+    mod_domain_truth_audit["Truth Audit"]
+    mod_domain_visual_critic["Visual Critic"]
+    mod_domain_web_generator["Web Generator"]
+    mod_file_io["File Io"]
+    end
+    subgraph n_3 ["FASE 3 · CIERRE"]
+    n_end(["End"])
+    end
+    n_start --> mod_base
+    mod_base --> mod_code_exec
+    mod_code_exec --> mod_domain_bundle_analyzer
+    mod_domain_bundle_analyzer --> mod_domain_creative_critic
+    mod_domain_creative_critic --> mod_domain_deployer
+    mod_domain_deployer --> mod_domain_evaluator
+    mod_domain_evaluator --> mod_domain_functional_tester
+    mod_domain_functional_tester --> mod_domain_meta_editor
+    mod_domain_meta_editor --> mod_domain_readme_fetcher
+    mod_domain_readme_fetcher --> mod_domain_repo_topics
+    mod_domain_repo_topics --> mod_domain_skill_auditor
+    mod_domain_skill_auditor --> mod_domain_skill_graph
+    mod_domain_skill_graph --> mod_domain_task_coevolve
+    mod_domain_task_coevolve --> mod_domain_truth_audit
+    mod_domain_truth_audit --> mod_domain_visual_critic
+    mod_domain_visual_critic --> mod_domain_web_generator
+    mod_domain_web_generator --> mod_file_io
+    mod_file_io --> n_end
+
+  </pre></div>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

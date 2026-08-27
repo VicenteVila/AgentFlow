@@ -24,22 +24,22 @@ flowchart TD
     classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
     classDef changed fill:#fde68a,stroke:#92400e
     subgraph n_1 ["FASE 1 · PREPARACIÓN"]
-    n_start(["Start<br><i>Agent.run() invoked</i>"])
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
     end
     subgraph n_2 ["FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)"]
-    dec_22{"rules_file.exists()<br><i>Condición en línea 22:</i>"}
-    dec_40{"not arq_dir.exists()<br><i>Condición en línea 40:</i>"}
-    dec_89{"verbose<br><i>Condición en línea 89:</i>"}
-    dec_25{"stack_file.exists()<br><i>Condición en línea 25:</i>"}
+    dec_22{"rules_file.exists()<br><i>Condición en línea 22:<br>rules_file.exists()</i>"}
+    dec_40{"not arq_dir.exists()<br><i>Condición en línea 40:<br>not arq_dir.exists()</i>"}
+    dec_89{"verbose<br><i>Condición en línea 89:<br>verbose</i>"}
+    dec_25{"stack_file.exists()<br><i>Condición en línea 25:<br>stack_file.exists()</i>"}
     loop_65["For each tool_name"]
-    dec_70{"quick<br><i>Condición en línea 70:</i>"}
+    dec_70{"quick<br><i>Condición en línea 70:<br>quick</i>"}
     loop_72["For each tool_name"]
     fn_load_archetype[["Load Archetype"]]
     fn_build_agent[["Build Agent"]]
     fn_run_single[["Run Single"]]
     end
     subgraph n_3 ["FASE 3 · CIERRE"]
-    n_end(["End<br><i>db.close()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
     end
     n_start --> fn_load_archetype
     dec_22 --> dec_25

@@ -999,6 +999,48 @@ def test_save_mermaid_html():
         assert "mermaid" in content.lower()
 
 
+def test_mermaid_reserved_keywords_sanitized():
+    from agentflow.mermaid import _sanitize_id, to_mermaid
+
+    assert _sanitize_id("end") == "n_end"
+    assert _sanitize_id("start") == "n_start"
+    assert _sanitize_id("subgraph") == "n_subgraph"
+    assert _sanitize_id("flowchart") == "n_flowchart"
+    assert _sanitize_id("comp_0") == "comp_0"
+
+    g = FlowGraph(title="Reserved Test")
+    g.add_node(Node(id="start", label="Start", node_type=NodeType.START))
+    g.add_node(Node(id="end", label="End", node_type=NodeType.END))
+    g.add_edge(Edge(source="start", target="end"))
+    mmd = to_mermaid(g)
+    assert "n_end" in mmd
+    assert "n_start" in mmd
+    assert "\n    end([" not in mmd
+    assert "\n    start([" not in mmd
+
+
+def test_parser_extracts_class_methods():
+    src = (
+        "class MemoryDB:\n"
+        "    def __init__(self):\n"
+        "        pass\n"
+        "    def upsert_run(self):\n"
+        "        if self.ready:\n"
+        "            self.conn.execute('insert')\n"
+        "    def close(self):\n"
+        "        self.conn.close()\n"
+        "    def count_nodes(self):\n"
+        "        return self.nodes\n"
+    )
+    g = parse_source(src)
+    ids = {n.id for n in g.nodes}
+    assert "fn_memorydb_upsert_run" in ids, f"Expected upsert_run in {ids}"
+    assert "fn_memorydb_close" in ids, f"Expected close in {ids}"
+    assert "fn_memorydb_count_nodes" in ids, f"Expected count_nodes in {ids}"
+    assert "start" in ids
+    assert len([i for i in ids if i.startswith("fn_memorydb")]) == 3
+
+
 def test_save_html():
     from agentflow.html import save_html
 

@@ -66,8 +66,7 @@ def parse_source(
     if agent_cls:
         _parse_agent_class(agent_cls, ParseContext(prof, graph))
     else:
-        # No agent class: treat top-level functions as entry points.
-        # Expand the largest function's body so its internal control flow is visible.
+        # No agent class: treat top-level functions and class methods as entry points.
         ctx = ParseContext(prof, graph)
         top_funcs = [n for n in tree.body if isinstance(n, _FUNC_TYPES)]
         for fn in top_funcs:
@@ -75,9 +74,24 @@ def parse_source(
             label = fn.name.lstrip("_").replace("_", " ").title()
             graph.add_node(Node(id=fid, label=label, node_type=NodeType.SUBPROCESS, line=fn.lineno))
             graph.add_edge(Edge(source="start", target=fid))
-            # Expand each function's body so internal control flow is visible
             if len(fn.body) > 3:
                 _parse_block(ctx, fn.body, fid)
+        # Also extract methods from non-Agent classes (e.g. MemoryDB, Tool subclasses)
+        for node in tree.body:
+            if isinstance(node, ast.ClassDef) and node.name != _find_agent_class.__name__:
+                methods = [
+                    item for item in node.body
+                    if isinstance(item, _FUNC_TYPES) and item.name != "__init__"
+                ]
+                prev = "start"
+                for meth in methods:
+                    mid = f"fn_{node.name.lower()}_{meth.name}"
+                    label = meth.name.lstrip("_").replace("_", " ").title()
+                    graph.add_node(Node(id=mid, label=label, node_type=NodeType.SUBPROCESS, line=meth.lineno))
+                    graph.add_edge(Edge(source=prev, target=mid))
+                    if len(meth.body) > 3:
+                        _parse_block(ctx, meth.body, mid)
+                    prev = mid
 
     if not any(n.node_type == NodeType.END for n in graph.nodes):
         graph.add_node(Node(
