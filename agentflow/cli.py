@@ -26,12 +26,12 @@ def _handle_diff(argv: list[str]) -> None:
     parser.add_argument("old", help="Old version of the file")
     parser.add_argument("new", help="New version of the file")
     parser.add_argument("-o", "--output", default=None, help="Output file path")
-    parser.add_argument("-l", "--layout", choices=["hierarchical", "grid", "phased", "swimlane"], default="hierarchical")
+    parser.add_argument("-l", "--layout", choices=["hierarchical", "grid", "phased", "phased-horizontal", "radial", "swimlane"], default="hierarchical")
     parser.add_argument("-f", "--format", choices=["excalidraw", "svg", "mermaid", "html"], default="excalidraw")
     parser.add_argument("--profile", default="generic")
     parser.add_argument("-t", "--title", default=None)
-    parser.add_argument("--theme", choices=["light", "dark", "pastel", "neon", "mono"], default="light")
-    parser.add_argument("--palette", choices=["light", "dark", "pastel", "neon", "mono"], default=None, help="Alias for --theme")
+    parser.add_argument("--theme", choices=["light", "dark", "pastel", "neon", "mono", "dungeon", "violet", "sandy", "ocean"], default="light")
+    parser.add_argument("--palette", choices=["light", "dark", "pastel", "neon", "mono", "dungeon", "violet", "sandy", "ocean"], default=None, help="Alias for --theme")
     parser.add_argument("--no-legend", action="store_true")
     parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--detail", choices=["low", "med", "high"], default="high")
@@ -225,7 +225,7 @@ def main(argv: list[str] | None = None) -> None:
     )
     parser.add_argument(
         "-l", "--layout",
-        choices=["hierarchical", "grid", "phased", "swimlane"],
+        choices=["hierarchical", "grid", "phased", "phased-horizontal", "radial", "swimlane"],
         default="hierarchical",
         help="Layout algorithm (default: hierarchical)",
     )
@@ -248,13 +248,13 @@ def main(argv: list[str] | None = None) -> None:
     )
     parser.add_argument(
         "--theme",
-        choices=["light", "dark", "pastel", "neon", "mono"],
+        choices=["light", "dark", "pastel", "neon", "mono", "dungeon", "violet", "sandy", "ocean"],
         default="light",
         help="Color theme (default: light)",
     )
     parser.add_argument(
         "--palette",
-        choices=["light", "dark", "pastel", "neon", "mono"],
+        choices=["light", "dark", "pastel", "neon", "mono", "dungeon", "violet", "sandy", "ocean"],
         default=None,
         help="Alias for --theme (overrides --theme if given)",
     )

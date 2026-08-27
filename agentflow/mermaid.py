@@ -15,7 +15,9 @@ from pathlib import Path
 from agentflow.layouts import (
     grid_layout,
     hierarchical_layout,
+    phased_horizontal_layout,
     phased_layout,
+    radial_layout,
     with_detail_level,
 )
 from agentflow.models import FlowGraph, NodeType
@@ -125,6 +127,10 @@ def to_mermaid(
         result = grid_layout(graph)
     elif layout == "phased":
         result = phased_layout(graph)
+    elif layout == "phased-horizontal":
+        result = phased_horizontal_layout(graph)
+    elif layout == "radial":
+        result = radial_layout(graph)
     elif layout == "swimlane":
         from agentflow.layouts import swimlane_layout
         result = swimlane_layout(graph)
@@ -135,7 +141,10 @@ def to_mermaid(
     lines.append(f"%% {title or graph.title}")
     if links:
         lines.append("%%{init: {'securityLevel':'loose'}}%%")
-    lines.append("flowchart TD")
+    if layout == "phased-horizontal":
+        lines.append("flowchart LR")
+    else:
+        lines.append("flowchart TD")
 
     # Class for evolution nodes (dashed)
     lines.append("    classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5")
@@ -144,7 +153,7 @@ def to_mermaid(
     lines.append("    classDef changed fill:#fde68a,stroke:#92400e")
 
     # Phase / group / lane subgraphs
-    if layout == "phased":
+    if layout in ("phased", "phased-horizontal"):
         boxes = result.phase_boxes
     elif layout == "swimlane":
         boxes = result.lane_boxes
@@ -156,7 +165,7 @@ def to_mermaid(
         from collections import defaultdict
         by_box: dict[str, list[str]] = defaultdict(list)
         # For phased, use phase number; for hierarchical/swimlane, use group_id/lane_id
-        if layout == "phased":
+        if layout in ("phased", "phased-horizontal"):
             for p in result.positioned:
                 by_box[str(p.phase)].append(p.node.id)
             for pb in result.phase_boxes:

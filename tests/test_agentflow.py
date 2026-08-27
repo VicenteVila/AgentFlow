@@ -1184,6 +1184,110 @@ def test_swimlane_cli(tmp_path=None):
         assert "subgraph" in out.read_text()
 
 
+# ── Phase 4: new layouts (phased-horizontal, radial) + extra themes ─────
+
+
+def test_phased_horizontal_layout():
+    from agentflow.layouts import phased_horizontal_layout
+
+    graph = parse(SIMPLE_AGENT, title="Phased-Horizontal")
+    result = phased_horizontal_layout(graph)
+    assert len(result.positioned) == graph.node_count
+    assert len(result.phase_boxes) >= 1
+    # Phases are columns: phase boxes sorted left→right, non-overlapping in X
+    ordered = sorted(result.phase_boxes, key=lambda b: b.phase)
+    for prev, cur in zip(ordered, ordered[1:], strict=False):
+        assert prev.x + prev.width <= cur.x
+    assert result.width > 0 and result.height > 0
+
+
+def test_phased_horizontal_mermaid_uses_lr():
+    from agentflow.mermaid import to_mermaid
+
+    graph = parse(SIMPLE_AGENT, title="Phased-Horizontal")
+    mmd = to_mermaid(graph, layout="phased-horizontal")
+    assert "flowchart LR" in mmd
+    assert "subgraph" in mmd
+
+
+def test_radial_layout():
+    from agentflow.layouts import radial_layout
+
+    graph = parse(SIMPLE_AGENT, title="Radial")
+    result = radial_layout(graph)
+    assert len(result.positioned) == graph.node_count
+    # Center node sits at radius 0 with at least one ring around it
+    center_ids = [p.node.id for p in result.positioned if p.group_id == "ring0"]
+    assert len(center_ids) == 1
+    assert any(p.group_id != "ring0" for p in result.positioned)
+    assert result.width > 0 and result.height > 0
+
+
+def test_radial_mermaid_renders():
+    from agentflow.mermaid import to_mermaid
+
+    graph = parse(SIMPLE_AGENT, title="Radial")
+    mmd = to_mermaid(graph, layout="radial")
+    assert "flowchart TD" in mmd
+    assert "flowchart LR" not in mmd
+
+
+def test_cli_phased_horizontal_and_radial():
+    import subprocess
+    import sys
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        src = Path(tmpdir) / "agent.py"
+        src.write_text("class Agent:\n    def run(self):\n        if x:\n            do_a()\n        tool()\n")
+        for layout, marker in [("phased-horizontal", "flowchart LR"), ("radial", "flowchart TD")]:
+            out = Path(tmpdir) / f"out_{layout}.mmd"
+            result = subprocess.run(
+                [sys.executable, "-m", "agentflow.cli", "-i", str(src), "-o", str(out),
+                 "-f", "mermaid", "-l", layout],
+                capture_output=True, text=True,
+            )
+            assert result.returncode == 0, result.stderr
+            assert out.exists()
+            assert marker in out.read_text()
+
+
+def test_extra_themes_distinct():
+    g = FlowGraph(title="Themes")
+    g.add_node(Node(id="a", label="A"))
+    g.add_node(Node(id="b", label="B"))
+    g.add_edge(Edge(source="a", target="b"))
+
+    from agentflow.layouts import get_theme
+    from agentflow.svg import to_svg
+
+    canvases = {t: get_theme(t)["canvas_background"] for t in ["dungeon", "violet", "sandy", "ocean"]}
+    # All four canvases are distinct from each other and from light/dark
+    assert len(set(canvases.values())) == 4
+    assert get_theme("dungeon")["canvas_background"] != get_theme("light")["canvas_background"]
+
+    svg_dungeon = to_svg(g, theme="dungeon")
+    svg_violet = to_svg(g, theme="violet")
+    assert svg_dungeon != svg_violet
+    assert "#fbf6de" in svg_dungeon  # creamy dungeon canvas
+
+
+def test_cli_extra_themes():
+    import subprocess
+    import sys
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        src = Path(tmpdir) / "a.py"
+        src.write_text("class Agent:\n    def run(self):\n        pass\n")
+        out = Path(tmpdir) / "out.svg"
+        result = subprocess.run(
+            [sys.executable, "-m", "agentflow.cli", "-i", str(src), "-o", str(out),
+             "--theme", "dungeon"],
+            capture_output=True, text=True,
+        )
+        assert result.returncode == 0
+        assert "#fbf6de" in out.read_text()
+
+
 # ── V5: ASCII, DOT, palettes ──────────────────────────────────────────
 
 

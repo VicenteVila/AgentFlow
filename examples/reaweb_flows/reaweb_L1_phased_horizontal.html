@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReaWeb · L1 · Agent (phased-horizontal)</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="reaweb_L0_Phased.html">← Volver</a>
+  <h1>ReaWeb · L1 · Agent (phased-horizontal)</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% ReaWeb · L1 · Agent (phased-horizontal)
+flowchart LR
+    classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    subgraph n_1 ["FASE 1 · PREPARACIÓN"]
+    n_start(["Start<br><i>Agent.run() invoked</i>"])
+    init["Init Agent<br><i>run_id, mkdir, upsert_run, write_text</i>"]
+    special__seed_from_workspace_867["Seed Workspace<br><i>Si workspace/current existe</i>"]
+    end
+    subgraph n_2 ["FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)"]
+    main_loop["Main Loop<br><i>while True:</i>"]
+    loop_869["Main Loop<br>(while True)"]
+    dec_876{"Stop<br>reason?<br><i>Motivo de parada?</i>"}
+    special__render_state_881["state = Render State<br><i>Genera prompt con: turn, cost,</i>"]
+    dec_900{"NOT tool_calls?<br><i>Niega tool_calls</i>"}
+    dec_904{"Agent said<br>done?<br><i>¿Agente dijo done/fin/finalizado?</i>"}
+    dec_905{"Target H<br>reached?<br><i>hypothesis_count ≤ target_h?</i>"}
+    loop_919["For each call in tool_calls"]
+    dec_945{"call.name ==<br>'generate_candidate' and node_id<br><i>Condición en línea 945:</i>"}
+    special__snapshot_946["Snapshot Workspace<br><i>Copia workspace/ → candidates/(id)/</i>"]
+    dec_949{"call.name ==<br>'generate_candidate' and node_id<br><i>Condición en línea 949:</i>"}
+    dec_953{"call.name ==<br>'generate_candidate' and is not<br><i>Condición en línea 953:</i>"}
+    dec_956{"node_id is not None and<br>call.name in 'audit_page')<br><i>Condición en línea 956:</i>"}
+    dec_961{"Budget<br>done?<br><i>turns ≥ 24 OR cost ≥ $5.00</i>"}
+    dec_969{"Compact<br>context?<br><i>tokens > 60000?</i>"}
+    dec_976{"self.memory.incremental.exists()<br><i>Condición en línea 976:</i>"}
+    tool_audit_truth_407["Audit Truth<br><i>Partes huérfanas, enlaces rotos,</i>"]
+    tool_audit_visual_447["Audit Visual<br><i>VLM Gemini: screenshot → score 0-100</i>"]
+    tool_audit_creative_479["Audit Creative<br><i>VLM anti-proxy: novedad/originalidad</i>"]
+    tool_generate_candidate_566["Generate Candidate<br><i>LLM sub-agent genera HTML/CSS/JS</i>"]
+    evo__auto_truth_audit_947["Auto Truth Audit<br><i>1 vez/run: partes conectadas</i>"]:::evolution
+    evo__auto_visual_audit_948["Auto Visual Audit<br><i>Post-generate: VLM screenshot</i>"]:::evolution
+    evo__compute_novelty_950["Compute Novelty<br><i>DOM(0.45) + palette(0.35)</i>"]:::evolution
+    evo__maybe_auto_lesson_955["Auto Lesson<br><i>delta ≥ 4.0 → aprende worked/didnt</i>"]:::evolution
+    evo__maybe_subtask_lesson_957["Subtask Lesson<br><i>Detecta subtask fail→pass</i>"]:::evolution
+    end
+    subgraph n_3 ["FASE 3 · CIERRE"]
+    special__export_final_982(["Export Final<br><i>Copia mejor candidato a</i>"])
+    end
+    n_start --> init
+    init --> main_loop
+    main_loop --> special__seed_from_workspace_867
+    special__seed_from_workspace_867 --> loop_869
+    loop_869 --> dec_876
+    dec_876 --> special__render_state_881
+    special__render_state_881 --> dec_900
+    dec_900 --> dec_904
+    dec_904 --> dec_905
+    dec_905 --> loop_919
+    loop_919 --> dec_945
+    dec_945 --> special__snapshot_946
+    special__snapshot_946 --> evo__auto_truth_audit_947
+    evo__auto_truth_audit_947 --> evo__auto_visual_audit_948
+    evo__auto_visual_audit_948 --> dec_949
+    dec_949 --> evo__compute_novelty_950
+    evo__compute_novelty_950 --> dec_953
+    dec_953 --> evo__maybe_auto_lesson_955
+    evo__maybe_auto_lesson_955 --> dec_956
+    dec_956 --> evo__maybe_subtask_lesson_957
+    evo__maybe_subtask_lesson_957 -- "loop" --> loop_919
+    loop_919 --> dec_961
+    dec_961 --> dec_969
+    dec_969 -- "loop" --> loop_869
+    loop_869 --> dec_976
+    dec_976 --> special__export_final_982
+    loop_919 -- "dispatch" --> tool_audit_truth_407
+    loop_919 -- "dispatch" --> tool_audit_visual_447
+    loop_919 -- "dispatch" --> tool_audit_creative_479
+    loop_919 -- "dispatch" --> tool_generate_candidate_566
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

@@ -25,7 +25,9 @@ from agentflow.layouts import (
     get_theme,
     grid_layout,
     hierarchical_layout,
+    phased_horizontal_layout,
     phased_layout,
+    radial_layout,
     with_detail_level,
 )
 from agentflow.models import FlowGraph, NodeType
@@ -165,6 +167,10 @@ def to_svg(
         result = grid_layout(graph, theme=theme)
     elif layout == "phased":
         result = phased_layout(graph, theme=theme)
+    elif layout == "phased-horizontal":
+        result = phased_horizontal_layout(graph, theme=theme)
+    elif layout == "radial":
+        result = radial_layout(graph, theme=theme)
     else:
         result = hierarchical_layout(graph, theme=theme)
 

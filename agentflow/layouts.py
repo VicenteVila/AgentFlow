@@ -1,12 +1,17 @@
 """Layout algorithms for positioning nodes in a flow graph.
 
-Provides two layout modes:
+Provides the following layouts:
 - hierarchical: HORIZONTAL layout (left→right) with visual grouping by category.
+- grid: tiled rows of nodes.
 - phased: VERTICAL layout (top→bottom) with phase boxes (FASE 1, 2, 3).
+- phased-horizontal: phases as COLUMNS left→right, nodes flowing top→bottom.
+- radial: circular rings around a central 'agent' node.
+- swimlane: vertical lanes keyed by role.
 """
 
 from __future__ import annotations
 
+import math
 from collections import defaultdict
 from dataclasses import dataclass, field
 
@@ -448,6 +453,178 @@ THEMES: dict[str, dict] = {
             "tools":        {"background": "#f1f5f9", "stroke": "#cbd5e1", "label": "TOOLS"},
             "evolution":    {"background": "#f8fafc", "stroke": "#cbd5e1", "label": "MEMORY"},
             "teardown":     {"background": "#f1f5f9", "stroke": "#cbd5e1", "label": "TEARDOWN"},
+        },
+    },
+    "dungeon": {
+        "arrow": "#6d5a3e",
+        "feedback_arrow": "#3b5bdb",
+        "text": "#3b341f",
+        "detail_text": "#6b5f45",
+        "title": "#3b341f",
+        "phase_label": "#4d4430",
+        "canvas_background": "#fbf6de",
+        "page_background": "#efe6ce",
+        "node_colors": {
+            NodeType.START:      {"background": "#eaf3df", "stroke": "#5a7d3d"},
+            NodeType.END:        {"background": "#f3dcdc", "stroke": "#a05c5c"},
+            NodeType.PROCESS:    {"background": "#efe6d5", "stroke": "#8a6d3b"},
+            NodeType.DECISION:   {"background": "#fdf3cf", "stroke": "#c2a13a"},
+            NodeType.SUBPROCESS: {"background": "#e0e7f3", "stroke": "#5b6fa8"},
+            NodeType.TOOL:       {"background": "#dcefe8", "stroke": "#3f826b"},
+            NodeType.LOOP:       {"background": "#f4dce8", "stroke": "#a85b8a"},
+            NodeType.EVOLUTION:  {"background": "#f5e0cd", "stroke": "#b06b2d"},
+        },
+        "category_styles": {
+            "init":     {"background": "#f0ead6", "stroke": "#a8b48a", "label": "INIT"},
+            "loop":     {"background": "#f6e6ee", "stroke": "#c48aa8", "label": "MAIN LOOP"},
+            "dispatch": {"background": "#efe6d5", "stroke": "#c9b26a", "label": "DISPATCH & EVALUATE"},
+            "tools":    {"background": "#e6efea", "stroke": "#7cb0a0", "label": "TOOLS"},
+            "evolution":{"background": "#f5e0cd", "stroke": "#d9a06b", "label": "SELF-EVOLUTION"},
+            "teardown": {"background": "#f5dddd", "stroke": "#d99a9a", "label": "TEARDOWN"},
+        },
+        "phase_defs": {
+            1: {"label": "FASE 1 · PREPARACIÓN", "background": "#f0ead6", "stroke": "#b8a880"},
+            2: {"label": "FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)", "background": "#fbf2d9", "stroke": "#b8a880"},
+            3: {"label": "FASE 3 · CIERRE", "background": "#eaf0dd", "stroke": "#b8a880"},
+        },
+        "swimlane_styles": {
+            "orchestrator": {"background": "#f0ead6", "stroke": "#a8b48a", "label": "ORCHESTRATOR"},
+            "planner":      {"background": "#e6e0ed", "stroke": "#a598c4", "label": "PLANNER"},
+            "developer":    {"background": "#efe6d5", "stroke": "#c9b26a", "label": "DEVELOPER"},
+            "debugger":     {"background": "#f6e6ee", "stroke": "#c48aa8", "label": "DEBUGGER"},
+            "designer":     {"background": "#f5e0cd", "stroke": "#d9a06b", "label": "DESIGNER"},
+            "tools":        {"background": "#e6efea", "stroke": "#7cb0a0", "label": "TOOLS"},
+            "evolution":    {"background": "#f5e0cd", "stroke": "#d9a06b", "label": "MEMORY"},
+            "teardown":     {"background": "#f5dddd", "stroke": "#d99a9a", "label": "TEARDOWN"},
+        },
+    },
+    "violet": {
+        "arrow": "#6b5e8f",
+        "feedback_arrow": "#7c3aed",
+        "text": "#2b1d3d",
+        "detail_text": "#6d5f87",
+        "title": "#2b1d3d",
+        "phase_label": "#4a3a63",
+        "canvas_background": "#faf7ff",
+        "page_background": "#e9e0f5",
+        "node_colors": {
+            NodeType.START:      {"background": "#eaf7ec", "stroke": "#4a9d5a"},
+            NodeType.END:        {"background": "#f9e6ea", "stroke": "#b3526a"},
+            NodeType.PROCESS:    {"background": "#efe9fb", "stroke": "#7e57c2"},
+            NodeType.DECISION:   {"background": "#fdf3e0", "stroke": "#d4a017"},
+            NodeType.SUBPROCESS: {"background": "#e3ecfa", "stroke": "#5b8def"},
+            NodeType.TOOL:       {"background": "#e6f2f6", "stroke": "#3f9db5"},
+            NodeType.LOOP:       {"background": "#f9e6f3", "stroke": "#c04f9e"},
+            NodeType.EVOLUTION:  {"background": "#fbeae6", "stroke": "#cc6e4e"},
+        },
+        "category_styles": {
+            "init":     {"background": "#eaf7ec", "stroke": "#a8d3b2", "label": "INIT"},
+            "loop":     {"background": "#f9e6f3", "stroke": "#d69ac3", "label": "MAIN LOOP"},
+            "dispatch": {"background": "#efe9fb", "stroke": "#bb9fe8", "label": "DISPATCH & EVALUATE"},
+            "tools":    {"background": "#e6f2f6", "stroke": "#9ccfdc", "label": "TOOLS"},
+            "evolution":{"background": "#fbeae6", "stroke": "#e0a291", "label": "SELF-EVOLUTION"},
+            "teardown": {"background": "#f9e6ea", "stroke": "#e0a3b2", "label": "TEARDOWN"},
+        },
+        "phase_defs": {
+            1: {"label": "FASE 1 · PREPARACIÓN", "background": "#f3eefe", "stroke": "#b9a6e0"},
+            2: {"label": "FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)", "background": "#f6ecfb", "stroke": "#b9a6e0"},
+            3: {"label": "FASE 3 · CIERRE", "background": "#eef7f1", "stroke": "#b9a6e0"},
+        },
+        "swimlane_styles": {
+            "orchestrator": {"background": "#eaf7ec", "stroke": "#a8d3b2", "label": "ORCHESTRATOR"},
+            "planner":      {"background": "#e6ecfa", "stroke": "#9cb8e8", "label": "PLANNER"},
+            "developer":    {"background": "#efe9fb", "stroke": "#bb9fe8", "label": "DEVELOPER"},
+            "debugger":     {"background": "#f9e6f3", "stroke": "#d69ac3", "label": "DEBUGGER"},
+            "designer":     {"background": "#fbeae6", "stroke": "#e0a291", "label": "DESIGNER"},
+            "tools":        {"background": "#e6f2f6", "stroke": "#9ccfdc", "label": "TOOLS"},
+            "evolution":    {"background": "#fbeae6", "stroke": "#e0a291", "label": "MEMORY"},
+            "teardown":     {"background": "#f9e6ea", "stroke": "#e0a3b2", "label": "TEARDOWN"},
+        },
+    },
+    "sandy": {
+        "arrow": "#7d6b5a",
+        "feedback_arrow": "#c07a1c",
+        "text": "#3d2f23",
+        "detail_text": "#8a6f55",
+        "title": "#3d2f23",
+        "phase_label": "#5c4a35",
+        "canvas_background": "#f9f1e7",
+        "page_background": "#efe2ce",
+        "node_colors": {
+            NodeType.START:      {"background": "#e9f1df", "stroke": "#6d8f4e"},
+            NodeType.END:        {"background": "#f3ded8", "stroke": "#b36a5a"},
+            NodeType.PROCESS:    {"background": "#f0e4d0", "stroke": "#a8893f"},
+            NodeType.DECISION:   {"background": "#f9ecc8", "stroke": "#d0a63c"},
+            NodeType.SUBPROCESS: {"background": "#e0e7e9", "stroke": "#5f8aa0"},
+            NodeType.TOOL:       {"background": "#e5eee3", "stroke": "#6f9b67"},
+            NodeType.LOOP:       {"background": "#f3e0e2", "stroke": "#b4677b"},
+            NodeType.EVOLUTION:  {"background": "#f6e2cd", "stroke": "#c47a2e"},
+        },
+        "category_styles": {
+            "init":     {"background": "#e9f1df", "stroke": "#b9cfa0", "label": "INIT"},
+            "loop":     {"background": "#f3e0e2", "stroke": "#d2a3a7", "label": "MAIN LOOP"},
+            "dispatch": {"background": "#f0e4d0", "stroke": "#d0bc8a", "label": "DISPATCH & EVALUATE"},
+            "tools":    {"background": "#e5eee3", "stroke": "#a3c49a", "label": "TOOLS"},
+            "evolution":{"background": "#f6e2cd", "stroke": "#e0b48c", "label": "SELF-EVOLUTION"},
+            "teardown": {"background": "#f3ded8", "stroke": "#dca99b", "label": "TEARDOWN"},
+        },
+        "phase_defs": {
+            1: {"label": "FASE 1 · PREPARACIÓN", "background": "#f3e8d4", "stroke": "#cbb194"},
+            2: {"label": "FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)", "background": "#fbf0da", "stroke": "#cbb194"},
+            3: {"label": "FASE 3 · CIERRE", "background": "#ecf0e2", "stroke": "#cbb194"},
+        },
+        "swimlane_styles": {
+            "orchestrator": {"background": "#e9f1df", "stroke": "#b9cfa0", "label": "ORCHESTRATOR"},
+            "planner":      {"background": "#e4e9e6", "stroke": "#a3bdb0", "label": "PLANNER"},
+            "developer":    {"background": "#f0e4d0", "stroke": "#d0bc8a", "label": "DEVELOPER"},
+            "debugger":     {"background": "#f3e0e2", "stroke": "#d2a3a7", "label": "DEBUGGER"},
+            "designer":     {"background": "#f6e2cd", "stroke": "#e0b48c", "label": "DESIGNER"},
+            "tools":        {"background": "#e5eee3", "stroke": "#a3c49a", "label": "TOOLS"},
+            "evolution":    {"background": "#f6e2cd", "stroke": "#e0b48c", "label": "MEMORY"},
+            "teardown":     {"background": "#f3ded8", "stroke": "#dca99b", "label": "TEARDOWN"},
+        },
+    },
+    "ocean": {
+        "arrow": "#4a6b7a",
+        "feedback_arrow": "#0ea5e9",
+        "text": "#12303a",
+        "detail_text": "#5d7d8a",
+        "title": "#12303a",
+        "phase_label": "#2f5462",
+        "canvas_background": "#f0fafb",
+        "page_background": "#dceef1",
+        "node_colors": {
+            NodeType.START:      {"background": "#e3f2e5", "stroke": "#3d8f5f"},
+            NodeType.END:        {"background": "#fce4ea", "stroke": "#cf5d7b"},
+            NodeType.PROCESS:    {"background": "#e2ecfb", "stroke": "#4678c8"},
+            NodeType.DECISION:   {"background": "#fbf0d8", "stroke": "#cf9c1e"},
+            NodeType.SUBPROCESS: {"background": "#def2f8", "stroke": "#3b9cc0"},
+            NodeType.TOOL:       {"background": "#dcf3ea", "stroke": "#2f9b7a"},
+            NodeType.LOOP:       {"background": "#fadbed", "stroke": "#c04d8f"},
+            NodeType.EVOLUTION:  {"background": "#fde8d8", "stroke": "#cc7430"},
+        },
+        "category_styles": {
+            "init":     {"background": "#e3f2e5", "stroke": "#a5cfa9", "label": "INIT"},
+            "loop":     {"background": "#fadbed", "stroke": "#d294b8", "label": "MAIN LOOP"},
+            "dispatch": {"background": "#e2ecfb", "stroke": "#9cb7e8", "label": "DISPATCH & EVALUATE"},
+            "tools":    {"background": "#dcf3ea", "stroke": "#8fc9b0", "label": "TOOLS"},
+            "evolution":{"background": "#fde8d8", "stroke": "#dfae8c", "label": "SELF-EVOLUTION"},
+            "teardown": {"background": "#fce4ea", "stroke": "#dc9db0", "label": "TEARDOWN"},
+        },
+        "phase_defs": {
+            1: {"label": "FASE 1 · PREPARACIÓN", "background": "#e5f2f4", "stroke": "#9cc5cf"},
+            2: {"label": "FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)", "background": "#ecf9fa", "stroke": "#9cc5cf"},
+            3: {"label": "FASE 3 · CIERRE", "background": "#e9f0e2", "stroke": "#9cc5cf"},
+        },
+        "swimlane_styles": {
+            "orchestrator": {"background": "#e3f2e5", "stroke": "#a5cfa9", "label": "ORCHESTRATOR"},
+            "planner":      {"background": "#e0eef8", "stroke": "#92b8d8", "label": "PLANNER"},
+            "developer":    {"background": "#e2ecfb", "stroke": "#9cb7e8", "label": "DEVELOPER"},
+            "debugger":     {"background": "#fadbed", "stroke": "#d294b8", "label": "DEBUGGER"},
+            "designer":     {"background": "#fde8d8", "stroke": "#dfae8c", "label": "DESIGNER"},
+            "tools":        {"background": "#dcf3ea", "stroke": "#8fc9b0", "label": "TOOLS"},
+            "evolution":    {"background": "#fde8d8", "stroke": "#dfae8c", "label": "MEMORY"},
+            "teardown":     {"background": "#fce4ea", "stroke": "#dc9db0", "label": "TEARDOWN"},
         },
     },
 }
@@ -1061,3 +1238,199 @@ def _topological_sort(graph: FlowGraph) -> list[str]:
             order.append(n.id)
 
     return order
+
+
+def phased_horizontal_layout(graph: FlowGraph, **kwargs) -> LayoutResult:
+    """Horizontal phased layout: FASE 1→2→3 flow left→right as columns.
+
+    Within each phase column, nodes flow top→bottom (main center, tools on the
+    right, evolution on the left). Mirrors ``phased_layout`` with the axes
+    swapped so wide phase-spanning tools stay legible.
+    """
+    if not graph.nodes:
+        return LayoutResult([], 0, 0)
+
+    phase_groups = _phase_groups(graph)
+    for phase in phase_groups:
+        phase_groups[phase] = _topo_order_filtered(graph, phase_groups[phase])
+
+    positioned: list[PositionedNode] = []
+    x_cursor = float(PHASE_TOP)
+    col_gap = 140.0
+    inner_gap = PHASE_H_GAP
+    col_top = 90.0
+    pal = get_theme(kwargs.get("theme", "light"))
+    phase_defs = pal["phase_defs"]
+
+    for phase in [1, 2, 3]:
+        node_ids = phase_groups[phase]
+        if not node_ids:
+            continue
+
+        main_nodes, side_nodes, evo_nodes = _classify_phase_nodes(graph, node_ids)
+
+        def _column_metrics(nids: list[str]) -> tuple[float, float]:
+            w = 0.0
+            h = 0.0
+            for nid in nids:
+                node = graph.get_node(nid)
+                if node is None:
+                    continue
+                nw, nh = node_size(node)
+                w = max(w, nw)
+                h += nh
+            if nids:
+                h += PHASE_V_GAP * (len(nids) - 1)
+            return w, h
+
+        main_w, main_h = _column_metrics(main_nodes)
+        side_w, side_h = _column_metrics(side_nodes)
+        evo_w, evo_h = _column_metrics(evo_nodes)
+
+        col_h = max(main_h, side_h, evo_h, 60.0)
+
+        evo_x = x_cursor
+        main_x = evo_x + (evo_w + inner_gap if evo_nodes else 0.0)
+        tools_x = main_x + (main_w + inner_gap if main_nodes else 0.0)
+
+        def _place(
+            nids: list[str], col_x: float, col_w: float, group: str,
+            col_h: float, phase: int,
+        ) -> None:
+            y = col_top + (col_h - col_w) / 2
+            for nid in nids:
+                node = graph.get_node(nid)
+                if node is None:
+                    continue
+                w, h = node_size(node)
+                positioned.append(PositionedNode(
+                    node=node, x=col_x + (col_w - w) / 2, y=y,
+                    width=w, height=h, group_id=group, phase=phase,
+                ))
+                y += h + PHASE_V_GAP
+
+        _place(main_nodes, main_x, main_w, "main", col_h, phase)
+        _place(side_nodes, tools_x, side_w, "tools", col_h, phase)
+        _place(evo_nodes, evo_x, evo_w, "evolution", col_h, phase)
+
+        xs = [evo_x] if evo_nodes else []
+        if main_nodes:
+            xs += [main_x, main_x + main_w]
+        if side_nodes:
+            xs += [tools_x, tools_x + side_w]
+        if evo_nodes:
+            xs.append(evo_x + evo_w)
+        label_w, _ = measure_text(phase_defs[phase]["label"], 22)
+        reserve = max((max(xs) - min(xs)) if xs else 0.0, label_w + 60)
+        x_cursor = (min(xs) if xs else x_cursor) + reserve + col_gap
+
+    # Compute phase boxes
+    phase_boxes = _compute_phase_boxes(positioned, phase_defs)
+
+    max_x = max((p.x + p.width for p in positioned), default=0)
+    max_y = max((p.y + p.height for p in positioned), default=0)
+
+    return LayoutResult(
+        positioned=positioned,
+        width=max_x + 80,
+        height=max_y + 80,
+        phase_boxes=phase_boxes,
+    )
+
+
+def _radial_center(graph: FlowGraph) -> str:
+    """Pick the central node: first START, else the node with max total degree."""
+    for node in graph.nodes:
+        if node.node_type == NodeType.START:
+            return node.id
+    deg: dict[str, int] = defaultdict(int)
+    for e in graph.edges:
+        deg[e.source] += 1
+        deg[e.target] += 1
+    if graph.nodes:
+        return max((n.id for n in graph.nodes), key=lambda nid: deg.get(nid, 0))
+    return ""
+
+
+def _radial_levels(graph: FlowGraph, center_id: str) -> dict[str, int]:
+    """BFS distance (undirected) from the center, used for concentric rings."""
+    adj: dict[str, list[str]] = defaultdict(list)
+    for e in graph.edges:
+        adj[e.source].append(e.target)
+        adj[e.target].append(e.source)
+
+    levels: dict[str, int] = {}
+    queue = [center_id]
+    levels[center_id] = 0
+    while queue:
+        cur = queue.pop(0)
+        for nb in adj.get(cur, []):
+            if nb not in levels:
+                levels[nb] = levels[cur] + 1
+                queue.append(nb)
+    for node in graph.nodes:
+        if node.id not in levels:
+            levels[node.id] = 1
+    return levels
+
+
+def radial_layout(graph: FlowGraph, **kwargs) -> LayoutResult:
+    """Circular layout: central agent node, others on concentric rings by BFS
+    distance. Distances and angles are computed for the exported geometry
+    (Excalidraw / SVG); Mermaid ignores the positions and lays out itself.
+    """
+    if not graph.nodes:
+        return LayoutResult([], 0, 0)
+
+    center_id = _radial_center(graph)
+    levels = _radial_levels(graph, center_id)
+
+    topo = _topological_sort(graph)
+    by_level: dict[int, list[str]] = {}
+    for nid, lvl in levels.items():
+        by_level.setdefault(lvl, []).append(nid)
+    for lvl, nids in by_level.items():
+        lset = set(nids)
+        by_level[lvl] = [nid for nid in topo if nid in lset]
+
+    origin_x = 500.0
+    origin_y = 400.0
+    ring_gap = 160.0
+    max_level = max(levels.values()) or 1
+
+    positioned: list[PositionedNode] = []
+    for level in range(max_level + 1):
+        nids = by_level.get(level, [])
+        if not nids:
+            continue
+        radius = ring_gap * level
+        count = len(nids)
+        for i, nid in enumerate(nids):
+            node = graph.get_node(nid)
+            if node is None:
+                continue
+            w, h = node_size(node)
+            angle = 2 * math.pi * i / count - math.pi / 2
+            x = origin_x + radius * math.cos(angle) - w / 2
+            y = origin_y + radius * math.sin(angle) - h / 2
+            positioned.append(PositionedNode(
+                node=node, x=x, y=y, width=w, height=h,
+                group_id=f"ring{level}", phase=1,
+            ))
+
+    min_x = min((p.x for p in positioned), default=0)
+    min_y = min((p.y for p in positioned), default=0)
+    max_x = max((p.x + p.width for p in positioned), default=0)
+    max_y = max((p.y + p.height for p in positioned), default=0)
+
+    # Shift so the diagram starts at (margin, margin)
+    margin = 60.0
+    for p in positioned:
+        p.x += margin - min_x
+        p.y += margin - min_y
+
+    return LayoutResult(
+        positioned=positioned,
+        width=max_x - min_x + margin * 2,
+        height=max_y - min_y + margin * 2,
+    )

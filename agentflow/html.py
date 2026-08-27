@@ -187,8 +187,10 @@ def to_html(
     *links* maps node IDs to relative URLs for drill-down navigation.
     Nodes with links get pointer cursor and click-to-navigate behavior.
     """
-    # Theme-aware page background
-    page_bg = "#f8f9fa" if theme == "light" else "#0f0f0f"
+    # Theme-aware page background (warm/cool canvases keep a tinted page)
+    from agentflow.layouts import get_theme
+    _pal = get_theme(theme)
+    page_bg = _pal.get("page_background", "#f8f9fa" if theme == "light" else "#0f0f0f")
     # SVG already carries its own canvas background; keep page slightly different
     svg_text = to_svg(graph, layout=layout, theme=theme, legend=legend, detail=detail)
     # Ensure SVG has an id for JS targeting (inject if missing)
@@ -207,9 +209,7 @@ def to_html(
             )
 
     # Derive canvas background from theme for the wrapper
-    from agentflow.layouts import get_theme
-    pal = get_theme(theme)
-    canvas_bg = pal["canvas_background"]
+    canvas_bg = _pal["canvas_background"]
 
     # Add drill-down JS if links provided
     drilldown_js = ""

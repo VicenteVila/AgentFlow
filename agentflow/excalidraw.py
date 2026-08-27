@@ -408,7 +408,7 @@ def to_excalidraw(
     Returns:
         A dict that can be serialized to .excalidraw JSON.
     """
-    from agentflow.layouts import grid_layout
+    from agentflow.layouts import grid_layout, phased_horizontal_layout, radial_layout
 
     _set_seed(seed)
     if detail != "high":
@@ -420,6 +420,10 @@ def to_excalidraw(
         result = grid_layout(graph, theme=theme)
     elif layout == "phased":
         result = phased_layout(graph, theme=theme)
+    elif layout == "phased-horizontal":
+        result = phased_horizontal_layout(graph, theme=theme)
+    elif layout == "radial":
+        result = radial_layout(graph, theme=theme)
     elif layout == "swimlane":
         from agentflow.layouts import swimlane_layout
         result = swimlane_layout(graph, theme=theme)

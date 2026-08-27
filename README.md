@@ -39,8 +39,11 @@ agentflow diff old.py new.py -f mermaid -o diff.mmd
 agentflow -i orchestrator.py -f ascii --detail low
 agentflow -i my_agent.py -f dot -o flow.dot   # → dot -Tsvg flow.dot
 
-# Palettes: light | dark | pastel | neon | mono (--palette = alias de --theme)
+# Palettes: light | dark | pastel | neon | mono | dungeon | violet | sandy | ocean (--palette = alias de --theme)
 agentflow -i my_agent.py -f svg --palette neon -o flow.svg
+
+# Nueva generación completa: jerarquía muñecas rusas L0→L1→L2→L3
+agentflow -i ./mi_repo --drilldown -t MiProyecto --output-dir ./flow_output
 
 # SVG export, dark theme, deterministic output
 agentflow -i my_agent.py -f svg --theme dark --seed 42 -o flow.svg
@@ -52,17 +55,18 @@ agentflow -i my_agent.py -f svg --theme dark --seed 42 -o flow.svg
   Python class or function tree.
 - **Profiles** — pluggable domain knowledge (known tools, exhaustive labels, phase patterns).
   Built-ins: `generic` (zero assumptions) and `reaweb`. Load your own from a `.py` file.
-- **Four layouts** — `hierarchical` (horizontal), `phased` (vertical FASE 1/2/3), `swimlane` (vertical lanes per actor), `grid`.
+- **Six layouts** — `hierarchical` (horizontal), `phased` (vertical FASE 1/2/3), `phased-horizontal` (fases en columnas), `radial` (anillos alrededor del agente central), `swimlane` (vertical lanes per actor), `grid`.
 - **Smart visuals** — content-driven sizing, orthogonal routing, swimlanes, lateral feedback, light/dark themes, **semantic edge colors** (YES green / NO red / loop blue).
 - **Repo overview** — point at a directory and get a map of the whole codebase (one node per module, optional import edges).
-- **Mermaid export** — `flowchart TD` that renders natively on GitHub/GitLab/Notion, no extra tooling.
+- **Drill-down (muñecas rusas)** — `--drilldown` genera toda la jerarquía L0→L1→L2→L3 como `.mmd` + `.html` interactivos con click-links y botón «← Volver».
+- **Mermaid export** — `flowchart TD` / `LR` que renderiza natively en GitHub/GitLab/Notion, no extra tooling.
 - **Progressive detail** — `--detail low|med|high` makes huge graphs readable (low = labels only).
 - **Diff mode** — `agentflow diff old.py new.py` highlights added/removed/changed nodes (leverages `--seed` determinism).
 - **Sequence diagrams** — `-f sequence` / `-f mermaid-seq`: lifelines por agente (Planner/LLM/Memory…), mensajes ordenados por línea.
 - **Interactive HTML** — self-contained `flow.html` with pan/zoom, phase collapse and search (works offline via `file://`).
 - **Deterministic output** — pass `--seed` to get byte-identical files (great for CI diffs).
 - **6 output formats** — excalidraw · svg · mermaid · html · **ascii** (terminal) · **dot** (Graphviz).
-- **5 palettes** — light, dark, pastel, neon, mono via `--palette`.
+- **9 palettes** — light, dark, pastel, neon, mono, dungeon (garabato kraft), violet, sandy, ocean vía `--palette`.
 - **SVG export** — same geometry, zero dependencies.
 
 ## Profiles
@@ -101,7 +105,7 @@ models.py     Node / Edge / FlowGraph          profiles.py   generic · reaweb �
 |---|---|
 | `parser.py` | AST → FlowGraph (domain knowledge comes from the profile) |
 | `profiles.py` | `Profile` dataclass, built-ins, custom loader |
-| `layouts.py` | hierarchical / phased / grid positioning, text measurement, themes |
+| `layouts.py` | hierarchical / phased / phased-horizontal / radial / grid / swimlane positioning, text measurement, themes |
 | `excalidraw.py` | FlowGraph → Excalidraw JSON (bindings, orthogonal routing) |
 | `svg.py` | FlowGraph → standalone SVG |
 | `mermaid.py` | FlowGraph → Mermaid flowchart TD |
