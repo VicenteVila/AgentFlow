@@ -1,0 +1,93 @@
+%% Evals
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_63{"not a_tokens or not b_tokens<br><i>Condición en línea 63:<br>not a_tokens or not b_tokens</i>"}
+    dec_78{"not ref_tokens or not<br>out_tokens<br><i>Condición en línea 78:<br>not ref_tokens or not out_tokens</i>"}
+    dec_91{"not tokens<br><i>Condición en línea 91:<br>not tokens</i>"}
+    dec_120{"not match<br><i>Condición en línea 120:<br>not match</i>"}
+    dec_150{"reference is None and<br>getattr(span, 'metadata', None)<br><i>Condición en línea 150:<br>reference is None and getattr(span, 'metadata', None)</i>"}
+    dec_202{"span_ids<br><i>Condición en línea 202:<br>span_ids</i>"}
+    loop_225["For each r in results"]
+    dec_83{"precision + recall == 0<br><i>Condición en línea 83:<br>precision + recall == 0</i>"}
+    dec_152{"reference is None and<br>references<br><i>Condición en línea 152:<br>reference is None and references</i>"}
+    dec_231{"not segmented<br><i>Condición en línea 231:<br>not segmented</i>"}
+    dec_154{"reference is not None<br><i>Condición en línea 154:<br>reference is not None</i>"}
+    loop_232["For loop"]
+    dec_160{"judge is not None<br><i>Condición en línea 160:<br>judge is not None</i>"}
+    loop_242["For each r in results"]
+    loop_246["For loop"]
+    loop_66["For each t in a_tokens"]
+    loop_68["For loop"]
+    loop_209["For each span in spans"]
+    loop_210["For each r"]
+    dec_211{"group_by and (span.metadata<br>or ()) and (group_by in<br><i>Condición en línea 211:<br>group_by and (span.metadata or ()) and (group_by in span.met</i>"}
+    fn_tokenize[["Tokenize"]]
+    fn_lcs_length[["Lcs Length"]]
+    fn_factuality_score[["Factuality Score"]]
+    fn_toxicity_score[["Toxicity Score"]]
+    fn_llm_judge_score[["Llm Judge Score"]]
+    fn__span_text[["Span Text"]]
+    fn_evaluate_span[["Evaluate Span"]]
+    fn_run_evals[["Run Evals"]]
+    fn_summary[["Summary"]]
+    fn_openai_judge[["Openai Judge"]]
+    fn_anthropic_judge[["Anthropic Judge"]]
+    fn_judge_261[["Judge"]]
+    fn_judge_278[["Judge"]]
+    tool_query_206["spans = Query<br><i>Consulta estructurada/filtrada de spans</i>"]
+    n_start --> fn_tokenize
+    n_start --> fn_lcs_length
+    fn_lcs_length --> dec_63
+    dec_63 --> loop_66
+    loop_66 --> loop_68
+    loop_68 -- "loop" --> loop_66
+    n_start --> fn_factuality_score
+    fn_factuality_score --> dec_78
+    dec_78 --> dec_83
+    n_start --> fn_toxicity_score
+    fn_toxicity_score --> dec_91
+    n_start --> fn_llm_judge_score
+    fn_llm_judge_score --> dec_120
+    n_start --> fn__span_text
+    n_start --> fn_evaluate_span
+    fn_evaluate_span --> dec_150
+    dec_150 --> dec_152
+    dec_152 --> dec_154
+    dec_154 --> dec_160
+    n_start --> fn_run_evals
+    fn_run_evals --> dec_202
+    dec_202 -- "NO" --> tool_query_206
+    tool_query_206 --> loop_209
+    loop_209 --> loop_210
+    loop_210 --> dec_211
+    dec_211 -- "loop" --> loop_210
+    loop_210 -- "loop" --> loop_209
+    n_start --> fn_summary
+    fn_summary --> loop_225
+    loop_225 --> dec_231
+    dec_231 --> loop_232
+    loop_232 --> loop_242
+    loop_242 --> loop_246
+    n_start --> fn_openai_judge
+    fn_openai_judge --> fn_judge_261
+    n_start --> fn_anthropic_judge
+    fn_anthropic_judge --> fn_judge_278
+    class n_start node-start
+    class fn_tokenize,fn_lcs_length,fn_factuality_score,fn_toxicity_score,fn_llm_judge_score,fn__span_text,fn_evaluate_span,fn_run_evals,fn_summary,fn_openai_judge,fn_judge_261,fn_anthropic_judge,fn_judge_278 node-subprocess
+    class dec_63,dec_78,dec_83,dec_91,dec_120,dec_150,dec_152,dec_154,dec_160,dec_202,dec_211,dec_231 node-decision
+    class loop_66,loop_68,loop_209,loop_210,loop_225,loop_232,loop_242,loop_246 node-loop
+    class tool_query_206 node-tool
+    class n_end node-end

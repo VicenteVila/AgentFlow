@@ -1,0 +1,74 @@
+%% Clickhouse
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_113{"db != 'default'<br><i>Condición en línea 113:<br>db != 'default'</i>"}
+    loop_205["For each s in spans"]
+    loop_207["For each s in spans"]
+    dec_213{"not rows<br><i>Condición en línea 213:<br>not rows</i>"}
+    dec_248{"trace_id<br><i>Condición en línea 248:<br>trace_id</i>"}
+    dec_251{"agent<br><i>Condición en línea 251:<br>agent</i>"}
+    dec_254{"status<br><i>Condición en línea 254:<br>status</i>"}
+    dec_257{"min_duration_ms is not None<br><i>Condición en línea 257:<br>min_duration_ms is not None</i>"}
+    dec_260{"since is not None<br><i>Condición en línea 260:<br>since is not None</i>"}
+    loop_268["For each s in spans"]
+    loop_270["For each s in spans"]
+    dec_272{"metadata<br><i>Condición en línea 272:<br>metadata</i>"}
+    fn_clickhousecollector__get_client[["Get Client"]]
+    fn_clickhousecollector__parse_dsn[["Parse Dsn"]]
+    tool_close_116["Close<br><i>Cierra conexión/recursos del backend</i>"]
+    fn_clickhousecollector__serialize_span[["Serialize Span"]]
+    fn_clickhousecollector__deserialize_span[["Deserialize Span"]]
+    fn_clickhousecollector__rows[["Rows"]]
+    fn_clickhousecollector_save[["Save"]]
+    fn_clickhousecollector_get_trace[["Get Trace"]]
+    fn_clickhousecollector_get_span[["Get Span"]]
+    fn_clickhousecollector_list_traces[["List Traces"]]
+    fn_clickhousecollector_get_last_trace_id[["Get Last Trace Id"]]
+    fn_clickhousecollector_query[["Query"]]
+    fn_clickhousecollector_clear[["Clear"]]
+    fn_clickhousecollector_close[["Close"]]
+    n_start --> fn_clickhousecollector__get_client
+    fn_clickhousecollector__get_client --> dec_113
+    dec_113 --> tool_close_116
+    fn_clickhousecollector__get_client --> fn_clickhousecollector__parse_dsn
+    fn_clickhousecollector__parse_dsn --> fn_clickhousecollector__serialize_span
+    fn_clickhousecollector__serialize_span --> fn_clickhousecollector__deserialize_span
+    fn_clickhousecollector__deserialize_span --> fn_clickhousecollector__rows
+    fn_clickhousecollector__rows --> fn_clickhousecollector_save
+    fn_clickhousecollector_save --> fn_clickhousecollector_get_trace
+    fn_clickhousecollector_get_trace --> loop_205
+    loop_205 --> loop_207
+    fn_clickhousecollector_get_trace --> fn_clickhousecollector_get_span
+    fn_clickhousecollector_get_span --> dec_213
+    fn_clickhousecollector_get_span --> fn_clickhousecollector_list_traces
+    fn_clickhousecollector_list_traces --> fn_clickhousecollector_get_last_trace_id
+    fn_clickhousecollector_get_last_trace_id --> fn_clickhousecollector_query
+    fn_clickhousecollector_query --> dec_248
+    dec_248 --> dec_251
+    dec_251 --> dec_254
+    dec_254 --> dec_257
+    dec_257 --> dec_260
+    dec_260 --> loop_268
+    loop_268 --> loop_270
+    loop_270 --> dec_272
+    fn_clickhousecollector_query --> fn_clickhousecollector_clear
+    fn_clickhousecollector_clear --> fn_clickhousecollector_close
+    class n_start node-start
+    class fn_clickhousecollector__get_client,fn_clickhousecollector__parse_dsn,fn_clickhousecollector__serialize_span,fn_clickhousecollector__deserialize_span,fn_clickhousecollector__rows,fn_clickhousecollector_save,fn_clickhousecollector_get_trace,fn_clickhousecollector_get_span,fn_clickhousecollector_list_traces,fn_clickhousecollector_get_last_trace_id,fn_clickhousecollector_query,fn_clickhousecollector_clear,fn_clickhousecollector_close node-subprocess
+    class dec_113,dec_213,dec_248,dec_251,dec_254,dec_257,dec_260,dec_272 node-decision
+    class tool_close_116 node-tool
+    class loop_205,loop_207,loop_268,loop_270 node-loop
+    class n_end node-end

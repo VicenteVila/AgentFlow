@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>traceforge · examples</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="traceforge_L0_Overview.html">← Volver</a>
+  <h1>traceforge · examples</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% traceforge · examples
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start"])
+    mod_async_multi_agent["Async Multi Agent<br><i>12 nodos, 12 enlaces</i>"]
+    mod_basic_usage["Basic Usage<br><i>5 nodos, 3 enlaces</i>"]
+    mod_metadata_evals["Metadata Evals<br><i>4 nodos, 2 enlaces</i>"]
+    mod_multi_agent_pipeline["Multi Agent Pipeline<br><i>4 nodos, 2 enlaces</i>"]
+    mod_openai_integration["Openai Integration<br><i>6 nodos, 4 enlaces</i>"]
+    n_end(["End"])
+    mod_fastapi_integration["Fastapi Integration<br><i>8 nodos, 6 enlaces</i>"]
+    n_start --> mod_async_multi_agent
+    mod_async_multi_agent --> mod_basic_usage
+    mod_basic_usage --> mod_fastapi_integration
+    mod_fastapi_integration --> mod_metadata_evals
+    mod_metadata_evals --> mod_multi_agent_pipeline
+    mod_multi_agent_pipeline --> mod_openai_integration
+    mod_openai_integration --> n_end
+    class n_start node-start
+    class mod_async_multi_agent node-loop
+    class mod_basic_usage,mod_metadata_evals,mod_multi_agent_pipeline,mod_openai_integration node-process
+    class mod_fastapi_integration node-tool
+    class n_end node-end
+    click mod_async_multi_agent href "traceforge_L2_Examples_Async_multi_agent.html" "Abrir detalle"
+    click mod_basic_usage href "traceforge_L2_Examples_Basic_usage.html" "Abrir detalle"
+    click mod_fastapi_integration href "traceforge_L2_Examples_Fastapi_integration.html" "Abrir detalle"
+    click mod_metadata_evals href "traceforge_L2_Examples_Metadata_evals.html" "Abrir detalle"
+    click mod_multi_agent_pipeline href "traceforge_L2_Examples_Multi_agent_pipeline.html" "Abrir detalle"
+    click mod_openai_integration href "traceforge_L2_Examples_Openai_integration.html" "Abrir detalle"
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

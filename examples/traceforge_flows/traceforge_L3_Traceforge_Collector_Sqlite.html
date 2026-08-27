@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sqlite</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="traceforge_L2_Traceforge_Collector.html">← Volver</a>
+  <h1>Sqlite</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Sqlite
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_75{"'input_truncated' not in<br>existing_columns<br><i>Condición en línea 75:<br>'input_truncated' not in existing_columns</i>"}
+    dec_78{"'stream' not in<br>existing_columns<br><i>Condición en línea 78:<br>'stream' not in existing_columns</i>"}
+    dec_83{"'metadata' not in<br>existing_columns<br><i>Condición en línea 83:<br>'metadata' not in existing_columns</i>"}
+    dec_250{"trace_id<br><i>Condición en línea 250:<br>trace_id</i>"}
+    dec_253{"agent<br><i>Condición en línea 253:<br>agent</i>"}
+    dec_256{"status<br><i>Condición en línea 256:<br>status</i>"}
+    dec_259{"min_duration_ms is not None<br><i>Condición en línea 259:<br>min_duration_ms is not None</i>"}
+    dec_262{"since<br><i>Condición en línea 262:<br>since</i>"}
+    dec_265{"metadata<br><i>Condición en línea 265:<br>metadata</i>"}
+    loop_266["For loop"]
+    fn_sqlitecollector__get_connection[["Get Connection"]]
+    fn_sqlitecollector__create_schema[["Create Schema"]]
+    fn_sqlitecollector__serialize_span[["Serialize Span"]]
+    fn_sqlitecollector__deserialize_span[["Deserialize Span"]]
+    fn_sqlitecollector_save[["Save"]]
+    fn_sqlitecollector_get_trace[["Get Trace"]]
+    fn_sqlitecollector_get_span[["Get Span"]]
+    fn_sqlitecollector_list_traces[["List Traces"]]
+    fn_sqlitecollector_get_last_trace_id[["Get Last Trace Id"]]
+    fn_sqlitecollector_query[["Query"]]
+    fn_sqlitecollector_clear[["Clear"]]
+    fn_sqlitecollector_close[["Close"]]
+    n_start --> fn_sqlitecollector__get_connection
+    fn_sqlitecollector__get_connection --> fn_sqlitecollector__create_schema
+    fn_sqlitecollector__create_schema --> dec_75
+    dec_75 --> dec_78
+    dec_78 --> dec_83
+    fn_sqlitecollector__create_schema --> fn_sqlitecollector__serialize_span
+    fn_sqlitecollector__serialize_span --> fn_sqlitecollector__deserialize_span
+    fn_sqlitecollector__deserialize_span --> fn_sqlitecollector_save
+    fn_sqlitecollector_save --> fn_sqlitecollector_get_trace
+    fn_sqlitecollector_get_trace --> fn_sqlitecollector_get_span
+    fn_sqlitecollector_get_span --> fn_sqlitecollector_list_traces
+    fn_sqlitecollector_list_traces --> fn_sqlitecollector_get_last_trace_id
+    fn_sqlitecollector_get_last_trace_id --> fn_sqlitecollector_query
+    fn_sqlitecollector_query --> dec_250
+    dec_250 --> dec_253
+    dec_253 --> dec_256
+    dec_256 --> dec_259
+    dec_259 --> dec_262
+    dec_262 --> dec_265
+    dec_265 --> loop_266
+    fn_sqlitecollector_query --> fn_sqlitecollector_clear
+    fn_sqlitecollector_clear --> fn_sqlitecollector_close
+    class n_start node-start
+    class fn_sqlitecollector__get_connection,fn_sqlitecollector__create_schema,fn_sqlitecollector__serialize_span,fn_sqlitecollector__deserialize_span,fn_sqlitecollector_save,fn_sqlitecollector_get_trace,fn_sqlitecollector_get_span,fn_sqlitecollector_list_traces,fn_sqlitecollector_get_last_trace_id,fn_sqlitecollector_query,fn_sqlitecollector_clear,fn_sqlitecollector_close node-subprocess
+    class dec_75,dec_78,dec_83,dec_250,dec_253,dec_256,dec_259,dec_262,dec_265 node-decision
+    class loop_266 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

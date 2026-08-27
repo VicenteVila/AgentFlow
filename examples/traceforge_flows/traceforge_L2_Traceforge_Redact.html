@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redact</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="traceforge_L1_Traceforge.html">← Volver</a>
+  <h1>Redact</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Redact
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_90{"enabled is not None<br><i>Condición en línea 90:<br>enabled is not None</i>"}
+    dec_107{"isinstance(value, str)<br><i>Condición en línea 107:<br>isinstance(value, str)</i>"}
+    dec_36{"not text<br><i>Condición en línea 36:<br>not text</i>"}
+    dec_92{"use_ner is not None<br><i>Condición en línea 92:<br>use_ner is not None</i>"}
+    dec_110{"isinstance(value, dict)<br><i>Condición en línea 110:<br>isinstance(value, dict)</i>"}
+    dec_94{"patterns is not None<br><i>Condición en línea 94:<br>patterns is not None</i>"}
+    loop_113["For loop"]
+    dec_118{"isinstance(value, (list,<br>tuple))<br><i>Condición en línea 118:<br>isinstance(value, (list, tuple))</i>"}
+    dec_120{"isinstance(value, tuple)<br><i>Condición en línea 120:<br>isinstance(value, tuple)</i>"}
+    loop_39["For loop"]
+    dec_40{"pattern is None<br><i>Condición en línea 40:<br>pattern is None</i>"}
+    dec_43{"count<br><i>Condición en línea 43:<br>count</i>"}
+    dec_46{"self.use_ner<br><i>Condición en línea 46:<br>self.use_ner</i>"}
+    dec_48{"nlp is not None<br><i>Condición en línea 48:<br>nlp is not None</i>"}
+    loop_50["For each ent in ents"]
+    dec_51{"ent.label_ in _NER_LABELS<br><i>Condición en línea 51:<br>ent.label_ in _NER_LABELS</i>"}
+    loop_59["For loop"]
+    dec_60{"pattern is None<br><i>Condición en línea 60:<br>pattern is None</i>"}
+    fn_set_pii_masker[["Set Pii Masker"]]
+    fn_redact_value[["Redact Value"]]
+    fn__redact[["Redact"]]
+    fn_piimasker_redact[["Redact"]]
+    fn_piimasker_find[["Find"]]
+    fn_piimasker__get_nlp[["Get Nlp"]]
+    n_start --> fn_set_pii_masker
+    fn_set_pii_masker --> dec_90
+    dec_90 --> dec_92
+    dec_92 --> dec_94
+    n_start --> fn_redact_value
+    n_start --> fn__redact
+    fn__redact --> dec_107
+    dec_107 --> dec_110
+    dec_110 --> loop_113
+    loop_113 --> dec_118
+    dec_118 --> dec_120
+    n_start --> fn_piimasker_redact
+    fn_piimasker_redact --> dec_36
+    dec_36 --> loop_39
+    loop_39 --> dec_40
+    dec_40 --> dec_43
+    dec_43 -- "loop" --> loop_39
+    loop_39 --> dec_46
+    dec_46 --> dec_48
+    dec_48 --> loop_50
+    loop_50 --> dec_51
+    dec_51 -- "loop" --> loop_50
+    fn_piimasker_redact --> fn_piimasker_find
+    fn_piimasker_find --> loop_59
+    loop_59 --> dec_60
+    dec_60 -- "loop" --> loop_59
+    fn_piimasker_find --> fn_piimasker__get_nlp
+    class n_start node-start
+    class fn_set_pii_masker,fn_redact_value,fn__redact,fn_piimasker_redact,fn_piimasker_find,fn_piimasker__get_nlp node-subprocess
+    class dec_90,dec_92,dec_94,dec_107,dec_110,dec_118,dec_120,dec_36,dec_40,dec_43,dec_46,dec_48,dec_51,dec_60 node-decision
+    class loop_113,loop_39,loop_50,loop_59 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

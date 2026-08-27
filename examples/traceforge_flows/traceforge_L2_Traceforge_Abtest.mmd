@@ -1,0 +1,54 @@
+%% Abtest
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_87{"isinstance(prompts, str)<br><i>Condición en línea 87:<br>isinstance(prompts, str)</i>"}
+    dec_176{"not eligible<br><i>Condición en línea 176:<br>not eligible</i>"}
+    dec_186{"best.avg_eval_score is not<br>None<br><i>Condición en línea 186:<br>best.avg_eval_score is not None</i>"}
+    loop_94["For loop"]
+    loop_98["For loop"]
+    dec_101{"collector is None<br><i>Condición en línea 101:<br>collector is None</i>"}
+    dec_126{"failed<br><i>Condición en línea 126:<br>failed</i>"}
+    dec_130{"collector is None<br><i>Condición en línea 130:<br>collector is None</i>"}
+    dec_135{"not spans<br><i>Condición en línea 135:<br>not spans</i>"}
+    dec_148{"results<br><i>Condición en línea 148:<br>results</i>"}
+    fn_compare_prompts[["Compare Prompts"]]
+    fn__pick_winner[["Pick Winner"]]
+    fn_abresult___str__[["Str"]]
+    fn_key_179[["Key"]]
+    tool_list_traces_131["new_ids = List Traces<br><i>Enumeración de traces con filtros</i>"]
+    n_start --> fn_compare_prompts
+    fn_compare_prompts --> dec_87
+    dec_87 --> loop_94
+    loop_94 --> loop_98
+    loop_98 --> dec_101
+    dec_101 --> dec_126
+    dec_126 --> dec_130
+    dec_130 -- "YES" --> tool_list_traces_131
+    dec_130 --> dec_135
+    dec_135 --> dec_148
+    dec_148 -- "loop" --> loop_98
+    loop_98 -- "loop" --> loop_94
+    n_start --> fn__pick_winner
+    fn__pick_winner --> dec_176
+    dec_176 --> fn_key_179
+    fn_key_179 --> dec_186
+    n_start --> fn_abresult___str__
+    class n_start node-start
+    class fn_compare_prompts,fn__pick_winner,fn_key_179,fn_abresult___str__ node-subprocess
+    class dec_87,dec_101,dec_126,dec_130,dec_135,dec_148,dec_176,dec_186 node-decision
+    class loop_94,loop_98 node-loop
+    class tool_list_traces_131 node-tool
+    class n_end node-end

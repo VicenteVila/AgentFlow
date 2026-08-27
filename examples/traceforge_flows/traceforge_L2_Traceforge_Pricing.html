@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="traceforge_L1_Traceforge.html">← Volver</a>
+  <h1>Pricing</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Pricing
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_99{"cache_path is not None<br><i>Condición en línea 99:<br>cache_path is not None</i>"}
+    dec_139{"not model<br><i>Condición en línea 139:<br>not model</i>"}
+    dec_142{"rates is None<br><i>Condición en línea 142:<br>rates is None</i>"}
+    loop_106["For loop"]
+    dec_107{"not isinstance(info, dict)<br><i>Condición en línea 107:<br>not isinstance(info, dict)</i>"}
+    dec_111{"input_cost is None or<br>output_cost is None<br><i>Condición en línea 111:<br>input_cost is None or output_cost is None</i>"}
+    dec_118{"not merged<br><i>Condición en línea 118:<br>not merged</i>"}
+    loop_164["For loop"]
+    dec_166{"cached is None<br><i>Condición en línea 166:<br>cached is None</i>"}
+    dec_168{"cached.get('input') !=<br>static('input') or !=<br><i>Condición en línea 168:<br>cached.get('input') != static('input') or cached.get('output</i>"}
+    fn__load_cache[["Load Cache"]]
+    fn_refresh_prices[["Refresh Prices"]]
+    fn_set_pricing_cache_path[["Set Pricing Cache Path"]]
+    fn_calculate_cost[["Calculate Cost"]]
+    fn_get_model_list[["Get Model List"]]
+    fn_price_changes[["Price Changes"]]
+    n_start --> fn__load_cache
+    n_start --> fn_refresh_prices
+    fn_refresh_prices --> dec_99
+    dec_99 --> loop_106
+    loop_106 --> dec_107
+    dec_107 --> dec_111
+    dec_111 -- "loop" --> loop_106
+    loop_106 --> dec_118
+    n_start --> fn_set_pricing_cache_path
+    n_start --> fn_calculate_cost
+    fn_calculate_cost --> dec_139
+    dec_139 --> dec_142
+    n_start --> fn_get_model_list
+    n_start --> fn_price_changes
+    fn_price_changes --> loop_164
+    loop_164 --> dec_166
+    dec_166 --> dec_168
+    dec_168 -- "loop" --> loop_164
+    class n_start node-start
+    class fn__load_cache,fn_refresh_prices,fn_set_pricing_cache_path,fn_calculate_cost,fn_get_model_list,fn_price_changes node-subprocess
+    class dec_99,dec_107,dec_111,dec_118,dec_139,dec_142,dec_166,dec_168 node-decision
+    class loop_106,loop_164 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

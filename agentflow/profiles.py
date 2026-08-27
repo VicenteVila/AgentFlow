@@ -4,10 +4,11 @@ A Profile carries all domain-specific knowledge used while parsing agent
 source code: known tool names, exhaustive labels, auto-evolution methods,
 decision hints and phase patterns. The parser itself is domain-agnostic.
 
-Two built-in profiles are provided:
+Built-in profiles are provided:
 - GENERIC: no domain knowledge — labels derive from the code itself.
 - REAWEB: exhaustive labels for the ReaWeb self-evolving web-design agent.
 - REAGAME: exhaustive labels for the ReaGame self-evolving game-design agent.
+- TRACEFORGE: labels for the TraceForge LLM-tracing library.
 
 Custom profiles can be loaded from an external Python file exposing a
 ``PROFILE`` dict (see :func:`load_profile`).
@@ -576,6 +577,162 @@ REAGAME_PROFILE = Profile(
 )
 
 
+# ── TraceForge profile ────────────────────────────────────────────────
+
+_TRACEFORGE_TOOL_INFO: dict[str, tuple[str, str]] = {
+    "instrument": (
+        "Instrument",
+        "Engancha tracers a frameworks\n(openai / anthropic / langchain / llamaindex)",
+    ),
+    "instrument_openai": (
+        "Instrument OpenAI",
+        "Monkey-patch a openai\npara trazar llamadas LLM",
+    ),
+    "instrument_anthropic": (
+        "Instrument Anthropic",
+        "Monkey-patch a anthropic\npara trazar llamadas LLM",
+    ),
+    "save": (
+        "Save Span",
+        "Persiste un span en el backend\nelegido (postgres/sqlite/clickhouse/…)",
+    ),
+    "get_trace": (
+        "Get Trace",
+        "Recupera un trace completo por id",
+    ),
+    "get_span": (
+        "Get Span",
+        "Recupera un span individual",
+    ),
+    "list_traces": (
+        "List Traces",
+        "Enumeración de traces con filtros",
+    ),
+    "get_last_trace_id": (
+        "Last Trace ID",
+        "Último id de trace persistido",
+    ),
+    "query": (
+        "Query",
+        "Consulta estructurada/filtrada de spans",
+    ),
+    "clear": (
+        "Clear",
+        "Vacía los datos del backend",
+    ),
+    "close": (
+        "Close",
+        "Cierra conexión/recursos del backend",
+    ),
+    "generate_report": (
+        "Generate Report",
+        "Span tree → reporte HTML\n(gantt + sankey + costes)",
+    ),
+    "run_dashboard": (
+        "Run Dashboard",
+        "Arranca el servidor HTTP\ncon el panel de trazabilidad",
+    ),
+    "show": ("CLI show", "Muestra un trace en la terminal"),
+    "stats": ("CLI stats", "Estadísticas agregadas de la traza"),
+    "report": ("CLI report", "Genera el reporte HTML"),
+    "export": ("CLI export", "Exporta traces a un fichero"),
+    "dashboard": ("CLI dashboard", "Lanza el dashboard web"),
+    "refresh_prices": ("CLI refresh-prices", "Actualiza la tabla de precios LLM"),
+}
+
+_TRACEFORGE_SPECIAL_CALLS: dict[str, tuple[str, str, NodeType]] = {
+    "on_llm_start": (
+        "LLM Start",
+        "Callback de framework:\ninicio de una llamada LLM",
+        NodeType.PROCESS,
+    ),
+    "on_llm_end": (
+        "LLM End",
+        "Callback de framework:\nfin de una llamada LLM",
+        NodeType.PROCESS,
+    ),
+    "on_llm_error": (
+        "LLM Error",
+        "Callback de framework:\nerror en una llamada LLM",
+        NodeType.PROCESS,
+    ),
+}
+
+_TRACEFORGE_FUNCTION_SPLITS: dict[str, list[tuple[str, list[str]]]] = {
+    "traceforge.auto": [
+        ("Core", [
+            "_patch_method", "_new_span", "_estimate_tokens", "_extract_prompt",
+            "_llm_wrapper_factory",
+        ]),
+        ("StreamProxies", [
+            "_streammixin___getattr__", "_streammixin__on_chunk",
+            "_streammixin__finalize", "_streammixin___del__",
+            "_syncstreamproxy___iter__", "_syncstreamproxy___next__",
+            "_syncstreamproxy___enter__", "_syncstreamproxy___exit__",
+            "_syncstreamproxy_close", "_asyncstreamproxy___aiter__",
+            "_asyncstreamproxy___anext__", "_asyncstreamproxy___aenter__",
+            "_asyncstreamproxy___aexit__", "_asyncstreamproxy_aclose",
+        ]),
+        ("OpenAI", [
+            "instrument_openai", "_openai_usage", "_openai_chunk_text",
+        ]),
+        ("Anthropic", [
+            "instrument_anthropic", "_anthropic_usage", "_anthropic_chunk_text",
+        ]),
+        ("LangChain", [
+            "_register_langchain", "_langchain_model",
+            "traceforgelangchainhandler_on_llm_start",
+            "traceforgelangchainhandler_on_llm_end",
+            "traceforgelangchainhandler_on_llm_error",
+        ]),
+        ("LlamaIndex", [
+            "_register_llamaindex",
+            "traceforgellamaindexhandler_on_llm_start",
+            "traceforgellamaindexhandler_on_llm_end",
+            "traceforgellamaindexhandler_on_llm_error",
+        ]),
+        ("Entry", ["instrument"]),
+    ],
+    "traceforge.reporting": [
+        ("Tree", ["_get_plotly_tag", "_build_span_tree_data", "_add_children"]),
+        ("Gantt", ["_build_gantt"]),
+        ("Sankey", ["_build_sankey"]),
+        ("Cost", ["_build_cost_chart"]),
+        ("Entry", ["generate_report"]),
+    ],
+    "traceforge.cli": [
+        ("Entry", ["_main"]),
+        ("Show", ["show", "show_trace", "_span_dict", "_build_span_tree", "_percentile"]),
+        ("List", ["list_traces"]),
+        ("Stats", ["stats"]),
+        ("Report", ["report"]),
+        ("Export", ["export"]),
+        ("Query", ["query"]),
+        ("Dashboard", ["dashboard"]),
+        ("Pricing", ["refresh_prices"]),
+        ("Clear", ["clear"]),
+    ],
+    "traceforge.dashboard": [
+        ("Entry", ["run_dashboard"]),
+        ("Views", ["_span_dict", "_trace_summary", "_build_timeseries"]),
+        ("HTTP", [
+            "dashboardhandler_log_message", "dashboardhandler_do_get",
+            "dashboardhandler__params", "dashboardhandler__query",
+            "dashboardhandler__stats", "dashboardhandler__send_json",
+            "dashboardhandler__send_html", "dashboardhandler__export_rows",
+            "dashboardhandler__send_csv",
+        ]),
+    ],
+}
+
+TRACEFORGE_PROFILE = Profile(
+    name="traceforge",
+    tool_names=_TRACEFORGE_TOOL_INFO,
+    special_calls=_TRACEFORGE_SPECIAL_CALLS,
+    function_splits=_TRACEFORGE_FUNCTION_SPLITS,
+)
+
+
 # ── LangChain profile ─────────────────────────────────────────────────
 
 LANGCHAIN_PROFILE = Profile(
@@ -725,6 +882,7 @@ PROFILES: dict[str, Profile] = {
     "generic": GENERIC_PROFILE,
     "reaweb": REAWEB_PROFILE,
     "reagame": REAGAME_PROFILE,
+    "traceforge": TRACEFORGE_PROFILE,
     "langchain": LANGCHAIN_PROFILE,
     "crewai": CREWAI_PROFILE,
     "autogen": AUTOGEN_PROFILE,

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cli · Show</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="traceforge_L2_Traceforge_Cli.html">← Volver</a>
+  <h1>Cli · Show</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Cli · Show
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_23{"not spans<br><i>Condición en línea 23:<br>not spans</i>"}
+    loop_38["For each root in roots"]
+    dec_66{"span.model<br><i>Condición en línea 66:<br>span.model</i>"}
+    dec_69{"span.tokens_input or<br>span.tokens_output<br><i>Condición en línea 69:<br>span.tokens_input or span.tokens_output</i>"}
+    dec_71{"span.stream<br><i>Condición en línea 71:<br>span.stream</i>"}
+    dec_73{"span.ttft_ms is not None<br><i>Condición en línea 73:<br>span.ttft_ms is not None</i>"}
+    dec_75{"span.throughput_tps<br><i>Condición en línea 75:<br>span.throughput_tps</i>"}
+    dec_78{"span.cost_usd<br><i>Condición en línea 78:<br>span.cost_usd</i>"}
+    dec_80{"span.input_truncated or<br>span.output_truncated<br><i>Condición en línea 80:<br>span.input_truncated or span.output_truncated</i>"}
+    dec_82{"span.status == 'error'<br><i>Condición en línea 82:<br>span.status == 'error'</i>"}
+    dec_89{"span.input<br><i>Condición en línea 89:<br>span.input</i>"}
+    dec_91{"len(inp) > 80<br><i>Condición en línea 91:<br>len(inp) > 80</i>"}
+    dec_95{"span.error<br><i>Condición en línea 95:<br>span.error</i>"}
+    loop_98["For each child_id in children"]
+    dec_100{"child<br><i>Condición en línea 100:<br>child</i>"}
+    fn_show[["Show"]]
+    fn_show_trace[["Show Trace"]]
+    fn__span_dict[["Span Dict"]]
+    fn__percentile[["Percentile"]]
+    tool_get_trace_22["spans = Get Trace<br><i>Recupera un trace completo por id</i>"]
+    fn__build_span_tree[["span_tree = Build Span Tree"]]
+    tool_get_span_99["child = Get Span<br><i>Recupera un span individual</i>"]
+    n_start --> fn_show
+    n_start --> fn_show_trace
+    fn_show_trace --> tool_get_trace_22
+    tool_get_trace_22 --> dec_23
+    dec_23 --> loop_38
+    loop_38 --> fn__build_span_tree
+    fn__build_span_tree -- "loop" --> loop_38
+    n_start --> fn__span_dict
+    n_start --> fn__build_span_tree
+    fn__build_span_tree --> dec_66
+    dec_66 --> dec_69
+    dec_69 --> dec_71
+    dec_71 --> dec_73
+    dec_73 --> dec_75
+    dec_75 --> dec_78
+    dec_78 --> dec_80
+    dec_80 --> dec_82
+    dec_82 --> dec_89
+    dec_89 --> dec_91
+    dec_91 --> dec_95
+    dec_95 --> loop_98
+    loop_98 --> tool_get_span_99
+    tool_get_span_99 --> dec_100
+    dec_100 --> fn__build_span_tree
+    fn__build_span_tree -- "loop" --> loop_98
+    n_start --> fn__percentile
+    class n_start node-start
+    class fn_show,fn_show_trace,fn__build_span_tree,fn__span_dict,fn__percentile node-subprocess
+    class tool_get_trace_22,tool_get_span_99 node-tool
+    class dec_23,dec_66,dec_69,dec_71,dec_73,dec_75,dec_78,dec_80,dec_82,dec_89,dec_91,dec_95,dec_100 node-decision
+    class loop_38,loop_98 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

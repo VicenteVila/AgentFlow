@@ -1,0 +1,153 @@
+%% Cli
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_39{"not (collector or db_path or<br>dsn)<br><i>Condición en línea 39:<br>not (collector or db_path or dsn)</i>"}
+    dec_80{"span.model<br><i>Condición en línea 80:<br>span.model</i>"}
+    dec_230{"since_days is not None<br><i>Condición en línea 230:<br>since_days is not None</i>"}
+    dec_426{"since_days is not None<br><i>Condición en línea 426:<br>since_days is not None</i>"}
+    loop_499["For each change"]
+    dec_43{"dsn and (not collector)<br><i>Condición en línea 43:<br>dsn and (not collector)</i>"}
+    dec_83{"span.tokens_input or<br>span.tokens_output<br><i>Condición en línea 83:<br>span.tokens_input or span.tokens_output</i>"}
+    dec_128{"not spans<br><i>Condición en línea 128:<br>not spans</i>"}
+    dec_156{"not trace_ids<br><i>Condición en línea 156:<br>not trace_ids</i>"}
+    dec_329{"output<br><i>Condición en línea 329:<br>output</i>"}
+    dec_85{"span.stream<br><i>Condición en línea 85:<br>span.stream</i>"}
+    loop_143["For each root in roots"]
+    dec_235{"not spans<br><i>Condición en línea 235:<br>not spans</i>"}
+    dec_435{"limit > 0<br><i>Condición en línea 435:<br>limit > 0</i>"}
+    dec_87{"span.ttft_ms is not None<br><i>Condición en línea 87:<br>span.ttft_ms is not None</i>"}
+    dec_438{"not spans<br><i>Condición en línea 438:<br>not spans</i>"}
+    dec_89{"span.throughput_tps<br><i>Condición en línea 89:<br>span.throughput_tps</i>"}
+    dec_442{"json_output<br><i>Condición en línea 442:<br>json_output</i>"}
+    dec_92{"span.cost_usd<br><i>Condición en línea 92:<br>span.cost_usd</i>"}
+    loop_455["For each s in spans"]
+    dec_94{"span.input_truncated or<br>span.output_truncated<br><i>Condición en línea 94:<br>span.input_truncated or span.output_truncated</i>"}
+    dec_96{"span.status == 'error'<br><i>Condición en línea 96:<br>span.status == 'error'</i>"}
+    dec_103{"span.input<br><i>Condición en línea 103:<br>span.input</i>"}
+    dec_105{"len(inp) > 80<br><i>Condición en línea 105:<br>len(inp) > 80</i>"}
+    dec_109{"span.error<br><i>Condición en línea 109:<br>span.error</i>"}
+    loop_112["For each child_id in children"]
+    dec_114{"child<br><i>Condición en línea 114:<br>child</i>"}
+    loop_161["For each tid"]
+    dec_176{"json_output<br><i>Condición en línea 176:<br>json_output</i>"}
+    loop_189["For each row in rows"]
+    loop_240["For each s in spans"]
+    dec_241{"s.agent not in by_agent<br><i>Condición en línea 241:<br>s.agent not in by_agent</i>"}
+    loop_250["For loop"]
+    dec_278{"json_output<br><i>Condición en línea 278:<br>json_output</i>"}
+    loop_279["For each r in rows"]
+    loop_294["For each row in rows"]
+    fn__main[["Main"]]
+    fn__span_dict[["Span Dict"]]
+    fn__percentile[["Percentile"]]
+    fn__build_span_tree[["Build Span Tree"]]
+    fn_show_trace[["Show Trace"]]
+    fn_list_traces[["List Traces"]]
+    fn_show[["Show"]]
+    fn_stats[["Stats"]]
+    fn_report[["Report"]]
+    fn_export[["Export"]]
+    fn_query[["Query"]]
+    fn_dashboard[["Dashboard"]]
+    fn_refresh_prices[["Refresh Prices"]]
+    fn_clear[["Clear"]]
+    tool_get_trace_127["spans = Get Trace<br><i>Recupera un trace completo por id</i>"]
+    tool_list_traces_154["trace_ids = List Traces<br><i>Enumeración de traces con filtros</i>"]
+    tool_generate_report_324["result = Generate Report<br><i>Span tree → reporte HTML<br>(gantt + sankey + costes)</i>"]
+    tool_query_233["spans = Query<br><i>Consulta estructurada/filtrada de spans</i>"]
+    tool_query_429["spans = Query<br><i>Consulta estructurada/filtrada de spans</i>"]
+    tool_get_span_113["child = Get Span<br><i>Recupera un span individual</i>"]
+    tool_get_trace_162["spans = Get Trace<br><i>Recupera un trace completo por id</i>"]
+    n_start --> fn__main
+    fn__main --> dec_39
+    dec_39 --> dec_43
+    n_start --> fn__span_dict
+    n_start --> fn__percentile
+    n_start --> fn__build_span_tree
+    fn__build_span_tree --> dec_80
+    dec_80 --> dec_83
+    dec_83 --> dec_85
+    dec_85 --> dec_87
+    dec_87 --> dec_89
+    dec_89 --> dec_92
+    dec_92 --> dec_94
+    dec_94 --> dec_96
+    dec_96 --> dec_103
+    dec_103 --> dec_105
+    dec_105 --> dec_109
+    dec_109 --> loop_112
+    loop_112 --> tool_get_span_113
+    tool_get_span_113 --> dec_114
+    dec_114 -- "loop" --> loop_112
+    n_start --> fn_show_trace
+    fn_show_trace --> tool_get_trace_127
+    tool_get_trace_127 --> dec_128
+    dec_128 --> loop_143
+    n_start --> fn_list_traces
+    fn_list_traces --> tool_list_traces_154
+    tool_list_traces_154 --> dec_156
+    dec_156 --> loop_161
+    loop_161 --> tool_get_trace_162
+    tool_get_trace_162 -- "loop" --> loop_161
+    loop_161 --> dec_176
+    dec_176 --> loop_189
+    n_start --> fn_show
+    n_start --> fn_stats
+    fn_stats --> dec_230
+    dec_230 --> tool_query_233
+    tool_query_233 --> dec_235
+    dec_235 --> loop_240
+    loop_240 --> dec_241
+    dec_241 -- "loop" --> loop_240
+    loop_240 --> loop_250
+    loop_250 --> dec_278
+    dec_278 --> loop_279
+    loop_279 --> loop_294
+    n_start --> fn_report
+    fn_report --> tool_generate_report_324
+    tool_generate_report_324 --> dec_329
+    n_start --> fn_export
+    n_start --> fn_query
+    fn_query --> dec_426
+    dec_426 --> tool_query_429
+    tool_query_429 --> dec_435
+    dec_435 --> dec_438
+    dec_438 --> dec_442
+    dec_442 --> loop_455
+    n_start --> fn_dashboard
+    n_start --> fn_refresh_prices
+    fn_refresh_prices --> loop_499
+    n_start --> fn_clear
+    class n_start node-start
+    class fn__main,fn__span_dict,fn__percentile,fn__build_span_tree,fn_show_trace,fn_list_traces,fn_show,fn_stats,fn_report,fn_export,fn_query,fn_dashboard,fn_refresh_prices,fn_clear node-subprocess
+    class dec_39,dec_43,dec_80,dec_83,dec_85,dec_87,dec_89,dec_92,dec_94,dec_96,dec_103,dec_105,dec_109,dec_114,dec_128,dec_156,dec_176,dec_230,dec_235,dec_241,dec_278,dec_329,dec_426,dec_435,dec_438,dec_442 node-decision
+    class loop_112,loop_143,loop_161,loop_189,loop_240,loop_250,loop_279,loop_294,loop_455,loop_499 node-loop
+    class tool_get_span_113,tool_get_trace_127,tool_list_traces_154,tool_get_trace_162,tool_query_233,tool_generate_report_324,tool_query_429 node-tool
+    class n_end node-end
+    click fn__main href "traceforge_L3_Traceforge_Cli_Entry.html" "Abrir detalle"
+    click fn_show href "traceforge_L3_Traceforge_Cli_Show.html" "Abrir detalle"
+    click fn_show_trace href "traceforge_L3_Traceforge_Cli_Show.html" "Abrir detalle"
+    click fn__span_dict href "traceforge_L3_Traceforge_Cli_Show.html" "Abrir detalle"
+    click fn__build_span_tree href "traceforge_L3_Traceforge_Cli_Show.html" "Abrir detalle"
+    click fn__percentile href "traceforge_L3_Traceforge_Cli_Show.html" "Abrir detalle"
+    click fn_list_traces href "traceforge_L3_Traceforge_Cli_List.html" "Abrir detalle"
+    click fn_stats href "traceforge_L3_Traceforge_Cli_Stats.html" "Abrir detalle"
+    click fn_report href "traceforge_L3_Traceforge_Cli_Report.html" "Abrir detalle"
+    click fn_export href "traceforge_L3_Traceforge_Cli_Export.html" "Abrir detalle"
+    click fn_query href "traceforge_L3_Traceforge_Cli_Query.html" "Abrir detalle"
+    click fn_dashboard href "traceforge_L3_Traceforge_Cli_Dashboard.html" "Abrir detalle"
+    click fn_refresh_prices href "traceforge_L3_Traceforge_Cli_Pricing.html" "Abrir detalle"
+    click fn_clear href "traceforge_L3_Traceforge_Cli_Clear.html" "Abrir detalle"

@@ -1,0 +1,46 @@
+%% Format
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_33{"ms < 0 or ms != ms<br><i>Condición en línea 33:<br>ms < 0 or ms != ms</i>"}
+    dec_56{"usd < 0 or usd != usd<br><i>Condición en línea 56:<br>usd < 0 or usd != usd</i>"}
+    dec_71{"tps >= 1000<br><i>Condición en línea 71:<br>tps >= 1000</i>"}
+    dec_35{"ms < 1000<br><i>Condición en línea 35:<br>ms < 1000</i>"}
+    dec_58{"usd < 0.01<br><i>Condición en línea 58:<br>usd < 0.01</i>"}
+    dec_37{"ms < 60000<br><i>Condición en línea 37:<br>ms < 60000</i>"}
+    dec_60{"usd < 1<br><i>Condición en línea 60:<br>usd < 1</i>"}
+    dec_43{"m < 60<br><i>Condición en línea 43:<br>m < 60</i>"}
+    fn_fmt_number[["Fmt Number"]]
+    fn_fmt_tokens[["Fmt Tokens"]]
+    fn_fmt_duration[["Fmt Duration"]]
+    fn_fmt_cost[["Fmt Cost"]]
+    fn_fmt_throughput[["Fmt Throughput"]]
+    n_start --> fn_fmt_number
+    n_start --> fn_fmt_tokens
+    n_start --> fn_fmt_duration
+    fn_fmt_duration --> dec_33
+    dec_33 --> dec_35
+    dec_35 --> dec_37
+    dec_37 --> dec_43
+    n_start --> fn_fmt_cost
+    fn_fmt_cost --> dec_56
+    dec_56 --> dec_58
+    dec_58 --> dec_60
+    n_start --> fn_fmt_throughput
+    fn_fmt_throughput --> dec_71
+    class n_start node-start
+    class fn_fmt_number,fn_fmt_tokens,fn_fmt_duration,fn_fmt_cost,fn_fmt_throughput node-subprocess
+    class dec_33,dec_35,dec_37,dec_43,dec_56,dec_58,dec_60,dec_71 node-decision
+    class n_end node-end

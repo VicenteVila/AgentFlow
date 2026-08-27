@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Core</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="traceforge_L1_Traceforge.html">← Volver</a>
+  <h1>Core</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Core
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_30{"max_input_len is not None<br><i>Condición en línea 30:<br>max_input_len is not None</i>"}
+    dec_158{"max_len > 0 and<br>isinstance(obj, str) and (len(obj)<br><i>Condición en línea 158:<br>max_len > 0 and isinstance(obj, str) and (len(obj) > max_len</i>"}
+    dec_211{"truncated<br><i>Condición en línea 211:<br>truncated</i>"}
+    dec_225{"truncated<br><i>Condición en línea 225:<br>truncated</i>"}
+    dec_260{"local<br><i>Condición en línea 260:<br>local</i>"}
+    dec_31{"max_input_len < 0<br><i>Condición en línea 31:<br>max_input_len < 0</i>"}
+    dec_161{"isinstance(obj, (list,<br>tuple))<br><i>Condición en línea 161:<br>isinstance(obj, (list, tuple))</i>"}
+    dec_34{"max_output_len is not None<br><i>Condición en línea 34:<br>max_output_len is not None</i>"}
+    dec_162{"max_list_items > 0 and<br>len(obj) > max_list_items<br><i>Condición en línea 162:<br>max_list_items > 0 and len(obj) > max_list_items</i>"}
+    dec_35{"max_output_len < 0<br><i>Condición en línea 35:<br>max_output_len < 0</i>"}
+    loop_171["For each item in items"]
+    dec_38{"max_list_items is not None<br><i>Condición en línea 38:<br>max_list_items is not None</i>"}
+    dec_175{"note is not None<br><i>Condición en línea 175:<br>note is not None</i>"}
+    dec_39{"max_list_items < 0<br><i>Condición en línea 39:<br>max_list_items < 0</i>"}
+    dec_177{"isinstance(obj, tuple)<br><i>Condición en línea 177:<br>isinstance(obj, tuple)</i>"}
+    dec_181{"isinstance(obj, dict)<br><i>Condición en línea 181:<br>isinstance(obj, dict)</i>"}
+    loop_184["For loop"]
+    fn_set_truncation_limits[["Set Truncation Limits"]]
+    fn__calculate_cost[["Calculate Cost"]]
+    fn__truncate[["Truncate"]]
+    fn__truncation_warning[["Truncation Warning"]]
+    fn__capture_input[["Capture Input"]]
+    fn__capture_output[["Capture Output"]]
+    fn_set_metadata_context[["Set Metadata Context"]]
+    fn_reset_metadata_context[["Reset Metadata Context"]]
+    fn__merged_span_metadata[["Merged Span Metadata"]]
+    fn__metadata_contains[["Metadata Contains"]]
+    fn__metadata_json_path[["Metadata Json Path"]]
+    fn_tracespan_close[["Close"]]
+    fn_tracecollector_save[["Save"]]
+    fn_tracespan_add_metadata[["Add Metadata"]]
+    fn_tracecollector_get_trace[["Get Trace"]]
+    fn_tracespan_set_output[["Set Output"]]
+    fn_tracecollector_get_span[["Get Span"]]
+    fn_tracespan_set_input[["Set Input"]]
+    fn_tracecollector_list_traces[["List Traces"]]
+    fn_tracespan_set_error[["Set Error"]]
+    fn_tracecollector_get_last_trace_id[["Get Last Trace Id"]]
+    fn_tracespan_set_tokens[["Set Tokens"]]
+    fn_tracecollector_query[["Query"]]
+    fn_tracespan_throughput_tps[["Throughput Tps"]]
+    n_start --> fn_set_truncation_limits
+    fn_set_truncation_limits --> dec_30
+    dec_30 --> dec_31
+    dec_31 --> dec_34
+    dec_34 --> dec_35
+    dec_35 --> dec_38
+    dec_38 --> dec_39
+    n_start --> fn__calculate_cost
+    n_start --> fn__truncate
+    fn__truncate --> dec_158
+    dec_158 --> dec_161
+    dec_161 --> dec_162
+    dec_162 --> loop_171
+    loop_171 --> dec_175
+    dec_175 --> dec_177
+    dec_177 --> dec_181
+    dec_181 --> loop_184
+    n_start --> fn__truncation_warning
+    n_start --> fn__capture_input
+    fn__capture_input --> dec_211
+    n_start --> fn__capture_output
+    fn__capture_output --> dec_225
+    n_start --> fn_set_metadata_context
+    n_start --> fn_reset_metadata_context
+    n_start --> fn__merged_span_metadata
+    fn__merged_span_metadata --> dec_260
+    n_start --> fn__metadata_contains
+    n_start --> fn__metadata_json_path
+    n_start --> fn_tracespan_close
+    fn_tracespan_close --> fn_tracespan_add_metadata
+    fn_tracespan_add_metadata --> fn_tracespan_set_output
+    fn_tracespan_set_output --> fn_tracespan_set_input
+    fn_tracespan_set_input --> fn_tracespan_set_error
+    fn_tracespan_set_error --> fn_tracespan_set_tokens
+    fn_tracespan_set_tokens --> fn_tracespan_throughput_tps
+    n_start --> fn_tracecollector_save
+    fn_tracecollector_save --> fn_tracecollector_get_trace
+    fn_tracecollector_get_trace --> fn_tracecollector_get_span
+    fn_tracecollector_get_span --> fn_tracecollector_list_traces
+    fn_tracecollector_list_traces --> fn_tracecollector_get_last_trace_id
+    fn_tracecollector_get_last_trace_id --> fn_tracecollector_query
+    class n_start node-start
+    class fn_set_truncation_limits,fn__calculate_cost,fn__truncate,fn__truncation_warning,fn__capture_input,fn__capture_output,fn_set_metadata_context,fn_reset_metadata_context,fn__merged_span_metadata,fn__metadata_contains,fn__metadata_json_path,fn_tracespan_close,fn_tracespan_add_metadata,fn_tracespan_set_output,fn_tracespan_set_input,fn_tracespan_set_error,fn_tracespan_set_tokens,fn_tracespan_throughput_tps,fn_tracecollector_save,fn_tracecollector_get_trace,fn_tracecollector_get_span,fn_tracecollector_list_traces,fn_tracecollector_get_last_trace_id,fn_tracecollector_query node-subprocess
+    class dec_30,dec_31,dec_34,dec_35,dec_38,dec_39,dec_158,dec_161,dec_162,dec_175,dec_177,dec_181,dec_211,dec_225,dec_260 node-decision
+    class loop_171,loop_184 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

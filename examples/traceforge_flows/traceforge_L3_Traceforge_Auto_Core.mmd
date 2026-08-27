@@ -1,0 +1,34 @@
+%% Auto · Core
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_2{"not hasattr(target, name)<br><i>Condición en línea 2:<br>not hasattr(target, name)</i>"}
+    dec_5{"getattr(original,<br>'_traceforge_patched', False)<br><i>Condición en línea 5:<br>getattr(original, '_traceforge_patched', False)</i>"}
+    fn__patch_method[["Patch Method"]]
+    fn__new_span[["New Span"]]
+    fn__estimate_tokens[["Estimate Tokens"]]
+    fn__extract_prompt[["Extract Prompt"]]
+    fn__llm_wrapper_factory[["Llm Wrapper Factory"]]
+    n_start --> fn__patch_method
+    fn__patch_method --> dec_2
+    dec_2 --> dec_5
+    n_start --> fn__new_span
+    n_start --> fn__estimate_tokens
+    n_start --> fn__extract_prompt
+    n_start --> fn__llm_wrapper_factory
+    class n_start node-start
+    class fn__patch_method,fn__new_span,fn__estimate_tokens,fn__extract_prompt,fn__llm_wrapper_factory node-subprocess
+    class dec_2,dec_5 node-decision
+    class n_end node-end

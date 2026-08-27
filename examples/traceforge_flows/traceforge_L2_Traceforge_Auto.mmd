@@ -1,0 +1,183 @@
+%% Auto
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_40{"not hasattr(target, name)<br><i>Condición en línea 40:<br>not hasattr(target, name)</i>"}
+    dec_363{"client is not None<br><i>Condición en línea 363:<br>client is not None</i>"}
+    dec_396{"client is not None<br><i>Condición en línea 396:<br>client is not None</i>"}
+    dec_473{"providers is None<br><i>Condición en línea 473:<br>providers is None</i>"}
+    dec_483{"isinstance(invocation, dict)<br><i>Condición en línea 483:<br>isinstance(invocation, dict)</i>"}
+    dec_560{"isinstance(serialized, dict)<br><i>Condición en línea 560:<br>isinstance(serialized, dict)</i>"}
+    dec_43{"getattr(original,<br>'_traceforge_patched', False)<br><i>Condición en línea 43:<br>getattr(original, '_traceforge_patched', False)</i>"}
+    loop_377["For each target in resources"]
+    loop_410["For each target in resources"]
+    dec_487{"model<br><i>Condición en línea 487:<br>model</i>"}
+    dec_216{"self._chunks == 1<br><i>Condición en línea 216:<br>self._chunks == 1</i>"}
+    dec_520{"entry is None<br><i>Condición en línea 520:<br>entry is None</i>"}
+    dec_566{"messages is not None<br><i>Condición en línea 566:<br>messages is not None</i>"}
+    dec_572{"entry is None<br><i>Condición en línea 572:<br>entry is None</i>"}
+    dec_489{"isinstance(serialized, dict)<br><i>Condición en línea 489:<br>isinstance(serialized, dict)</i>"}
+    dec_218{"len(self._offsets) <<br>MAX_CHUNK_OFFSETS<br><i>Condición en línea 218:<br>len(self._offsets) < MAX_CHUNK_OFFSETS</i>"}
+    dec_228{"self._finalized<br><i>Condición en línea 228:<br>self._finalized</i>"}
+    dec_525{"generations<br><i>Condición en línea 525:<br>generations</i>"}
+    dec_534{"entry is None<br><i>Condición en línea 534:<br>entry is None</i>"}
+    dec_581{"entry is None<br><i>Condición en línea 581:<br>entry is None</i>"}
+    dec_221{"text<br><i>Condición en línea 221:<br>text</i>"}
+    dec_239{"error is not None<br><i>Condición en línea 239:<br>error is not None</i>"}
+    dec_527{"first is not None<br><i>Condición en línea 527:<br>first is not None</i>"}
+    dec_585{"exception is None<br><i>Condición en línea 585:<br>exception is None</i>"}
+    dec_242{"self._collector is not None<br><i>Condición en línea 242:<br>self._collector is not None</i>"}
+    dec_244{"self._is_new_trace<br><i>Condición en línea 244:<br>self._is_new_trace</i>"}
+    fn__patch_method[["Patch Method"]]
+    fn__new_span[["New Span"]]
+    fn__estimate_tokens[["Estimate Tokens"]]
+    fn__openai_chunk_text[["Openai Chunk Text"]]
+    fn__anthropic_chunk_text[["Anthropic Chunk Text"]]
+    fn__extract_prompt[["Extract Prompt"]]
+    fn__llm_wrapper_factory[["Llm Wrapper Factory"]]
+    fn__openai_usage[["Openai Usage"]]
+    fn__anthropic_usage[["Anthropic Usage"]]
+    fn_instrument_openai[["Instrument Openai"]]
+    fn_instrument_anthropic[["Instrument Anthropic"]]
+    fn__register_langchain[["Register Langchain"]]
+    fn__register_llamaindex[["Register Llamaindex"]]
+    fn_instrument[["Instrument"]]
+    fn__langchain_model[["Langchain Model"]]
+    fn__streammixin___getattr__[["Getattr"]]
+    fn__syncstreamproxy___iter__[["Iter"]]
+    fn__asyncstreamproxy___aiter__[["Aiter"]]
+    fn_traceforgelangchainhandler_on_llm_start[["On Llm Start"]]
+    fn_traceforgellamaindexhandler_on_llm_start[["On Llm Start"]]
+    fn__streammixin__on_chunk[["On Chunk"]]
+    fn__syncstreamproxy___next__[["Next"]]
+    fn__asyncstreamproxy___anext__[["Anext"]]
+    fn_traceforgelangchainhandler_on_llm_end[["On Llm End"]]
+    fn_traceforgellamaindexhandler_on_llm_end[["On Llm End"]]
+    fn__streammixin__finalize[["Finalize"]]
+    fn__syncstreamproxy___enter__[["Enter"]]
+    fn__asyncstreamproxy___aenter__[["Aenter"]]
+    fn_traceforgelangchainhandler_on_llm_error[["On Llm Error"]]
+    fn_traceforgellamaindexhandler_on_llm_error[["On Llm Error"]]
+    fn__streammixin___del__[["Del"]]
+    fn__syncstreamproxy___exit__[["Exit"]]
+    fn__asyncstreamproxy___aexit__[["Aexit"]]
+    fn__syncstreamproxy_close[["Close"]]
+    fn__asyncstreamproxy_aclose[["Aclose"]]
+    tool_close_241["Close<br><i>Cierra conexión/recursos del backend</i>"]
+    tool_save_243["Save Span<br><i>Persiste un span en el backend<br>elegido (postgres/sqlite/clickhouse/…)</i>"]
+    n_start --> fn__patch_method
+    fn__patch_method --> dec_40
+    dec_40 --> dec_43
+    n_start --> fn__new_span
+    n_start --> fn__estimate_tokens
+    n_start --> fn__openai_chunk_text
+    n_start --> fn__anthropic_chunk_text
+    n_start --> fn__extract_prompt
+    n_start --> fn__llm_wrapper_factory
+    n_start --> fn__openai_usage
+    n_start --> fn__anthropic_usage
+    n_start --> fn_instrument_openai
+    fn_instrument_openai --> dec_363
+    dec_363 --> loop_377
+    n_start --> fn_instrument_anthropic
+    fn_instrument_anthropic --> dec_396
+    dec_396 --> loop_410
+    n_start --> fn__register_langchain
+    n_start --> fn__register_llamaindex
+    n_start --> fn_instrument
+    fn_instrument --> dec_473
+    n_start --> fn__langchain_model
+    fn__langchain_model --> dec_483
+    dec_483 --> dec_487
+    dec_487 --> dec_489
+    n_start --> fn__streammixin___getattr__
+    fn__streammixin___getattr__ --> fn__streammixin__on_chunk
+    fn__streammixin__on_chunk --> dec_216
+    dec_216 --> dec_218
+    dec_218 --> dec_221
+    fn__streammixin__on_chunk --> fn__streammixin__finalize
+    fn__streammixin__finalize --> dec_228
+    dec_228 --> dec_239
+    dec_239 --> tool_close_241
+    tool_close_241 --> dec_242
+    dec_242 --> tool_save_243
+    tool_save_243 --> dec_244
+    fn__streammixin__finalize --> fn__streammixin___del__
+    n_start --> fn__syncstreamproxy___iter__
+    fn__syncstreamproxy___iter__ --> fn__syncstreamproxy___next__
+    fn__syncstreamproxy___next__ --> fn__syncstreamproxy___enter__
+    fn__syncstreamproxy___enter__ --> fn__syncstreamproxy___exit__
+    fn__syncstreamproxy___exit__ --> fn__syncstreamproxy_close
+    n_start --> fn__asyncstreamproxy___aiter__
+    fn__asyncstreamproxy___aiter__ --> fn__asyncstreamproxy___anext__
+    fn__asyncstreamproxy___anext__ --> fn__asyncstreamproxy___aenter__
+    fn__asyncstreamproxy___aenter__ --> fn__asyncstreamproxy___aexit__
+    fn__asyncstreamproxy___aexit__ --> fn__asyncstreamproxy_aclose
+    n_start --> fn_traceforgelangchainhandler_on_llm_start
+    fn_traceforgelangchainhandler_on_llm_start --> fn_traceforgelangchainhandler_on_llm_end
+    fn_traceforgelangchainhandler_on_llm_end --> dec_520
+    dec_520 --> dec_525
+    dec_525 --> dec_527
+    fn_traceforgelangchainhandler_on_llm_end --> fn_traceforgelangchainhandler_on_llm_error
+    fn_traceforgelangchainhandler_on_llm_error --> dec_534
+    n_start --> fn_traceforgellamaindexhandler_on_llm_start
+    fn_traceforgellamaindexhandler_on_llm_start --> dec_560
+    dec_560 --> dec_566
+    fn_traceforgellamaindexhandler_on_llm_start --> fn_traceforgellamaindexhandler_on_llm_end
+    fn_traceforgellamaindexhandler_on_llm_end --> dec_572
+    fn_traceforgellamaindexhandler_on_llm_end --> fn_traceforgellamaindexhandler_on_llm_error
+    fn_traceforgellamaindexhandler_on_llm_error --> dec_581
+    dec_581 --> dec_585
+    class n_start node-start
+    class fn__patch_method,fn__new_span,fn__estimate_tokens,fn__openai_chunk_text,fn__anthropic_chunk_text,fn__extract_prompt,fn__llm_wrapper_factory,fn__openai_usage,fn__anthropic_usage,fn_instrument_openai,fn_instrument_anthropic,fn__register_langchain,fn__register_llamaindex,fn_instrument,fn__langchain_model,fn__streammixin___getattr__,fn__streammixin__on_chunk,fn__streammixin__finalize,fn__streammixin___del__,fn__syncstreamproxy___iter__,fn__syncstreamproxy___next__,fn__syncstreamproxy___enter__,fn__syncstreamproxy___exit__,fn__syncstreamproxy_close,fn__asyncstreamproxy___aiter__,fn__asyncstreamproxy___anext__,fn__asyncstreamproxy___aenter__,fn__asyncstreamproxy___aexit__,fn__asyncstreamproxy_aclose,fn_traceforgelangchainhandler_on_llm_start,fn_traceforgelangchainhandler_on_llm_end,fn_traceforgelangchainhandler_on_llm_error,fn_traceforgellamaindexhandler_on_llm_start,fn_traceforgellamaindexhandler_on_llm_end,fn_traceforgellamaindexhandler_on_llm_error node-subprocess
+    class dec_40,dec_43,dec_363,dec_396,dec_473,dec_483,dec_487,dec_489,dec_216,dec_218,dec_221,dec_228,dec_239,dec_242,dec_244,dec_520,dec_525,dec_527,dec_534,dec_560,dec_566,dec_572,dec_581,dec_585 node-decision
+    class loop_377,loop_410 node-loop
+    class tool_close_241,tool_save_243 node-tool
+    class n_end node-end
+    click fn__patch_method href "traceforge_L3_Traceforge_Auto_Core.html" "Abrir detalle"
+    click fn__new_span href "traceforge_L3_Traceforge_Auto_Core.html" "Abrir detalle"
+    click fn__estimate_tokens href "traceforge_L3_Traceforge_Auto_Core.html" "Abrir detalle"
+    click fn__extract_prompt href "traceforge_L3_Traceforge_Auto_Core.html" "Abrir detalle"
+    click fn__llm_wrapper_factory href "traceforge_L3_Traceforge_Auto_Core.html" "Abrir detalle"
+    click fn__streammixin___getattr__ href "traceforge_L3_Traceforge_Auto_StreamProxies.html" "Abrir detalle"
+    click fn__streammixin__on_chunk href "traceforge_L3_Traceforge_Auto_StreamProxies.html" "Abrir detalle"
+    click fn__streammixin__finalize href "traceforge_L3_Traceforge_Auto_StreamProxies.html" "Abrir detalle"
+    click fn__streammixin___del__ href "traceforge_L3_Traceforge_Auto_StreamProxies.html" "Abrir detalle"
+    click fn__syncstreamproxy___iter__ href "traceforge_L3_Traceforge_Auto_StreamProxies.html" "Abrir detalle"
+    click fn__syncstreamproxy___next__ href "traceforge_L3_Traceforge_Auto_StreamProxies.html" "Abrir detalle"
+    click fn__syncstreamproxy___enter__ href "traceforge_L3_Traceforge_Auto_StreamProxies.html" "Abrir detalle"
+    click fn__syncstreamproxy___exit__ href "traceforge_L3_Traceforge_Auto_StreamProxies.html" "Abrir detalle"
+    click fn__syncstreamproxy_close href "traceforge_L3_Traceforge_Auto_StreamProxies.html" "Abrir detalle"
+    click fn__asyncstreamproxy___aiter__ href "traceforge_L3_Traceforge_Auto_StreamProxies.html" "Abrir detalle"
+    click fn__asyncstreamproxy___anext__ href "traceforge_L3_Traceforge_Auto_StreamProxies.html" "Abrir detalle"
+    click fn__asyncstreamproxy___aenter__ href "traceforge_L3_Traceforge_Auto_StreamProxies.html" "Abrir detalle"
+    click fn__asyncstreamproxy___aexit__ href "traceforge_L3_Traceforge_Auto_StreamProxies.html" "Abrir detalle"
+    click fn__asyncstreamproxy_aclose href "traceforge_L3_Traceforge_Auto_StreamProxies.html" "Abrir detalle"
+    click fn_instrument_openai href "traceforge_L3_Traceforge_Auto_OpenAI.html" "Abrir detalle"
+    click fn__openai_usage href "traceforge_L3_Traceforge_Auto_OpenAI.html" "Abrir detalle"
+    click fn__openai_chunk_text href "traceforge_L3_Traceforge_Auto_OpenAI.html" "Abrir detalle"
+    click fn_instrument_anthropic href "traceforge_L3_Traceforge_Auto_Anthropic.html" "Abrir detalle"
+    click fn__anthropic_usage href "traceforge_L3_Traceforge_Auto_Anthropic.html" "Abrir detalle"
+    click fn__anthropic_chunk_text href "traceforge_L3_Traceforge_Auto_Anthropic.html" "Abrir detalle"
+    click fn__register_langchain href "traceforge_L3_Traceforge_Auto_LangChain.html" "Abrir detalle"
+    click fn__langchain_model href "traceforge_L3_Traceforge_Auto_LangChain.html" "Abrir detalle"
+    click fn_traceforgelangchainhandler_on_llm_start href "traceforge_L3_Traceforge_Auto_LangChain.html" "Abrir detalle"
+    click fn_traceforgelangchainhandler_on_llm_end href "traceforge_L3_Traceforge_Auto_LangChain.html" "Abrir detalle"
+    click fn_traceforgelangchainhandler_on_llm_error href "traceforge_L3_Traceforge_Auto_LangChain.html" "Abrir detalle"
+    click fn__register_llamaindex href "traceforge_L3_Traceforge_Auto_LlamaIndex.html" "Abrir detalle"
+    click fn_traceforgellamaindexhandler_on_llm_start href "traceforge_L3_Traceforge_Auto_LlamaIndex.html" "Abrir detalle"
+    click fn_traceforgellamaindexhandler_on_llm_end href "traceforge_L3_Traceforge_Auto_LlamaIndex.html" "Abrir detalle"
+    click fn_traceforgellamaindexhandler_on_llm_error href "traceforge_L3_Traceforge_Auto_LlamaIndex.html" "Abrir detalle"
+    click fn_instrument href "traceforge_L3_Traceforge_Auto_Entry.html" "Abrir detalle"

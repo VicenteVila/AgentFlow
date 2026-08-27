@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="traceforge_L1_Traceforge.html">← Volver</a>
+  <h1>Dashboard</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Dashboard
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_249{"open_browser<br><i>Condición en línea 249:<br>open_browser</i>"}
+    dec_70{"bucket not in ('hour',<br>'day')<br><i>Condición en línea 70:<br>bucket not in ('hour', 'day')</i>"}
+    dec_97{"path == '/'<br><i>Condición en línea 97:<br>path == '/'</i>"}
+    dec_99{"path == '/api/health'<br><i>Condición en línea 99:<br>path == '/api/health'</i>"}
+    dec_101{"path == '/api/traces'<br><i>Condición en línea 101:<br>path == '/api/traces'</i>"}
+    dec_106{"path == '/api/trace-count'<br><i>Condición en línea 106:<br>path == '/api/trace-count'</i>"}
+    dec_108{"path == '/api/timeseries'<br><i>Condición en línea 108:<br>path == '/api/timeseries'</i>"}
+    dec_110{"path == '/api/export.csv'<br><i>Condición en línea 110:<br>path == '/api/export.csv'</i>"}
+    loop_188["For each s in spans"]
+    dec_112{"path.startswith('/api/trace/')<br><i>Condición en línea 112:<br>path.startswith('/api/trace/')</i>"}
+    dec_211{"rows<br><i>Condición en línea 211:<br>rows</i>"}
+    dec_115{"not spans<br><i>Condición en línea 115:<br>not spans</i>"}
+    dec_118{"path == '/api/stats'<br><i>Condición en línea 118:<br>path == '/api/stats'</i>"}
+    dec_120{"path == '/api/query'<br><i>Condición en línea 120:<br>path == '/api/query'</i>"}
+    loop_73["For each s in spans"]
+    dec_74{"NOT started_at?<br><i>Niega started_at<br>para lógica invertida</i>"}
+    loop_143["For each s in spans"]
+    dec_144{"s.agent not in by_agent<br><i>Condición en línea 144:<br>s.agent not in by_agent</i>"}
+    loop_152["For loop"]
+    fn__span_dict[["Span Dict"]]
+    fn__trace_summary[["Trace Summary"]]
+    fn__build_timeseries[["Build Timeseries"]]
+    fn_run_dashboard[["Run Dashboard"]]
+    fn_dashboardhandler_log_message[["Log Message"]]
+    tool_query_69["spans = Query<br><i>Consulta estructurada/filtrada de spans</i>"]
+    fn_dashboardhandler_do_GET[["Do Get"]]
+    fn_dashboardhandler__params[["Params"]]
+    fn_dashboardhandler__query[["Query"]]
+    fn_dashboardhandler__stats[["Stats"]]
+    tool_list_traces_104["traces = List Traces<br><i>Enumeración de traces con filtros</i>"]
+    tool_query_141["spans = Query<br><i>Consulta estructurada/filtrada de spans</i>"]
+    fn_dashboardhandler__send_json[["Send Json"]]
+    fn_dashboardhandler__send_html[["Send Html"]]
+    fn_dashboardhandler__export_rows[["Export Rows"]]
+    fn_dashboardhandler__send_csv[["Send Csv"]]
+    tool_get_trace_114["spans = Get Trace<br><i>Recupera un trace completo por id</i>"]
+    n_start --> fn__span_dict
+    n_start --> fn__trace_summary
+    n_start --> fn__build_timeseries
+    fn__build_timeseries --> tool_query_69
+    tool_query_69 --> dec_70
+    dec_70 --> loop_73
+    loop_73 --> dec_74
+    dec_74 -- "loop" --> loop_73
+    n_start --> fn_run_dashboard
+    fn_run_dashboard --> dec_249
+    n_start --> fn_dashboardhandler_log_message
+    fn_dashboardhandler_log_message --> fn_dashboardhandler_do_GET
+    fn_dashboardhandler_do_GET --> dec_97
+    dec_97 --> dec_99
+    dec_99 --> dec_101
+    dec_101 --> tool_list_traces_104
+    tool_list_traces_104 --> dec_106
+    dec_106 --> dec_108
+    dec_108 --> dec_110
+    dec_110 --> dec_112
+    dec_112 --> tool_get_trace_114
+    tool_get_trace_114 --> dec_115
+    dec_115 --> dec_118
+    dec_118 --> dec_120
+    fn_dashboardhandler_do_GET --> fn_dashboardhandler__params
+    fn_dashboardhandler__params --> fn_dashboardhandler__query
+    fn_dashboardhandler__query --> fn_dashboardhandler__stats
+    fn_dashboardhandler__stats --> tool_query_141
+    tool_query_141 --> loop_143
+    loop_143 --> dec_144
+    dec_144 -- "loop" --> loop_143
+    loop_143 --> loop_152
+    fn_dashboardhandler__stats --> fn_dashboardhandler__send_json
+    fn_dashboardhandler__send_json --> fn_dashboardhandler__send_html
+    fn_dashboardhandler__send_html --> fn_dashboardhandler__export_rows
+    fn_dashboardhandler__export_rows --> loop_188
+    fn_dashboardhandler__export_rows --> fn_dashboardhandler__send_csv
+    fn_dashboardhandler__send_csv --> dec_211
+    class n_start node-start
+    class fn__span_dict,fn__trace_summary,fn__build_timeseries,fn_run_dashboard,fn_dashboardhandler_log_message,fn_dashboardhandler_do_GET,fn_dashboardhandler__params,fn_dashboardhandler__query,fn_dashboardhandler__stats,fn_dashboardhandler__send_json,fn_dashboardhandler__send_html,fn_dashboardhandler__export_rows,fn_dashboardhandler__send_csv node-subprocess
+    class tool_query_69,tool_list_traces_104,tool_get_trace_114,tool_query_141 node-tool
+    class dec_70,dec_74,dec_249,dec_97,dec_99,dec_101,dec_106,dec_108,dec_110,dec_112,dec_115,dec_118,dec_120,dec_144,dec_211 node-decision
+    class loop_73,loop_143,loop_152,loop_188 node-loop
+    class n_end node-end
+    click fn_run_dashboard href "traceforge_L3_Traceforge_Dashboard_Entry.html" "Abrir detalle"
+    click fn__span_dict href "traceforge_L3_Traceforge_Dashboard_Views.html" "Abrir detalle"
+    click fn__trace_summary href "traceforge_L3_Traceforge_Dashboard_Views.html" "Abrir detalle"
+    click fn__build_timeseries href "traceforge_L3_Traceforge_Dashboard_Views.html" "Abrir detalle"
+    click fn_dashboardhandler_log_message href "traceforge_L3_Traceforge_Dashboard_HTTP.html" "Abrir detalle"
+    click fn_dashboardhandler__params href "traceforge_L3_Traceforge_Dashboard_HTTP.html" "Abrir detalle"
+    click fn_dashboardhandler__query href "traceforge_L3_Traceforge_Dashboard_HTTP.html" "Abrir detalle"
+    click fn_dashboardhandler__stats href "traceforge_L3_Traceforge_Dashboard_HTTP.html" "Abrir detalle"
+    click fn_dashboardhandler__send_json href "traceforge_L3_Traceforge_Dashboard_HTTP.html" "Abrir detalle"
+    click fn_dashboardhandler__send_html href "traceforge_L3_Traceforge_Dashboard_HTTP.html" "Abrir detalle"
+    click fn_dashboardhandler__export_rows href "traceforge_L3_Traceforge_Dashboard_HTTP.html" "Abrir detalle"
+    click fn_dashboardhandler__send_csv href "traceforge_L3_Traceforge_Dashboard_HTTP.html" "Abrir detalle"
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

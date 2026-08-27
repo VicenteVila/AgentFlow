@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Otel</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="traceforge_L2_Traceforge_Collector.html">← Volver</a>
+  <h1>Otel</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Otel
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_85{"span.trace_id not in<br>self._traces<br><i>Condición en línea 85:<br>span.trace_id not in self._traces</i>"}
+    dec_90{"span.parent_id and<br>span.parent_id in self._spans<br><i>Condición en línea 90:<br>span.parent_id and span.parent_id in self._spans</i>"}
+    dec_92{"span.span_id not in<br>parent.children<br><i>Condición en línea 92:<br>span.span_id not in parent.children</i>"}
+    dec_168{"end <= 0<br><i>Condición en línea 168:<br>end <= 0</i>"}
+    dec_190{"trace_id<br><i>Condición en línea 190:<br>trace_id</i>"}
+    loop_218["For each s in spans"]
+    loop_195["For each s in span_pool"]
+    dec_196{"agent and s.agent != agent<br><i>Condición en línea 196:<br>agent and s.agent != agent</i>"}
+    dec_198{"status and s.status !=<br>status<br><i>Condición en línea 198:<br>status and s.status != status</i>"}
+    dec_200{"min_duration_ms is not None<br>and s.duration_ms <<br><i>Condición en línea 200:<br>min_duration_ms is not None and s.duration_ms < min_duration</i>"}
+    dec_202{"since and s.started_at and<br>(s.started_at < since)<br><i>Condición en línea 202:<br>since and s.started_at and (s.started_at < since)</i>"}
+    dec_204{"metadata and (not<br>_metadata_contains(s.metadata or<br><i>Condición en línea 204:<br>metadata and (not _metadata_contains(s.metadata or (), metad</i>"}
+    fn__to_ns[["To Ns"]]
+    fn__otel_trace_id[["Otel Trace Id"]]
+    fn__otel_span_id[["Otel Span Id"]]
+    fn__deterministicidgenerator_generate_trace_id[["Generate Trace Id"]]
+    fn_otelcollector__ensure_tracer[["Ensure Tracer"]]
+    fn__deterministicidgenerator_generate_span_id[["Generate Span Id"]]
+    fn_otelcollector_save[["Save"]]
+    fn_otelcollector__export_to_otel[["Export To Otel"]]
+    fn_otelcollector_get_trace[["Get Trace"]]
+    fn_otelcollector_get_span[["Get Span"]]
+    fn_otelcollector_list_traces[["List Traces"]]
+    fn_otelcollector_get_last_trace_id[["Get Last Trace Id"]]
+    fn_otelcollector_query[["Query"]]
+    fn_otelcollector_clear[["Clear"]]
+    tool_get_trace_191["span_pool = Get Trace<br><i>Recupera un trace completo por id</i>"]
+    fn_otelcollector_export_traces[["Export Traces"]]
+    tool_query_216["spans = Query<br><i>Consulta estructurada/filtrada de spans</i>"]
+    n_start --> fn__to_ns
+    n_start --> fn__otel_trace_id
+    n_start --> fn__otel_span_id
+    n_start --> fn__deterministicidgenerator_generate_trace_id
+    fn__deterministicidgenerator_generate_trace_id --> fn__deterministicidgenerator_generate_span_id
+    n_start --> fn_otelcollector__ensure_tracer
+    fn_otelcollector__ensure_tracer --> fn_otelcollector_save
+    fn_otelcollector_save --> dec_85
+    dec_85 --> dec_90
+    dec_90 --> dec_92
+    fn_otelcollector_save --> fn_otelcollector__export_to_otel
+    fn_otelcollector__export_to_otel --> fn_otelcollector_get_trace
+    fn_otelcollector_get_trace --> fn_otelcollector_get_span
+    fn_otelcollector_get_span --> fn_otelcollector_list_traces
+    fn_otelcollector_list_traces --> dec_168
+    fn_otelcollector_list_traces --> fn_otelcollector_get_last_trace_id
+    fn_otelcollector_get_last_trace_id --> fn_otelcollector_query
+    fn_otelcollector_query --> dec_190
+    dec_190 -- "YES" --> tool_get_trace_191
+    dec_190 --> loop_195
+    loop_195 --> dec_196
+    dec_196 --> dec_198
+    dec_198 --> dec_200
+    dec_200 --> dec_202
+    dec_202 --> dec_204
+    dec_204 -- "loop" --> loop_195
+    fn_otelcollector_query --> fn_otelcollector_clear
+    fn_otelcollector_clear --> fn_otelcollector_export_traces
+    fn_otelcollector_export_traces --> tool_query_216
+    tool_query_216 --> loop_218
+    class n_start node-start
+    class fn__to_ns,fn__otel_trace_id,fn__otel_span_id,fn__deterministicidgenerator_generate_trace_id,fn__deterministicidgenerator_generate_span_id,fn_otelcollector__ensure_tracer,fn_otelcollector_save,fn_otelcollector__export_to_otel,fn_otelcollector_get_trace,fn_otelcollector_get_span,fn_otelcollector_list_traces,fn_otelcollector_get_last_trace_id,fn_otelcollector_query,fn_otelcollector_clear,fn_otelcollector_export_traces node-subprocess
+    class dec_85,dec_90,dec_92,dec_168,dec_190,dec_196,dec_198,dec_200,dec_202,dec_204 node-decision
+    class tool_get_trace_191,tool_query_216 node-tool
+    class loop_195,loop_218 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

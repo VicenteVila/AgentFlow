@@ -263,14 +263,11 @@ def _parse_agent_class(cls: ast.ClassDef, ctx: ParseContext) -> None:
             elif item.name == "_handle_eval_result":
                 handle_eval = item
 
-    prev_node: str
+    prev_node: str = "start"
     if init_method:
         _parse_init(init_method, ctx)
         ctx.graph.add_edge(Edge(source="start", target="init", label=""))
         prev_node = "init"
-    else:
-        ctx.graph.add_edge(Edge(source="start", target="main_loop", label=""))
-        prev_node = "start"
 
     if run_method:
         _parse_run_method(run_method, ctx, prev_node)

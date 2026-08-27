@@ -1,0 +1,62 @@
+%% traceforge · traceforge
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start"])
+    mod_abtest["Abtest<br><i>17 nodos, 17 enlaces</i>"]
+    mod_auto["Auto<br><i>65 nodos, 63 enlaces</i>"]
+    mod_cli["Cli<br><i>59 nodos, 60 enlaces</i>"]
+    mod_core["Core<br><i>43 nodos, 41 enlaces</i>"]
+    mod_dashboard["Dashboard<br><i>38 nodos, 38 enlaces</i>"]
+    mod_evals["Evals<br><i>36 nodos, 37 enlaces</i>"]
+    mod_format["Format<br><i>15 nodos, 13 enlaces</i>"]
+    mod_pricing["Pricing<br><i>18 nodos, 18 enlaces</i>"]
+    mod_redact["Redact<br><i>26 nodos, 27 enlaces</i>"]
+    mod_reporting["Reporting<br><i>33 nodos, 35 enlaces</i>"]
+    n_end(["End"])
+    mod_collector[["Collector<br><i>5 sub-flujos</i>"]]
+    mod_context["Context<br><i>8 nodos, 6 enlaces</i>"]
+    mod_decorator[["Decorator<br><i>8 nodos, 6 enlaces</i>"]]
+    n_start --> mod_collector
+    mod_collector --> mod_abtest
+    mod_abtest --> mod_auto
+    mod_auto --> mod_cli
+    mod_cli --> mod_context
+    mod_context --> mod_core
+    mod_core --> mod_dashboard
+    mod_dashboard --> mod_decorator
+    mod_decorator --> mod_evals
+    mod_evals --> mod_format
+    mod_format --> mod_pricing
+    mod_pricing --> mod_redact
+    mod_redact --> mod_reporting
+    mod_reporting --> n_end
+    class n_start node-start
+    class mod_collector,mod_decorator node-subprocess
+    class mod_abtest,mod_auto,mod_cli,mod_core,mod_dashboard,mod_evals,mod_pricing,mod_redact,mod_reporting node-loop
+    class mod_context node-tool
+    class mod_format node-process
+    class n_end node-end
+    click mod_collector href "traceforge_L2_Traceforge_Collector.html" "Abrir detalle"
+    click mod_abtest href "traceforge_L2_Traceforge_Abtest.html" "Abrir detalle"
+    click mod_auto href "traceforge_L2_Traceforge_Auto.html" "Abrir detalle"
+    click mod_cli href "traceforge_L2_Traceforge_Cli.html" "Abrir detalle"
+    click mod_context href "traceforge_L2_Traceforge_Context.html" "Abrir detalle"
+    click mod_core href "traceforge_L2_Traceforge_Core.html" "Abrir detalle"
+    click mod_dashboard href "traceforge_L2_Traceforge_Dashboard.html" "Abrir detalle"
+    click mod_decorator href "traceforge_L2_Traceforge_Decorator.html" "Abrir detalle"
+    click mod_evals href "traceforge_L2_Traceforge_Evals.html" "Abrir detalle"
+    click mod_format href "traceforge_L2_Traceforge_Format.html" "Abrir detalle"
+    click mod_pricing href "traceforge_L2_Traceforge_Pricing.html" "Abrir detalle"
+    click mod_redact href "traceforge_L2_Traceforge_Redact.html" "Abrir detalle"
+    click mod_reporting href "traceforge_L2_Traceforge_Reporting.html" "Abrir detalle"
