@@ -1,0 +1,42 @@
+%% Run Benchmark · Suite
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    dec_20{"not suite_file.exists()<br><i>Condición en línea 20:<br>not suite_file.exists()</i>"}
+    dec_29{"args.full<br><i>Condición en línea 29:<br>args.full</i>"}
+    dec_31{"not args.rho and (not<br>TASK_COEVOLVE_ENABLED)<br><i>Condición en línea 31:<br>not args.rho and (not TASK_COEVOLVE_ENABLED)</i>"}
+    dec_36{"rho < 1.0<br><i>Condición en línea 36:<br>rho < 1.0</i>"}
+    loop_51["For each task_def in suite"]
+    dec_54{"not sampled<br><i>Condición en línea 54:<br>not sampled</i>"}
+    dec_126{"args.json_out<br><i>Condición en línea 126:<br>args.json_out</i>"}
+    dec_132{"args.leaderboard<br><i>Condición en línea 132:<br>args.leaderboard</i>"}
+    fn__run_suite[["Run Suite"]]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_117{"selector is not None and sel<br>is not None<br><i>Condición en línea 117:<br>selector is not None and sel is not None</i>"}
+    n_start --> fn__run_suite
+    fn__run_suite --> dec_20
+    dec_20 --> dec_29
+    dec_29 --> dec_31
+    dec_31 --> dec_36
+    dec_36 --> loop_51
+    loop_51 --> dec_54
+    dec_54 -- "loop" --> loop_51
+    loop_51 --> dec_117
+    dec_117 --> dec_126
+    dec_126 --> dec_132
+    class n_start node-start
+    class fn__run_suite node-subprocess
+    class dec_20,dec_29,dec_31,dec_36,dec_54,dec_117,dec_126,dec_132 node-decision
+    class loop_51 node-loop
+    class n_end node-end

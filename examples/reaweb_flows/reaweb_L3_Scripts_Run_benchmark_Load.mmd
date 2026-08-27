@@ -1,0 +1,39 @@
+%% Run Benchmark · Load
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    loop_19["For each run_id"]
+    dec_5{"roots<br><i>Condición en línea 5:<br>roots</i>"}
+    dec_12{"Has nodes?<br><i>Search tree tiene nodos?<br>→ evaluar candidato</i>"}
+    loop_22["For each r"]
+    dec_23{"r.get('task_hash') != th<br><i>Condición en línea 23:<br>r.get('task_hash') != th</i>"}
+    fn_load_benchmark[["Load Benchmark"]]
+    fn__baseline[["Baseline"]]
+    fn__num_8[["Num"]]
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    n_start --> fn__baseline
+    fn__baseline --> dec_5
+    dec_5 --> fn__num_8
+    fn__num_8 --> dec_12
+    n_start --> fn_load_benchmark
+    fn_load_benchmark --> loop_19
+    loop_19 --> loop_22
+    loop_22 --> dec_23
+    dec_23 --> fn__baseline
+    fn__baseline -- "loop" --> loop_22
+    class n_start node-start
+    class fn__baseline,fn__num_8,fn_load_benchmark node-subprocess
+    class dec_5,dec_12,dec_23 node-decision
+    class loop_19,loop_22 node-loop
+    class n_end node-end

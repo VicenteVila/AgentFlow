@@ -20,7 +20,7 @@
   <p class="note">Click en los modulos con cursor mano para drill-down.</p>
   <div id="diagram"><pre class="mermaid">
 %% Trend Evolution
-%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
 flowchart LR
     classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
     classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
@@ -111,6 +111,11 @@ flowchart LR
     class dec_40,dec_43,dec_59,dec_102,dec_105,dec_107,dec_123,dec_125,dec_131,dec_136,dec_150,dec_152,dec_156,dec_163,dec_171,dec_204 node-decision
     class loop_56,loop_99,loop_122,loop_128,loop_130,loop_139,loop_146,loop_147,loop_149,loop_161 node-loop
     class n_end node-end
+    click fn__baseline href "reaweb_L3_Scripts_Trend_evolution_Data.html" "Abrir detalle"
+    click fn_collect href "reaweb_L3_Scripts_Trend_evolution_Data.html" "Abrir detalle"
+    click fn_render_markdown href "reaweb_L3_Scripts_Trend_evolution_Render.html" "Abrir detalle"
+    click fn__fmt_num href "reaweb_L3_Scripts_Trend_evolution_Render.html" "Abrir detalle"
+    click fn_main href "reaweb_L3_Scripts_Trend_evolution_Entry.html" "Abrir detalle"
 
   </pre></div>
   <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>

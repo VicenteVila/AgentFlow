@@ -21,6 +21,8 @@ from agentflow.profiles import (
     load_profile,
 )
 
+ROOT = Path(__file__).resolve().parent.parent
+
 
 def parse(text, title="Test"):
     """Parse with the reaweb profile (exhaustive labels)."""
@@ -2038,3 +2040,35 @@ def test_cli_drilldown_theme_no_phases():
         assert "subgraph" not in mmd
         assert "classDef node-process fill:#000000,stroke:#8b5cf6" in mmd
         assert (out / "index.html").exists()
+
+
+# ── Headless mermaid render ───────────────────────────────────────────
+
+
+def _node_render_available():
+    import shutil
+
+    if shutil.which("node") is None:
+        return False
+    for p in (ROOT / "node_modules" / "mermaid", ROOT / "node_modules" / "jsdom"):
+        if not p.exists():
+            return False
+    return True
+
+
+def test_mermaid_headless_render():
+    """Render a real generated drill-down diagram to SVG without a browser."""
+    import subprocess
+
+    if not _node_render_available():
+        pytest.skip("node + mermaid + jsdom no instalados (npm ci)")
+    mmd = ROOT / "examples" / "reaweb_flows" / "reaweb_L3_Tools_Domain_Evaluator.mmd"
+    if not mmd.exists():
+        pytest.skip("no hay diagrama de ejemplo que renderizar")
+    result = subprocess.run(
+        ["node", str(ROOT / "tests" / "mermaid_render.mjs"), str(mmd)],
+        capture_output=True, text=True, timeout=300,
+    )
+    assert result.returncode == 0, result.stderr
+    size = int(result.stdout.strip())
+    assert size > 10000, "el SVG renderizado es sospechosamente pequeño"

@@ -80,6 +80,18 @@ FUNCTION_SPLITS: dict[str, list[tuple[str, list[str]]]] = {
             "_has_modern_images", "_scripts_async", "_img_responsive",
         ]),
     ],
+    "scripts.trend_evolution": [
+        ("Data", ["_baseline", "collect"]),
+        ("Render", ["render_markdown", "_fmt_num"]),
+        ("Entry", ["main"]),
+    ],
+    "scripts.run_benchmark": [
+        ("Load", ["_baseline", "load_benchmark"]),
+        ("Render", ["render", "_f"]),
+        ("Suite", ["_run_suite"]),
+        ("Leaderboard", ["_write_leaderboard"]),
+        ("Entry", ["main"]),
+    ],
 }
 
 # Class-level splits: dotted module path -> [class names to expand each alone].
