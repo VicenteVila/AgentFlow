@@ -1,0 +1,55 @@
+%% Research Scheduler
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_171{"_scheduler is None<br><i>Condición en línea 171:<br>_scheduler is None</i>"}
+    dec_102{"self.running<br><i>Condición en línea 102:<br>self.running</i>"}
+    dec_112{"self._thread<br><i>Condición en línea 112:<br>self._thread</i>"}
+    dec_146{"results<br><i>Condición en línea 146:<br>results</i>"}
+    fn_get_scheduler[["Get Scheduler"]]
+    fn_researchscheduler__get_schedules_file[["Get Schedules File"]]
+    fn_researchscheduler__load_schedules[["Load Schedules"]]
+    fn_researchscheduler__save_schedules[["Save Schedules"]]
+    fn_researchscheduler_add_schedule[["Add Schedule"]]
+    fn_researchscheduler_remove_schedule[["Remove Schedule"]]
+    fn_researchscheduler_list_schedules[["List Schedules"]]
+    fn_researchscheduler_toggle_schedule[["Toggle Schedule"]]
+    fn_researchscheduler_start[["Start"]]
+    fn_researchscheduler_stop[["Stop"]]
+    fn_researchscheduler__loop[["Loop"]]
+    fn_researchscheduler__run_schedule[["Run Schedule"]]
+    tool_search_144["results = Search<br><i>Búsqueda híbrida (sqlite + obsidian /<br>semántica densa + BM25)</i>"]
+    n_start --> fn_get_scheduler
+    fn_get_scheduler --> dec_171
+    n_start --> fn_researchscheduler__get_schedules_file
+    fn_researchscheduler__get_schedules_file --> fn_researchscheduler__load_schedules
+    fn_researchscheduler__load_schedules --> fn_researchscheduler__save_schedules
+    fn_researchscheduler__save_schedules --> fn_researchscheduler_add_schedule
+    fn_researchscheduler_add_schedule --> fn_researchscheduler_remove_schedule
+    fn_researchscheduler_remove_schedule --> fn_researchscheduler_list_schedules
+    fn_researchscheduler_list_schedules --> fn_researchscheduler_toggle_schedule
+    fn_researchscheduler_toggle_schedule --> fn_researchscheduler_start
+    fn_researchscheduler_start --> dec_102
+    fn_researchscheduler_start --> fn_researchscheduler_stop
+    fn_researchscheduler_stop --> dec_112
+    fn_researchscheduler_stop --> fn_researchscheduler__loop
+    fn_researchscheduler__loop --> fn_researchscheduler__run_schedule
+    fn_researchscheduler__run_schedule --> tool_search_144
+    tool_search_144 --> dec_146
+    class n_start node-start
+    class fn_get_scheduler,fn_researchscheduler__get_schedules_file,fn_researchscheduler__load_schedules,fn_researchscheduler__save_schedules,fn_researchscheduler_add_schedule,fn_researchscheduler_remove_schedule,fn_researchscheduler_list_schedules,fn_researchscheduler_toggle_schedule,fn_researchscheduler_start,fn_researchscheduler_stop,fn_researchscheduler__loop,fn_researchscheduler__run_schedule node-subprocess
+    class dec_171,dec_102,dec_112,dec_146 node-decision
+    class tool_search_144 node-tool
+    class n_end node-end

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hybrid Retriever</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="asubarnipal_L1_Core.html">← Volver</a>
+  <h1>Hybrid Retriever</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Hybrid Retriever
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_143{"result.startswith('```')<br><i>Condición en línea 143:<br>result.startswith('```')</i>"}
+    dec_146{"result.endswith('```')<br><i>Condición en línea 146:<br>result.endswith('```')</i>"}
+    loop_223["For each r in results"]
+    dec_151{"'sub_queries' not in plan<br><i>Condición en línea 151:<br>'sub_queries' not in plan</i>"}
+    dec_338{"auto_extract_entities and<br>len(content) > 100<br><i>Condición en línea 338:<br>auto_extract_entities and len(content) > 100</i>"}
+    loop_80["For each sq"]
+    dec_88{"seed_ents<br><i>Condición en línea 88:<br>seed_ents</i>"}
+    dec_92{"graph_entities<br><i>Condición en línea 92:<br>graph_entities</i>"}
+    loop_93["For each ent_data in graph_entities"]
+    loop_236["For each r in results"]
+    dec_238{"node_id and node_id not in<br>seen<br><i>Condición en línea 238:<br>node_id and node_id not in seen</i>"}
+    loop_266["For each ev"]
+    dec_269{"content and content not in<br>evidence_texts<br><i>Condición en línea 269:<br>content and content not in evidence_texts</i>"}
+    dec_277{"context<br><i>Condición en línea 277:<br>context</i>"}
+    loop_282["For each ent"]
+    dec_285{"ent_profile<br><i>Condición en línea 285:<br>ent_profile</i>"}
+    loop_361["For each ev"]
+    dec_364{"content<br><i>Condición en línea 364:<br>content</i>"}
+    loop_368["For each ent"]
+    dec_371{"profile<br><i>Condición en línea 371:<br>profile</i>"}
+    fn_get_hmem_manager[["Get Hmem Manager"]]
+    fn_get_hybrid_retriever[["Get Hybrid Retriever"]]
+    fn_hybridretriever__get_tree[["Get Tree"]]
+    fn_hmemmanager___new__[["New"]]
+    fn_hybridretriever__get_graph[["Get Graph"]]
+    fn_hmemmanager_remember[["Remember"]]
+    fn_hybridretriever__get_llm[["Get Llm"]]
+    fn_hmemmanager_recall[["Recall"]]
+    fn_hybridretriever_retrieve[["Retrieve"]]
+    fn_hmemmanager_think[["Think"]]
+    fn_hybridretriever__plan_retrieval[["Plan Retrieval"]]
+    fn_hmemmanager_get_context[["Get Context"]]
+    tool_generate_140["result = Generate<br><i>LLMRouter: invocación LLM<br>generativa (gemini/ollama)</i>"]
+    fn_hybridretriever__retrieve_tree[["Retrieve Tree"]]
+    fn_hmemmanager_stats[["Stats"]]
+    fn_hybridretriever__rank_evidence[["Rank Evidence"]]
+    fn_hmemmanager_get_recent_memories[["Get Recent Memories"]]
+    fn_hybridretriever_answer[["Answer"]]
+    fn_hmemmanager_close[["Close"]]
+    tool_retrieve_261["retrieval = Retrieve<br><i>HybridRetriever: planifica y recupera de<br>tree + graph + embbeding</i>"]
+    fn_hybridretriever_ingest_memory[["Ingest Memory"]]
+    fn_hybridretriever_get_memory_context[["Get Memory Context"]]
+    tool_retrieve_357["retrieval = Retrieve<br><i>HybridRetriever: planifica y recupera de<br>tree + graph + embbeding</i>"]
+    fn_hybridretriever_get_stats[["Get Stats"]]
+    fn_hybridretriever_close[["Close"]]
+    tool_generate_301["answer = Generate<br><i>LLMRouter: invocación LLM<br>generativa (gemini/ollama)</i>"]
+    n_start --> fn_get_hmem_manager
+    n_start --> fn_get_hybrid_retriever
+    n_start --> fn_hybridretriever__get_tree
+    fn_hybridretriever__get_tree --> fn_hybridretriever__get_graph
+    fn_hybridretriever__get_graph --> fn_hybridretriever__get_llm
+    fn_hybridretriever__get_llm --> fn_hybridretriever_retrieve
+    fn_hybridretriever_retrieve --> loop_80
+    loop_80 --> dec_88
+    dec_88 -- "loop" --> loop_80
+    loop_80 --> dec_92
+    dec_92 --> loop_93
+    fn_hybridretriever_retrieve --> fn_hybridretriever__plan_retrieval
+    fn_hybridretriever__plan_retrieval --> tool_generate_140
+    tool_generate_140 --> dec_143
+    dec_143 --> dec_146
+    dec_146 --> dec_151
+    fn_hybridretriever__plan_retrieval --> fn_hybridretriever__retrieve_tree
+    fn_hybridretriever__retrieve_tree --> fn_hybridretriever__rank_evidence
+    fn_hybridretriever__rank_evidence --> loop_223
+    loop_223 --> loop_236
+    loop_236 --> dec_238
+    dec_238 -- "loop" --> loop_236
+    fn_hybridretriever__rank_evidence --> fn_hybridretriever_answer
+    fn_hybridretriever_answer --> tool_retrieve_261
+    tool_retrieve_261 --> loop_266
+    loop_266 --> dec_269
+    dec_269 -- "loop" --> loop_266
+    loop_266 --> dec_277
+    dec_277 --> loop_282
+    loop_282 --> dec_285
+    dec_285 -- "loop" --> loop_282
+    loop_282 --> tool_generate_301
+    fn_hybridretriever_answer --> fn_hybridretriever_ingest_memory
+    fn_hybridretriever_ingest_memory --> dec_338
+    fn_hybridretriever_ingest_memory --> fn_hybridretriever_get_memory_context
+    fn_hybridretriever_get_memory_context --> tool_retrieve_357
+    tool_retrieve_357 --> loop_361
+    loop_361 --> dec_364
+    dec_364 -- "loop" --> loop_361
+    loop_361 --> loop_368
+    loop_368 --> dec_371
+    dec_371 -- "loop" --> loop_368
+    fn_hybridretriever_get_memory_context --> fn_hybridretriever_get_stats
+    fn_hybridretriever_get_stats --> fn_hybridretriever_close
+    n_start --> fn_hmemmanager___new__
+    fn_hmemmanager___new__ --> fn_hmemmanager_remember
+    fn_hmemmanager_remember --> fn_hmemmanager_recall
+    fn_hmemmanager_recall --> fn_hmemmanager_think
+    fn_hmemmanager_think --> fn_hmemmanager_get_context
+    fn_hmemmanager_get_context --> fn_hmemmanager_stats
+    fn_hmemmanager_stats --> fn_hmemmanager_get_recent_memories
+    fn_hmemmanager_get_recent_memories --> fn_hmemmanager_close
+    class n_start node-start
+    class fn_get_hmem_manager,fn_get_hybrid_retriever,fn_hybridretriever__get_tree,fn_hybridretriever__get_graph,fn_hybridretriever__get_llm,fn_hybridretriever_retrieve,fn_hybridretriever__plan_retrieval,fn_hybridretriever__retrieve_tree,fn_hybridretriever__rank_evidence,fn_hybridretriever_answer,fn_hybridretriever_ingest_memory,fn_hybridretriever_get_memory_context,fn_hybridretriever_get_stats,fn_hybridretriever_close,fn_hmemmanager___new__,fn_hmemmanager_remember,fn_hmemmanager_recall,fn_hmemmanager_think,fn_hmemmanager_get_context,fn_hmemmanager_stats,fn_hmemmanager_get_recent_memories,fn_hmemmanager_close node-subprocess
+    class loop_80,loop_93,loop_223,loop_236,loop_266,loop_282,loop_361,loop_368 node-loop
+    class dec_88,dec_92,dec_143,dec_146,dec_151,dec_238,dec_269,dec_277,dec_285,dec_338,dec_364,dec_371 node-decision
+    class tool_generate_140,tool_retrieve_261,tool_generate_301,tool_retrieve_357 node-tool
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

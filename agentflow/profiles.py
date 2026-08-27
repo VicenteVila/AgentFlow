@@ -9,6 +9,7 @@ Built-in profiles are provided:
 - REAWEB: exhaustive labels for the ReaWeb self-evolving web-design agent.
 - REAGAME: exhaustive labels for the ReaGame self-evolving game-design agent.
 - TRACEFORGE: labels for the TraceForge LLM-tracing library.
+- ASUBARNIPAL: labels for the Asubarnipal wiki/RAG assistant (Telegram + FastAPI).
 
 Custom profiles can be loaded from an external Python file exposing a
 ``PROFILE`` dict (see :func:`load_profile`).
@@ -733,6 +734,345 @@ TRACEFORGE_PROFILE = Profile(
 )
 
 
+# ── Asubarnipal profile ───────────────────────────────────────────────
+
+_ASUBARNIPAL_TOOL_INFO: dict[str, tuple[str, str]] = {
+    "ingest_url": (
+        "Ingest URL",
+        "WikiIngest: descarga y parsea una URL\n(youtube si procede) al vault",
+    ),
+    "ingest_url_smart": (
+        "Ingest Smart",
+        "Detección de tipo de fuente\n(youtube / web / file) y ruta de ingestión",
+    ),
+    "ingest_file": (
+        "Ingest File",
+        "Ingesta de un fichero de texto\n(ruta local o documento Telegram)",
+    ),
+    "ingest_image": (
+        "Ingest Image",
+        "Ingesta de una imagen → OCR\nsi el modelo está disponible",
+    ),
+    "ingest_pdf": (
+        "Ingest PDF",
+        "Análisis página a página + OCR",
+    ),
+    "extract_with_ocr": (
+        "Extract w/ OCR",
+        "Extracción de texto de imagen\nvía modelo OCR",
+    ),
+    "save_research_proposal": (
+        "Save Proposal",
+        "Persiste la propuesta de investigación\ncomo nota wiki",
+    ),
+    "ingestar": (
+        "Ingestar",
+        "WikiEngine: midende notas de una fuente\nal vault (frontmatter + relaciones)",
+    ),
+    "query_wiki": (
+        "Query Wiki",
+        "Búsqueda semántica sobre el vault wiki",
+    ),
+    "lint": ("Lint Wiki", "Valida la estructura de las notas wiki"),
+    "search": (
+        "Search",
+        "Búsqueda híbrida (sqlite + obsidian /\nsemántica densa + BM25)",
+    ),
+    "query_knowledge": (
+        "Query Knowledge",
+        "API: consulta RAG sobre el conocimiento indexado",
+    ),
+    "retrieve": (
+        "Retrieve",
+        "HybridRetriever: planifica y recupera de\ntree + graph + embbeding",
+    ),
+    "answer": ("Answer", "Respuesta con contexto recuperado"),
+    "remember": (
+        "Remember",
+        "HMem: consolida un evento en la memoria",
+    ),
+    "recall": ("Recall", "HMem: recupera memoria reciente"),
+    "think": ("Think", "HMem: razonamiento sobre la memoria"),
+    "build_graph": (
+        "Build Graph",
+        "Graphify: construye el grafo\n(story-graph) del vault",
+    ),
+    "query_graph": (
+        "Query Graph",
+        "Graphify: consulta el grafo",
+    ),
+    "update_graph": ("Update Graph", "Graphify: actualiza el grafo"),
+    "export_graph": ("Export Graph", "Graphify: exporta el grafo"),
+    "add_url_to_graph": (
+        "Add URL to Graph",
+        "Graphify: añade una URL como nodo",
+    ),
+    "add_entity": (
+        "Add Entity",
+        "EntityGraph: inserta/actualiza una entidad",
+    ),
+    "add_relation": (
+        "Add Relation",
+        "EntityGraph: crea una relación entre entidades",
+    ),
+    "link_memory": (
+        "Link Memory",
+        "EntityGraph: enlaza una memoria a entidades",
+    ),
+    "extract_entities": (
+        "Extract Entities",
+        "EntityGraph: entidades desde un texto\nvia LLM",
+    ),
+    "ingest_memory": (
+        "Ingest Memory",
+        "HybridRetriever: inserta y consolida memoria",
+    ),
+    "search_web": (
+        "Search Web",
+        "Búsqueda web externa para \nrespuestas del asistente",
+    ),
+    "generate": (
+        "Generate",
+        "LLMRouter: invocación LLM\ngenerativa (gemini/ollama)",
+    ),
+    "call_agent": (
+        "Call Agent",
+        "LLMRouter: conversación con el agente",
+    ),
+    "call_with_harness": (
+        "Call w/ Harness",
+        "LLM + harness de runtime (herramientas\ntrajectoria y presupuesto)",
+    ),
+    "call_with_turbo": (
+        "Call w/ Turbo",
+        "LLM con compresión turboquant",
+    ),
+    "search_and_summarize": (
+        "Search & Summarize",
+        "Librarian: búsqueda bibliográfica\n+ resumen con fuentes",
+    ),
+    "research_topic": (
+        "Research Topic",
+        "Investigación de un tema desde\nel servicio principal",
+    ),
+}
+
+_ASUBARNIPAL_SPECIAL_CALLS: dict[str, tuple[str, str, NodeType]] = {
+    "_heartbeat_loop": (
+        "Heartbeat Loop",
+        "Background loop: notifica estado\ndel agente cada heartbeat",
+        NodeType.LOOP,
+    ),
+    "_suture_loop": (
+        "Suture Loop",
+        "Background loop: conservación de la\nmemoria (respaldos)",
+        NodeType.LOOP,
+    ),
+    "_graph_loop": (
+        "Graph Loop",
+        "Background loop: reconstrucción del grafo\ngraphify del vault",
+        NodeType.LOOP,
+    ),
+    "_hmem_loop": (
+        "HMem Loop",
+        "Background loop: consolidación de la\nmemoria híbrida",
+        NodeType.LOOP,
+    ),
+    "_run_hmem_consolidation": (
+        "HMem Consolidate",
+        "Consolidación programada de memoria",
+        NodeType.PROCESS,
+    ),
+    "_update_graphify": (
+        "Update Graphify",
+        "Reconstruye el grafo del vault",
+        NodeType.PROCESS,
+    ),
+    "_check_ollama_available": (
+        "Check Ollama",
+        "Comprueba disponibilidad del modelo\nlocal ollama",
+        NodeType.PROCESS,
+    ),
+    "_check_ollama": (
+        "Check Ollama",
+        "Comprueba disponibilidad del modelo\nlocal ollama",
+        NodeType.PROCESS,
+    ),
+    "_memory_robustness": (
+        "Memory Robustness",
+        "Robustecimiento/consolidación del\nárbol de memoria",
+        NodeType.PROCESS,
+    ),
+    "heal_orphans": (
+        "Heal Orphans",
+        "WikiHealer: repara notas huérfanas",
+        NodeType.PROCESS,
+    ),
+}
+
+_ASUBARNIPAL_EVO_INFO: dict[str, tuple[str, str]] = {
+    "evolve_from_failures": (
+        "Evolve from Failures",
+        "ProceduralSkillLayer: deriva habilidades\nde los fallos registrados",
+    ),
+    "record_failure": (
+        "Record Failure",
+        "Registra un fallo de acción para evolución\nde habilidades",
+    ),
+}
+
+_ASUBARNIPAL_FUNCTION_SPLITS: dict[str, list[tuple[str, list[str]]]] = {
+    "interface.telegram_bot": [
+        ("Entry", ["main"]),
+        ("Sessions", [
+            "get_user_session", "_save_to_db", "_load_from_db",
+            "_prune_db_history", "_clear_db_session",
+        ]),
+        ("Messages", ["_estimate_tokens", "_trim_history", "_build_messages"]),
+        ("Handlers", [
+            "handle_message", "handle_voice", "handle_photo",
+            "agent_callback", "error_handler",
+        ]),
+        ("Commands", [
+            "indexar_wiki_cmd", "clear_session_cmd", "session_info_cmd",
+        ]),
+    ],
+    "api.main": [
+        ("Entry", [
+            "_graceful_shutdown", "root",
+            "http_exception_handler", "general_exception_handler",
+        ]),
+        ("Health", ["health", "liveness", "readiness", "circuit_breaker_status"]),
+        ("Metrics", ["get_metrics", "get_prometheus_metrics"]),
+        ("Knowledge", ["query_knowledge", "list_vaults"]),
+        ("Commands", ["execute_command", "get_command_history", "add_to_history"]),
+        ("Status", ["get_status", "get_stats"]),
+        ("Feeds", [
+            "list_feeds", "subscribe_feed", "unsubscribe_feed", "check_feed_updates",
+        ]),
+        ("Logs", ["get_logs"]),
+        ("Schedules", ["list_schedules"]),
+    ],
+    "core.graphify_integration": [
+        ("Paths", ["_get_graph_dir", "_get_graphify_bin"]),
+        ("GraphIO", ["_graph_json", "_graph_html", "_graph_report"]),
+        ("Runner", ["_check_graphify", "_run_graphify"]),
+        ("Ops", ["build_graph", "update_graph", "export_graph", "add_url_to_graph"]),
+        ("Query", [
+            "query_graph", "get_graph_stats", "get_graph_report",
+            "get_graph_html_path",
+        ]),
+        ("Dashboard", ["copy_graph_to_dashboard", "install_graphify_hook"]),
+    ],
+    "interface.handlers.busqueda": [
+        ("Helpers", ["is_url", "is_local_path", "extract_url_from_text"]),
+        ("Ingestion", [
+            "ingest_cmd", "_ingest_url", "_ingest_local_file",
+            "_ingest_telegram_document", "_ingest_telegram_photo",
+        ]),
+        ("Research", ["investigar_cmd", "_validate_topic", "_validate_url"]),
+    ],
+    "core.wiki_engine": [
+        ("Helpers", [
+            "guardar_schema", "_hash_fuente", "_extraer_frontmatter",
+            "_actualizar_index",
+        ]),
+        ("Ingestion", [
+            "ingestar", "log_ingest", "_buscar_notas_existentes",
+            "_encontrar_relacionadas",
+        ]),
+        ("Query", ["query_wiki", "lint"]),
+        ("VectorIndex", [
+            "_scan", "generar_embeddings", "construir_grafo",
+            "detectar_comunidades", "identificar_hubs", "full_index",
+        ]),
+    ],
+    "core.wiki.ingest": [
+        ("Entry", ["ingest_url_smart", "get_last_source", "get_last_ingested"]),
+        ("Youtube", [
+            "ingest_url", "_is_youtube_url", "_check_node_js", "_extract_video_id",
+            "_extract_youtube_transcript", "_extract_youtube_metadata",
+            "_parse_vtt_content", "_parse_srt_content", "_ingest_youtube",
+        ]),
+        ("Enrichment", [
+            "_detect_language", "_translate_text", "_generate_summary",
+            "_extract_concepts", "_find_related_notes",
+        ]),
+        ("OCR", [
+            "_check_ocr_model_available", "extract_with_ocr", "_process_pdf_page_ocr",
+        ]),
+        ("Files", ["ingest_file", "_ingest_text_file", "ingest_image"]),
+        ("Pdf", ["_analyze_pdf_pages", "ingest_pdf"]),
+        ("Research", ["save_research_proposal"]),
+    ],
+    "core.memory_tree": [
+        ("Core", [
+            "__init__", "_get_active_vault_name", "_get_db_path", "_init_db",
+            "_get_llm", "_get_embeddings_model", "_generate_node_id",
+            "_get_time_window",
+        ]),
+        ("Similarity", ["_compute_similarity", "_generate_summary", "_memory_robustness"]),
+        ("Insert", [
+            "insert", "_propagate_consolidation", "_merge_nodes", "_create_parent_node",
+        ]),
+        ("Query", [
+            "query", "_query_level", "_temporal_relevance", "_rank_results",
+        ]),
+        ("Maintenance", [
+            "force_consolidation", "prune_old_nodes", "get_stats", "get_recent",
+            "close",
+        ]),
+    ],
+    "core.entity_graph": [
+        ("Core", [
+            "__init__", "_get_active_vault_name", "_get_db_path", "_init_db",
+            "_get_llm", "_generate_entity_id", "_generate_relation_id",
+        ]),
+        ("Entities", [
+            "add_entity", "update_entity", "get_entity",
+            "get_entities_by_type", "get_entity_by_id",
+        ]),
+        ("Relations", ["add_relation", "expand", "get_relations"]),
+        ("Memory", ["link_memory", "extract_entities", "ingest_with_entities"]),
+        ("Traversal", ["get_neighbors", "get_hubs", "get_stats", "close"]),
+    ],
+    "core.vault_manager": [
+        ("Core", ["__new__", "__init__", "_load_config", "_save_config"]),
+        ("Hall", [
+            "_ensure_default_vault", "_get_db_path", "_get_index_path",
+        ]),
+        ("Vaults", ["list_vaults", "get_active", "create", "_init_vault_db"]),
+        ("Switch", ["switch", "delete"]),
+        ("Transfer", ["export_vault", "import_vault"]),
+        ("Connect", ["connect", "disconnect", "get_vault_notes_count"]),
+    ],
+}
+
+_ASUBARNIPAL_CLASS_SPLITS: dict[str, list[str]] = {
+    "core.runtime_harness": [
+        "RuntimeHarness", "EnvironmentContractLayer", "ProceduralSkillLayer",
+        "ProceduralSkill", "ActionValidationResult", "ActionRealizationLayer",
+        "TrajectoryState", "TrajectoryRegulationLayer",
+    ],
+    "core.background_manager": [
+        "BackgroundManager", "AgentState", "BraveCounter",
+        "MemorySkill", "WikiHealer", "GraphBuilder",
+    ],
+    "core.llm_router": [
+        "LLMRouter", "GeminiRouter", "BraveRouter", "BraveCounter",
+    ],
+}
+
+ASUBARNIPAL_PROFILE = Profile(
+    name="asubarnipal",
+    tool_names=_ASUBARNIPAL_TOOL_INFO,
+    special_calls=_ASUBARNIPAL_SPECIAL_CALLS,
+    evolution_methods=_ASUBARNIPAL_EVO_INFO,
+    function_splits=_ASUBARNIPAL_FUNCTION_SPLITS,
+    class_splits=_ASUBARNIPAL_CLASS_SPLITS,
+)
+
+
 # ── LangChain profile ─────────────────────────────────────────────────
 
 LANGCHAIN_PROFILE = Profile(
@@ -883,6 +1223,7 @@ PROFILES: dict[str, Profile] = {
     "reaweb": REAWEB_PROFILE,
     "reagame": REAGAME_PROFILE,
     "traceforge": TRACEFORGE_PROFILE,
+    "asubarnipal": ASUBARNIPAL_PROFILE,
     "langchain": LANGCHAIN_PROFILE,
     "crewai": CREWAI_PROFILE,
     "autogen": AUTOGEN_PROFILE,

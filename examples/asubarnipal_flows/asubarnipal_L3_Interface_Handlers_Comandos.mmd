@@ -1,0 +1,44 @@
+%% Comandos
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_23{"config.DATA_DIR.exists()<br><i>Condición en línea 23:<br>config.DATA_DIR.exists()</i>"}
+    dec_148{"agent_file.exists()<br><i>Condición en línea 148:<br>agent_file.exists()</i>"}
+    dec_25{"agent_file.exists()<br><i>Condición en línea 25:<br>agent_file.exists()</i>"}
+    dec_155{"heartbeat_file.exists()<br><i>Condición en línea 155:<br>heartbeat_file.exists()</i>"}
+    dec_32{"config.DATA_DIR.exists()<br><i>Condición en línea 32:<br>config.DATA_DIR.exists()</i>"}
+    dec_162{"counter_file.exists()<br><i>Condición en línea 162:<br>counter_file.exists()</i>"}
+    dec_34{"counter_file.exists()<br><i>Condición en línea 34:<br>counter_file.exists()</i>"}
+    fn_get_status_text[["Get Status Text"]]
+    fn_start_cmd[["Start Cmd"]]
+    fn_manual_cmd[["Manual Cmd"]]
+    fn_status_cmd[["Status Cmd"]]
+    fn_reporte_cmd[["Reporte Cmd"]]
+    n_start --> fn_get_status_text
+    fn_get_status_text --> dec_23
+    dec_23 --> dec_25
+    dec_25 --> dec_32
+    dec_32 --> dec_34
+    n_start --> fn_start_cmd
+    n_start --> fn_manual_cmd
+    n_start --> fn_status_cmd
+    n_start --> fn_reporte_cmd
+    fn_reporte_cmd --> dec_148
+    dec_148 --> dec_155
+    dec_155 --> dec_162
+    class n_start node-start
+    class fn_get_status_text,fn_start_cmd,fn_manual_cmd,fn_status_cmd,fn_reporte_cmd node-subprocess
+    class dec_23,dec_25,dec_32,dec_34,dec_148,dec_155,dec_162 node-decision
+    class n_end node-end

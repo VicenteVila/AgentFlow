@@ -1281,6 +1281,23 @@ def test_phased_horizontal_mermaid_uses_lr():
     assert "subgraph" in mmd
 
 
+def test_vertical_mermaid_uses_td_with_no_phases():
+    from agentflow.mermaid import to_mermaid
+
+    graph = parse(SIMPLE_AGENT, title="Vertical")
+    mmd = to_mermaid(graph, layout="vertical", no_phases=True)
+    assert "flowchart TD" in mmd
+    assert "flowchart LR" not in mmd
+
+
+def test_no_phases_keeps_lr_except_vertical():
+    from agentflow.mermaid import to_mermaid
+
+    graph = parse(SIMPLE_AGENT, title="NoPhases")
+    mmd = to_mermaid(graph, layout="phased-horizontal", no_phases=True)
+    assert "flowchart LR" in mmd
+
+
 def test_radial_layout():
     from agentflow.layouts import radial_layout
 

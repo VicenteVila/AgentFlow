@@ -1,0 +1,77 @@
+%% Graph Builder
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_29{"not self.db_path.exists()<br><i>Condición en línea 29:<br>not self.db_path.exists()</i>"}
+    dec_40{"self.conn is None<br><i>Condición en línea 40:<br>self.conn is None</i>"}
+    dec_159{"self.conn is None<br><i>Condición en línea 159:<br>self.conn is None</i>"}
+    loop_50["For each entity in entities"]
+    dec_57{"len(entity) > 3 and<br>entity(3)<br><i>Condición en línea 57:<br>len(entity) > 3 and entity(3)</i>"}
+    dec_66{"len(entity) > 4 and<br>entity(4)<br><i>Condición en línea 66:<br>len(entity) > 4 and entity(4)</i>"}
+    loop_69["For each related in relacionados"]
+    dec_70{"isinstance(related, dict)<br>and 'id' in related<br><i>Condición en línea 70:<br>isinstance(related, dict) and 'id' in related</i>"}
+    loop_85["For each rel in relations"]
+    dec_86{"rel(0) and rel(1)<br><i>Condición en línea 86:<br>rel(0) and rel(1)</i>"}
+    loop_124["For each edge in edges"]
+    dec_128{"source<br><i>Condición en línea 128:<br>source</i>"}
+    dec_130{"target<br><i>Condición en línea 130:<br>target</i>"}
+    loop_134["For each node in nodes"]
+    dec_136{"node_id in connection_count<br><i>Condición en línea 136:<br>node_id in connection_count</i>"}
+    loop_174["For each rel in relations"]
+    dec_175{"rel(0) and rel(0) != node_id<br><i>Condición en línea 175:<br>rel(0) and rel(0) != node_id</i>"}
+    dec_177{"rel(1) and rel(1) != node_id<br><i>Condición en línea 177:<br>rel(1) and rel(1) != node_id</i>"}
+    dec_180{"neighbor_ids<br><i>Condición en línea 180:<br>neighbor_ids</i>"}
+    fn_graphbuilder__init_connection[["Init Connection"]]
+    fn_graphbuilder_build_graph[["Build Graph"]]
+    fn_graphbuilder__calculate_hubs[["Calculate Hubs"]]
+    fn_graphbuilder__save_graph[["Save Graph"]]
+    fn_graphbuilder_get_neighbors[["Get Neighbors"]]
+    fn_graphbuilder_close[["Close"]]
+    n_start --> fn_graphbuilder__init_connection
+    fn_graphbuilder__init_connection --> dec_29
+    fn_graphbuilder__init_connection --> fn_graphbuilder_build_graph
+    fn_graphbuilder_build_graph --> dec_40
+    dec_40 --> loop_50
+    loop_50 --> dec_57
+    dec_57 --> dec_66
+    dec_66 --> loop_69
+    loop_69 --> dec_70
+    dec_70 -- "loop" --> loop_69
+    loop_69 -- "loop" --> loop_50
+    loop_50 --> loop_85
+    loop_85 --> dec_86
+    dec_86 -- "loop" --> loop_85
+    fn_graphbuilder_build_graph --> fn_graphbuilder__calculate_hubs
+    fn_graphbuilder__calculate_hubs --> loop_124
+    loop_124 --> dec_128
+    dec_128 --> dec_130
+    dec_130 -- "loop" --> loop_124
+    loop_124 --> loop_134
+    loop_134 --> dec_136
+    dec_136 -- "loop" --> loop_134
+    fn_graphbuilder__calculate_hubs --> fn_graphbuilder__save_graph
+    fn_graphbuilder__save_graph --> fn_graphbuilder_get_neighbors
+    fn_graphbuilder_get_neighbors --> dec_159
+    dec_159 --> loop_174
+    loop_174 --> dec_175
+    dec_175 --> dec_177
+    dec_177 -- "loop" --> loop_174
+    loop_174 --> dec_180
+    fn_graphbuilder_get_neighbors --> fn_graphbuilder_close
+    class n_start node-start
+    class fn_graphbuilder__init_connection,fn_graphbuilder_build_graph,fn_graphbuilder__calculate_hubs,fn_graphbuilder__save_graph,fn_graphbuilder_get_neighbors,fn_graphbuilder_close node-subprocess
+    class dec_29,dec_40,dec_57,dec_66,dec_70,dec_86,dec_128,dec_130,dec_136,dec_159,dec_175,dec_177,dec_180 node-decision
+    class loop_50,loop_69,loop_85,loop_124,loop_134,loop_174 node-loop
+    class n_end node-end

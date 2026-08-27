@@ -1,0 +1,51 @@
+%% asubarnipal · core · wiki
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start"])
+    mod_base["Base<br><i>67 nodos, 75 enlaces</i>"]
+    mod_citation_extractor["Citation Extractor<br><i>53 nodos, 55 enlaces</i>"]
+    mod_citation_verifier["Citation Verifier<br><i>61 nodos, 62 enlaces</i>"]
+    mod_ingest["Ingest<br><i>111 nodos, 123 enlaces</i>"]
+    mod_ingest_validator["Ingest Validator<br><i>8 nodos, 6 enlaces</i>"]
+    mod_obsidian["Obsidian<br><i>13 nodos, 13 enlaces</i>"]
+    mod_quality_scorer["Quality Scorer<br><i>48 nodos, 47 enlaces</i>"]
+    mod_reader["Reader<br><i>5 nodos, 3 enlaces</i>"]
+    mod_search["Search<br><i>27 nodos, 32 enlaces</i>"]
+    mod_validators["Validators<br><i>66 nodos, 67 enlaces</i>"]
+    n_end(["End"])
+    n_start --> mod_base
+    mod_base --> mod_citation_extractor
+    mod_citation_extractor --> mod_citation_verifier
+    mod_citation_verifier --> mod_ingest
+    mod_ingest --> mod_ingest_validator
+    mod_ingest_validator --> mod_obsidian
+    mod_obsidian --> mod_quality_scorer
+    mod_quality_scorer --> mod_reader
+    mod_reader --> mod_search
+    mod_search --> mod_validators
+    mod_validators --> n_end
+    class n_start node-start
+    class mod_base,mod_citation_extractor,mod_citation_verifier,mod_ingest,mod_obsidian,mod_quality_scorer,mod_search,mod_validators node-loop
+    class mod_ingest_validator,mod_reader node-process
+    class n_end node-end
+    click mod_base href "asubarnipal_L3_Core_Wiki_Base.html" "Abrir detalle"
+    click mod_citation_extractor href "asubarnipal_L3_Core_Wiki_Citation_extractor.html" "Abrir detalle"
+    click mod_citation_verifier href "asubarnipal_L3_Core_Wiki_Citation_verifier.html" "Abrir detalle"
+    click mod_ingest href "asubarnipal_L3_Core_Wiki_Ingest.html" "Abrir detalle"
+    click mod_ingest_validator href "asubarnipal_L3_Core_Wiki_Ingest_validator.html" "Abrir detalle"
+    click mod_obsidian href "asubarnipal_L3_Core_Wiki_Obsidian.html" "Abrir detalle"
+    click mod_quality_scorer href "asubarnipal_L3_Core_Wiki_Quality_scorer.html" "Abrir detalle"
+    click mod_reader href "asubarnipal_L3_Core_Wiki_Reader.html" "Abrir detalle"
+    click mod_search href "asubarnipal_L3_Core_Wiki_Search.html" "Abrir detalle"
+    click mod_validators href "asubarnipal_L3_Core_Wiki_Validators.html" "Abrir detalle"

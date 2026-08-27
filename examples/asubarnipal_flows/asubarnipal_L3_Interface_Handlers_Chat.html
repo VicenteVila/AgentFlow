@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="asubarnipal_L2_Interface_Handlers.html">← Volver</a>
+  <h1>Chat</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Chat
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_106{"not args<br><i>Condición en línea 106:<br>not args</i>"}
+    dec_123{"not topic<br><i>Condición en línea 123:<br>not topic</i>"}
+    dec_211{"data.startswith('charlar:')<br><i>Condición en línea 211:<br>data.startswith('charlar:')</i>"}
+    dec_130{"mode not in MODES<br><i>Condición en línea 130:<br>mode not in MODES</i>"}
+    dec_213{"mode in MODES<br><i>Condición en línea 213:<br>mode in MODES</i>"}
+    dec_138{"not valid<br><i>Condición en línea 138:<br>not valid</i>"}
+    dec_180{"turbo_info<br><i>Condición en línea 180:<br>turbo_info</i>"}
+    dec_189{"response<br><i>Condición en línea 189:<br>response</i>"}
+    dec_191{"turbo_info<br><i>Condición en línea 191:<br>turbo_info</i>"}
+    fn_charlar_cmd[["Charlar Cmd"]]
+    fn_charlar_callback[["Charlar Callback"]]
+    tool_answer_208["Answer<br><i>Respuesta con contexto recuperado</i>"]
+    tool_call_with_turbo_177["result = Call w/ Turbo<br><i>LLM con compresión turboquant</i>"]
+    tool_call_agent_185["result = Call Agent<br><i>LLMRouter: conversación con el agente</i>"]
+    n_start --> fn_charlar_cmd
+    fn_charlar_cmd --> dec_106
+    dec_106 --> dec_123
+    dec_123 --> dec_130
+    dec_130 --> dec_138
+    dec_138 --> tool_call_with_turbo_177
+    tool_call_with_turbo_177 --> dec_180
+    dec_180 --> tool_call_agent_185
+    tool_call_agent_185 --> dec_189
+    dec_189 -- "YES" --> dec_191
+    n_start --> fn_charlar_callback
+    fn_charlar_callback --> tool_answer_208
+    tool_answer_208 --> dec_211
+    dec_211 --> dec_213
+    class n_start node-start
+    class fn_charlar_cmd,fn_charlar_callback node-subprocess
+    class dec_106,dec_123,dec_130,dec_138,dec_180,dec_189,dec_191,dec_211,dec_213 node-decision
+    class tool_call_with_turbo_177,tool_call_agent_185,tool_answer_208 node-tool
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

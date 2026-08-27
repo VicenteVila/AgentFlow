@@ -1,0 +1,44 @@
+%% Runtime Harness
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start"])
+    n_end(["End"])
+    mod_0[["RuntimeHarness · clase"]]
+    mod_1[["EnvironmentContractLayer · clase"]]
+    mod_2[["ProceduralSkillLayer · clase"]]
+    mod_3[["ProceduralSkill · clase"]]
+    mod_4[["ActionValidationResult · clase"]]
+    mod_5[["ActionRealizationLayer · clase"]]
+    mod_6[["TrajectoryState · clase"]]
+    mod_7[["TrajectoryRegulationLayer · clase"]]
+    n_start --> mod_0
+    mod_0 --> mod_1
+    mod_1 --> mod_2
+    mod_2 --> mod_3
+    mod_3 --> mod_4
+    mod_4 --> mod_5
+    mod_5 --> mod_6
+    mod_6 --> mod_7
+    mod_7 --> n_end
+    class n_start node-start
+    class mod_0,mod_1,mod_2,mod_3,mod_4,mod_5,mod_6,mod_7 node-subprocess
+    class n_end node-end
+    click mod_0 href "asubarnipal_L3_Core_Runtime_harness_RuntimeHarness.html" "Abrir detalle"
+    click mod_1 href "asubarnipal_L3_Core_Runtime_harness_EnvironmentContractLayer.html" "Abrir detalle"
+    click mod_2 href "asubarnipal_L3_Core_Runtime_harness_ProceduralSkillLayer.html" "Abrir detalle"
+    click mod_3 href "asubarnipal_L3_Core_Runtime_harness_ProceduralSkill.html" "Abrir detalle"
+    click mod_4 href "asubarnipal_L3_Core_Runtime_harness_ActionValidationResult.html" "Abrir detalle"
+    click mod_5 href "asubarnipal_L3_Core_Runtime_harness_ActionRealizationLayer.html" "Abrir detalle"
+    click mod_6 href "asubarnipal_L3_Core_Runtime_harness_TrajectoryState.html" "Abrir detalle"
+    click mod_7 href "asubarnipal_L3_Core_Runtime_harness_TrajectoryRegulationLayer.html" "Abrir detalle"

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Programs</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="asubarnipal_L1_Core.html">← Volver</a>
+  <h1>Skill Programs</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Skill Programs
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_315{"_registry is None<br><i>Condición en línea 315:<br>_registry is None</i>"}
+    dec_109{"attempt >= max_attempt<br><i>Condición en línea 109:<br>attempt >= max_attempt</i>"}
+    loop_232["For each pf in matched"]
+    loop_281["For each pf"]
+    dec_295{"pf is None<br><i>Condición en línea 295:<br>pf is None</i>"}
+    dec_297{"not pf.matches(state)<br><i>Condición en línea 297:<br>not pf.matches(state)</i>"}
+    loop_75["For each part in parts"]
+    dec_76{"isinstance(current, dict)<br><i>Condición en línea 76:<br>isinstance(current, dict)</i>"}
+    loop_220["For each pf"]
+    dec_222{"pf.matches(state)<br><i>Condición en línea 222:<br>pf.matches(state)</i>"}
+    fn_get_pf_registry[["Get Pf Registry"]]
+    fn_programfunction_execute[["Execute"]]
+    fn_retrypf_execute[["Execute"]]
+    fn_decomposepf_execute[["Execute"]]
+    fn_fallbackpf_execute[["Execute"]]
+    fn_validatebeforeactpf_execute[["Execute"]]
+    fn_skillprogramregistry_register[["Register"]]
+    fn_programfunction_matches[["Matches"]]
+    fn_skillprogramregistry_register_builtins[["Register Builtins"]]
+    fn_programfunction__get_nested[["Get Nested"]]
+    fn_skillprogramregistry_find_matching[["Find Matching"]]
+    fn_programfunction_record_outcome[["Record Outcome"]]
+    fn_skillprogramregistry_execute_matching[["Execute Matching"]]
+    fn_skillprogramregistry_evolve_from_failures[["Evolve From Failures"]]
+    fn_skillprogramregistry_get_stats[["Get Stats"]]
+    fn_skillprogramregistry_list_pfs[["List Pfs"]]
+    fn_skillprogramregistry_execute_pf[["Execute Pf"]]
+    n_start --> fn_get_pf_registry
+    fn_get_pf_registry --> dec_315
+    n_start --> fn_programfunction_execute
+    fn_programfunction_execute --> fn_programfunction_matches
+    fn_programfunction_matches --> fn_programfunction__get_nested
+    fn_programfunction__get_nested --> loop_75
+    loop_75 --> dec_76
+    dec_76 -- "loop" --> loop_75
+    fn_programfunction__get_nested --> fn_programfunction_record_outcome
+    n_start --> fn_retrypf_execute
+    fn_retrypf_execute --> dec_109
+    n_start --> fn_decomposepf_execute
+    n_start --> fn_fallbackpf_execute
+    n_start --> fn_validatebeforeactpf_execute
+    n_start --> fn_skillprogramregistry_register
+    fn_skillprogramregistry_register --> fn_skillprogramregistry_register_builtins
+    fn_skillprogramregistry_register_builtins --> fn_skillprogramregistry_find_matching
+    fn_skillprogramregistry_find_matching --> loop_220
+    loop_220 --> dec_222
+    dec_222 -- "loop" --> loop_220
+    fn_skillprogramregistry_find_matching --> fn_skillprogramregistry_execute_matching
+    fn_skillprogramregistry_execute_matching --> loop_232
+    fn_skillprogramregistry_execute_matching --> fn_skillprogramregistry_evolve_from_failures
+    fn_skillprogramregistry_evolve_from_failures --> fn_skillprogramregistry_get_stats
+    fn_skillprogramregistry_get_stats --> fn_skillprogramregistry_list_pfs
+    fn_skillprogramregistry_list_pfs --> loop_281
+    fn_skillprogramregistry_list_pfs --> fn_skillprogramregistry_execute_pf
+    fn_skillprogramregistry_execute_pf --> dec_295
+    dec_295 --> dec_297
+    class n_start node-start
+    class fn_get_pf_registry,fn_programfunction_execute,fn_programfunction_matches,fn_programfunction__get_nested,fn_programfunction_record_outcome,fn_retrypf_execute,fn_decomposepf_execute,fn_fallbackpf_execute,fn_validatebeforeactpf_execute,fn_skillprogramregistry_register,fn_skillprogramregistry_register_builtins,fn_skillprogramregistry_find_matching,fn_skillprogramregistry_execute_matching,fn_skillprogramregistry_evolve_from_failures,fn_skillprogramregistry_get_stats,fn_skillprogramregistry_list_pfs,fn_skillprogramregistry_execute_pf node-subprocess
+    class dec_315,dec_76,dec_109,dec_222,dec_295,dec_297 node-decision
+    class loop_75,loop_220,loop_232,loop_281 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

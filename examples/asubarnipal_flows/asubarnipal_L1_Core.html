@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>asubarnipal · core</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="asubarnipal_L0_Overview.html">← Volver</a>
+  <h1>asubarnipal · core</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% asubarnipal · core
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start"])
+    mod_audit_logger["Audit Logger<br><i>16 nodos, 14 enlaces</i>"]
+    mod_background_manager["Background Manager<br><i>12 nodos, 10 enlaces</i>"]
+    mod_backup_manager["Backup Manager<br><i>23 nodos, 21 enlaces</i>"]
+    mod_banner["Banner<br><i>14 nodos, 14 enlaces</i>"]
+    mod_bot_logger["Bot Logger<br><i>41 nodos, 39 enlaces</i>"]
+    mod_cache["Cache<br><i>25 nodos, 23 enlaces</i>"]
+    mod_circuit_breaker["Circuit Breaker<br><i>20 nodos, 18 enlaces</i>"]
+    mod_command_history["Command History<br><i>14 nodos, 12 enlaces</i>"]
+    mod_dashboard_logic["Dashboard Logic<br><i>10 nodos, 8 enlaces</i>"]
+    mod_di["Di<br><i>18 nodos, 17 enlaces</i>"]
+    mod_entity_graph["Entity Graph<br><i>61 nodos, 67 enlaces</i>"]
+    mod_feed_tracker["Feed Tracker<br><i>25 nodos, 25 enlaces</i>"]
+    mod_graph_builder["Graph Builder<br><i>27 nodos, 31 enlaces</i>"]
+    mod_graphify_integration["Graphify Integration<br><i>53 nodos, 53 enlaces</i>"]
+    mod_hybrid_retriever["Hybrid Retriever<br><i>48 nodos, 52 enlaces</i>"]
+    mod_hybrid_search["Hybrid Search<br><i>58 nodos, 67 enlaces</i>"]
+    mod_input_sanitizer["Input Sanitizer<br><i>18 nodos, 17 enlaces</i>"]
+    mod_librarian["Librarian<br><i>23 nodos, 23 enlaces</i>"]
+    mod_llm_router["Llm Router<br><i>36 nodos, 37 enlaces</i>"]
+    mod_logging_config["Logging Config<br><i>18 nodos, 16 enlaces</i>"]
+    mod_memory["Memory<br><i>34 nodos, 34 enlaces</i>"]
+    mod_memory_tree["Memory Tree<br><i>61 nodos, 63 enlaces</i>"]
+    mod_rate_limiter["Rate Limiter<br><i>12 nodos, 10 enlaces</i>"]
+    mod_runtime_harness["Runtime Harness<br><i>74 nodos, 81 enlaces</i>"]
+    mod_session_db["Session Db<br><i>21 nodos, 20 enlaces</i>"]
+    mod_settings["Settings<br><i>14 nodos, 12 enlaces</i>"]
+    mod_skill_programs["Skill Programs<br><i>29 nodos, 29 enlaces</i>"]
+    mod_skill_registry["Skill Registry<br><i>10 nodos, 10 enlaces</i>"]
+    mod_stt["Stt<br><i>6 nodos, 4 enlaces</i>"]
+    mod_turboquant_config["Turboquant Config<br><i>13 nodos, 12 enlaces</i>"]
+    mod_turboquant_engine["Turboquant Engine<br><i>42 nodos, 42 enlaces</i>"]
+    mod_turboquant_modes["Turboquant Modes<br><i>7 nodos, 5 enlaces</i>"]
+    mod_vault_manager["Vault Manager<br><i>58 nodos, 57 enlaces</i>"]
+    mod_vision["Vision<br><i>10 nodos, 8 enlaces</i>"]
+    mod_wiki_engine["Wiki Engine<br><i>62 nodos, 73 enlaces</i>"]
+    mod_wiki_healer["Wiki Healer<br><i>15 nodos, 14 enlaces</i>"]
+    n_end(["End"])
+    mod_search[["Search<br><i>6 sub-flujos</i>"]]
+    mod_turboquant[["Turboquant<br><i>5 sub-flujos</i>"]]
+    mod_wiki[["Wiki<br><i>10 sub-flujos</i>"]]
+    mod_live_activity[["Live Activity<br><i>15 nodos, 13 enlaces</i>"]]
+    mod_research_scheduler["Research Scheduler<br><i>19 nodos, 17 enlaces</i>"]
+    n_start --> mod_search
+    mod_search --> mod_turboquant
+    mod_turboquant --> mod_wiki
+    mod_wiki --> mod_audit_logger
+    mod_audit_logger --> mod_background_manager
+    mod_background_manager --> mod_backup_manager
+    mod_backup_manager --> mod_banner
+    mod_banner --> mod_bot_logger
+    mod_bot_logger --> mod_cache
+    mod_cache --> mod_circuit_breaker
+    mod_circuit_breaker --> mod_command_history
+    mod_command_history --> mod_dashboard_logic
+    mod_dashboard_logic --> mod_di
+    mod_di --> mod_entity_graph
+    mod_entity_graph --> mod_feed_tracker
+    mod_feed_tracker --> mod_graph_builder
+    mod_graph_builder --> mod_graphify_integration
+    mod_graphify_integration --> mod_hybrid_retriever
+    mod_hybrid_retriever --> mod_hybrid_search
+    mod_hybrid_search --> mod_input_sanitizer
+    mod_input_sanitizer --> mod_librarian
+    mod_librarian --> mod_live_activity
+    mod_live_activity --> mod_llm_router
+    mod_llm_router --> mod_logging_config
+    mod_logging_config --> mod_memory
+    mod_memory --> mod_memory_tree
+    mod_memory_tree --> mod_rate_limiter
+    mod_rate_limiter --> mod_research_scheduler
+    mod_research_scheduler --> mod_runtime_harness
+    mod_runtime_harness --> mod_session_db
+    mod_session_db --> mod_settings
+    mod_settings --> mod_skill_programs
+    mod_skill_programs --> mod_skill_registry
+    mod_skill_registry --> mod_stt
+    mod_stt --> mod_turboquant_config
+    mod_turboquant_config --> mod_turboquant_engine
+    mod_turboquant_engine --> mod_turboquant_modes
+    mod_turboquant_modes --> mod_vault_manager
+    mod_vault_manager --> mod_vision
+    mod_vision --> mod_wiki_engine
+    mod_wiki_engine --> mod_wiki_healer
+    mod_wiki_healer --> n_end
+    class n_start node-start
+    class mod_search,mod_turboquant,mod_wiki,mod_live_activity node-subprocess
+    class mod_audit_logger,mod_background_manager,mod_backup_manager,mod_bot_logger,mod_circuit_breaker,mod_dashboard_logic,mod_rate_limiter,mod_settings,mod_stt,mod_turboquant_modes,mod_vision node-process
+    class mod_banner,mod_cache,mod_command_history,mod_di,mod_entity_graph,mod_feed_tracker,mod_graph_builder,mod_graphify_integration,mod_hybrid_retriever,mod_hybrid_search,mod_input_sanitizer,mod_librarian,mod_llm_router,mod_logging_config,mod_memory,mod_memory_tree,mod_runtime_harness,mod_session_db,mod_skill_programs,mod_skill_registry,mod_turboquant_config,mod_turboquant_engine,mod_vault_manager,mod_wiki_engine,mod_wiki_healer node-loop
+    class mod_research_scheduler node-tool
+    class n_end node-end
+    click mod_search href "asubarnipal_L2_Core_Search.html" "Abrir detalle"
+    click mod_turboquant href "asubarnipal_L2_Core_Turboquant.html" "Abrir detalle"
+    click mod_wiki href "asubarnipal_L2_Core_Wiki.html" "Abrir detalle"
+    click mod_audit_logger href "asubarnipal_L2_Core_Audit_logger.html" "Abrir detalle"
+    click mod_background_manager href "asubarnipal_L2_Core_Background_manager.html" "Abrir detalle"
+    click mod_backup_manager href "asubarnipal_L2_Core_Backup_manager.html" "Abrir detalle"
+    click mod_banner href "asubarnipal_L2_Core_Banner.html" "Abrir detalle"
+    click mod_bot_logger href "asubarnipal_L2_Core_Bot_logger.html" "Abrir detalle"
+    click mod_cache href "asubarnipal_L2_Core_Cache.html" "Abrir detalle"
+    click mod_circuit_breaker href "asubarnipal_L2_Core_Circuit_breaker.html" "Abrir detalle"
+    click mod_command_history href "asubarnipal_L2_Core_Command_history.html" "Abrir detalle"
+    click mod_dashboard_logic href "asubarnipal_L2_Core_Dashboard_logic.html" "Abrir detalle"
+    click mod_di href "asubarnipal_L2_Core_Di.html" "Abrir detalle"
+    click mod_entity_graph href "asubarnipal_L2_Core_Entity_graph.html" "Abrir detalle"
+    click mod_feed_tracker href "asubarnipal_L2_Core_Feed_tracker.html" "Abrir detalle"
+    click mod_graph_builder href "asubarnipal_L2_Core_Graph_builder.html" "Abrir detalle"
+    click mod_graphify_integration href "asubarnipal_L2_Core_Graphify_integration.html" "Abrir detalle"
+    click mod_hybrid_retriever href "asubarnipal_L2_Core_Hybrid_retriever.html" "Abrir detalle"
+    click mod_hybrid_search href "asubarnipal_L2_Core_Hybrid_search.html" "Abrir detalle"
+    click mod_input_sanitizer href "asubarnipal_L2_Core_Input_sanitizer.html" "Abrir detalle"
+    click mod_librarian href "asubarnipal_L2_Core_Librarian.html" "Abrir detalle"
+    click mod_live_activity href "asubarnipal_L2_Core_Live_activity.html" "Abrir detalle"
+    click mod_llm_router href "asubarnipal_L2_Core_Llm_router.html" "Abrir detalle"
+    click mod_logging_config href "asubarnipal_L2_Core_Logging_config.html" "Abrir detalle"
+    click mod_memory href "asubarnipal_L2_Core_Memory.html" "Abrir detalle"
+    click mod_memory_tree href "asubarnipal_L2_Core_Memory_tree.html" "Abrir detalle"
+    click mod_rate_limiter href "asubarnipal_L2_Core_Rate_limiter.html" "Abrir detalle"
+    click mod_research_scheduler href "asubarnipal_L2_Core_Research_scheduler.html" "Abrir detalle"
+    click mod_runtime_harness href "asubarnipal_L2_Core_Runtime_harness.html" "Abrir detalle"
+    click mod_session_db href "asubarnipal_L2_Core_Session_db.html" "Abrir detalle"
+    click mod_settings href "asubarnipal_L2_Core_Settings.html" "Abrir detalle"
+    click mod_skill_programs href "asubarnipal_L2_Core_Skill_programs.html" "Abrir detalle"
+    click mod_skill_registry href "asubarnipal_L2_Core_Skill_registry.html" "Abrir detalle"
+    click mod_stt href "asubarnipal_L2_Core_Stt.html" "Abrir detalle"
+    click mod_turboquant_config href "asubarnipal_L2_Core_Turboquant_config.html" "Abrir detalle"
+    click mod_turboquant_engine href "asubarnipal_L2_Core_Turboquant_engine.html" "Abrir detalle"
+    click mod_turboquant_modes href "asubarnipal_L2_Core_Turboquant_modes.html" "Abrir detalle"
+    click mod_vault_manager href "asubarnipal_L2_Core_Vault_manager.html" "Abrir detalle"
+    click mod_vision href "asubarnipal_L2_Core_Vision.html" "Abrir detalle"
+    click mod_wiki_engine href "asubarnipal_L2_Core_Wiki_engine.html" "Abrir detalle"
+    click mod_wiki_healer href "asubarnipal_L2_Core_Wiki_healer.html" "Abrir detalle"
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

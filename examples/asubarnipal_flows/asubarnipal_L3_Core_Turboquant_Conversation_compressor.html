@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conversation Compressor</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="asubarnipal_L2_Core_Turboquant.html">← Volver</a>
+  <h1>Conversation Compressor</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Conversation Compressor
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_74{"len(messages) <=<br>self.max_messages<br><i>Condición en línea 74:<br>len(messages) <= self.max_messages</i>"}
+    dec_86{"summary_text<br><i>Condición en línea 86:<br>summary_text</i>"}
+    dec_114{"current_tokens <= max_tokens<br><i>Condición en línea 114:<br>current_tokens <= max_tokens</i>"}
+    loop_122["Loop"]
+    dec_131{"'tool_calls' in message or<br>'function_call' in message<br><i>Condición en línea 131:<br>'tool_calls' in message or 'function_call' in message</i>"}
+    dec_135{"role in ('tool', 'function')<br><i>Condición en línea 135:<br>role in ('tool', 'function')</i>"}
+    dec_149{"not messages<br><i>Condición en línea 149:<br>not messages</i>"}
+    dec_139{"any((kw in content.lower()<br>for kw in CRITICAL_KEYWORDS))<br><i>Condición en línea 139:<br>any((kw in content.lower() for kw in CRITICAL_KEYWORDS))</i>"}
+    dec_155{"self.mode == 'llm' and<br>self.llm_func is not None<br><i>Condición en línea 155:<br>self.mode == 'llm' and self.llm_func is not None</i>"}
+    dec_162{"not text.strip()<br><i>Condición en línea 162:<br>not text.strip()</i>"}
+    dec_183{"not sentences<br><i>Condición en línea 183:<br>not sentences</i>"}
+    dec_186{"len(sentences) <=<br>max_sentences<br><i>Condición en línea 186:<br>len(sentences) <= max_sentences</i>"}
+    dec_197{"tokenizer is not None<br><i>Condición en línea 197:<br>tokenizer is not None</i>"}
+    fn_compressionresult_to_dict[["To Dict"]]
+    fn_conversationcompressor_compress[["Compress"]]
+    fn_conversationcompressor_compress_to_token_budget[["Compress To Token Budget"]]
+    fn_conversationcompressor__is_critical[["Is Critical"]]
+    fn_conversationcompressor__summarize[["Summarize"]]
+    fn_conversationcompressor__llm_summarize[["Llm Summarize"]]
+    fn_conversationcompressor__extractive_summary[["Extractive Summary"]]
+    fn_conversationcompressor__count_tokens[["Count Tokens"]]
+    fn_conversationcompressor__tag_length[["Tag Length"]]
+    n_start --> fn_compressionresult_to_dict
+    n_start --> fn_conversationcompressor_compress
+    fn_conversationcompressor_compress --> dec_74
+    dec_74 --> dec_86
+    fn_conversationcompressor_compress --> fn_conversationcompressor_compress_to_token_budget
+    fn_conversationcompressor_compress_to_token_budget --> dec_114
+    dec_114 --> loop_122
+    fn_conversationcompressor_compress_to_token_budget --> fn_conversationcompressor__is_critical
+    fn_conversationcompressor__is_critical --> dec_131
+    dec_131 --> dec_135
+    dec_135 --> dec_139
+    fn_conversationcompressor__is_critical --> fn_conversationcompressor__summarize
+    fn_conversationcompressor__summarize --> dec_149
+    dec_149 --> dec_155
+    fn_conversationcompressor__summarize --> fn_conversationcompressor__llm_summarize
+    fn_conversationcompressor__llm_summarize --> dec_162
+    fn_conversationcompressor__llm_summarize --> fn_conversationcompressor__extractive_summary
+    fn_conversationcompressor__extractive_summary --> dec_183
+    dec_183 --> dec_186
+    fn_conversationcompressor__extractive_summary --> fn_conversationcompressor__count_tokens
+    fn_conversationcompressor__count_tokens --> dec_197
+    fn_conversationcompressor__count_tokens --> fn_conversationcompressor__tag_length
+    class n_start node-start
+    class fn_compressionresult_to_dict,fn_conversationcompressor_compress,fn_conversationcompressor_compress_to_token_budget,fn_conversationcompressor__is_critical,fn_conversationcompressor__summarize,fn_conversationcompressor__llm_summarize,fn_conversationcompressor__extractive_summary,fn_conversationcompressor__count_tokens,fn_conversationcompressor__tag_length node-subprocess
+    class dec_74,dec_86,dec_114,dec_131,dec_135,dec_139,dec_149,dec_155,dec_162,dec_183,dec_186,dec_197 node-decision
+    class loop_122 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

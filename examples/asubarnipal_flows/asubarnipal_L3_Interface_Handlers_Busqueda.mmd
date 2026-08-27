@@ -1,0 +1,147 @@
+%% Busqueda
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_21{"is_url(text)<br><i>Condición en línea 21:<br>is_url(text)</i>"}
+    dec_45{"update.message.document<br><i>Condición en línea 45:<br>update.message.document</i>"}
+    dec_159{"not path.exists()<br><i>Condición en línea 159:<br>not path.exists()</i>"}
+    dec_271{"mime_type ==<br>'application/pdf' or<br><i>Condición en línea 271:<br>mime_type == 'application/pdf' or file_name.lower().endswith</i>"}
+    dec_364{"not topic<br><i>Condición en línea 364:<br>not topic</i>"}
+    dec_417{"not topic or<br>len(topic.strip()) < 2<br><i>Condición en línea 417:<br>not topic or len(topic.strip()) < 2</i>"}
+    dec_426{"not url<br><i>Condición en línea 426:<br>not url</i>"}
+    dec_34{"url_match<br><i>Condición en línea 34:<br>url_match</i>"}
+    dec_49{"update.message.photo<br><i>Condición en línea 49:<br>update.message.photo</i>"}
+    dec_99{"result.get('success')<br><i>Condición en línea 99:<br>result.get('success')</i>"}
+    dec_185{"ext == '.pdf'<br><i>Condición en línea 185:<br>ext == '.pdf'</i>"}
+    dec_343{"result.get('success')<br><i>Condición en línea 343:<br>result.get('success')</i>"}
+    dec_369{"not valid<br><i>Condición en línea 369:<br>not valid</i>"}
+    dec_419{"len(topic) > 200<br><i>Condición en línea 419:<br>len(topic) > 200</i>"}
+    dec_429{"not<br>url.startswith(('http://',<br><i>Condición en línea 429:<br>not url.startswith(('http://', 'https://'))</i>"}
+    dec_53{"not text_input<br><i>Condición en línea 53:<br>not text_input</i>"}
+    dec_108{"is_youtube<br><i>Condición en línea 108:<br>is_youtube</i>"}
+    dec_187{"ext in ('.png', '.jpg',<br>'.jpeg')<br><i>Condición en línea 187:<br>ext in ('.png', '.jpg', '.jpeg')</i>"}
+    dec_286{"result.get('success')<br><i>Condición en línea 286:<br>result.get('success')</i>"}
+    dec_382{"not<br>brave_counter.can_search()<br><i>Condición en línea 382:<br>not brave_counter.can_search()</i>"}
+    dec_66{"is_url(text_input)<br><i>Condición en línea 66:<br>is_url(text_input)</i>"}
+    dec_130{"is_youtube and<br>result.get('has_transcript')<br><i>Condición en línea 130:<br>is_youtube and result.get('has_transcript')</i>"}
+    dec_294{"result.get('has_ocr')<br><i>Condición en línea 294:<br>result.get('has_ocr')</i>"}
+    dec_68{"is_local_path(text_input)<br><i>Condición en línea 68:<br>is_local_path(text_input)</i>"}
+    dec_133{"summary<br><i>Condición en línea 133:<br>summary</i>"}
+    dec_192{"result.get('success')<br><i>Condición en línea 192:<br>result.get('success')</i>"}
+    dec_299{"content_len > 0<br><i>Condición en línea 299:<br>content_len > 0</i>"}
+    dec_72{"url and is_url(url)<br><i>Condición en línea 72:<br>url and is_url(url)</i>"}
+    dec_136{"result.get('concepts')<br><i>Condición en línea 136:<br>result.get('concepts')</i>"}
+    dec_202{"ext == '.pdf'<br><i>Condición en línea 202:<br>ext == '.pdf'</i>"}
+    dec_302{"result.get('truncated')<br><i>Condición en línea 302:<br>result.get('truncated')</i>"}
+    dec_207{"ocr_pages<br><i>Condición en línea 207:<br>ocr_pages</i>"}
+    dec_209{"len(ocr_pages) <= 10<br><i>Condición en línea 209:<br>len(ocr_pages) <= 10</i>"}
+    loop_216["For each p"]
+    dec_217{"p == end + 1<br><i>Condición en línea 217:<br>p == end + 1</i>"}
+    loop_397["For each r in results"]
+    fn_is_url[["Is Url"]]
+    fn_is_local_path[["Is Local Path"]]
+    fn_extract_url_from_text[["Extract Url From Text"]]
+    fn_ingest_cmd[["Ingest Cmd"]]
+    fn__ingest_url[["Ingest Url"]]
+    fn__ingest_local_file[["Ingest Local File"]]
+    fn__ingest_telegram_document[["Ingest Telegram Document"]]
+    fn__ingest_telegram_photo[["Ingest Telegram Photo"]]
+    fn_investigar_cmd[["Investigar Cmd"]]
+    fn__validate_topic[["Validate Topic"]]
+    fn__validate_url[["Validate Url"]]
+    tool_search_33["url_match = Search<br><i>Búsqueda híbrida (sqlite + obsidian /<br>semántica densa + BM25)</i>"]
+    tool_ingest_url_smart_97["result = Ingest Smart<br><i>Detección de tipo de fuente<br>(youtube / web / file) y ruta de ingestión</i>"]
+    tool_ingest_image_336["result = Ingest Image<br><i>Ingesta de una imagen → OCR<br>si el modelo está disponible</i>"]
+    tool_ingest_pdf_274["result = Ingest PDF<br><i>Análisis página a página + OCR</i>"]
+    tool_ingest_file_278["result = Ingest File<br><i>Ingesta de un fichero de texto<br>(ruta local o documento Telegram)</i>"]
+    tool_ingest_pdf_186["result = Ingest PDF<br><i>Análisis página a página + OCR</i>"]
+    tool_ingest_image_188["result = Ingest Image<br><i>Ingesta de una imagen → OCR<br>si el modelo está disponible</i>"]
+    tool_ingest_file_190["result = Ingest File<br><i>Ingesta de un fichero de texto<br>(ruta local o documento Telegram)</i>"]
+    tool_ingest_url_399["Ingest URL<br><i>WikiIngest: descarga y parsea una URL<br>(youtube si procede) al vault</i>"]
+    n_start --> fn_is_url
+    n_start --> fn_is_local_path
+    fn_is_local_path --> dec_21
+    n_start --> fn_extract_url_from_text
+    fn_extract_url_from_text --> tool_search_33
+    tool_search_33 --> dec_34
+    n_start --> fn_ingest_cmd
+    fn_ingest_cmd --> dec_45
+    dec_45 --> dec_49
+    dec_49 --> dec_53
+    dec_53 --> dec_66
+    dec_66 --> dec_68
+    dec_68 -- "NO" --> dec_72
+    n_start --> fn__ingest_url
+    fn__ingest_url --> tool_ingest_url_smart_97
+    tool_ingest_url_smart_97 --> dec_99
+    dec_99 --> dec_108
+    dec_108 --> dec_130
+    dec_130 --> dec_133
+    dec_133 --> dec_136
+    n_start --> fn__ingest_local_file
+    fn__ingest_local_file --> dec_159
+    dec_159 --> dec_185
+    dec_185 --> tool_ingest_pdf_186
+    dec_185 --> dec_187
+    dec_187 -- "YES" --> tool_ingest_image_188
+    dec_187 -- "NO" --> tool_ingest_file_190
+    tool_ingest_file_190 --> dec_192
+    dec_192 --> dec_202
+    dec_202 --> dec_207
+    dec_207 --> dec_209
+    dec_209 -- "NO" --> loop_216
+    loop_216 --> dec_217
+    dec_217 -- "loop" --> loop_216
+    n_start --> fn__ingest_telegram_document
+    fn__ingest_telegram_document --> dec_271
+    dec_271 -- "YES" --> tool_ingest_pdf_274
+    dec_271 -- "NO" --> tool_ingest_file_278
+    tool_ingest_file_278 --> dec_286
+    dec_286 --> dec_294
+    dec_294 --> dec_299
+    dec_299 --> dec_302
+    n_start --> fn__ingest_telegram_photo
+    fn__ingest_telegram_photo --> tool_ingest_image_336
+    tool_ingest_image_336 --> dec_343
+    n_start --> fn_investigar_cmd
+    fn_investigar_cmd --> dec_364
+    dec_364 --> dec_369
+    dec_369 --> dec_382
+    dec_382 --> loop_397
+    loop_397 --> tool_ingest_url_399
+    tool_ingest_url_399 -- "loop" --> loop_397
+    n_start --> fn__validate_topic
+    fn__validate_topic --> dec_417
+    dec_417 --> dec_419
+    n_start --> fn__validate_url
+    fn__validate_url --> dec_426
+    dec_426 --> dec_429
+    class n_start node-start
+    class fn_is_url,fn_is_local_path,fn_extract_url_from_text,fn_ingest_cmd,fn__ingest_url,fn__ingest_local_file,fn__ingest_telegram_document,fn__ingest_telegram_photo,fn_investigar_cmd,fn__validate_topic,fn__validate_url node-subprocess
+    class dec_21,dec_34,dec_45,dec_49,dec_53,dec_66,dec_68,dec_72,dec_99,dec_108,dec_130,dec_133,dec_136,dec_159,dec_185,dec_187,dec_192,dec_202,dec_207,dec_209,dec_217,dec_271,dec_286,dec_294,dec_299,dec_302,dec_343,dec_364,dec_369,dec_382,dec_417,dec_419,dec_426,dec_429 node-decision
+    class tool_search_33,tool_ingest_url_smart_97,tool_ingest_pdf_186,tool_ingest_image_188,tool_ingest_file_190,tool_ingest_pdf_274,tool_ingest_file_278,tool_ingest_image_336,tool_ingest_url_399 node-tool
+    class loop_216,loop_397 node-loop
+    class n_end node-end
+    click fn_is_url href "asubarnipal_L4_Interface_Handlers_Busqueda_Helpers.html" "Abrir detalle"
+    click fn_is_local_path href "asubarnipal_L4_Interface_Handlers_Busqueda_Helpers.html" "Abrir detalle"
+    click fn_extract_url_from_text href "asubarnipal_L4_Interface_Handlers_Busqueda_Helpers.html" "Abrir detalle"
+    click fn_ingest_cmd href "asubarnipal_L4_Interface_Handlers_Busqueda_Ingestion.html" "Abrir detalle"
+    click fn__ingest_url href "asubarnipal_L4_Interface_Handlers_Busqueda_Ingestion.html" "Abrir detalle"
+    click fn__ingest_local_file href "asubarnipal_L4_Interface_Handlers_Busqueda_Ingestion.html" "Abrir detalle"
+    click fn__ingest_telegram_document href "asubarnipal_L4_Interface_Handlers_Busqueda_Ingestion.html" "Abrir detalle"
+    click fn__ingest_telegram_photo href "asubarnipal_L4_Interface_Handlers_Busqueda_Ingestion.html" "Abrir detalle"
+    click fn_investigar_cmd href "asubarnipal_L4_Interface_Handlers_Busqueda_Research.html" "Abrir detalle"
+    click fn__validate_topic href "asubarnipal_L4_Interface_Handlers_Busqueda_Research.html" "Abrir detalle"
+    click fn__validate_url href "asubarnipal_L4_Interface_Handlers_Busqueda_Research.html" "Abrir detalle"

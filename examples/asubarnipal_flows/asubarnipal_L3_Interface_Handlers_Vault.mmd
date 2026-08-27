@@ -1,0 +1,103 @@
+%% Vault
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_22{"not result.get('success')<br><i>Condición en línea 22:<br>not result.get('success')</i>"}
+    dec_51{"not args<br><i>Condición en línea 51:<br>not args</i>"}
+    dec_94{"not args<br><i>Condición en línea 94:<br>not args</i>"}
+    dec_127{"not vault<br><i>Condición en línea 127:<br>not vault</i>"}
+    dec_168{"not args<br><i>Condición en línea 168:<br>not args</i>"}
+    dec_217{"not args<br><i>Condición en línea 217:<br>not args</i>"}
+    dec_249{"len(args) < 2<br><i>Condición en línea 249:<br>len(args) < 2</i>"}
+    dec_334{"not args<br><i>Condición en línea 334:<br>not args</i>"}
+    dec_378{"result.get('success')<br><i>Condición en línea 378:<br>result.get('success')</i>"}
+    dec_64{"name.lower().replace(' ',<br>'_') in vm._config.get('vaults',<br><i>Condición en línea 64:<br>name.lower().replace(' ', '_') in vm._config.get('vaults', (</i>"}
+    dec_108{"result.get('success')<br><i>Condición en línea 108:<br>result.get('success')</i>"}
+    dec_138{"db_path.exists()<br><i>Condición en línea 138:<br>db_path.exists()</i>"}
+    dec_180{"name == 'principal'<br><i>Condición en línea 180:<br>name == 'principal'</i>"}
+    dec_224{"not name<br><i>Condición en línea 224:<br>not name</i>"}
+    dec_264{"result.get('success')<br><i>Condición en línea 264:<br>result.get('success')</i>"}
+    dec_282{"not action_data<br><i>Condición en línea 282:<br>not action_data</i>"}
+    dec_352{"result.get('success')<br><i>Condición en línea 352:<br>result.get('success')</i>"}
+    dec_382{"result.get('was_active')<br><i>Condición en línea 382:<br>result.get('was_active')</i>"}
+    dec_186{"name not in<br>vm._config.get('vaults', ())<br><i>Condición en línea 186:<br>name not in vm._config.get('vaults', ())</i>"}
+    dec_233{"result.get('success')<br><i>Condición en línea 233:<br>result.get('success')</i>"}
+    dec_289{"query.data == 'vault_cancel'<br><i>Condición en línea 289:<br>query.data == 'vault_cancel'</i>"}
+    dec_354{"result.get('name')<br><i>Condición en línea 354:<br>result.get('name')</i>"}
+    dec_294{"query.data ==<br>'vault_confirm'<br><i>Condición en línea 294:<br>query.data == 'vault_confirm'</i>"}
+    dec_297{"action ==<br>'vault_create_confirm'<br><i>Condición en línea 297:<br>action == 'vault_create_confirm'</i>"}
+    dec_302{"result.get('success')<br><i>Condición en línea 302:<br>result.get('success')</i>"}
+    dec_314{"action ==<br>'vault_delete_confirm'<br><i>Condición en línea 314:<br>action == 'vault_delete_confirm'</i>"}
+    dec_319{"result.get('success')<br><i>Condición en línea 319:<br>result.get('success')</i>"}
+    loop_32["For each v in vaults"]
+    dec_38{"v.get('description')<br><i>Condición en línea 38:<br>v.get('description')</i>"}
+    fn_vaults_cmd[["Vaults Cmd"]]
+    fn_vault_create_cmd[["Vault Create Cmd"]]
+    fn_vault_use_cmd[["Vault Use Cmd"]]
+    fn_vault_info_cmd[["Vault Info Cmd"]]
+    fn_vault_delete_cmd[["Vault Delete Cmd"]]
+    fn_vault_export_cmd[["Vault Export Cmd"]]
+    fn_vault_import_cmd[["Vault Import Cmd"]]
+    fn_vault_callback[["Vault Callback"]]
+    fn_vault_connect_cmd[["Vault Connect Cmd"]]
+    fn_vault_disconnect_cmd[["Vault Disconnect Cmd"]]
+    tool_answer_277["Answer<br><i>Respuesta con contexto recuperado</i>"]
+    n_start --> fn_vaults_cmd
+    fn_vaults_cmd --> dec_22
+    dec_22 --> loop_32
+    loop_32 --> dec_38
+    dec_38 -- "loop" --> loop_32
+    n_start --> fn_vault_create_cmd
+    fn_vault_create_cmd --> dec_51
+    dec_51 --> dec_64
+    n_start --> fn_vault_use_cmd
+    fn_vault_use_cmd --> dec_94
+    dec_94 --> dec_108
+    n_start --> fn_vault_info_cmd
+    fn_vault_info_cmd --> dec_127
+    dec_127 --> dec_138
+    n_start --> fn_vault_delete_cmd
+    fn_vault_delete_cmd --> dec_168
+    dec_168 --> dec_180
+    dec_180 --> dec_186
+    n_start --> fn_vault_export_cmd
+    fn_vault_export_cmd --> dec_217
+    dec_217 --> dec_224
+    dec_224 --> dec_233
+    n_start --> fn_vault_import_cmd
+    fn_vault_import_cmd --> dec_249
+    dec_249 --> dec_264
+    n_start --> fn_vault_callback
+    fn_vault_callback --> tool_answer_277
+    tool_answer_277 --> dec_282
+    dec_282 --> dec_289
+    dec_289 --> dec_294
+    dec_294 --> dec_297
+    dec_297 --> dec_302
+    dec_297 --> dec_314
+    dec_314 -- "YES" --> dec_319
+    n_start --> fn_vault_connect_cmd
+    fn_vault_connect_cmd --> dec_334
+    dec_334 --> dec_352
+    dec_352 -- "YES" --> dec_354
+    n_start --> fn_vault_disconnect_cmd
+    fn_vault_disconnect_cmd --> dec_378
+    dec_378 -- "YES" --> dec_382
+    class n_start node-start
+    class fn_vaults_cmd,fn_vault_create_cmd,fn_vault_use_cmd,fn_vault_info_cmd,fn_vault_delete_cmd,fn_vault_export_cmd,fn_vault_import_cmd,fn_vault_callback,fn_vault_connect_cmd,fn_vault_disconnect_cmd node-subprocess
+    class dec_22,dec_38,dec_51,dec_64,dec_94,dec_108,dec_127,dec_138,dec_168,dec_180,dec_186,dec_217,dec_224,dec_233,dec_249,dec_264,dec_282,dec_289,dec_294,dec_297,dec_302,dec_314,dec_319,dec_334,dec_352,dec_354,dec_378,dec_382 node-decision
+    class loop_32 node-loop
+    class tool_answer_277 node-tool
+    class n_end node-end

@@ -1,0 +1,32 @@
+%% Graphify Integration · Runner
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_4{"not graphify_bin<br><i>Condición en línea 4:<br>not graphify_bin</i>"}
+    dec_11{"not graphify_bin<br><i>Condición en línea 11:<br>not graphify_bin</i>"}
+    dec_24{"'OLLAMA_BASE_URL' not in env<br><i>Condición en línea 24:<br>'OLLAMA_BASE_URL' not in env</i>"}
+    dec_27{"'OLLAMA_API_KEY' not in env<br><i>Condición en línea 27:<br>'OLLAMA_API_KEY' not in env</i>"}
+    fn__check_graphify[["Check Graphify"]]
+    fn__run_graphify[["Run Graphify"]]
+    n_start --> fn__check_graphify
+    fn__check_graphify --> dec_4
+    n_start --> fn__run_graphify
+    fn__run_graphify --> dec_11
+    dec_11 --> dec_24
+    dec_24 --> dec_27
+    class n_start node-start
+    class fn__check_graphify,fn__run_graphify node-subprocess
+    class dec_4,dec_11,dec_24,dec_27 node-decision
+    class n_end node-end

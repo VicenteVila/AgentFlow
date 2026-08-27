@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pytorch Adapter</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="asubarnipal_L2_Core_Turboquant.html">← Volver</a>
+  <h1>Pytorch Adapter</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Pytorch Adapter
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_36{"not<br>Path(self.gguf_path).exists()<br><i>Condición en línea 36:<br>not Path(self.gguf_path).exists()</i>"}
+    dec_71{"isinstance(llm, _MockLlama)<br><i>Condición en línea 71:<br>isinstance(llm, _MockLlama)</i>"}
+    dec_76{"hasattr(llm, 'model') and<br>hasattr(llm.model, 'tensors')<br><i>Condición en línea 76:<br>hasattr(llm, 'model') and hasattr(llm.model, 'tensors')</i>"}
+    loop_77["For loop"]
+    dec_79{"hasattr(llm, 'get_tensor')<br><i>Condición en línea 79:<br>hasattr(llm, 'get_tensor')</i>"}
+    loop_80["For each name"]
+    fn_pytorchmodeladapter_load[["Load"]]
+    fn__mockllama_get_mock_weights[["Get Mock Weights"]]
+    fn__genericwrapper_forward[["Forward"]]
+    fn_pytorchmodeladapter__load_llama[["Load Llama"]]
+    fn__mockllama_get_tensor_names[["Get Tensor Names"]]
+    fn__genericwrapper_get_weights[["Get Weights"]]
+    fn_pytorchmodeladapter__extract_weights[["Extract Weights"]]
+    fn__mockllama_create_completion[["Create Completion"]]
+    fn_pytorchmodeladapter__create_pytorch_model[["Create Pytorch Model"]]
+    fn_pytorchmodeladapter_generate[["Generate"]]
+    fn_pytorchmodeladapter_get_device[["Get Device"]]
+    fn_pytorchmodeladapter_get_num_parameters[["Get Num Parameters"]]
+    n_start --> fn_pytorchmodeladapter_load
+    fn_pytorchmodeladapter_load --> dec_36
+    fn_pytorchmodeladapter_load --> fn_pytorchmodeladapter__load_llama
+    fn_pytorchmodeladapter__load_llama --> fn_pytorchmodeladapter__extract_weights
+    fn_pytorchmodeladapter__extract_weights --> dec_71
+    dec_71 --> dec_76
+    dec_76 --> loop_77
+    dec_76 --> dec_79
+    dec_79 --> loop_80
+    fn_pytorchmodeladapter__extract_weights --> fn_pytorchmodeladapter__create_pytorch_model
+    fn_pytorchmodeladapter__create_pytorch_model --> fn_pytorchmodeladapter_generate
+    fn_pytorchmodeladapter_generate --> fn_pytorchmodeladapter_get_device
+    fn_pytorchmodeladapter_get_device --> fn_pytorchmodeladapter_get_num_parameters
+    n_start --> fn__mockllama_get_mock_weights
+    fn__mockllama_get_mock_weights --> fn__mockllama_get_tensor_names
+    fn__mockllama_get_tensor_names --> fn__mockllama_create_completion
+    n_start --> fn__genericwrapper_forward
+    fn__genericwrapper_forward --> fn__genericwrapper_get_weights
+    class n_start node-start
+    class fn_pytorchmodeladapter_load,fn_pytorchmodeladapter__load_llama,fn_pytorchmodeladapter__extract_weights,fn_pytorchmodeladapter__create_pytorch_model,fn_pytorchmodeladapter_generate,fn_pytorchmodeladapter_get_device,fn_pytorchmodeladapter_get_num_parameters,fn__mockllama_get_mock_weights,fn__mockllama_get_tensor_names,fn__mockllama_create_completion,fn__genericwrapper_forward,fn__genericwrapper_get_weights node-subprocess
+    class dec_36,dec_71,dec_76,dec_79 node-decision
+    class loop_77,loop_80 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

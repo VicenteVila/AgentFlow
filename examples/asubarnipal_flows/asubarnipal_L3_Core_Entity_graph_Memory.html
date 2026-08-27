@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entity Graph · Memory</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="asubarnipal_L2_Core_Entity_graph.html">← Volver</a>
+  <h1>Entity Graph · Memory</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Entity Graph · Memory
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_11{"not ent<br><i>Condición en línea 11:<br>not ent</i>"}
+    dec_64{"result.startswith('```')<br><i>Condición en línea 64:<br>result.startswith('```')</i>"}
+    dec_67{"result.endswith('```')<br><i>Condición en línea 67:<br>result.endswith('```')</i>"}
+    loop_97["For each ent_data in entities"]
+    loop_112["For loop"]
+    loop_113["For each ent2"]
+    fn_link_memory[["Link Memory"]]
+    fn_extract_entities[["Extract Entities"]]
+    fn_ingest_with_entities[["Ingest With Entities"]]
+    tool_generate_61["result = Generate<br><i>LLMRouter: invocación LLM<br>generativa (gemini/ollama)</i>"]
+    tool_extract_entities_94["entities = Extract Entities<br><i>EntityGraph: entidades desde un texto<br>via LLM</i>"]
+    tool_add_entity_12["ent = Add Entity<br><i>EntityGraph: inserta/actualiza una entidad</i>"]
+    tool_add_entity_98["ent = Add Entity<br><i>EntityGraph: inserta/actualiza una entidad</i>"]
+    tool_link_memory_105["Link Memory<br><i>EntityGraph: enlaza una memoria a entidades</i>"]
+    tool_add_relation_114["Add Relation<br><i>EntityGraph: crea una relación entre entidades</i>"]
+    n_start --> fn_link_memory
+    fn_link_memory --> dec_11
+    dec_11 --> tool_add_entity_12
+    n_start --> fn_extract_entities
+    fn_extract_entities --> tool_generate_61
+    tool_generate_61 --> dec_64
+    dec_64 --> dec_67
+    n_start --> fn_ingest_with_entities
+    fn_ingest_with_entities --> tool_extract_entities_94
+    tool_extract_entities_94 --> loop_97
+    loop_97 --> tool_add_entity_98
+    tool_add_entity_98 --> tool_link_memory_105
+    tool_link_memory_105 -- "loop" --> loop_97
+    loop_97 --> loop_112
+    loop_112 --> loop_113
+    loop_113 --> tool_add_relation_114
+    tool_add_relation_114 -- "loop" --> loop_113
+    loop_113 -- "loop" --> loop_112
+    class n_start node-start
+    class fn_link_memory,fn_extract_entities,fn_ingest_with_entities node-subprocess
+    class dec_11,dec_64,dec_67 node-decision
+    class tool_add_entity_12,tool_generate_61,tool_extract_entities_94,tool_add_entity_98,tool_link_memory_105,tool_add_relation_114 node-tool
+    class loop_97,loop_112,loop_113 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

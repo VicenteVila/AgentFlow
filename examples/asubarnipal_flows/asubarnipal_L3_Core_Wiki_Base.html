@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Base</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="asubarnipal_L2_Core_Wiki.html">← Volver</a>
+  <h1>Base</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Base
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_84{"qf.exists()<br><i>Condición en línea 84:<br>qf.exists()</i>"}
+    dec_101{"ingest_type == 'pdf'<br><i>Condición en línea 101:<br>ingest_type == 'pdf'</i>"}
+    dec_106{"pages > 0<br><i>Condición en línea 106:<br>pages > 0</i>"}
+    dec_117{"ingest_type == 'youtube'<br><i>Condición en línea 117:<br>ingest_type == 'youtube'</i>"}
+    dec_167{"quality_score < 50<br><i>Condición en línea 167:<br>quality_score < 50</i>"}
+    dec_111{"ocr_pages > 0 and<br>data.get('has_ocr')<br><i>Condición en línea 111:<br>ocr_pages > 0 and data.get('has_ocr')</i>"}
+    dec_121{"duration > 0 and<br>transcript_chars > 0<br><i>Condición en línea 121:<br>duration > 0 and transcript_chars > 0</i>"}
+    dec_128{"ingest_type == 'url'<br><i>Condición en línea 128:<br>ingest_type == 'url'</i>"}
+    dec_181{"not recent<br><i>Condición en línea 181:<br>not recent</i>"}
+    dec_114{"content_len < 1000<br><i>Condición en línea 114:<br>content_len < 1000</i>"}
+    dec_125{"transcript_chars < 500<br><i>Condición en línea 125:<br>transcript_chars < 500</i>"}
+    dec_130{"html_len > 0 and content_len<br>> 0<br><i>Condición en línea 130:<br>html_len > 0 and content_len > 0</i>"}
+    dec_134{"content_len < 500<br><i>Condición en línea 134:<br>content_len < 500</i>"}
+    dec_138{"concepts >= 3<br><i>Condición en línea 138:<br>concepts >= 3</i>"}
+    dec_140{"concepts == 0<br><i>Condición en línea 140:<br>concepts == 0</i>"}
+    dec_303{"relacionados<br><i>Condición en línea 303:<br>relacionados</i>"}
+    dec_314{"not row<br><i>Condición en línea 314:<br>not row</i>"}
+    dec_335{"getattr(self,<br>'_fts5_initialized', False)<br><i>Condición en línea 335:<br>getattr(self, '_fts5_initialized', False)</i>"}
+    dec_350{"fts5_count < entity_count or<br>fts5_count == 0 or fts5_count ><br><i>Condición en línea 350:<br>fts5_count < entity_count or fts5_count == 0 or fts5_count ></i>"}
+    loop_358["For each row in rows"]
+    loop_192["For each e in recent"]
+    dec_194{"t not in by_type<br><i>Condición en línea 194:<br>t not in by_type</i>"}
+    loop_199["For loop"]
+    loop_238["For loop"]
+    dec_239{"col_name not in<br>existing_columns<br><i>Condición en línea 239:<br>col_name not in existing_columns</i>"}
+    loop_321["For each related in relacionados"]
+    dec_325{"r<br><i>Condición en línea 325:<br>r</i>"}
+    loop_405["For loop"]
+    loop_417["For each rid in delete_rowids"]
+    loop_434["For loop"]
+    loop_439["Main Loop<br>(while True)"]
+    dec_441{"not cur.fetchone()<br><i>Condición en línea 441:<br>not cur.fetchone()</i>"}
+    dec_445{"counter > 100<br><i>Condición en línea 445:<br>counter > 100</i>"}
+    loop_492["For loop"]
+    dec_499{"tipo<br><i>Condición en línea 499:<br>tipo</i>"}
+    dec_501{"tipo.lower() in tipo_map<br><i>Condición en línea 501:<br>tipo.lower() in tipo_map</i>"}
+    loop_504["For loop"]
+    dec_505{"any((kw in content_lower or<br>kw in name_lower for kw in<br><i>Condición en línea 505:<br>any((kw in content_lower or kw in name_lower for kw in keywo</i>"}
+    loop_508["For loop"]
+    loop_509["For each kw in keywords"]
+    dec_510{"kw in content_lower or kw in<br>tipo.lower()<br><i>Condición en línea 510:<br>kw in content_lower or kw in tipo.lower()</i>"}
+    dec_514{"'lora' in name_lower or<br>'lora' in content_lower<br><i>Condición en línea 514:<br>'lora' in name_lower or 'lora' in content_lower</i>"}
+    dec_516{"'gpt' in name_lower or 'gpt'<br>in content_lower<br><i>Condición en línea 516:<br>'gpt' in name_lower or 'gpt' in content_lower</i>"}
+    dec_518{"'research' in name_lower<br><i>Condición en línea 518:<br>'research' in name_lower</i>"}
+    fn__slugify[["Slugify"]]
+    fn_wiki__get_vault_path[["Get Vault Path"]]
+    fn_wiki__get_vault_db_path[["Get Vault Db Path"]]
+    fn_wiki__get_active_vault_info[["Get Active Vault Info"]]
+    fn_wiki__get_quality_file[["Get Quality File"]]
+    fn_wiki__load_quality_history[["Load Quality History"]]
+    fn_wiki__save_quality_history[["Save Quality History"]]
+    fn_wiki__calculate_quality_score[["Calculate Quality Score"]]
+    fn_wiki_track_ingest_quality[["Track Ingest Quality"]]
+    fn_wiki_get_ingest_quality[["Get Ingest Quality"]]
+    fn_wiki_get_quality_alerts[["Get Quality Alerts"]]
+    fn_wiki__init_db[["Init Db"]]
+    fn_wiki__create_tables[["Create Tables"]]
+    fn_wiki_add_entity[["Add Entity"]]
+    fn_wiki__update_relations[["Update Relations"]]
+    fn_wiki__ensure_fts5[["Ensure Fts5"]]
+    fn_wiki_get_all[["Get All"]]
+    fn_wiki_deduplicate[["Deduplicate"]]
+    fn_wiki_fix_null_ids[["Fix Null Ids"]]
+    fn_wiki_backfill_tags[["Backfill Tags"]]
+    fn_wiki_close[["Close"]]
+    n_start --> fn__slugify
+    n_start --> fn_wiki__get_vault_path
+    fn_wiki__get_vault_path --> fn_wiki__get_vault_db_path
+    fn_wiki__get_vault_db_path --> fn_wiki__get_active_vault_info
+    fn_wiki__get_active_vault_info --> fn_wiki__get_quality_file
+    fn_wiki__get_quality_file --> fn_wiki__load_quality_history
+    fn_wiki__load_quality_history --> dec_84
+    fn_wiki__load_quality_history --> fn_wiki__save_quality_history
+    fn_wiki__save_quality_history --> fn_wiki__calculate_quality_score
+    fn_wiki__calculate_quality_score --> dec_101
+    dec_101 --> dec_106
+    dec_106 --> dec_111
+    dec_111 --> dec_114
+    dec_101 --> dec_117
+    dec_117 --> dec_121
+    dec_121 --> dec_125
+    dec_117 --> dec_128
+    dec_128 --> dec_130
+    dec_130 --> dec_134
+    dec_134 --> dec_138
+    dec_138 --> dec_140
+    fn_wiki__calculate_quality_score --> fn_wiki_track_ingest_quality
+    fn_wiki_track_ingest_quality --> dec_167
+    fn_wiki_track_ingest_quality --> fn_wiki_get_ingest_quality
+    fn_wiki_get_ingest_quality --> dec_181
+    dec_181 --> loop_192
+    loop_192 --> dec_194
+    dec_194 -- "loop" --> loop_192
+    loop_192 --> loop_199
+    fn_wiki_get_ingest_quality --> fn_wiki_get_quality_alerts
+    fn_wiki_get_quality_alerts --> fn_wiki__init_db
+    fn_wiki__init_db --> loop_238
+    loop_238 --> dec_239
+    dec_239 -- "loop" --> loop_238
+    fn_wiki__init_db --> fn_wiki__create_tables
+    fn_wiki__create_tables --> fn_wiki_add_entity
+    fn_wiki_add_entity --> dec_303
+    fn_wiki_add_entity --> fn_wiki__update_relations
+    fn_wiki__update_relations --> dec_314
+    dec_314 --> loop_321
+    loop_321 --> dec_325
+    dec_325 -- "loop" --> loop_321
+    fn_wiki__update_relations --> fn_wiki__ensure_fts5
+    fn_wiki__ensure_fts5 --> dec_335
+    dec_335 --> dec_350
+    dec_350 --> loop_358
+    fn_wiki__ensure_fts5 --> fn_wiki_get_all
+    fn_wiki_get_all --> fn_wiki_deduplicate
+    fn_wiki_deduplicate --> loop_405
+    loop_405 --> loop_417
+    loop_417 -- "loop" --> loop_405
+    fn_wiki_deduplicate --> fn_wiki_fix_null_ids
+    fn_wiki_fix_null_ids --> loop_434
+    loop_434 --> loop_439
+    loop_439 --> dec_441
+    dec_441 --> dec_445
+    dec_445 -- "loop" --> loop_439
+    loop_439 -- "loop" --> loop_434
+    fn_wiki_fix_null_ids --> fn_wiki_backfill_tags
+    fn_wiki_backfill_tags --> loop_492
+    loop_492 --> dec_499
+    dec_499 --> dec_501
+    dec_501 --> loop_504
+    loop_504 --> dec_505
+    dec_505 -- "loop" --> loop_504
+    loop_504 --> loop_508
+    loop_508 --> loop_509
+    loop_509 --> dec_510
+    dec_510 -- "loop" --> loop_509
+    loop_509 -- "loop" --> loop_508
+    loop_508 --> dec_514
+    dec_514 --> dec_516
+    dec_516 --> dec_518
+    dec_518 -- "loop" --> loop_492
+    fn_wiki_backfill_tags --> fn_wiki_close
+    class n_start node-start
+    class fn__slugify,fn_wiki__get_vault_path,fn_wiki__get_vault_db_path,fn_wiki__get_active_vault_info,fn_wiki__get_quality_file,fn_wiki__load_quality_history,fn_wiki__save_quality_history,fn_wiki__calculate_quality_score,fn_wiki_track_ingest_quality,fn_wiki_get_ingest_quality,fn_wiki_get_quality_alerts,fn_wiki__init_db,fn_wiki__create_tables,fn_wiki_add_entity,fn_wiki__update_relations,fn_wiki__ensure_fts5,fn_wiki_get_all,fn_wiki_deduplicate,fn_wiki_fix_null_ids,fn_wiki_backfill_tags,fn_wiki_close node-subprocess
+    class dec_84,dec_101,dec_106,dec_111,dec_114,dec_117,dec_121,dec_125,dec_128,dec_130,dec_134,dec_138,dec_140,dec_167,dec_181,dec_194,dec_239,dec_303,dec_314,dec_325,dec_335,dec_350,dec_441,dec_445,dec_499,dec_501,dec_505,dec_510,dec_514,dec_516,dec_518 node-decision
+    class loop_192,loop_199,loop_238,loop_321,loop_358,loop_405,loop_417,loop_434,loop_439,loop_492,loop_504,loop_508,loop_509 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

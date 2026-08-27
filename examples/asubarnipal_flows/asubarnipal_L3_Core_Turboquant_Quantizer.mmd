@@ -1,0 +1,67 @@
+%% Quantizer
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_283{"tensor_sizes is None<br><i>Condición en línea 283:<br>tensor_sizes is None</i>"}
+    dec_66{"self.per_channel and dim >=<br>0<br><i>Condición en línea 66:<br>self.per_channel and dim >= 0</i>"}
+    dec_72{"max_val == min_val<br><i>Condición en línea 72:<br>max_val == min_val</i>"}
+    dec_108{"not reduce_dim<br><i>Condición en línea 108:<br>not reduce_dim</i>"}
+    loop_235["For loop"]
+    dec_236{"isinstance(module,<br>skip_classes)<br><i>Condición en línea 236:<br>isinstance(module, skip_classes)</i>"}
+    dec_239{"isinstance(module,<br>torch.nn.Linear)<br><i>Condición en línea 239:<br>isinstance(module, torch.nn.Linear)</i>"}
+    dec_245{"module.bias is not None<br><i>Condición en línea 245:<br>module.bias is not None</i>"}
+    dec_250{"parent_name<br><i>Condición en línea 250:<br>parent_name</i>"}
+    loop_289["For each size in tensor_sizes"]
+    loop_293["For each _"]
+    loop_297["For each _"]
+    fn_quantize_model[["Quantize Model"]]
+    fn_benchmark_quantization[["Benchmark Quantization"]]
+    fn_quantizationstats_to_dict[["To Dict"]]
+    fn_asymmetricquantizer_quantize[["Quantize"]]
+    fn_dynamicquantizedlinear_quantize_weights[["Quantize Weights"]]
+    fn_asymmetricquantizer_dequantize[["Dequantize"]]
+    fn_dynamicquantizedlinear_forward[["Forward"]]
+    fn_asymmetricquantizer__quantize_per_channel[["Quantize Per Channel"]]
+    fn_asymmetricquantizer_quantize_weight[["Quantize Weight"]]
+    fn_asymmetricquantizer_analyze[["Analyze"]]
+    n_start --> fn_quantize_model
+    fn_quantize_model --> loop_235
+    loop_235 --> dec_236
+    dec_236 --> dec_239
+    dec_239 --> dec_245
+    dec_245 --> dec_250
+    dec_250 -- "loop" --> loop_235
+    n_start --> fn_benchmark_quantization
+    fn_benchmark_quantization --> dec_283
+    dec_283 --> loop_289
+    loop_289 --> loop_293
+    loop_293 --> loop_297
+    loop_297 -- "loop" --> loop_289
+    n_start --> fn_quantizationstats_to_dict
+    n_start --> fn_asymmetricquantizer_quantize
+    fn_asymmetricquantizer_quantize --> dec_66
+    dec_66 --> dec_72
+    fn_asymmetricquantizer_quantize --> fn_asymmetricquantizer_dequantize
+    fn_asymmetricquantizer_dequantize --> fn_asymmetricquantizer__quantize_per_channel
+    fn_asymmetricquantizer__quantize_per_channel --> dec_108
+    fn_asymmetricquantizer__quantize_per_channel --> fn_asymmetricquantizer_quantize_weight
+    fn_asymmetricquantizer_quantize_weight --> fn_asymmetricquantizer_analyze
+    n_start --> fn_dynamicquantizedlinear_quantize_weights
+    fn_dynamicquantizedlinear_quantize_weights --> fn_dynamicquantizedlinear_forward
+    class n_start node-start
+    class fn_quantize_model,fn_benchmark_quantization,fn_quantizationstats_to_dict,fn_asymmetricquantizer_quantize,fn_asymmetricquantizer_dequantize,fn_asymmetricquantizer__quantize_per_channel,fn_asymmetricquantizer_quantize_weight,fn_asymmetricquantizer_analyze,fn_dynamicquantizedlinear_quantize_weights,fn_dynamicquantizedlinear_forward node-subprocess
+    class loop_235,loop_289,loop_293,loop_297 node-loop
+    class dec_236,dec_239,dec_245,dec_250,dec_283,dec_66,dec_72,dec_108 node-decision
+    class n_end node-end

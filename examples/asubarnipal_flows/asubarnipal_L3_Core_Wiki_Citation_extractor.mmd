@@ -1,0 +1,127 @@
+%% Citation Extractor
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_378{"formato<br><i>Condición en línea 378:<br>formato</i>"}
+    dec_182{"len(groups) >= 1<br><i>Condición en línea 182:<br>len(groups) >= 1</i>"}
+    dec_184{"len(groups) >= 2<br><i>Condición en línea 184:<br>len(groups) >= 2</i>"}
+    dec_205{"len(groups) >= 1<br><i>Condición en línea 205:<br>len(groups) >= 1</i>"}
+    dec_186{"len(groups) >= 3<br><i>Condición en línea 186:<br>len(groups) >= 3</i>"}
+    dec_207{"len(groups) >= 2<br><i>Condición en línea 207:<br>len(groups) >= 2</i>"}
+    dec_226{"len(groups) >= 1<br><i>Condición en línea 226:<br>len(groups) >= 1</i>"}
+    dec_188{"len(groups) >= 4<br><i>Condición en línea 188:<br>len(groups) >= 4</i>"}
+    dec_209{"len(groups) >= 3<br><i>Condición en línea 209:<br>len(groups) >= 3</i>"}
+    dec_228{"len(groups) >= 2<br><i>Condición en línea 228:<br>len(groups) >= 2</i>"}
+    dec_247{"len(groups) >= 2<br><i>Condición en línea 247:<br>len(groups) >= 2</i>"}
+    dec_190{"len(groups) >= 5 and<br>groups(4)<br><i>Condición en línea 190:<br>len(groups) >= 5 and groups(4)</i>"}
+    dec_211{"len(groups) >= 4 and<br>groups(3)<br><i>Condición en línea 211:<br>len(groups) >= 4 and groups(3)</i>"}
+    dec_230{"len(groups) >= 3<br><i>Condición en línea 230:<br>len(groups) >= 3</i>"}
+    dec_249{"len(groups) >= 3<br><i>Condición en línea 249:<br>len(groups) >= 3</i>"}
+    dec_268{"len(groups) >= 1<br><i>Condición en línea 268:<br>len(groups) >= 1</i>"}
+    dec_192{"len(groups) >= 6 and<br>groups(5)<br><i>Condición en línea 192:<br>len(groups) >= 6 and groups(5)</i>"}
+    dec_213{"len(groups) >= 5 and<br>groups(4)<br><i>Condición en línea 213:<br>len(groups) >= 5 and groups(4)</i>"}
+    dec_232{"len(groups) >= 4 and<br>groups(3)<br><i>Condición en línea 232:<br>len(groups) >= 4 and groups(3)</i>"}
+    dec_251{"len(groups) >= 4<br><i>Condición en línea 251:<br>len(groups) >= 4</i>"}
+    dec_270{"len(groups) >= 2<br><i>Condición en línea 270:<br>len(groups) >= 2</i>"}
+    dec_194{"len(groups) >= 7 and<br>groups(6)<br><i>Condición en línea 194:<br>len(groups) >= 7 and groups(6)</i>"}
+    dec_215{"len(groups) >= 6<br><i>Condición en línea 215:<br>len(groups) >= 6</i>"}
+    dec_234{"len(groups) >= 5 and<br>groups(4)<br><i>Condición en línea 234:<br>len(groups) >= 5 and groups(4)</i>"}
+    dec_253{"len(groups) >= 5 and<br>groups(4)<br><i>Condición en línea 253:<br>len(groups) >= 5 and groups(4)</i>"}
+    dec_196{"len(groups) >= 8 and<br>groups(7)<br><i>Condición en línea 196:<br>len(groups) >= 8 and groups(7)</i>"}
+    dec_217{"len(groups) >= 7 and<br>groups(6)<br><i>Condición en línea 217:<br>len(groups) >= 7 and groups(6)</i>"}
+    dec_236{"len(groups) >= 6<br><i>Condición en línea 236:<br>len(groups) >= 6</i>"}
+    dec_255{"len(groups) >= 6 and<br>groups(5)<br><i>Condición en línea 255:<br>len(groups) >= 6 and groups(5)</i>"}
+    dec_238{"len(groups) >= 7 and<br>groups(6)<br><i>Condición en línea 238:<br>len(groups) >= 7 and groups(6)</i>"}
+    dec_257{"len(groups) >= 7 and<br>groups(6)<br><i>Condición en línea 257:<br>len(groups) >= 7 and groups(6)</i>"}
+    dec_259{"len(groups) >= 8 and<br>groups(7)<br><i>Condición en línea 259:<br>len(groups) >= 8 and groups(7)</i>"}
+    loop_109["For loop"]
+    loop_110["For each pattern in patterns"]
+    loop_113["For each match in matches"]
+    dec_115{"citation<br><i>Condición en línea 115:<br>citation</i>"}
+    loop_288["For each citation in citations"]
+    dec_292{"normalized not in seen<br><i>Condición en línea 292:<br>normalized not in seen</i>"}
+    fn_extract_citations[["Extract Citations"]]
+    fn_citation_to_dict[["To Dict"]]
+    fn_citationextractor_extract[["Extract"]]
+    fn_citation_get_identifier[["Get Identifier"]]
+    fn_citationextractor__parse_match[["Parse Match"]]
+    fn_citationextractor__parse_apa[["Parse Apa"]]
+    fn_citationextractor__parse_mla[["Parse Mla"]]
+    fn_citationextractor__parse_chicago[["Parse Chicago"]]
+    fn_citationextractor__parse_ieee[["Parse Ieee"]]
+    fn_citationextractor__parse_inline[["Parse Inline"]]
+    fn_citationextractor__remove_duplicates[["Remove Duplicates"]]
+    fn_citationextractor_extract_from_pdf[["Extract From Pdf"]]
+    fn_citationextractor_extract_from_url[["Extract From Url"]]
+    n_start --> fn_extract_citations
+    fn_extract_citations --> dec_378
+    n_start --> fn_citation_to_dict
+    fn_citation_to_dict --> fn_citation_get_identifier
+    n_start --> fn_citationextractor_extract
+    fn_citationextractor_extract --> loop_109
+    loop_109 --> loop_110
+    loop_110 --> loop_113
+    loop_113 --> dec_115
+    dec_115 -- "loop" --> loop_113
+    loop_113 -- "loop" --> loop_110
+    loop_110 -- "loop" --> loop_109
+    fn_citationextractor_extract --> fn_citationextractor__parse_match
+    fn_citationextractor__parse_match --> fn_citationextractor__parse_apa
+    fn_citationextractor__parse_apa --> dec_182
+    dec_182 --> dec_184
+    dec_184 --> dec_186
+    dec_186 --> dec_188
+    dec_188 --> dec_190
+    dec_190 --> dec_192
+    dec_192 --> dec_194
+    dec_194 --> dec_196
+    fn_citationextractor__parse_apa --> fn_citationextractor__parse_mla
+    fn_citationextractor__parse_mla --> dec_205
+    dec_205 --> dec_207
+    dec_207 --> dec_209
+    dec_209 --> dec_211
+    dec_211 --> dec_213
+    dec_213 --> dec_215
+    dec_215 --> dec_217
+    fn_citationextractor__parse_mla --> fn_citationextractor__parse_chicago
+    fn_citationextractor__parse_chicago --> dec_226
+    dec_226 --> dec_228
+    dec_228 --> dec_230
+    dec_230 --> dec_232
+    dec_232 --> dec_234
+    dec_234 --> dec_236
+    dec_236 --> dec_238
+    fn_citationextractor__parse_chicago --> fn_citationextractor__parse_ieee
+    fn_citationextractor__parse_ieee --> dec_247
+    dec_247 --> dec_249
+    dec_249 --> dec_251
+    dec_251 --> dec_253
+    dec_253 --> dec_255
+    dec_255 --> dec_257
+    dec_257 --> dec_259
+    fn_citationextractor__parse_ieee --> fn_citationextractor__parse_inline
+    fn_citationextractor__parse_inline --> dec_268
+    dec_268 --> dec_270
+    fn_citationextractor__parse_inline --> fn_citationextractor__remove_duplicates
+    fn_citationextractor__remove_duplicates --> loop_288
+    loop_288 --> dec_292
+    dec_292 -- "loop" --> loop_288
+    fn_citationextractor__remove_duplicates --> fn_citationextractor_extract_from_pdf
+    fn_citationextractor_extract_from_pdf --> fn_citationextractor_extract_from_url
+    class n_start node-start
+    class fn_extract_citations,fn_citation_to_dict,fn_citation_get_identifier,fn_citationextractor_extract,fn_citationextractor__parse_match,fn_citationextractor__parse_apa,fn_citationextractor__parse_mla,fn_citationextractor__parse_chicago,fn_citationextractor__parse_ieee,fn_citationextractor__parse_inline,fn_citationextractor__remove_duplicates,fn_citationextractor_extract_from_pdf,fn_citationextractor_extract_from_url node-subprocess
+    class dec_378,dec_115,dec_182,dec_184,dec_186,dec_188,dec_190,dec_192,dec_194,dec_196,dec_205,dec_207,dec_209,dec_211,dec_213,dec_215,dec_217,dec_226,dec_228,dec_230,dec_232,dec_234,dec_236,dec_238,dec_247,dec_249,dec_251,dec_253,dec_255,dec_257,dec_259,dec_268,dec_270,dec_292 node-decision
+    class loop_109,loop_110,loop_113,loop_288 node-loop
+    class n_end node-end

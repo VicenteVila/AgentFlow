@@ -1,0 +1,104 @@
+%% Busqueda · Ingestion
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_6{"update.message.document<br><i>Condición en línea 6:<br>update.message.document</i>"}
+    dec_10{"update.message.photo<br><i>Condición en línea 10:<br>update.message.photo</i>"}
+    dec_229{"mime_type ==<br>'application/pdf' or<br><i>Condición en línea 229:<br>mime_type == 'application/pdf' or file_name.lower().endswith</i>"}
+    dec_14{"not text_input<br><i>Condición en línea 14:<br>not text_input</i>"}
+    dec_244{"result.get('success')<br><i>Condición en línea 244:<br>result.get('success')</i>"}
+    dec_27{"is_url(text_input)<br><i>Condición en línea 27:<br>is_url(text_input)</i>"}
+    dec_300{"result.get('success')<br><i>Condición en línea 300:<br>result.get('success')</i>"}
+    dec_252{"result.get('has_ocr')<br><i>Condición en línea 252:<br>result.get('has_ocr')</i>"}
+    dec_29{"is_local_path(text_input)<br><i>Condición en línea 29:<br>is_local_path(text_input)</i>"}
+    dec_257{"content_len > 0<br><i>Condición en línea 257:<br>content_len > 0</i>"}
+    dec_33{"url and is_url(url)<br><i>Condición en línea 33:<br>url and is_url(url)</i>"}
+    dec_260{"result.get('truncated')<br><i>Condición en línea 260:<br>result.get('truncated')</i>"}
+    dec_118{"not path.exists()<br><i>Condición en línea 118:<br>not path.exists()</i>"}
+    dec_144{"ext == '.pdf'<br><i>Condición en línea 144:<br>ext == '.pdf'</i>"}
+    dec_146{"ext in ('.png', '.jpg',<br>'.jpeg')<br><i>Condición en línea 146:<br>ext in ('.png', '.jpg', '.jpeg')</i>"}
+    dec_59{"result.get('success')<br><i>Condición en línea 59:<br>result.get('success')</i>"}
+    dec_68{"is_youtube<br><i>Condición en línea 68:<br>is_youtube</i>"}
+    dec_151{"result.get('success')<br><i>Condición en línea 151:<br>result.get('success')</i>"}
+    dec_90{"is_youtube and<br>result.get('has_transcript')<br><i>Condición en línea 90:<br>is_youtube and result.get('has_transcript')</i>"}
+    dec_161{"ext == '.pdf'<br><i>Condición en línea 161:<br>ext == '.pdf'</i>"}
+    dec_93{"summary<br><i>Condición en línea 93:<br>summary</i>"}
+    dec_166{"ocr_pages<br><i>Condición en línea 166:<br>ocr_pages</i>"}
+    dec_96{"result.get('concepts')<br><i>Condición en línea 96:<br>result.get('concepts')</i>"}
+    dec_168{"len(ocr_pages) <= 10<br><i>Condición en línea 168:<br>len(ocr_pages) <= 10</i>"}
+    loop_175["For each p"]
+    dec_176{"p == end + 1<br><i>Condición en línea 176:<br>p == end + 1</i>"}
+    fn_ingest_cmd[["Ingest Cmd"]]
+    fn__ingest_telegram_document[["Ingest Telegram Document"]]
+    fn__ingest_telegram_photo[["Ingest Telegram Photo"]]
+    tool_ingest_pdf_232["result = Ingest PDF<br><i>Análisis página a página + OCR</i>"]
+    tool_ingest_file_236["result = Ingest File<br><i>Ingesta de un fichero de texto<br>(ruta local o documento Telegram)</i>"]
+    tool_ingest_image_293["result = Ingest Image<br><i>Ingesta de una imagen → OCR<br>si el modelo está disponible</i>"]
+    fn__ingest_local_file[["Ingest Local File"]]
+    fn__ingest_url[["Ingest Url"]]
+    tool_ingest_url_smart_57["result = Ingest Smart<br><i>Detección de tipo de fuente<br>(youtube / web / file) y ruta de ingestión</i>"]
+    tool_ingest_pdf_145["result = Ingest PDF<br><i>Análisis página a página + OCR</i>"]
+    tool_ingest_image_147["result = Ingest Image<br><i>Ingesta de una imagen → OCR<br>si el modelo está disponible</i>"]
+    tool_ingest_file_149["result = Ingest File<br><i>Ingesta de un fichero de texto<br>(ruta local o documento Telegram)</i>"]
+    n_start --> fn_ingest_cmd
+    fn_ingest_cmd --> dec_6
+    dec_6 --> fn__ingest_telegram_document
+    fn__ingest_telegram_document --> dec_10
+    dec_10 --> fn__ingest_telegram_photo
+    fn__ingest_telegram_photo --> dec_14
+    dec_14 --> dec_27
+    dec_27 --> fn__ingest_url
+    dec_27 --> dec_29
+    dec_29 -- "YES" --> fn__ingest_local_file
+    dec_29 -- "NO" --> dec_33
+    dec_33 -- "YES" --> fn__ingest_url
+    n_start --> fn__ingest_url
+    fn__ingest_url --> tool_ingest_url_smart_57
+    tool_ingest_url_smart_57 --> dec_59
+    dec_59 --> dec_68
+    dec_68 --> dec_90
+    dec_90 --> dec_93
+    dec_93 --> dec_96
+    n_start --> fn__ingest_local_file
+    fn__ingest_local_file --> dec_118
+    dec_118 --> dec_144
+    dec_144 --> tool_ingest_pdf_145
+    dec_144 --> dec_146
+    dec_146 -- "YES" --> tool_ingest_image_147
+    dec_146 -- "NO" --> tool_ingest_file_149
+    tool_ingest_file_149 --> dec_151
+    dec_151 --> dec_161
+    dec_161 --> dec_166
+    dec_166 --> dec_168
+    dec_168 -- "NO" --> loop_175
+    loop_175 --> dec_176
+    dec_176 -- "loop" --> loop_175
+    n_start --> fn__ingest_telegram_document
+    fn__ingest_telegram_document --> dec_229
+    dec_229 -- "YES" --> tool_ingest_pdf_232
+    dec_229 -- "NO" --> tool_ingest_file_236
+    tool_ingest_file_236 --> dec_244
+    dec_244 --> dec_252
+    dec_252 --> dec_257
+    dec_257 --> dec_260
+    n_start --> fn__ingest_telegram_photo
+    fn__ingest_telegram_photo --> tool_ingest_image_293
+    tool_ingest_image_293 --> dec_300
+    class n_start node-start
+    class fn_ingest_cmd,fn__ingest_telegram_document,fn__ingest_telegram_photo,fn__ingest_url,fn__ingest_local_file node-subprocess
+    class dec_6,dec_10,dec_14,dec_27,dec_29,dec_33,dec_59,dec_68,dec_90,dec_93,dec_96,dec_118,dec_144,dec_146,dec_151,dec_161,dec_166,dec_168,dec_176,dec_229,dec_244,dec_252,dec_257,dec_260,dec_300 node-decision
+    class tool_ingest_url_smart_57,tool_ingest_pdf_145,tool_ingest_image_147,tool_ingest_file_149,tool_ingest_pdf_232,tool_ingest_file_236,tool_ingest_image_293 node-tool
+    class loop_175 node-loop
+    class n_end node-end

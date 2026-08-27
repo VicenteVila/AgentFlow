@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quality Scorer</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="asubarnipal_L2_Core_Wiki.html">← Volver</a>
+  <h1>Quality Scorer</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Quality Scorer
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_130{"metadata_score < 70<br><i>Condición en línea 130:<br>metadata_score < 70</i>"}
+    dec_132{"content_length < 1000<br><i>Condición en línea 132:<br>content_length < 1000</i>"}
+    dec_190{"metadata_score < 70<br><i>Condición en línea 190:<br>metadata_score < 70</i>"}
+    dec_134{"citation_score < 50<br><i>Condición en línea 134:<br>citation_score < 50</i>"}
+    dec_192{"content_length < 5000<br><i>Condición en línea 192:<br>content_length < 5000</i>"}
+    dec_252{"metadata_score < 70<br><i>Condición en línea 252:<br>metadata_score < 70</i>"}
+    dec_136{"domain_score < 0.5<br><i>Condición en línea 136:<br>domain_score < 0.5</i>"}
+    dec_194{"citation_score < 50<br><i>Condición en línea 194:<br>citation_score < 50</i>"}
+    dec_254{"availability_score < 50<br><i>Condición en línea 254:<br>availability_score < 50</i>"}
+    dec_292{"not fields<br><i>Condición en línea 292:<br>not fields</i>"}
+    dec_196{"academic_score < 50<br><i>Condición en línea 196:<br>academic_score < 50</i>"}
+    dec_256{"content_length < 3000<br><i>Condición en línea 256:<br>content_length < 3000</i>"}
+    dec_317{"content_length >=<br>t('excellent')<br><i>Condición en línea 317:<br>content_length >= t('excellent')</i>"}
+    dec_198{"structure_score < 50<br><i>Condición en línea 198:<br>structure_score < 50</i>"}
+    dec_258{"engagement_score < 30<br><i>Condición en línea 258:<br>engagement_score < 30</i>"}
+    dec_319{"content_length >= t('good')<br><i>Condición en línea 319:<br>content_length >= t('good')</i>"}
+    dec_339{"not citas_extraidas<br><i>Condición en línea 339:<br>not citas_extraidas</i>"}
+    dec_260{"citation_score < 50<br><i>Condición en línea 260:<br>citation_score < 50</i>"}
+    dec_321{"content_length >=<br>t('acceptable')<br><i>Condición en línea 321:<br>content_length >= t('acceptable')</i>"}
+    dec_364{"not domain<br><i>Condición en línea 364:<br>not domain</i>"}
+    dec_391{"metadata.get('doi')<br><i>Condición en línea 391:<br>metadata.get('doi')</i>"}
+    dec_395{"metadata.get('isbn')<br><i>Condición en línea 395:<br>metadata.get('isbn')</i>"}
+    dec_412{"paginas == 0<br><i>Condición en línea 412:<br>paginas == 0</i>"}
+    dec_416{"paginas >= 10<br><i>Condición en línea 416:<br>paginas >= 10</i>"}
+    dec_438{"metadata.get('transcripcion')<br><i>Condición en línea 438:<br>metadata.get('transcripcion')</i>"}
+    dec_418{"paginas >= 5<br><i>Condición en línea 418:<br>paginas >= 5</i>"}
+    dec_442{"metadata.get('tiene_subtitulos')<br><i>Condición en línea 442:<br>metadata.get('tiene_subtitulos')</i>"}
+    dec_464{"vistas == 0<br><i>Condición en línea 464:<br>vistas == 0</i>"}
+    dec_420{"paginas >= 2<br><i>Condición en línea 420:<br>paginas >= 2</i>"}
+    dec_446{"Condition?<br><i>Condición en línea 446:<br>metadata.get('subtitulos_extraidos')</i>"}
+    loop_371["For loop"]
+    dec_372{"trusted_domain in domain<br><i>Condición en línea 372:<br>trusted_domain in domain</i>"}
+    fn_calculate_quality_score[["Calculate Quality Score"]]
+    fn_qualityscore___post_init__[["Post Init"]]
+    fn_qualityscorer_calculate_url_score[["Calculate Url Score"]]
+    fn_qualityscore_to_dict[["To Dict"]]
+    fn_qualityscorer_calculate_pdf_score[["Calculate Pdf Score"]]
+    fn_qualityscorer_calculate_youtube_score[["Calculate Youtube Score"]]
+    fn_qualityscorer__calculate_metadata_completeness[["Calculate Metadata Completeness"]]
+    fn_qualityscorer__calculate_content_length_score[["Calculate Content Length Score"]]
+    fn_qualityscorer__calculate_citation_quality[["Calculate Citation Quality"]]
+    fn_qualityscorer__calculate_domain_authority[["Calculate Domain Authority"]]
+    fn_qualityscorer__calculate_academic_identifiers[["Calculate Academic Identifiers"]]
+    fn_qualityscorer__calculate_document_structure[["Calculate Document Structure"]]
+    fn_qualityscorer__calculate_content_availability[["Calculate Content Availability"]]
+    fn_qualityscorer__calculate_engagement_metrics[["Calculate Engagement Metrics"]]
+    n_start --> fn_calculate_quality_score
+    n_start --> fn_qualityscore___post_init__
+    fn_qualityscore___post_init__ --> fn_qualityscore_to_dict
+    n_start --> fn_qualityscorer_calculate_url_score
+    fn_qualityscorer_calculate_url_score --> dec_130
+    dec_130 --> dec_132
+    dec_132 --> dec_134
+    dec_134 --> dec_136
+    fn_qualityscorer_calculate_url_score --> fn_qualityscorer_calculate_pdf_score
+    fn_qualityscorer_calculate_pdf_score --> dec_190
+    dec_190 --> dec_192
+    dec_192 --> dec_194
+    dec_194 --> dec_196
+    dec_196 --> dec_198
+    fn_qualityscorer_calculate_pdf_score --> fn_qualityscorer_calculate_youtube_score
+    fn_qualityscorer_calculate_youtube_score --> dec_252
+    dec_252 --> dec_254
+    dec_254 --> dec_256
+    dec_256 --> dec_258
+    dec_258 --> dec_260
+    fn_qualityscorer_calculate_youtube_score --> fn_qualityscorer__calculate_metadata_completeness
+    fn_qualityscorer__calculate_metadata_completeness --> dec_292
+    fn_qualityscorer__calculate_metadata_completeness --> fn_qualityscorer__calculate_content_length_score
+    fn_qualityscorer__calculate_content_length_score --> dec_317
+    dec_317 --> dec_319
+    dec_319 --> dec_321
+    fn_qualityscorer__calculate_content_length_score --> fn_qualityscorer__calculate_citation_quality
+    fn_qualityscorer__calculate_citation_quality --> dec_339
+    fn_qualityscorer__calculate_citation_quality --> fn_qualityscorer__calculate_domain_authority
+    fn_qualityscorer__calculate_domain_authority --> dec_364
+    dec_364 --> loop_371
+    loop_371 --> dec_372
+    dec_372 -- "loop" --> loop_371
+    fn_qualityscorer__calculate_domain_authority --> fn_qualityscorer__calculate_academic_identifiers
+    fn_qualityscorer__calculate_academic_identifiers --> dec_391
+    dec_391 --> dec_395
+    fn_qualityscorer__calculate_academic_identifiers --> fn_qualityscorer__calculate_document_structure
+    fn_qualityscorer__calculate_document_structure --> dec_412
+    dec_412 --> dec_416
+    dec_416 --> dec_418
+    dec_418 --> dec_420
+    fn_qualityscorer__calculate_document_structure --> fn_qualityscorer__calculate_content_availability
+    fn_qualityscorer__calculate_content_availability --> dec_438
+    dec_438 --> dec_442
+    dec_442 --> dec_446
+    fn_qualityscorer__calculate_content_availability --> fn_qualityscorer__calculate_engagement_metrics
+    fn_qualityscorer__calculate_engagement_metrics --> dec_464
+    class n_start node-start
+    class fn_calculate_quality_score,fn_qualityscore___post_init__,fn_qualityscore_to_dict,fn_qualityscorer_calculate_url_score,fn_qualityscorer_calculate_pdf_score,fn_qualityscorer_calculate_youtube_score,fn_qualityscorer__calculate_metadata_completeness,fn_qualityscorer__calculate_content_length_score,fn_qualityscorer__calculate_citation_quality,fn_qualityscorer__calculate_domain_authority,fn_qualityscorer__calculate_academic_identifiers,fn_qualityscorer__calculate_document_structure,fn_qualityscorer__calculate_content_availability,fn_qualityscorer__calculate_engagement_metrics node-subprocess
+    class dec_130,dec_132,dec_134,dec_136,dec_190,dec_192,dec_194,dec_196,dec_198,dec_252,dec_254,dec_256,dec_258,dec_260,dec_292,dec_317,dec_319,dec_321,dec_339,dec_364,dec_372,dec_391,dec_395,dec_412,dec_416,dec_418,dec_420,dec_438,dec_442,dec_446,dec_464 node-decision
+    class loop_371 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+%% Hybrid Search
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    loop_59["For each r in obsidian_results"]
+    dec_115{"not self.vault_path or not<br>self.vault_path.exists()<br><i>Condición en línea 115:<br>not self.vault_path or not self.vault_path.exists()</i>"}
+    dec_183{"include_last_source and<br>is_about_last<br><i>Condición en línea 183:<br>include_last_source and is_about_last</i>"}
+    dec_193{"last_source and<br>last_source.get('content')<br><i>Condición en línea 193:<br>last_source and last_source.get('content')</i>"}
+    dec_287{"not candidates<br><i>Condición en línea 287:<br>not candidates</i>"}
+    dec_342{"not candidates<br><i>Condición en línea 342:<br>not candidates</i>"}
+    loop_67["For each r in sqlite_results"]
+    dec_70{"not exists<br><i>Condición en línea 70:<br>not exists</i>"}
+    loop_124["For each md_file"]
+    dec_125{"md_file.name.startswith('.')<br><i>Condición en línea 125:<br>md_file.name.startswith('.')</i>"}
+    dec_135{"match_found<br><i>Condición en línea 135:<br>match_found</i>"}
+    dec_137{"content.startswith('—-')<br><i>Condición en línea 137:<br>content.startswith('—-')</i>"}
+    dec_139{"end > 0<br><i>Condición en línea 139:<br>end > 0</i>"}
+    loop_141["For each line"]
+    dec_142{"line.startswith('title:')<br><i>Condición en línea 142:<br>line.startswith('title:')</i>"}
+    dec_147{"pos < 0<br><i>Condición en línea 147:<br>pos < 0</i>"}
+    dec_160{"len(results) >= limit * 2<br><i>Condición en línea 160:<br>len(results) >= limit * 2</i>"}
+    loop_212["For each r"]
+    dec_223{"r.get('name', ''))<br><i>Condición en línea 223:<br>self._is_keyword_match(query_clean, r.get('name', ''))</i>"}
+    loop_226["For each r"]
+    dec_238{"r.get('name', ''))<br><i>Condición en línea 238:<br>self._is_keyword_match(query_clean, r.get('name', ''))</i>"}
+    dec_241{"not all_candidates<br><i>Condición en línea 241:<br>not all_candidates</i>"}
+    dec_249{"obsidian_top<br><i>Condición en línea 249:<br>obsidian_top</i>"}
+    loop_251["For each r"]
+    dec_256{"sqlite_top<br><i>Condición en línea 256:<br>sqlite_top</i>"}
+    loop_258["For each r"]
+    dec_266{"len(full_context) ><br>max_chars<br><i>Condición en línea 266:<br>len(full_context) > max_chars</i>"}
+    loop_275["For each token in query_tokens"]
+    dec_276{"len(token) < 2<br><i>Condición en línea 276:<br>len(token) < 2</i>"}
+    dec_278{"token in name_lower or<br>name_lower in token<br><i>Condición en línea 278:<br>token in name_lower or name_lower in token</i>"}
+    loop_280["For each keyword"]
+    dec_281{"keyword in token and keyword<br>in name_lower<br><i>Condición en línea 281:<br>keyword in token and keyword in name_lower</i>"}
+    loop_297["For each c in candidates"]
+    loop_303["For each token in query_tokens"]
+    dec_304{"token in name_lower<br><i>Condición en línea 304:<br>token in name_lower</i>"}
+    dec_306{"len(content) > 50 and token<br>in content.lower()<br><i>Condición en línea 306:<br>len(content) > 50 and token in content.lower()</i>"}
+    loop_313["For loop"]
+    dec_314{"fp in fuente.lower()<br><i>Condición en línea 314:<br>fp in fuente.lower()</i>"}
+    dec_321{"fecha<br><i>Condición en línea 321:<br>fecha</i>"}
+    dec_335{"source_entities<br><i>Condición en línea 335:<br>source_entities</i>"}
+    loop_346["For each c in candidates"]
+    dec_352{"tipo == 'source' or tipo ==<br>'pdf'<br><i>Condición en línea 352:<br>tipo == 'source' or tipo == 'pdf'</i>"}
+    dec_354{"tipo == 'video'<br><i>Condición en línea 354:<br>tipo == 'video'</i>"}
+    dec_356{"tipo == 'concept'<br><i>Condición en línea 356:<br>tipo == 'concept'</i>"}
+    dec_362{"fecha<br><i>Condición en línea 362:<br>fecha</i>"}
+    fn_get_hybrid_search[["Get Hybrid Search"]]
+    fn_hybridsearch__get_active_vault[["Get Active Vault"]]
+    fn_hybridsearch__get_vault_path[["Get Vault Path"]]
+    fn_hybridsearch_search[["Search"]]
+    fn_hybridsearch__search_sqlite[["Search Sqlite"]]
+    fn_hybridsearch__search_obsidian[["Search Obsidian"]]
+    fn_hybridsearch_get_context_for_llm[["Get Context For Llm"]]
+    fn_hybridsearch__is_keyword_match[["Is Keyword Match"]]
+    fn_hybridsearch__rank_with_scoring[["Rank With Scoring"]]
+    tool_search_207["search_results = Search<br><i>Búsqueda híbrida (sqlite + obsidian /<br>semántica densa + BM25)</i>"]
+    fn_hybridsearch__rank_with_scoring_fallback[["Rank With Scoring Fallback"]]
+    n_start --> fn_get_hybrid_search
+    n_start --> fn_hybridsearch__get_active_vault
+    fn_hybridsearch__get_active_vault --> fn_hybridsearch__get_vault_path
+    fn_hybridsearch__get_vault_path --> fn_hybridsearch_search
+    fn_hybridsearch_search --> loop_59
+    loop_59 --> loop_67
+    loop_67 --> dec_70
+    dec_70 -- "loop" --> loop_67
+    fn_hybridsearch_search --> fn_hybridsearch__search_sqlite
+    fn_hybridsearch__search_sqlite --> fn_hybridsearch__search_obsidian
+    fn_hybridsearch__search_obsidian --> dec_115
+    dec_115 --> loop_124
+    loop_124 --> dec_125
+    dec_125 --> dec_135
+    dec_135 --> dec_137
+    dec_137 --> dec_139
+    dec_139 --> loop_141
+    loop_141 --> dec_142
+    dec_142 -- "loop" --> loop_141
+    loop_141 --> dec_147
+    dec_147 --> dec_160
+    dec_160 -- "loop" --> loop_124
+    fn_hybridsearch__search_obsidian --> fn_hybridsearch_get_context_for_llm
+    fn_hybridsearch_get_context_for_llm --> dec_183
+    dec_183 --> dec_193
+    dec_193 --> tool_search_207
+    tool_search_207 --> loop_212
+    loop_212 --> dec_223
+    dec_223 -- "loop" --> loop_212
+    loop_212 --> loop_226
+    loop_226 --> dec_238
+    dec_238 -- "loop" --> loop_226
+    loop_226 --> dec_241
+    dec_241 --> dec_249
+    dec_249 --> loop_251
+    loop_251 --> dec_256
+    dec_256 --> loop_258
+    loop_258 --> dec_266
+    fn_hybridsearch_get_context_for_llm --> fn_hybridsearch__is_keyword_match
+    fn_hybridsearch__is_keyword_match --> loop_275
+    loop_275 --> dec_276
+    dec_276 --> dec_278
+    dec_278 --> loop_280
+    loop_280 --> dec_281
+    dec_281 -- "loop" --> loop_280
+    loop_280 -- "loop" --> loop_275
+    fn_hybridsearch__is_keyword_match --> fn_hybridsearch__rank_with_scoring
+    fn_hybridsearch__rank_with_scoring --> dec_287
+    dec_287 --> loop_297
+    loop_297 --> loop_303
+    loop_303 --> dec_304
+    dec_304 --> dec_306
+    dec_306 -- "loop" --> loop_303
+    loop_303 --> loop_313
+    loop_313 --> dec_314
+    dec_314 -- "loop" --> loop_313
+    loop_313 --> dec_321
+    dec_321 -- "loop" --> loop_297
+    loop_297 --> dec_335
+    fn_hybridsearch__rank_with_scoring --> fn_hybridsearch__rank_with_scoring_fallback
+    fn_hybridsearch__rank_with_scoring_fallback --> dec_342
+    dec_342 --> loop_346
+    loop_346 --> dec_352
+    dec_352 --> dec_354
+    dec_354 --> dec_356
+    dec_356 --> dec_362
+    dec_362 -- "loop" --> loop_346
+    class n_start node-start
+    class fn_get_hybrid_search,fn_hybridsearch__get_active_vault,fn_hybridsearch__get_vault_path,fn_hybridsearch_search,fn_hybridsearch__search_sqlite,fn_hybridsearch__search_obsidian,fn_hybridsearch_get_context_for_llm,fn_hybridsearch__is_keyword_match,fn_hybridsearch__rank_with_scoring,fn_hybridsearch__rank_with_scoring_fallback node-subprocess
+    class loop_59,loop_67,loop_124,loop_141,loop_212,loop_226,loop_251,loop_258,loop_275,loop_280,loop_297,loop_303,loop_313,loop_346 node-loop
+    class dec_70,dec_115,dec_125,dec_135,dec_137,dec_139,dec_142,dec_147,dec_160,dec_183,dec_193,dec_223,dec_238,dec_241,dec_249,dec_256,dec_266,dec_276,dec_278,dec_281,dec_287,dec_304,dec_306,dec_314,dec_321,dec_335,dec_342,dec_352,dec_354,dec_356,dec_362 node-decision
+    class tool_search_207 node-tool
+    class n_end node-end

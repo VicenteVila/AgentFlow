@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="asubarnipal_L2_Core_Wiki.html">← Volver</a>
+  <h1>Search</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Search
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_31{"keywords<br><i>Condición en línea 31:<br>keywords</i>"}
+    loop_33["For each token in keywords"]
+    loop_39["For each r"]
+    dec_45{"name_matches<br><i>Condición en línea 45:<br>name_matches</i>"}
+    loop_56["For each r"]
+    loop_81["For each row"]
+    loop_85["For each r in rels"]
+    dec_86{"isinstance(r, dict)<br><i>Condición en línea 86:<br>isinstance(r, dict)</i>"}
+    dec_87{"r.get('name')<br><i>Condición en línea 87:<br>r.get('name')</i>"}
+    dec_89{"isinstance(r, str) and<br>r.strip()<br><i>Condición en línea 89:<br>isinstance(r, str) and r.strip()</i>"}
+    loop_102["For each row"]
+    loop_105["For each tag in tags"]
+    loop_118["For each row"]
+    dec_120{"not relacionados or<br>relacionados == '()'<br><i>Condición en línea 120:<br>not relacionados or relacionados == '()'</i>"}
+    loop_126["For each rel in rels"]
+    dec_129{"not self.cursor.fetchone()<br><i>Condición en línea 129:<br>not self.cursor.fetchone()</i>"}
+    loop_148["For each row"]
+    dec_150{"estado == 'draft'<br><i>Condición en línea 150:<br>estado == 'draft'</i>"}
+    dec_152{"estado == 'final'<br><i>Condición en línea 152:<br>estado == 'final'</i>"}
+    dec_154{"not relacionados or<br>relacionados == '()'<br><i>Condición en línea 154:<br>not relacionados or relacionados == '()'</i>"}
+    fn_wikisearchmixin_search[["Search"]]
+    fn_wikisearchmixin_get_hubs[["Get Hubs"]]
+    fn_wikisearchmixin_get_clusters[["Get Clusters"]]
+    fn_wikisearchmixin_lint[["Lint"]]
+    fn_wikisearchmixin_get_stats[["Get Stats"]]
+    n_start --> fn_wikisearchmixin_search
+    fn_wikisearchmixin_search --> dec_31
+    dec_31 --> loop_33
+    loop_33 --> loop_39
+    loop_39 -- "loop" --> loop_33
+    loop_33 --> dec_45
+    dec_45 --> loop_56
+    fn_wikisearchmixin_search --> fn_wikisearchmixin_get_hubs
+    fn_wikisearchmixin_get_hubs --> loop_81
+    loop_81 --> loop_85
+    loop_85 --> dec_86
+    dec_86 --> dec_87
+    dec_86 --> dec_89
+    dec_89 -- "loop" --> loop_85
+    loop_85 -- "loop" --> loop_81
+    fn_wikisearchmixin_get_hubs --> fn_wikisearchmixin_get_clusters
+    fn_wikisearchmixin_get_clusters --> loop_102
+    loop_102 --> loop_105
+    loop_105 -- "loop" --> loop_102
+    fn_wikisearchmixin_get_clusters --> fn_wikisearchmixin_lint
+    fn_wikisearchmixin_lint --> loop_118
+    loop_118 --> dec_120
+    dec_120 --> loop_126
+    loop_126 --> dec_129
+    dec_129 -- "loop" --> loop_126
+    loop_126 -- "loop" --> loop_118
+    fn_wikisearchmixin_lint --> fn_wikisearchmixin_get_stats
+    fn_wikisearchmixin_get_stats --> loop_148
+    loop_148 --> dec_150
+    dec_150 --> dec_152
+    dec_152 --> dec_154
+    dec_154 -- "loop" --> loop_148
+    class n_start node-start
+    class fn_wikisearchmixin_search,fn_wikisearchmixin_get_hubs,fn_wikisearchmixin_get_clusters,fn_wikisearchmixin_lint,fn_wikisearchmixin_get_stats node-subprocess
+    class dec_31,dec_45,dec_86,dec_87,dec_89,dec_120,dec_129,dec_150,dec_152,dec_154 node-decision
+    class loop_33,loop_39,loop_56,loop_81,loop_85,loop_102,loop_105,loop_118,loop_126,loop_148 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

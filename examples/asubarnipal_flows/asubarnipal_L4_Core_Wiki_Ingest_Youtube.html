@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ingest · Youtube</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="asubarnipal_L3_Core_Wiki_Ingest.html">← Volver</a>
+  <h1>Ingest · Youtube</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Ingest · Youtube
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_20{"result.get('success')<br><i>Condición en línea 20:<br>result.get('success')</i>"}
+    dec_68{"'youtube.com' in<br>parsed.hostname or in<br><i>Condición en línea 68:<br>'youtube.com' in parsed.hostname or 'www.youtube.com' in par</i>"}
+    dec_81{"video_id<br><i>Condición en línea 81:<br>video_id</i>"}
+    dec_71{"'youtu.be' in<br>parsed.hostname<br><i>Condición en línea 71:<br>'youtu.be' in parsed.hostname</i>"}
+    dec_90{"snippets<br><i>Condición en línea 90:<br>snippets</i>"}
+    dec_41{"node_path<br><i>Condición en línea 41:<br>node_path</i>"}
+    dec_45{"result.returncode == 0<br><i>Condición en línea 45:<br>result.returncode == 0</i>"}
+    dec_50{"Tool:<br>nt?<br><i>Dispatch nt</i>"}
+    loop_57["For each path in node_paths"]
+    dec_58{"os.path.exists(path)<br><i>Condición en línea 58:<br>os.path.exists(path)</i>"}
+    loop_92["For each s in snippets"]
+    dec_95{"text<br><i>Condición en línea 95:<br>text</i>"}
+    dec_104{"not transcript<br><i>Condición en línea 104:<br>not transcript</i>"}
+    dec_116{"node_available<br><i>Condición en línea 116:<br>node_available</i>"}
+    loop_134["For each lang in subtitle_langs"]
+    dec_135{"subs_dict.get(lang)<br><i>Condición en línea 135:<br>subs_dict.get(lang)</i>"}
+    dec_138{"not chosen_subs<br><i>Condición en línea 138:<br>not chosen_subs</i>"}
+    loop_139["For each lang in subtitle_langs"]
+    dec_140{"auto_dict.get(lang)<br><i>Condición en línea 140:<br>auto_dict.get(lang)</i>"}
+    dec_143{"not chosen_subs and<br>auto_dict<br><i>Condición en línea 143:<br>not chosen_subs and auto_dict</i>"}
+    dec_147{"chosen_subs<br><i>Condición en línea 147:<br>chosen_subs</i>"}
+    loop_149["For each fmt_entry"]
+    dec_151{"not sub_url<br><i>Condición en línea 151:<br>not sub_url</i>"}
+    loop_153["For each attempt"]
+    dec_155{"attempt > 0<br><i>Condición en línea 155:<br>attempt > 0</i>"}
+    dec_158{"resp.ok<br><i>Condición en línea 158:<br>resp.ok</i>"}
+    dec_159{"'vtt' in<br>resp.headers.get('Content-Type',<br><i>Condición en línea 159:<br>'vtt' in resp.headers.get('Content-Type', '').lower() or sub</i>"}
+    dec_163{"texts<br><i>Condición en línea 163:<br>texts</i>"}
+    dec_167{"resp.status_code == 429<br><i>Condición en línea 167:<br>resp.status_code == 429</i>"}
+    dec_171{"transcript<br><i>Condición en línea 171:<br>transcript</i>"}
+    dec_181{"not metadata<br><i>Condición en línea 181:<br>not metadata</i>"}
+    loop_210["For each line"]
+    dec_212{"'—>' in line<br><i>Condición en línea 212:<br>'—>' in line</i>"}
+    dec_216{"len(parts) >= 2<br><i>Condición en línea 216:<br>len(parts) >= 2</i>"}
+    dec_224{"line and (not<br>line.startswith('WEBVTT')) and<br><i>Condición en línea 224:<br>line and (not line.startswith('WEBVTT')) and (not line.start</i>"}
+    dec_225{"line.startswith('<')<br><i>Condición en línea 225:<br>line.startswith('<')</i>"}
+    dec_228{"clean_text.strip()<br><i>Condición en línea 228:<br>clean_text.strip()</i>"}
+    dec_230{"current_text<br><i>Condición en línea 230:<br>current_text</i>"}
+    dec_234{"current_text<br><i>Condición en línea 234:<br>current_text</i>"}
+    loop_245["For each seg"]
+    dec_247{"text<br><i>Condición en línea 247:<br>text</i>"}
+    dec_254{"not texts<br><i>Condición en línea 254:<br>not texts</i>"}
+    loop_255["For each line"]
+    dec_257{"'—>' in line or<br>line.isdigit()<br><i>Condición en línea 257:<br>'—>' in line or line.isdigit()</i>"}
+    dec_259{"line<br><i>Condición en línea 259:<br>line</i>"}
+    fn_ingest_url[["Ingest Url"]]
+    fn__is_youtube_url[["Is Youtube Url"]]
+    fn__extract_youtube_transcript[["Extract Youtube Transcript"]]
+    fn__ingest_youtube[["Ingest Youtube"]]
+    tool_add_entity_16["result = Add Entity<br><i>EntityGraph: inserta/actualiza una entidad</i>"]
+    fn__extract_video_id[["Extract Video Id"]]
+    fn__check_node_js[["Check Node Js"]]
+    fn__parse_vtt_content[["texts = Parse Vtt Content"]]
+    fn__parse_srt_content[["texts = Parse Srt Content"]]
+    fn__extract_youtube_metadata[["metadata = Extract Youtube Metadata"]]
+    n_start --> fn_ingest_url
+    fn_ingest_url --> tool_add_entity_16
+    tool_add_entity_16 --> dec_20
+    n_start --> fn__is_youtube_url
+    n_start --> fn__check_node_js
+    fn__check_node_js --> dec_41
+    dec_41 --> dec_45
+    dec_45 --> dec_50
+    dec_50 --> loop_57
+    loop_57 --> dec_58
+    dec_58 -- "loop" --> loop_57
+    n_start --> fn__extract_video_id
+    fn__extract_video_id --> dec_68
+    dec_68 --> dec_71
+    n_start --> fn__extract_youtube_transcript
+    fn__extract_youtube_transcript --> fn__extract_video_id
+    fn__extract_video_id --> dec_81
+    dec_81 --> dec_90
+    dec_90 --> loop_92
+    loop_92 --> dec_95
+    dec_95 -- "loop" --> loop_92
+    loop_92 --> dec_104
+    dec_104 --> fn__check_node_js
+    fn__check_node_js --> dec_116
+    dec_116 --> loop_134
+    loop_134 --> dec_135
+    dec_135 -- "loop" --> loop_134
+    loop_134 --> dec_138
+    dec_138 --> loop_139
+    loop_139 --> dec_140
+    dec_140 -- "loop" --> loop_139
+    loop_139 --> dec_143
+    dec_143 --> dec_147
+    dec_147 -- "YES" --> loop_149
+    loop_149 --> dec_151
+    dec_151 --> loop_153
+    loop_153 --> dec_155
+    dec_155 --> dec_158
+    dec_158 --> dec_159
+    dec_159 -- "YES" --> fn__parse_vtt_content
+    dec_159 -- "NO" --> fn__parse_srt_content
+    fn__parse_srt_content --> dec_163
+    dec_158 --> dec_167
+    dec_167 -- "loop" --> loop_153
+    loop_153 --> dec_171
+    dec_171 -- "loop" --> loop_149
+    dec_147 --> dec_181
+    dec_181 --> fn__extract_youtube_metadata
+    n_start --> fn__extract_youtube_metadata
+    n_start --> fn__parse_vtt_content
+    fn__parse_vtt_content --> loop_210
+    loop_210 --> dec_212
+    dec_212 --> dec_216
+    dec_216 --> dec_224
+    dec_224 --> dec_225
+    dec_225 --> dec_228
+    dec_224 --> dec_230
+    dec_230 -- "loop" --> loop_210
+    loop_210 --> dec_234
+    n_start --> fn__parse_srt_content
+    fn__parse_srt_content --> loop_245
+    loop_245 --> dec_247
+    dec_247 -- "loop" --> loop_245
+    loop_245 --> dec_254
+    dec_254 --> loop_255
+    loop_255 --> dec_257
+    dec_257 --> dec_259
+    dec_259 -- "loop" --> loop_255
+    n_start --> fn__ingest_youtube
+    class n_start node-start
+    class fn_ingest_url,fn__is_youtube_url,fn__check_node_js,fn__extract_video_id,fn__extract_youtube_transcript,fn__parse_vtt_content,fn__parse_srt_content,fn__extract_youtube_metadata,fn__ingest_youtube node-subprocess
+    class tool_add_entity_16 node-tool
+    class dec_20,dec_41,dec_45,dec_50,dec_58,dec_68,dec_71,dec_81,dec_90,dec_95,dec_104,dec_116,dec_135,dec_138,dec_140,dec_143,dec_147,dec_151,dec_155,dec_158,dec_159,dec_163,dec_167,dec_171,dec_181,dec_212,dec_216,dec_224,dec_225,dec_228,dec_230,dec_234,dec_247,dec_254,dec_257,dec_259 node-decision
+    class loop_57,loop_92,loop_134,loop_139,loop_149,loop_153,loop_210,loop_245,loop_255 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

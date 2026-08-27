@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ingest · Entry</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="asubarnipal_L3_Core_Wiki_Ingest.html">← Volver</a>
+  <h1>Ingest · Entry</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Ingest · Entry
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_12{"self._is_youtube_url(url)<br><i>Condición en línea 12:<br>self._is_youtube_url(url)</i>"}
+    dec_123{"content_type == 'pdf'<br><i>Condición en línea 123:<br>content_type == 'pdf'</i>"}
+    loop_167["For each row"]
+    dec_19{"NOT ok?<br><i>Niega ok<br>para lógica invertida</i>"}
+    dec_129{"content_type == 'youtube'<br><i>Condición en línea 129:<br>content_type == 'youtube'</i>"}
+    loop_27["For each tag"]
+    dec_134{"content_type == 'url'<br><i>Condición en línea 134:<br>content_type == 'url'</i>"}
+    dec_39{"lang != translate_to<br><i>Condición en línea 39:<br>lang != translate_to</i>"}
+    dec_150{"row<br><i>Condición en línea 150:<br>row</i>"}
+    loop_54["For each concept"]
+    dec_56{"clean_concept and<br>len(clean_concept) > 2<br><i>Condición en línea 56:<br>clean_concept and len(clean_concept) > 2</i>"}
+    fn_ingest_url_smart[["Ingest Url Smart"]]
+    fn_get_last_source[["Get Last Source"]]
+    fn_get_last_ingested[["Get Last Ingested"]]
+    tool_add_entity_57["Add Entity<br><i>EntityGraph: inserta/actualiza una entidad</i>"]
+    tool_add_entity_74["Add Entity<br><i>EntityGraph: inserta/actualiza una entidad</i>"]
+    n_start --> fn_ingest_url_smart
+    fn_ingest_url_smart --> dec_12
+    dec_12 --> dec_19
+    dec_19 --> loop_27
+    loop_27 --> dec_39
+    dec_39 --> loop_54
+    loop_54 --> dec_56
+    dec_56 --> tool_add_entity_57
+    tool_add_entity_57 -- "loop" --> loop_54
+    loop_54 --> tool_add_entity_74
+    n_start --> fn_get_last_source
+    fn_get_last_source --> dec_123
+    dec_123 --> dec_129
+    dec_129 --> dec_134
+    dec_134 --> dec_150
+    n_start --> fn_get_last_ingested
+    fn_get_last_ingested --> loop_167
+    class n_start node-start
+    class fn_ingest_url_smart,fn_get_last_source,fn_get_last_ingested node-subprocess
+    class dec_12,dec_19,dec_39,dec_56,dec_123,dec_129,dec_134,dec_150 node-decision
+    class loop_27,loop_54,loop_167 node-loop
+    class tool_add_entity_57,tool_add_entity_74 node-tool
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

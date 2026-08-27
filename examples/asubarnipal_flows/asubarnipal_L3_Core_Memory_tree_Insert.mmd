@@ -1,0 +1,65 @@
+%% Memory Tree · Insert
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_8{"timestamp is None<br><i>Condición en línea 8:<br>timestamp is None</i>"}
+    dec_51{"level >=<br>max(self.levels_config.keys())<br><i>Condición en línea 51:<br>level >= max(self.levels_config.keys())</i>"}
+    dec_60{"current is None<br><i>Condición en línea 60:<br>current is None</i>"}
+    dec_66{"current_level < level<br><i>Condición en línea 66:<br>current_level < level</i>"}
+    loop_84["For each candidate in candidates"]
+    dec_85{"candidate('node_id') ==<br>node_id<br><i>Condición en línea 85:<br>candidate('node_id') == node_id</i>"}
+    dec_93{"sim > max_sim<br><i>Condición en línea 93:<br>sim > max_sim</i>"}
+    dec_97{"similar_node<br><i>Condición en línea 97:<br>similar_node</i>"}
+    dec_110{"parent is None or child is<br>None<br><i>Condición en línea 110:<br>parent is None or child is None</i>"}
+    dec_114{"child_node_id not in<br>children<br><i>Condición en línea 114:<br>child_node_id not in children</i>"}
+    dec_118{"parent.get('content')<br><i>Condición en línea 118:<br>parent.get('content')</i>"}
+    dec_120{"parent.get('summary')<br><i>Condición en línea 120:<br>parent.get('summary')</i>"}
+    dec_122{"child.get('content')<br><i>Condición en línea 122:<br>child.get('content')</i>"}
+    dec_124{"child.get('summary')<br><i>Condición en línea 124:<br>child.get('summary')</i>"}
+    dec_155{"child is None<br><i>Condición en línea 155:<br>child is None</i>"}
+    fn_insert[["Insert"]]
+    fn__propagate_consolidation[["Propagate Consolidation"]]
+    fn__merge_nodes[["Merge Nodes"]]
+    fn__create_parent_node[["Create Parent Node"]]
+    n_start --> fn_insert
+    fn_insert --> dec_8
+    dec_8 --> fn__propagate_consolidation
+    n_start --> fn__propagate_consolidation
+    fn__propagate_consolidation --> dec_51
+    dec_51 --> dec_60
+    dec_60 --> dec_66
+    dec_66 --> loop_84
+    loop_84 --> dec_85
+    dec_85 --> dec_93
+    dec_93 -- "loop" --> loop_84
+    loop_84 --> dec_97
+    dec_97 -- "YES" --> fn__merge_nodes
+    dec_97 -- "NO" --> fn__create_parent_node
+    n_start --> fn__merge_nodes
+    fn__merge_nodes --> dec_110
+    dec_110 --> dec_114
+    dec_114 --> dec_118
+    dec_118 --> dec_120
+    dec_120 --> dec_122
+    dec_122 --> dec_124
+    dec_124 --> fn__propagate_consolidation
+    n_start --> fn__create_parent_node
+    fn__create_parent_node --> dec_155
+    dec_155 --> fn__propagate_consolidation
+    class n_start node-start
+    class fn_insert,fn__propagate_consolidation,fn__merge_nodes,fn__create_parent_node node-subprocess
+    class dec_8,dec_51,dec_60,dec_66,dec_85,dec_93,dec_97,dec_110,dec_114,dec_118,dec_120,dec_122,dec_124,dec_155 node-decision
+    class loop_84 node-loop
+    class n_end node-end

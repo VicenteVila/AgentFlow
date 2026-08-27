@@ -1,0 +1,68 @@
+%% Validation
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_25{"not last<br><i>Condición en línea 25:<br>not last</i>"}
+    dec_61{"not last<br><i>Condición en línea 61:<br>not last</i>"}
+    dec_118{"tipo == 'video'<br><i>Condición en línea 118:<br>tipo == 'video'</i>"}
+    dec_135{"result.schema_errors<br><i>Condición en línea 135:<br>result.schema_errors</i>"}
+    dec_68{"not content or len(content)<br>< 200<br><i>Condición en línea 68:<br>not content or len(content) < 200</i>"}
+    dec_120{"tipo == 'source' and '.pdf'<br>in fuente.lower()<br><i>Condición en línea 120:<br>tipo == 'source' and '.pdf' in fuente.lower()</i>"}
+    loop_136["For each err"]
+    dec_80{"not citations<br><i>Condición en línea 80:<br>not citations</i>"}
+    dec_122{"tipo == 'source' and<br>(fuente.startswith('http') or not<br><i>Condición en línea 122:<br>tipo == 'source' and (fuente.startswith('http') or 'youtube'</i>"}
+    dec_138{"len(result.schema_errors) ><br>3<br><i>Condición en línea 138:<br>len(result.schema_errors) > 3</i>"}
+    dec_143{"result.quality_factors<br><i>Condición en línea 143:<br>result.quality_factors</i>"}
+    loop_145["For loop"]
+    dec_148{"result.quality_warnings<br><i>Condición en línea 148:<br>result.quality_warnings</i>"}
+    loop_149["For each w"]
+    dec_154{"result.citations_extracted ><br>0<br><i>Condición en línea 154:<br>result.citations_extracted > 0</i>"}
+    loop_98["For loop"]
+    dec_103{"vr.doi_encontrado<br><i>Condición en línea 103:<br>vr.doi_encontrado</i>"}
+    dec_106{"len(citations) > 15<br><i>Condición en línea 106:<br>len(citations) > 15</i>"}
+    fn_validar_cmd[["Validar Cmd"]]
+    fn_citas_cmd[["Citas Cmd"]]
+    fn__detect_content_type[["Detect Content Type"]]
+    fn__format_validation_result[["Format Validation Result"]]
+    fn__score_bar[["Score Bar"]]
+    n_start --> fn_validar_cmd
+    fn_validar_cmd --> dec_25
+    n_start --> fn_citas_cmd
+    fn_citas_cmd --> dec_61
+    dec_61 --> dec_68
+    dec_68 --> dec_80
+    dec_80 --> loop_98
+    loop_98 --> dec_103
+    dec_103 -- "loop" --> loop_98
+    loop_98 --> dec_106
+    n_start --> fn__detect_content_type
+    fn__detect_content_type --> dec_118
+    dec_118 --> dec_120
+    dec_120 --> dec_122
+    n_start --> fn__format_validation_result
+    fn__format_validation_result --> dec_135
+    dec_135 --> loop_136
+    loop_136 --> dec_138
+    dec_138 --> dec_143
+    dec_143 --> loop_145
+    loop_145 --> dec_148
+    dec_148 --> loop_149
+    loop_149 --> dec_154
+    n_start --> fn__score_bar
+    class n_start node-start
+    class fn_validar_cmd,fn_citas_cmd,fn__detect_content_type,fn__format_validation_result,fn__score_bar node-subprocess
+    class dec_25,dec_61,dec_68,dec_80,dec_103,dec_106,dec_118,dec_120,dec_122,dec_135,dec_138,dec_143,dec_148,dec_154 node-decision
+    class loop_98,loop_136,loop_145,loop_149 node-loop
+    class n_end node-end

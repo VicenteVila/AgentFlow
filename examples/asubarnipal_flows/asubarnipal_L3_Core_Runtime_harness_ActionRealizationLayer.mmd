@@ -1,0 +1,56 @@
+%% Runtime Harness · ActionRealizationLayer
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_3{"not tool_call or 'name' not<br>in tool_call<br><i>Condición en línea 3:<br>not tool_call or 'name' not in tool_call</i>"}
+    dec_50{"not action or<br>len(action.strip()) == 0<br><i>Condición en línea 50:<br>not action or len(action.strip()) == 0</i>"}
+    dec_10{"isinstance(args, str)<br><i>Condición en línea 10:<br>isinstance(args, str)</i>"}
+    dec_55{"len(cleaned) > 10000<br><i>Condición en línea 55:<br>len(cleaned) > 10000</i>"}
+    loop_18["For each t in available_tools"]
+    dec_19{"t.get('function',<br>()).get('name') == name<br><i>Condición en línea 19:<br>t.get('function', ()).get('name') == name</i>"}
+    dec_23{"not tool_def<br><i>Condición en línea 23:<br>not tool_def</i>"}
+    loop_31["For each req in required"]
+    dec_32{"req not in args<br><i>Condición en línea 32:<br>req not in args</i>"}
+    dec_34{"req in props and 'default'<br>in props(req)<br><i>Condición en línea 34:<br>req in props and 'default' in props(req)</i>"}
+    loop_38["For loop"]
+    dec_39{"key in props and 'type' in<br>props(key)<br><i>Condición en línea 39:<br>key in props and 'type' in props(key)</i>"}
+    dec_41{"expected_type == 'integer'<br>and isinstance(value, float)<br><i>Condición en línea 41:<br>expected_type == 'integer' and isinstance(value, float)</i>"}
+    fn_validate_tool_call[["Validate Tool Call"]]
+    fn_validate_action[["Validate Action"]]
+    fn_get_stats[["Get Stats"]]
+    n_start --> fn_validate_tool_call
+    fn_validate_tool_call --> dec_3
+    dec_3 --> dec_10
+    dec_10 --> loop_18
+    loop_18 --> dec_19
+    dec_19 -- "loop" --> loop_18
+    loop_18 --> dec_23
+    dec_23 --> loop_31
+    loop_31 --> dec_32
+    dec_32 --> dec_34
+    dec_34 -- "loop" --> loop_31
+    loop_31 --> loop_38
+    loop_38 --> dec_39
+    dec_39 --> dec_41
+    dec_41 -- "loop" --> loop_38
+    n_start --> fn_validate_action
+    fn_validate_action --> dec_50
+    dec_50 --> dec_55
+    n_start --> fn_get_stats
+    class n_start node-start
+    class fn_validate_tool_call,fn_validate_action,fn_get_stats node-subprocess
+    class dec_3,dec_10,dec_19,dec_23,dec_32,dec_34,dec_39,dec_41,dec_50,dec_55 node-decision
+    class loop_18,loop_31,loop_38 node-loop
+    class n_end node-end

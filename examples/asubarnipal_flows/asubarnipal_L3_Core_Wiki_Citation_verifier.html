@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Citation Verifier</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="asubarnipal_L2_Core_Wiki.html">← Volver</a>
+  <h1>Citation Verifier</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Citation Verifier
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_88{"cache_key in self.cache<br><i>Condición en línea 88:<br>cache_key in self.cache</i>"}
+    dec_97{"citation.doi<br><i>Condición en línea 97:<br>citation.doi</i>"}
+    dec_99{"doi_result.verificado<br><i>Condición en línea 99:<br>doi_result.verificado</i>"}
+    dec_173{"response.status_code == 200<br><i>Condición en línea 173:<br>response.status_code == 200</i>"}
+    dec_106{"self.use_crossref and (not<br>result.verificado)<br><i>Condición en línea 106:<br>self.use_crossref and (not result.verificado)</i>"}
+    dec_183{"authors<br><i>Condición en línea 183:<br>authors</i>"}
+    dec_192{"response.status_code == 404<br><i>Condición en línea 192:<br>response.status_code == 404</i>"}
+    dec_222{"citation.titulo<br><i>Condición en línea 222:<br>citation.titulo</i>"}
+    dec_108{"crossref_result.verificado<br><i>Condición en línea 108:<br>crossref_result.verificado</i>"}
+    dec_224{"citation.autores<br><i>Condición en línea 224:<br>citation.autores</i>"}
+    dec_303{"citation.titulo<br><i>Condición en línea 303:<br>citation.titulo</i>"}
+    dec_115{"self.use_local and (not<br>result.verificado)<br><i>Condición en línea 115:<br>self.use_local and (not result.verificado)</i>"}
+    dec_227{"not query_parts<br><i>Condición en línea 227:<br>not query_parts</i>"}
+    dec_117{"local_result.verificado<br><i>Condición en línea 117:<br>local_result.verificado</i>"}
+    dec_245{"response.status_code == 200<br><i>Condición en línea 245:<br>response.status_code == 200</i>"}
+    dec_306{"search_results<br><i>Condición en línea 306:<br>search_results</i>"}
+    dec_363{"citation.titulo and<br>item.get('title')<br><i>Condición en línea 363:<br>citation.titulo and item.get('title')</i>"}
+    dec_249{"items<br><i>Condición en línea 249:<br>items</i>"}
+    dec_370{"citation.año and<br>item.get('published-print')<br><i>Condición en línea 370:<br>citation.año and item.get('published-print')</i>"}
+    dec_402{"citation.titulo and<br>item.get('title')<br><i>Condición en línea 402:<br>citation.titulo and item.get('title')</i>"}
+    dec_253{"best_match<br><i>Condición en línea 253:<br>best_match</i>"}
+    dec_372{"item_year and citation.año<br>== item_year<br><i>Condición en línea 372:<br>item_year and citation.año == item_year</i>"}
+    dec_404{"item_title) > 0.8<br><i>Condición en línea 404:<br>self._string_similarity(citation.titulo, item_title) > 0.8</i>"}
+    dec_261{"authors<br><i>Condición en línea 261:<br>authors</i>"}
+    dec_377{"citation.autores and<br>item.get('author')<br><i>Condición en línea 377:<br>citation.autores and item.get('author')</i>"}
+    dec_408{"citation.año and<br>item.get('published-print')<br><i>Condición en línea 408:<br>citation.año and item.get('published-print')</i>"}
+    dec_462{"not s1 or not s2<br><i>Condición en línea 462:<br>not s1 or not s2</i>"}
+    dec_410{"item_year and citation.año<br>== item_year<br><i>Condición en línea 410:<br>item_year and citation.año == item_year</i>"}
+    dec_469{"not words1 or not words2<br><i>Condición en línea 469:<br>not words1 or not words2</i>"}
+    dec_488{"citation.doi<br><i>Condición en línea 488:<br>citation.doi</i>"}
+    dec_414{"citation.autores and<br>item.get('author')<br><i>Condición en línea 414:<br>citation.autores and item.get('author')</i>"}
+    dec_490{"citation.titulo<br><i>Condición en línea 490:<br>citation.titulo</i>"}
+    dec_419{"item_authors) > 0.7<br><i>Condición en línea 419:<br>self._string_similarity(citation.autores, item_authors) > 0.</i>"}
+    dec_492{"citation.autores<br><i>Condición en línea 492:<br>citation.autores</i>"}
+    dec_423{"citation.doi and<br>item.get('DOI')<br><i>Condición en línea 423:<br>citation.doi and item.get('DOI')</i>"}
+    dec_494{"citation.año<br><i>Condición en línea 494:<br>citation.año</i>"}
+    dec_424{"citation.doi == item('DOI')<br><i>Condición en línea 424:<br>citation.doi == item('DOI')</i>"}
+    loop_140["For each citation in citations"]
+    dec_145{"self.use_crossref<br><i>Condición en línea 145:<br>self.use_crossref</i>"}
+    loop_308["For each item in search_results"]
+    dec_309{"self._is_match(citation,<br>item)<br><i>Condición en línea 309:<br>self._is_match(citation, item)</i>"}
+    dec_317{"NOT verificado?<br><i>Niega verificado<br>para lógica invertida</i>"}
+    loop_339["For each item in items"]
+    dec_342{"score > best_score and score<br>>= 0.6<br><i>Condición en línea 342:<br>score > best_score and score >= 0.6</i>"}
+    fn_verify_citations[["Verify Citations"]]
+    fn_verificationresult___post_init__[["Post Init"]]
+    fn_citationverifier_verify[["Verify"]]
+    fn_citationverifier_verify_batch[["Verify Batch"]]
+    fn_citationverifier__verify_with_doi[["Verify With Doi"]]
+    fn_citationverifier__verify_with_crossref[["Verify With Crossref"]]
+    fn_citationverifier__verify_with_local_db[["Verify With Local Db"]]
+    fn_citationverifier__find_best_match[["Find Best Match"]]
+    tool_search_304["search_results = Search<br><i>Búsqueda híbrida (sqlite + obsidian /<br>semántica densa + BM25)</i>"]
+    fn_citationverifier__calculate_confidence_score[["Calculate Confidence Score"]]
+    fn_citationverifier__get_coincidencias[["Get Coincidencias"]]
+    fn_citationverifier__is_match[["Is Match"]]
+    fn_citationverifier__string_similarity[["String Similarity"]]
+    fn_citationverifier__get_cache_key[["Get Cache Key"]]
+    fn_citationverifier_clear_cache[["Clear Cache"]]
+    n_start --> fn_verify_citations
+    n_start --> fn_verificationresult___post_init__
+    n_start --> fn_citationverifier_verify
+    fn_citationverifier_verify --> dec_88
+    dec_88 --> dec_97
+    dec_97 --> dec_99
+    dec_99 --> dec_106
+    dec_106 --> dec_108
+    dec_108 --> dec_115
+    dec_115 --> dec_117
+    fn_citationverifier_verify --> fn_citationverifier_verify_batch
+    fn_citationverifier_verify_batch --> loop_140
+    loop_140 --> dec_145
+    dec_145 -- "loop" --> loop_140
+    fn_citationverifier_verify_batch --> fn_citationverifier__verify_with_doi
+    fn_citationverifier__verify_with_doi --> dec_173
+    dec_173 --> dec_183
+    dec_173 --> dec_192
+    fn_citationverifier__verify_with_doi --> fn_citationverifier__verify_with_crossref
+    fn_citationverifier__verify_with_crossref --> dec_222
+    dec_222 --> dec_224
+    dec_224 --> dec_227
+    dec_227 --> dec_245
+    dec_245 --> dec_249
+    dec_249 --> dec_253
+    dec_253 --> dec_261
+    fn_citationverifier__verify_with_crossref --> fn_citationverifier__verify_with_local_db
+    fn_citationverifier__verify_with_local_db --> dec_303
+    dec_303 --> tool_search_304
+    tool_search_304 --> dec_306
+    dec_306 --> loop_308
+    loop_308 --> dec_309
+    dec_309 -- "loop" --> loop_308
+    loop_308 --> dec_317
+    fn_citationverifier__verify_with_local_db --> fn_citationverifier__find_best_match
+    fn_citationverifier__find_best_match --> loop_339
+    loop_339 --> dec_342
+    dec_342 -- "loop" --> loop_339
+    fn_citationverifier__find_best_match --> fn_citationverifier__calculate_confidence_score
+    fn_citationverifier__calculate_confidence_score --> dec_363
+    dec_363 --> dec_370
+    dec_370 --> dec_372
+    dec_372 --> dec_377
+    fn_citationverifier__calculate_confidence_score --> fn_citationverifier__get_coincidencias
+    fn_citationverifier__get_coincidencias --> dec_402
+    dec_402 --> dec_404
+    dec_404 --> dec_408
+    dec_408 --> dec_410
+    dec_410 --> dec_414
+    dec_414 --> dec_419
+    dec_419 --> dec_423
+    dec_423 --> dec_424
+    fn_citationverifier__get_coincidencias --> fn_citationverifier__is_match
+    fn_citationverifier__is_match --> fn_citationverifier__string_similarity
+    fn_citationverifier__string_similarity --> dec_462
+    dec_462 --> dec_469
+    fn_citationverifier__string_similarity --> fn_citationverifier__get_cache_key
+    fn_citationverifier__get_cache_key --> dec_488
+    dec_488 --> dec_490
+    dec_490 --> dec_492
+    dec_492 --> dec_494
+    fn_citationverifier__get_cache_key --> fn_citationverifier_clear_cache
+    class n_start node-start
+    class fn_verify_citations,fn_verificationresult___post_init__,fn_citationverifier_verify,fn_citationverifier_verify_batch,fn_citationverifier__verify_with_doi,fn_citationverifier__verify_with_crossref,fn_citationverifier__verify_with_local_db,fn_citationverifier__find_best_match,fn_citationverifier__calculate_confidence_score,fn_citationverifier__get_coincidencias,fn_citationverifier__is_match,fn_citationverifier__string_similarity,fn_citationverifier__get_cache_key,fn_citationverifier_clear_cache node-subprocess
+    class dec_88,dec_97,dec_99,dec_106,dec_108,dec_115,dec_117,dec_145,dec_173,dec_183,dec_192,dec_222,dec_224,dec_227,dec_245,dec_249,dec_253,dec_261,dec_303,dec_306,dec_309,dec_317,dec_342,dec_363,dec_370,dec_372,dec_377,dec_402,dec_404,dec_408,dec_410,dec_414,dec_419,dec_423,dec_424,dec_462,dec_469,dec_488,dec_490,dec_492,dec_494 node-decision
+    class loop_140,loop_308,loop_339 node-loop
+    class tool_search_304 node-tool
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

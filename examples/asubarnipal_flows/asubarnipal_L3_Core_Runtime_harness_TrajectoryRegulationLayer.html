@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Runtime Harness · TrajectoryRegulationLayer</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="asubarnipal_L2_Core_Runtime_harness.html">← Volver</a>
+  <h1>Runtime Harness · TrajectoryRegulationLayer</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Runtime Harness · TrajectoryRegulationLayer
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_10{"state.stagnation_count >=<br>self.max_stagnation<br><i>Condición en línea 10:<br>state.stagnation_count >= self.max_stagnation</i>"}
+    dec_26{"state.invalid_retry_count >=<br>self.max_retries<br><i>Condición en línea 26:<br>state.invalid_retry_count >= self.max_retries</i>"}
+    dec_41{"state.action_count >=<br>self.max_actions<br><i>Condición en línea 41:<br>state.action_count >= self.max_actions</i>"}
+    dec_50{"elapsed >= self.max_duration<br><i>Condición en línea 50:<br>elapsed >= self.max_duration</i>"}
+    loop_63["For each check"]
+    dec_66{"intervention<br><i>Condición en línea 66:<br>intervention</i>"}
+    fn_check_loop[["Check Loop"]]
+    fn_check_retries[["Check Retries"]]
+    fn_check_budget[["Check Budget"]]
+    fn_check_all[["Check All"]]
+    fn_cleanup[["Cleanup"]]
+    fn_get_stats[["Get Stats"]]
+    fn_get_state[["Get State"]]
+    n_start --> fn_get_state
+    n_start --> fn_check_loop
+    fn_check_loop --> fn_get_state
+    fn_get_state --> dec_10
+    n_start --> fn_check_retries
+    fn_check_retries --> fn_get_state
+    fn_get_state --> dec_26
+    n_start --> fn_check_budget
+    fn_check_budget --> fn_get_state
+    fn_get_state --> dec_41
+    dec_41 --> dec_50
+    n_start --> fn_check_all
+    fn_check_all --> loop_63
+    loop_63 --> dec_66
+    dec_66 -- "loop" --> loop_63
+    n_start --> fn_cleanup
+    n_start --> fn_get_stats
+    class n_start node-start
+    class fn_get_state,fn_check_loop,fn_check_retries,fn_check_budget,fn_check_all,fn_cleanup,fn_get_stats node-subprocess
+    class dec_10,dec_26,dec_41,dec_50,dec_66 node-decision
+    class loop_63 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

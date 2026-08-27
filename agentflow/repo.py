@@ -18,9 +18,10 @@ from pathlib import Path
 from agentflow.models import Edge, FlowGraph, Node, NodeType
 from agentflow.parser import parse_file
 
-_EXCLUDE_DIRS = {".git", ".venv", "venv", "__pycache__", ".pytest_cache",
-                 "node_modules", ".mypy_cache", ".ruff_cache", "dist", "build",
-                 "htmlcov", ".tox", "eggs", "*.egg-info"}
+_EXCLUDE_DIRS = {".git", ".venv", "venv", "venv_linux", "venv_windows",
+                 "__pycache__", ".pytest_cache", "node_modules", ".mypy_cache",
+                 ".ruff_cache", "dist", "build", "htmlcov", ".tox", "eggs",
+                 "*.egg-info", "data", "obsidian_vault", "ingesta", "ingestion"}
 
 
 def collect_python_files(root: Path, exclude: set[str] | None = None,

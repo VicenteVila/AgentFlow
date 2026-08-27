@@ -1,0 +1,76 @@
+%% Llm Router · LLMRouter
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_37{"len(standard_messages) > 40<br><i>Condición en línea 37:<br>len(standard_messages) > 40</i>"}
+    dec_50{"len(compressed) <<br>len(standard_messages)<br><i>Condición en línea 50:<br>len(compressed) < len(standard_messages)</i>"}
+    dec_59{"self.ollama_client<br><i>Condición en línea 59:<br>self.ollama_client</i>"}
+    loop_158["For each pf_result in pf_results"]
+    dec_159{"pf_result.get('action') in<br>('retry', 'validate')<br><i>Condición en línea 159:<br>pf_result.get('action') in ('retry', 'validate')</i>"}
+    loop_168["For each tc in tool_calls"]
+    loop_182["For each attempt"]
+    dec_183{"self.use_ollama<br><i>Condición en línea 183:<br>self.use_ollama</i>"}
+    dec_196{"self.gemini_keys<br><i>Condición en línea 196:<br>self.gemini_keys</i>"}
+    loop_241["For each attempt"]
+    dec_270{"attempt < max_retries - 1<br><i>Condición en línea 270:<br>attempt < max_retries - 1</i>"}
+    fn__check_ollama[["Check Ollama"]]
+    fn__init_ollama[["Init Ollama"]]
+    fn__http_chat[["Http Chat"]]
+    fn_call_agent[["Call Agent"]]
+    fn_call_with_harness[["Call With Harness"]]
+    fn_generate[["Generate"]]
+    fn__gemini_chat[["Gemini Chat"]]
+    fn_call_with_turbo[["Call With Turbo"]]
+    fn_get_turbo_status[["Get Turbo Status"]]
+    fn_apply_turbo_mode[["Apply Turbo Mode"]]
+    fn_rotate_gemini[["Rotate Gemini"]]
+    fn_chat[["Chat"]]
+    fn__prepare_messages[["standard_messages = Prepare Messages"]]
+    n_start --> fn__check_ollama
+    n_start --> fn_rotate_gemini
+    n_start --> fn__init_ollama
+    n_start --> fn_chat
+    fn_chat --> fn__prepare_messages
+    fn__prepare_messages --> dec_37
+    dec_37 --> dec_50
+    dec_50 --> dec_59
+    n_start --> fn__http_chat
+    n_start --> fn__prepare_messages
+    n_start --> fn_call_agent
+    n_start --> fn_call_with_harness
+    fn_call_with_harness --> loop_158
+    loop_158 --> dec_159
+    dec_159 -- "loop" --> loop_158
+    loop_158 --> fn_chat
+    fn_chat --> loop_168
+    n_start --> fn_generate
+    fn_generate --> loop_182
+    loop_182 --> dec_183
+    dec_183 --> dec_196
+    dec_196 --> fn_rotate_gemini
+    fn_rotate_gemini -- "loop" --> loop_182
+    n_start --> fn__gemini_chat
+    n_start --> fn_call_with_turbo
+    fn_call_with_turbo --> loop_241
+    loop_241 --> fn_chat
+    fn_chat --> dec_270
+    dec_270 -- "loop" --> loop_241
+    n_start --> fn_get_turbo_status
+    n_start --> fn_apply_turbo_mode
+    class n_start node-start
+    class fn__check_ollama,fn_rotate_gemini,fn__init_ollama,fn_chat,fn__prepare_messages,fn__http_chat,fn_call_agent,fn_call_with_harness,fn_generate,fn__gemini_chat,fn_call_with_turbo,fn_get_turbo_status,fn_apply_turbo_mode node-subprocess
+    class dec_37,dec_50,dec_59,dec_159,dec_183,dec_196,dec_270 node-decision
+    class loop_158,loop_168,loop_182,loop_241 node-loop
+    class n_end node-end

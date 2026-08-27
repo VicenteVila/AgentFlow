@@ -156,6 +156,8 @@ def to_mermaid(
     elif layout == "swimlane":
         from agentflow.layouts import swimlane_layout
         result = swimlane_layout(graph)
+    elif layout == "vertical":
+        result = hierarchical_layout(graph)
     else:
         result = hierarchical_layout(graph)
 
@@ -170,7 +172,9 @@ def to_mermaid(
         init["themeVariables"] = {"lineColor": pal["arrow"]}
     if init:
         lines.append("%%{init: " + json.dumps(init) + "}%%")
-    if no_phases or layout == "phased-horizontal":
+    if layout == "vertical":
+        lines.append("flowchart TD")
+    elif no_phases or layout == "phased-horizontal":
         lines.append("flowchart LR")
     else:
         lines.append("flowchart TD")

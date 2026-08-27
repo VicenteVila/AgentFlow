@@ -1,0 +1,103 @@
+%% Turboquant Engine
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_86{"NOT _ollama_available?<br><i>Niega _ollama_available<br>para lógica invertida</i>"}
+    dec_90{"configured<br><i>Condición en línea 90:<br>configured</i>"}
+    dec_101{"not mode_cfg<br><i>Condición en línea 101:<br>not mode_cfg</i>"}
+    dec_119{"model_cfg<br><i>Condición en línea 119:<br>model_cfg</i>"}
+    dec_171{"mode<br><i>Condición en línea 171:<br>mode</i>"}
+    dec_174{"NOT is_applied?<br><i>Niega is_applied<br>para lógica invertida</i>"}
+    dec_202{"NOT _ollama_available?<br><i>Niega _ollama_available<br>para lógica invertida</i>"}
+    dec_208{"not model<br><i>Condición en línea 208:<br>not model</i>"}
+    dec_262{"not model_name<br><i>Condición en línea 262:<br>not model_name</i>"}
+    loop_269["For each path in search_paths"]
+    dec_270{"os.path.exists(path)<br><i>Condición en línea 270:<br>os.path.exists(path)</i>"}
+    dec_277{"quantizer is None<br><i>Condición en línea 277:<br>quantizer is None</i>"}
+    dec_281{"adapter is None<br><i>Condición en línea 281:<br>adapter is None</i>"}
+    dec_287{"model is None<br><i>Condición en línea 287:<br>model is None</i>"}
+    dec_329{"cache is None<br><i>Condición en línea 329:<br>cache is None</i>"}
+    dec_354{"compressor is None<br><i>Condición en línea 354:<br>compressor is None</i>"}
+    dec_357{"max_tokens<br><i>Condición en línea 357:<br>max_tokens</i>"}
+    dec_381{"self._kv_cache is not None<br><i>Condición en línea 381:<br>self._kv_cache is not None</i>"}
+    fn_get_engine[["Get Engine"]]
+    fn_apply_chat_mode[["Apply Chat Mode"]]
+    fn_get_turbo_params[["Get Turbo Params"]]
+    fn_get_turbo_status[["Get Turbo Status"]]
+    fn_turboquantengine___new__[["New"]]
+    fn_turboquantengine__check_ollama[["Check Ollama"]]
+    fn_turboquantengine__detect_gguf_models[["Detect Gguf Models"]]
+    fn_turboquantengine_get_active_model[["Get Active Model"]]
+    fn_turboquantengine_apply_mode[["Apply Mode"]]
+    fn_turboquantengine_apply_by_priority[["Apply By Priority"]]
+    fn_turboquantengine_get_current_settings[["Get Current Settings"]]
+    fn_turboquantengine_get_optimized_params[["Get Optimized Params"]]
+    fn_turboquantengine_benchmark[["Benchmark"]]
+    fn_turboquantengine_get_quantizer[["Get Quantizer"]]
+    fn_turboquantengine_get_adapter[["Get Adapter"]]
+    fn_turboquantengine__find_gguf_model[["Find Gguf Model"]]
+    fn_turboquantengine_quantize_active_model[["Quantize Active Model"]]
+    fn_turboquantengine_get_kv_cache[["Get Kv Cache"]]
+    fn_turboquantengine_get_kv_cache_stats[["Get Kv Cache Stats"]]
+    fn_turboquantengine_get_compressor[["Get Compressor"]]
+    fn_turboquantengine_compress_conversation[["Compress Conversation"]]
+    fn_turboquantengine_reset[["Reset"]]
+    n_start --> fn_get_engine
+    n_start --> fn_apply_chat_mode
+    n_start --> fn_get_turbo_params
+    n_start --> fn_get_turbo_status
+    n_start --> fn_turboquantengine___new__
+    fn_turboquantengine___new__ --> fn_turboquantengine__check_ollama
+    fn_turboquantengine__check_ollama --> fn_turboquantengine__detect_gguf_models
+    fn_turboquantengine__detect_gguf_models --> fn_turboquantengine_get_active_model
+    fn_turboquantengine_get_active_model --> dec_86
+    dec_86 --> dec_90
+    fn_turboquantengine_get_active_model --> fn_turboquantengine_apply_mode
+    fn_turboquantengine_apply_mode --> dec_101
+    dec_101 --> dec_119
+    fn_turboquantengine_apply_mode --> fn_turboquantengine_apply_by_priority
+    fn_turboquantengine_apply_by_priority --> fn_turboquantengine_get_current_settings
+    fn_turboquantengine_get_current_settings --> fn_turboquantengine_get_optimized_params
+    fn_turboquantengine_get_optimized_params --> dec_171
+    dec_171 --> dec_174
+    fn_turboquantengine_get_optimized_params --> fn_turboquantengine_benchmark
+    fn_turboquantengine_benchmark --> dec_202
+    dec_202 --> dec_208
+    fn_turboquantengine_benchmark --> fn_turboquantengine_get_quantizer
+    fn_turboquantengine_get_quantizer --> fn_turboquantengine_get_adapter
+    fn_turboquantengine_get_adapter --> fn_turboquantengine__find_gguf_model
+    fn_turboquantengine__find_gguf_model --> dec_262
+    dec_262 --> loop_269
+    loop_269 --> dec_270
+    dec_270 -- "loop" --> loop_269
+    fn_turboquantengine__find_gguf_model --> fn_turboquantengine_quantize_active_model
+    fn_turboquantengine_quantize_active_model --> dec_277
+    dec_277 --> dec_281
+    dec_281 --> dec_287
+    fn_turboquantengine_quantize_active_model --> fn_turboquantengine_get_kv_cache
+    fn_turboquantengine_get_kv_cache --> fn_turboquantengine_get_kv_cache_stats
+    fn_turboquantengine_get_kv_cache_stats --> dec_329
+    fn_turboquantengine_get_kv_cache_stats --> fn_turboquantengine_get_compressor
+    fn_turboquantengine_get_compressor --> fn_turboquantengine_compress_conversation
+    fn_turboquantengine_compress_conversation --> dec_354
+    dec_354 --> dec_357
+    fn_turboquantengine_compress_conversation --> fn_turboquantengine_get_current_settings
+    fn_turboquantengine_get_current_settings --> dec_381
+    fn_turboquantengine_get_current_settings --> fn_turboquantengine_reset
+    class n_start node-start
+    class fn_get_engine,fn_apply_chat_mode,fn_get_turbo_params,fn_get_turbo_status,fn_turboquantengine___new__,fn_turboquantengine__check_ollama,fn_turboquantengine__detect_gguf_models,fn_turboquantengine_get_active_model,fn_turboquantengine_apply_mode,fn_turboquantengine_apply_by_priority,fn_turboquantengine_get_current_settings,fn_turboquantengine_get_optimized_params,fn_turboquantengine_benchmark,fn_turboquantengine_get_quantizer,fn_turboquantengine_get_adapter,fn_turboquantengine__find_gguf_model,fn_turboquantengine_quantize_active_model,fn_turboquantengine_get_kv_cache,fn_turboquantengine_get_kv_cache_stats,fn_turboquantengine_get_compressor,fn_turboquantengine_compress_conversation,fn_turboquantengine_reset node-subprocess
+    class dec_86,dec_90,dec_101,dec_119,dec_171,dec_174,dec_202,dec_208,dec_262,dec_270,dec_277,dec_281,dec_287,dec_329,dec_354,dec_357,dec_381 node-decision
+    class loop_269 node-loop
+    class n_end node-end

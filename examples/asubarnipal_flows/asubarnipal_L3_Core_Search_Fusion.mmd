@@ -1,0 +1,51 @@
+%% Fusion
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    loop_31["For each r in faiss_results"]
+    dec_33{"id_ not in results_dict<br><i>Condición en línea 33:<br>id_ not in results_dict</i>"}
+    loop_43["For each r in graph_results"]
+    dec_45{"id_ not in results_dict<br><i>Condición en línea 45:<br>id_ not in results_dict</i>"}
+    loop_55["For each r"]
+    loop_76["For each results in result_lists"]
+    loop_77["For loop"]
+    dec_81{"id_ not in scores_dict<br><i>Condición en línea 81:<br>id_ not in scores_dict</i>"}
+    loop_90["For loop"]
+    fn_fuse_weighted[["Fuse Weighted"]]
+    fn_fuse_rrf[["Fuse Rrf"]]
+    fn_weightedfusion_fuse[["Fuse"]]
+    fn_reciprocalrankfusion_fuse[["Fuse"]]
+    n_start --> fn_fuse_weighted
+    n_start --> fn_fuse_rrf
+    n_start --> fn_weightedfusion_fuse
+    fn_weightedfusion_fuse --> loop_31
+    loop_31 --> dec_33
+    dec_33 -- "loop" --> loop_31
+    loop_31 --> loop_43
+    loop_43 --> dec_45
+    dec_45 -- "loop" --> loop_43
+    loop_43 --> loop_55
+    n_start --> fn_reciprocalrankfusion_fuse
+    fn_reciprocalrankfusion_fuse --> loop_76
+    loop_76 --> loop_77
+    loop_77 --> dec_81
+    dec_81 -- "loop" --> loop_77
+    loop_77 -- "loop" --> loop_76
+    loop_76 --> loop_90
+    class n_start node-start
+    class fn_fuse_weighted,fn_fuse_rrf,fn_weightedfusion_fuse,fn_reciprocalrankfusion_fuse node-subprocess
+    class loop_31,loop_43,loop_55,loop_76,loop_77,loop_90 node-loop
+    class dec_33,dec_45,dec_81 node-decision
+    class n_end node-end

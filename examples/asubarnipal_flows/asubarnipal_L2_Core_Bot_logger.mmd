@@ -1,0 +1,98 @@
+%% Bot Logger
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_94{"self._show_indent and depth<br>> 0<br><i>Condición en línea 94:<br>self._show_indent and depth > 0</i>"}
+    dec_96{"depth > 1<br><i>Condición en línea 96:<br>depth > 1</i>"}
+    dec_104{"self._show_timestamps<br><i>Condición en línea 104:<br>self._show_timestamps</i>"}
+    dec_127{"tracker<br><i>Condición en línea 127:<br>tracker</i>"}
+    dec_194{"result<br><i>Condición en línea 194:<br>result</i>"}
+    dec_208{"result<br><i>Condición en línea 208:<br>result</i>"}
+    dec_232{"exc<br><i>Condición en línea 232:<br>exc</i>"}
+    fn_botlogger___new__[["New"]]
+    fn_botlogger__get_tracker[["Get Tracker"]]
+    fn_botlogger__format[["Format"]]
+    fn_botlogger__log[["Log"]]
+    fn_botlogger__strip_ansi[["Strip Ansi"]]
+    fn_botlogger_incoming[["Incoming"]]
+    fn_botlogger_outgoing[["Outgoing"]]
+    fn_botlogger_llm[["Llm"]]
+    fn_botlogger_llm_start[["Llm Start"]]
+    fn_botlogger_llm_end[["Llm End"]]
+    fn_botlogger_rag[["Rag"]]
+    fn_botlogger_rag_search[["Rag Search"]]
+    fn_botlogger_tool[["Tool"]]
+    fn_botlogger_tool_start[["Tool Start"]]
+    fn_botlogger_tool_end[["Tool End"]]
+    fn_botlogger_thought[["Thought"]]
+    fn_botlogger_agent[["Agent"]]
+    fn_botlogger_agent_step[["Agent Step"]]
+    fn_botlogger_agent_end[["Agent End"]]
+    fn_botlogger_error[["Error"]]
+    fn_botlogger_warn[["Warn"]]
+    fn_botlogger_warning[["Warning"]]
+    fn_botlogger_debug[["Debug"]]
+    fn_botlogger_info[["Info"]]
+    fn_botlogger_success[["Success"]]
+    fn_botlogger_group[["Group"]]
+    fn_botlogger_step[["Step"]]
+    fn_botlogger_progress[["Progress"]]
+    fn_botlogger_set_color[["Set Color"]]
+    fn_botlogger_set_timestamps[["Set Timestamps"]]
+    fn_botlogger_set_indent[["Set Indent"]]
+    fn_botlogger_reset_depth[["Reset Depth"]]
+    n_start --> fn_botlogger___new__
+    fn_botlogger___new__ --> fn_botlogger__get_tracker
+    fn_botlogger__get_tracker --> fn_botlogger__format
+    fn_botlogger__format --> dec_94
+    dec_94 -- "YES" --> dec_96
+    dec_94 --> dec_104
+    fn_botlogger__format --> fn_botlogger__log
+    fn_botlogger__log --> dec_127
+    fn_botlogger__log --> fn_botlogger__strip_ansi
+    fn_botlogger__strip_ansi --> fn_botlogger_incoming
+    fn_botlogger_incoming --> fn_botlogger_outgoing
+    fn_botlogger_outgoing --> fn_botlogger_llm
+    fn_botlogger_llm --> fn_botlogger_llm_start
+    fn_botlogger_llm_start --> fn_botlogger_llm_end
+    fn_botlogger_llm_end --> fn_botlogger_rag
+    fn_botlogger_rag --> fn_botlogger_rag_search
+    fn_botlogger_rag_search --> fn_botlogger_tool
+    fn_botlogger_tool --> dec_194
+    fn_botlogger_tool --> fn_botlogger_tool_start
+    fn_botlogger_tool_start --> fn_botlogger_tool_end
+    fn_botlogger_tool_end --> dec_208
+    fn_botlogger_tool_end --> fn_botlogger_thought
+    fn_botlogger_thought --> fn_botlogger_agent
+    fn_botlogger_agent --> fn_botlogger_agent_step
+    fn_botlogger_agent_step --> fn_botlogger_agent_end
+    fn_botlogger_agent_end --> fn_botlogger_error
+    fn_botlogger_error --> dec_232
+    fn_botlogger_error --> fn_botlogger_warn
+    fn_botlogger_warn --> fn_botlogger_warning
+    fn_botlogger_warning --> fn_botlogger_debug
+    fn_botlogger_debug --> fn_botlogger_info
+    fn_botlogger_info --> fn_botlogger_success
+    fn_botlogger_success --> fn_botlogger_group
+    fn_botlogger_group --> fn_botlogger_step
+    fn_botlogger_step --> fn_botlogger_progress
+    fn_botlogger_progress --> fn_botlogger_set_color
+    fn_botlogger_set_color --> fn_botlogger_set_timestamps
+    fn_botlogger_set_timestamps --> fn_botlogger_set_indent
+    fn_botlogger_set_indent --> fn_botlogger_reset_depth
+    class n_start node-start
+    class fn_botlogger___new__,fn_botlogger__get_tracker,fn_botlogger__format,fn_botlogger__log,fn_botlogger__strip_ansi,fn_botlogger_incoming,fn_botlogger_outgoing,fn_botlogger_llm,fn_botlogger_llm_start,fn_botlogger_llm_end,fn_botlogger_rag,fn_botlogger_rag_search,fn_botlogger_tool,fn_botlogger_tool_start,fn_botlogger_tool_end,fn_botlogger_thought,fn_botlogger_agent,fn_botlogger_agent_step,fn_botlogger_agent_end,fn_botlogger_error,fn_botlogger_warn,fn_botlogger_warning,fn_botlogger_debug,fn_botlogger_info,fn_botlogger_success,fn_botlogger_group,fn_botlogger_step,fn_botlogger_progress,fn_botlogger_set_color,fn_botlogger_set_timestamps,fn_botlogger_set_indent,fn_botlogger_reset_depth node-subprocess
+    class dec_94,dec_96,dec_104,dec_127,dec_194,dec_208,dec_232 node-decision
+    class n_end node-end

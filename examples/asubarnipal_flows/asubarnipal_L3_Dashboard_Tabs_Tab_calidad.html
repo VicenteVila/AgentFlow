@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tab Calidad</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="asubarnipal_L2_Dashboard_Tabs.html">← Volver</a>
+  <h1>Tab Calidad</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Tab Calidad
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_23{"quality('total') == 0<br><i>Condición en línea 23:<br>quality('total') == 0</i>"}
+    dec_58{"not by_type<br><i>Condición en línea 58:<br>not by_type</i>"}
+    dec_94{"not recent<br><i>Condición en línea 94:<br>not recent</i>"}
+    dec_124{"not alerts<br><i>Condición en línea 124:<br>not alerts</i>"}
+    dec_144{"not history or len(history)<br>< 2<br><i>Condición en línea 144:<br>not history or len(history) < 2</i>"}
+    loop_64["For loop"]
+    loop_99["For each e"]
+    loop_128["For each a in alerts"]
+    dec_152{"len(df) < 2<br><i>Condición en línea 152:<br>len(df) < 2</i>"}
+    fn_render_tab_calidad[["Render Tab Calidad"]]
+    fn__render_summary_metrics[["Render Summary Metrics"]]
+    fn__render_quality_by_type[["Render Quality By Type"]]
+    fn__render_recent_ingests[["Render Recent Ingests"]]
+    fn__render_quality_alerts[["Render Quality Alerts"]]
+    fn__render_quality_timeline[["Render Quality Timeline"]]
+    n_start --> fn_render_tab_calidad
+    fn_render_tab_calidad --> dec_23
+    n_start --> fn__render_summary_metrics
+    n_start --> fn__render_quality_by_type
+    fn__render_quality_by_type --> dec_58
+    dec_58 --> loop_64
+    n_start --> fn__render_recent_ingests
+    fn__render_recent_ingests --> dec_94
+    dec_94 --> loop_99
+    n_start --> fn__render_quality_alerts
+    fn__render_quality_alerts --> dec_124
+    dec_124 --> loop_128
+    n_start --> fn__render_quality_timeline
+    fn__render_quality_timeline --> dec_144
+    dec_144 --> dec_152
+    class n_start node-start
+    class fn_render_tab_calidad,fn__render_summary_metrics,fn__render_quality_by_type,fn__render_recent_ingests,fn__render_quality_alerts,fn__render_quality_timeline node-subprocess
+    class dec_23,dec_58,dec_94,dec_124,dec_144,dec_152 node-decision
+    class loop_64,loop_99,loop_128 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

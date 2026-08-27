@@ -26,7 +26,7 @@ def _handle_diff(argv: list[str]) -> None:
     parser.add_argument("old", help="Old version of the file")
     parser.add_argument("new", help="New version of the file")
     parser.add_argument("-o", "--output", default=None, help="Output file path")
-    parser.add_argument("-l", "--layout", choices=["hierarchical", "grid", "phased", "phased-horizontal", "radial", "swimlane"], default="hierarchical")
+    parser.add_argument("-l", "--layout", choices=["hierarchical", "grid", "phased", "phased-horizontal", "radial", "swimlane", "vertical"], default="hierarchical")
     parser.add_argument("-f", "--format", choices=["excalidraw", "svg", "mermaid", "mermaid-html", "html"], default="excalidraw")
     parser.add_argument("--profile", default="generic")
     parser.add_argument("-t", "--title", default=None)
@@ -198,7 +198,7 @@ def main(argv: list[str] | None = None) -> None:
     )
     parser.add_argument(
         "-l", "--layout",
-        choices=["hierarchical", "grid", "phased", "phased-horizontal", "radial", "swimlane"],
+        choices=["hierarchical", "grid", "phased", "phased-horizontal", "radial", "swimlane", "vertical"],
         default="hierarchical",
         help="Layout algorithm (default: hierarchical)",
     )
@@ -211,8 +211,8 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument(
         "--profile",
         default="generic",
-        help="Domain profile: 'generic', 'reaweb', 'reagame', 'traceforge', or path to a .py file "
-             "defining a PROFILE dict (default: generic)",
+        help="Domain profile: 'generic', 'reaweb', 'reagame', 'traceforge', 'asubarnipal', or path "
+             "to a .py file defining a PROFILE dict (default: generic)",
     )
     parser.add_argument(
         "-t", "--title",
@@ -284,6 +284,10 @@ def main(argv: list[str] | None = None) -> None:
         print(f"Error: file not found: {input_path}", file=sys.stderr)
         sys.exit(1)
 
+    if args.drilldown:
+        _handle_drilldown(args, input_path)
+        return
+
     # Parse the source (file vs directory → repo overview)
     if input_path.is_dir():
         from agentflow.repo import build_repo_overview
@@ -312,10 +316,6 @@ def main(argv: list[str] | None = None) -> None:
 
     if args.summary:
         print(graph.summary())
-        return
-
-    if args.drilldown:
-        _handle_drilldown(args, input_path)
         return
 
     # Generate output (detail level applied inside renderers)

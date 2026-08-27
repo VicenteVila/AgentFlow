@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>asubarnipal · interface · handlers</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="asubarnipal_L1_Interface.html">← Volver</a>
+  <h1>asubarnipal · interface · handlers</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% asubarnipal · interface · handlers
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start"])
+    mod_agente["Agente<br><i>32 nodos, 30 enlaces</i>"]
+    mod_backup["Backup<br><i>14 nodos, 12 enlaces</i>"]
+    mod_busqueda["Busqueda<br><i>58 nodos, 58 enlaces</i>"]
+    mod_comandos["Comandos<br><i>14 nodos, 12 enlaces</i>"]
+    mod_error_handler["Error Handler<br><i>4 nodos, 2 enlaces</i>"]
+    mod_graphify_handler["Graphify Handler<br><i>34 nodos, 32 enlaces</i>"]
+    mod_harness_commands["Harness Commands<br><i>12 nodos, 11 enlaces</i>"]
+    mod_hmem_commands["Hmem Commands<br><i>19 nodos, 17 enlaces</i>"]
+    mod_scheduled_research["Scheduled Research<br><i>17 nodos, 16 enlaces</i>"]
+    mod_validation["Validation<br><i>25 nodos, 24 enlaces</i>"]
+    mod_validators["Validators<br><i>20 nodos, 18 enlaces</i>"]
+    mod_vault["Vault<br><i>42 nodos, 41 enlaces</i>"]
+    mod_vision["Vision<br><i>8 nodos, 6 enlaces</i>"]
+    mod_wiki["Wiki<br><i>46 nodos, 45 enlaces</i>"]
+    n_end(["End"])
+    mod_chat["Chat<br><i>16 nodos, 14 enlaces</i>"]
+    mod_keyboards[["Keyboards<br><i>8 nodos, 6 enlaces</i>"]]
+    n_start --> mod_agente
+    mod_agente --> mod_backup
+    mod_backup --> mod_busqueda
+    mod_busqueda --> mod_chat
+    mod_chat --> mod_comandos
+    mod_comandos --> mod_error_handler
+    mod_error_handler --> mod_graphify_handler
+    mod_graphify_handler --> mod_harness_commands
+    mod_harness_commands --> mod_hmem_commands
+    mod_hmem_commands --> mod_keyboards
+    mod_keyboards --> mod_scheduled_research
+    mod_scheduled_research --> mod_validation
+    mod_validation --> mod_validators
+    mod_validators --> mod_vault
+    mod_vault --> mod_vision
+    mod_vision --> mod_wiki
+    mod_wiki --> n_end
+    class n_start node-start
+    class mod_agente,mod_backup,mod_busqueda,mod_graphify_handler,mod_harness_commands,mod_hmem_commands,mod_scheduled_research,mod_validation,mod_vault,mod_wiki node-loop
+    class mod_chat node-tool
+    class mod_comandos,mod_error_handler,mod_validators,mod_vision node-process
+    class mod_keyboards node-subprocess
+    class n_end node-end
+    click mod_agente href "asubarnipal_L3_Interface_Handlers_Agente.html" "Abrir detalle"
+    click mod_backup href "asubarnipal_L3_Interface_Handlers_Backup.html" "Abrir detalle"
+    click mod_busqueda href "asubarnipal_L3_Interface_Handlers_Busqueda.html" "Abrir detalle"
+    click mod_chat href "asubarnipal_L3_Interface_Handlers_Chat.html" "Abrir detalle"
+    click mod_comandos href "asubarnipal_L3_Interface_Handlers_Comandos.html" "Abrir detalle"
+    click mod_error_handler href "asubarnipal_L3_Interface_Handlers_Error_handler.html" "Abrir detalle"
+    click mod_graphify_handler href "asubarnipal_L3_Interface_Handlers_Graphify_handler.html" "Abrir detalle"
+    click mod_harness_commands href "asubarnipal_L3_Interface_Handlers_Harness_commands.html" "Abrir detalle"
+    click mod_hmem_commands href "asubarnipal_L3_Interface_Handlers_Hmem_commands.html" "Abrir detalle"
+    click mod_keyboards href "asubarnipal_L3_Interface_Handlers_Keyboards.html" "Abrir detalle"
+    click mod_scheduled_research href "asubarnipal_L3_Interface_Handlers_Scheduled_research.html" "Abrir detalle"
+    click mod_validation href "asubarnipal_L3_Interface_Handlers_Validation.html" "Abrir detalle"
+    click mod_validators href "asubarnipal_L3_Interface_Handlers_Validators.html" "Abrir detalle"
+    click mod_vault href "asubarnipal_L3_Interface_Handlers_Vault.html" "Abrir detalle"
+    click mod_vision href "asubarnipal_L3_Interface_Handlers_Vision.html" "Abrir detalle"
+    click mod_wiki href "asubarnipal_L3_Interface_Handlers_Wiki.html" "Abrir detalle"
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

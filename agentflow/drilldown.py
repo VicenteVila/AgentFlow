@@ -15,7 +15,9 @@ directives; every page carries a ``← Volver`` back-link to its parent; and an
 
 from __future__ import annotations
 
+import os
 import shutil
+from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -30,10 +32,12 @@ from agentflow.repo import _classify_file_graph
 _EXCLUDED_DIRS = {
     "test", "tests", "datasets", "fixtures", "templates", "workspace",
     "runs", "docs", "website", "assets", "migrations",
+    "data", "obsidian_vault", "ingesta", "ingestion",
 }
 
 _SKIP_DIRS = _EXCLUDED_DIRS | {
-    "venv", ".venv", "__pycache__", ".git", ".pytest_cache", ".ruff_cache",
+    "venv", ".venv", "venv_linux", "venv_windows", "__pycache__", ".git",
+    ".pytest_cache", ".ruff_cache",
     ".mypy_cache", "node_modules", "egg-info", "*.egg-info", "dist",
     "build", "htmlcov", ".tox",
 }
@@ -113,14 +117,43 @@ def _collect_dirs(ctx: _Ctx, root: Path) -> list[Path]:
     return sorted(raw.values(), key=lambda p: p.name.lower())
 
 
+def _iter_py_recurse(root: Path) -> Iterator[Path]:
+    """Yield every ``.py`` file under *root*, pruning ``_SKIP_DIRS`` subtrees.
+
+    Unlike ``Path.rglob`` this skips excluded directories *during* traversal,
+    so huge non-code trees (obsidian vaults, data dirs) are never scanned.
+    Symlinked directories are followed; repeat visits are guarded by realpath.
+    """
+    visited: set[str] = set()
+    stack = [root]
+    while stack:
+        dir_path = stack.pop()
+        real = os.path.realpath(dir_path)
+        if real in visited:
+            continue
+        visited.add(real)
+        try:
+            with os.scandir(dir_path) as it:
+                for entry in it:
+                    try:
+                        if entry.is_dir():
+                            if entry.name in _SKIP_DIRS:
+                                continue
+                            stack.append(Path(entry.path))
+                        elif entry.name.endswith(".py"):
+                            yield Path(entry.path)
+                    except OSError:
+                        continue
+        except OSError:
+            continue
+
+
 def _flow_files_in(ctx: _Ctx, dir_path: Path, recursive: bool) -> list[Path]:
     """Python files under *dir_path* that parse to a real flow."""
     seen: set[Path] = set()
     result: list[Path] = []
     if recursive:
-        candidates = [p for p in dir_path.rglob("*.py")
-                      if not any(part in _SKIP_DIRS
-                                 for part in p.relative_to(dir_path).parts)]
+        candidates = list(_iter_py_recurse(dir_path))
     else:
         candidates = [p for p in dir_path.iterdir() if p.is_file() and p.suffix == ".py"]
     for p in sorted(candidates, key=lambda pp: pp.name.lower()):

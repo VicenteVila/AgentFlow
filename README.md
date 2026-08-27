@@ -57,11 +57,11 @@ agentflow -i my_agent.py -f svg --theme dark --seed 42 -o flow.svg
 - **Domain-agnostic parser** — extracts `run()` flow, loops, decisions and calls from any
   Python class or function tree.
 - **Profiles** — pluggable domain knowledge (known tools, exhaustive labels, phase patterns).
-  Built-ins: `generic` (zero assumptions), `reaweb`, `reagame` y `traceforge`. Load your own from a `.py` file.
+  Built-ins: `generic` (zero assumptions), `reaweb`, `reagame`, `traceforge` y `asubarnipal`. Load your own from a `.py` file.
 - **Six layouts** — `hierarchical` (horizontal), `phased` (vertical FASE 1/2/3), `phased-horizontal` (fases en columnas), `radial` (anillos alrededor del agente central), `swimlane` (vertical lanes per actor), `grid`.
 - **Smart visuals** — content-driven sizing, orthogonal routing, swimlanes, lateral feedback, light/dark themes, **semantic edge colors** (YES green / NO red / loop blue).
 - **Repo overview** — point at a directory and get a map of the whole codebase (one node per module, optional import edges).
-- **Drill-down (muñecas rusas)** — `--drilldown` sobre un directorio genera toda la jerarquía recursiva L0 (overview) → paquetes → ficheros → splits por función/clase como `.mmd` + `.html` interactivos con click-links, botón «← Volver» e `index.html`. Hereda `--theme` / `--no-phases` / `--layout` y resuelve symlinks (incluye la carpeta oculta `.agent`). Las tablas de splits viven en el **perfil** (`function_splits` / `class_splits`), así cada familia de repos (ej. `reaweb`, `reagame`) define los suyos sin colisiones.
+- **Drill-down (muñecas rusas)** — `--drilldown` sobre un directorio genera toda la jerarquía recursiva L0 (overview) → paquetes → ficheros → splits por función/clase como `.mmd` + `.html` interactivos con click-links, botón «← Volver» e `index.html`. Hereda `--theme` / `--no-phases` / `--layout` y resuelve symlinks (incluye la carpeta oculta `.agent`). Con `--layout vertical` cada diagrama se traza de arriba a abajo (`flowchart TD`, `Start` arriba y `End` al final), tipo esquema. Las tablas de splits viven en el **perfil** (`function_splits` / `class_splits`), así cada familia de repos (ej. `reaweb`, `reagame`) define los suyos sin colisiones.
 - **Mermaid export** — `flowchart TD` / `LR` que renderiza natively en GitHub/GitLab/Notion, no extra tooling. `--theme` colorea los nodos (`classDef`) y `--no-phases` deja el flujo plano y horizontal sin cajas FASE.
 - **Progressive detail** — `--detail low|med|high` makes huge graphs readable (low = labels only).
 - **Diff mode** — `agentflow diff old.py new.py` highlights added/removed/changed nodes (leverages `--seed` determinism).
@@ -101,7 +101,7 @@ Phase detection is structural by default: cycles in the graph become the *loop* 
 ```
 source.py ──▶ parser (AST + Profile) ──▶ FlowGraph ──▶ layouts ──┬─▶ excalidraw (.excalidraw)
                                                                  └─▶ svg (.svg)
-models.py     Node / Edge / FlowGraph          profiles.py   generic · reaweb · reagame · traceforge · custom
+models.py     Node / Edge / FlowGraph          profiles.py   generic · reaweb · reagame · traceforge · asubarnipal · custom
 ```
 
 | Module | Responsibility |

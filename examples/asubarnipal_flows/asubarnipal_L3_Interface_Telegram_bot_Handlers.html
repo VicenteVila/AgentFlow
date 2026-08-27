@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegram Bot · Handlers</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="asubarnipal_L2_Interface_Telegram_bot.html">← Volver</a>
+  <h1>Telegram Bot · Handlers</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Telegram Bot · Handlers
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_255{"not voice<br><i>Condición en línea 255:<br>not voice</i>"}
+    dec_309{"not is_vision_available()<br><i>Condición en línea 309:<br>not is_vision_available()</i>"}
+    dec_274{"success<br><i>Condición en línea 274:<br>success</i>"}
+    dec_320{"success<br><i>Condición en línea 320:<br>success</i>"}
+    dec_337{"query.data ==<br>'show_dashboard'<br><i>Condición en línea 337:<br>query.data == 'show_dashboard'</i>"}
+    dec_286{"ogg_path.exists()<br><i>Condición en línea 286:<br>ogg_path.exists()</i>"}
+    dec_329{"photo_path.exists()<br><i>Condición en línea 329:<br>photo_path.exists()</i>"}
+    dec_339{"config.DATA_DIR.exists()<br><i>Condición en línea 339:<br>config.DATA_DIR.exists()</i>"}
+    dec_366{"query.data == 'show_wiki'<br><i>Condición en línea 366:<br>query.data == 'show_wiki'</i>"}
+    dec_6{"text.startswith('/')<br><i>Condición en línea 6:<br>text.startswith('/')</i>"}
+    dec_341{"agent_file.exists()<br><i>Condición en línea 341:<br>agent_file.exists()</i>"}
+    dec_368{"not entries<br><i>Condición en línea 368:<br>not entries</i>"}
+    dec_378{"query.data ==<br>'agent_continue'<br><i>Condición en línea 378:<br>query.data == 'agent_continue'</i>"}
+    dec_11{"PENDING_RESTORE.get(user_id) != fb<br><i>Condición en línea 11:<br>PENDING_RESTORE.get(user_id) != 'waiting' and fb in ('sí', '</i>"}
+    dec_348{"config.HEARTBEAT_FILE.exists()<br><i>Condición en línea 348:<br>config.HEARTBEAT_FILE.exists()</i>"}
+    loop_373["For each e"]
+    dec_14{"result.get('success')<br><i>Condición en línea 14:<br>result.get('success')</i>"}
+    dec_29{"re.match('^https?://',<br>text.strip())<br><i>Condición en línea 29:<br>re.match('^https?://', text.strip())</i>"}
+    dec_44{"session_info.get('exists')<br>and 0) > 0<br><i>Condición en línea 44:<br>session_info.get('exists') and session_info.get('message_cou</i>"}
+    dec_45{"user_id not in<br>PENDING_RESTORE<br><i>Condición en línea 45:<br>user_id not in PENDING_RESTORE</i>"}
+    dec_62{"PENDING_RESTORE.get(user_id) ==<br><i>Condición en línea 62:<br>PENDING_RESTORE.get(user_id) == 'waiting'</i>"}
+    dec_63{"text.lower() in ('sí', 'si',<br>'yes', 's', 'y')<br><i>Condición en línea 63:<br>text.lower() in ('sí', 'si', 'yes', 's', 'y')</i>"}
+    dec_69{"system_prompt<br><i>Condición en línea 69:<br>system_prompt</i>"}
+    dec_83{"text.lower() in ('no', 'n')<br><i>Condición en línea 83:<br>text.lower() in ('no', 'n')</i>"}
+    dec_75{"charlar_mode<br><i>Condición en línea 75:<br>charlar_mode</i>"}
+    dec_96{"bypass_rag<br><i>Condición en línea 96:<br>bypass_rag</i>"}
+    dec_108{"session.get('charla_mode')<br><i>Condición en línea 108:<br>session.get('charla_mode')</i>"}
+    dec_123{"not<br>session.get('system_prompt')<br><i>Condición en línea 123:<br>not session.get('system_prompt')</i>"}
+    loop_133["For each attempt"]
+    dec_152{"response<br><i>Condición en línea 152:<br>response</i>"}
+    dec_165{"not response<br><i>Condición en línea 165:<br>not response</i>"}
+    dec_172{"response<br><i>Condición en línea 172:<br>response</i>"}
+    dec_186{"not response<br><i>Condición en línea 186:<br>not response</i>"}
+    dec_217{"not response<br><i>Condición en línea 217:<br>not response</i>"}
+    dec_223{"response<br><i>Condición en línea 223:<br>response</i>"}
+    fn_handle_voice[["Handle Voice"]]
+    fn_handle_photo[["Handle Photo"]]
+    fn_agent_callback[["Agent Callback"]]
+    fn_error_handler[["Error Handler"]]
+    tool_answer_335["Answer<br><i>Respuesta con contexto recuperado</i>"]
+    fn_handle_message[["Handle Message"]]
+    tool_call_with_turbo_145["result = Call w/ Turbo<br><i>LLM con compresión turboquant</i>"]
+    tool_remember_230["Remember<br><i>HMem: consolida un evento en la memoria</i>"]
+    n_start --> fn_handle_message
+    fn_handle_message --> dec_6
+    dec_6 --> dec_11
+    dec_11 --> dec_14
+    dec_14 --> dec_29
+    dec_29 --> dec_44
+    dec_44 --> dec_45
+    dec_45 --> dec_62
+    dec_62 --> dec_63
+    dec_63 --> dec_69
+    dec_69 --> dec_75
+    dec_63 --> dec_83
+    dec_83 --> dec_96
+    dec_96 --> dec_108
+    dec_108 --> dec_123
+    dec_123 --> loop_133
+    loop_133 --> tool_call_with_turbo_145
+    tool_call_with_turbo_145 --> dec_152
+    dec_152 -- "loop" --> loop_133
+    loop_133 --> dec_165
+    dec_165 --> dec_172
+    dec_172 --> dec_186
+    dec_186 --> dec_217
+    dec_217 --> dec_223
+    dec_223 --> tool_remember_230
+    n_start --> fn_handle_voice
+    fn_handle_voice --> dec_255
+    dec_255 --> dec_274
+    dec_274 -- "YES" --> fn_handle_message
+    dec_274 --> dec_286
+    n_start --> fn_handle_photo
+    fn_handle_photo --> dec_309
+    dec_309 --> dec_320
+    dec_320 --> dec_329
+    n_start --> fn_agent_callback
+    fn_agent_callback --> tool_answer_335
+    tool_answer_335 --> dec_337
+    dec_337 --> dec_339
+    dec_339 --> dec_341
+    dec_341 --> dec_348
+    dec_337 --> dec_366
+    dec_366 --> dec_368
+    dec_368 --> loop_373
+    dec_366 --> dec_378
+    n_start --> fn_error_handler
+    class n_start node-start
+    class fn_handle_message,fn_handle_voice,fn_handle_photo,fn_agent_callback,fn_error_handler node-subprocess
+    class dec_6,dec_11,dec_14,dec_29,dec_44,dec_45,dec_62,dec_63,dec_69,dec_75,dec_83,dec_96,dec_108,dec_123,dec_152,dec_165,dec_172,dec_186,dec_217,dec_223,dec_255,dec_274,dec_286,dec_309,dec_320,dec_329,dec_337,dec_339,dec_341,dec_348,dec_366,dec_368,dec_378 node-decision
+    class loop_133,loop_373 node-loop
+    class tool_call_with_turbo_145,tool_remember_230,tool_answer_335 node-tool
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

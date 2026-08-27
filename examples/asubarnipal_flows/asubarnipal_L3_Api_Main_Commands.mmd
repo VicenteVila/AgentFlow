@@ -1,0 +1,28 @@
+%% Main · Commands
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_7{"cmd.startswith('/')<br><i>Condición en línea 7:<br>cmd.startswith('/')</i>"}
+    fn_execute_command[["Execute Command"]]
+    fn_get_command_history[["Get Command History"]]
+    fn_add_to_history[["Add To History"]]
+    n_start --> fn_execute_command
+    fn_execute_command --> dec_7
+    n_start --> fn_get_command_history
+    n_start --> fn_add_to_history
+    class n_start node-start
+    class fn_execute_command,fn_get_command_history,fn_add_to_history node-subprocess
+    class dec_7 node-decision
+    class n_end node-end

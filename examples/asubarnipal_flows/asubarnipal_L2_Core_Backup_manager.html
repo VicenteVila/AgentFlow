@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Backup Manager</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="asubarnipal_L1_Core.html">← Volver</a>
+  <h1>Backup Manager</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Backup Manager
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_53{"vault_name<br><i>Condición en línea 53:<br>vault_name</i>"}
+    dec_58{"not vault_config<br><i>Condición en línea 58:<br>not vault_config</i>"}
+    dec_66{"vault_path.exists()<br><i>Condición en línea 66:<br>vault_path.exists()</i>"}
+    dec_104{"not backup_path.exists()<br><i>Condición en línea 104:<br>not backup_path.exists()</i>"}
+    dec_69{"db_path.exists()<br><i>Condición en línea 69:<br>db_path.exists()</i>"}
+    dec_109{"wiki_dir.exists()<br><i>Condición en línea 109:<br>wiki_dir.exists()</i>"}
+    dec_111{"target.exists()<br><i>Condición en línea 111:<br>target.exists()</i>"}
+    dec_116{"db_file.exists()<br><i>Condición en línea 116:<br>db_file.exists()</i>"}
+    dec_156{"NOT _history?<br><i>Niega _history<br>para lógica invertida</i>"}
+    dec_121{"active and<br>active.get('db_path')<br><i>Condición en línea 121:<br>active and active.get('db_path')</i>"}
+    fn_get_backup_manager[["Get Backup Manager"]]
+    fn_backupmanager__load_history[["Load History"]]
+    fn_backupmanager__save_history[["Save History"]]
+    fn_backupmanager_backup_vault[["Backup Vault"]]
+    fn_backupmanager_list_backups[["List Backups"]]
+    fn_backupmanager_restore_backup[["Restore Backup"]]
+    fn_backupmanager_delete_backup[["Delete Backup"]]
+    fn_backupmanager__rotate_backups[["Rotate Backups"]]
+    fn_backupmanager_should_auto_backup[["Should Auto Backup"]]
+    fn_backupmanager_auto_backup_if_needed[["Auto Backup If Needed"]]
+    fn_backupmanager_stats[["Stats"]]
+    n_start --> fn_get_backup_manager
+    n_start --> fn_backupmanager__load_history
+    fn_backupmanager__load_history --> fn_backupmanager__save_history
+    fn_backupmanager__save_history --> fn_backupmanager_backup_vault
+    fn_backupmanager_backup_vault --> dec_53
+    dec_53 --> dec_58
+    dec_58 --> dec_66
+    dec_66 --> dec_69
+    fn_backupmanager_backup_vault --> fn_backupmanager_list_backups
+    fn_backupmanager_list_backups --> fn_backupmanager_restore_backup
+    fn_backupmanager_restore_backup --> dec_104
+    dec_104 --> dec_109
+    dec_109 --> dec_111
+    dec_111 --> dec_116
+    dec_116 --> dec_121
+    fn_backupmanager_restore_backup --> fn_backupmanager_delete_backup
+    fn_backupmanager_delete_backup --> fn_backupmanager__rotate_backups
+    fn_backupmanager__rotate_backups --> fn_backupmanager_should_auto_backup
+    fn_backupmanager_should_auto_backup --> dec_156
+    fn_backupmanager_should_auto_backup --> fn_backupmanager_auto_backup_if_needed
+    fn_backupmanager_auto_backup_if_needed --> fn_backupmanager_stats
+    class n_start node-start
+    class fn_get_backup_manager,fn_backupmanager__load_history,fn_backupmanager__save_history,fn_backupmanager_backup_vault,fn_backupmanager_list_backups,fn_backupmanager_restore_backup,fn_backupmanager_delete_backup,fn_backupmanager__rotate_backups,fn_backupmanager_should_auto_backup,fn_backupmanager_auto_backup_if_needed,fn_backupmanager_stats node-subprocess
+    class dec_53,dec_58,dec_66,dec_69,dec_104,dec_109,dec_111,dec_116,dec_121,dec_156 node-decision
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

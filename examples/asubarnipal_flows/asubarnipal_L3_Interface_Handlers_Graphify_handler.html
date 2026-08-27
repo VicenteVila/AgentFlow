@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Graphify Handler</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="asubarnipal_L2_Interface_Handlers.html">← Volver</a>
+  <h1>Graphify Handler</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Graphify Handler
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_30{"'deep' in args<br><i>Condición en línea 30:<br>'deep' in args</i>"}
+    dec_99{"NOT args?<br><i>Niega args<br>para lógica invertida</i>"}
+    dec_131{"not stats.get('exists')<br><i>Condición en línea 131:<br>not stats.get('exists')</i>"}
+    dec_167{"not report<br><i>Condición en línea 167:<br>not report</i>"}
+    dec_186{"NOT args?<br><i>Niega args<br>para lógica invertida</i>"}
+    dec_211{"NOT args?<br><i>Niega args<br>para lógica invertida</i>"}
+    dec_32{"'force' in args<br><i>Condición en línea 32:<br>'force' in args</i>"}
+    dec_82{"result.get('success')<br><i>Condición en línea 82:<br>result.get('success')</i>"}
+    dec_148{"stats.get('hubs')<br><i>Condición en línea 148:<br>stats.get('hubs')</i>"}
+    dec_175{"len(report) > 4000<br><i>Condición en línea 175:<br>len(report) > 4000</i>"}
+    dec_224{"fmt == 'callflow'<br><i>Condición en línea 224:<br>fmt == 'callflow'</i>"}
+    dec_114{"result.get('success') and<br>result.get('answer')<br><i>Condición en línea 114:<br>result.get('success') and result.get('answer')</i>"}
+    loop_150["For each hub"]
+    dec_201{"result.get('success')<br><i>Condición en línea 201:<br>result.get('success')</i>"}
+    dec_42{"result.get('success')<br><i>Condición en línea 42:<br>result.get('success')</i>"}
+    dec_153{"stats.get('html_exists')<br><i>Condición en línea 153:<br>stats.get('html_exists')</i>"}
+    dec_233{"result.get('success')<br><i>Condición en línea 233:<br>result.get('success')</i>"}
+    dec_58{"stats.get('hubs')<br><i>Condición en línea 58:<br>stats.get('hubs')</i>"}
+    dec_155{"stats.get('report_exists')<br><i>Condición en línea 155:<br>stats.get('report_exists')</i>"}
+    loop_60["For each hub"]
+    fn_graphify_cmd[["Graphify Cmd"]]
+    fn_graph_update_cmd[["Graph Update Cmd"]]
+    fn_graph_query_cmd[["Graph Query Cmd"]]
+    fn_graph_stats_cmd[["Graph Stats Cmd"]]
+    fn_graph_report_cmd[["Graph Report Cmd"]]
+    fn_graph_add_cmd[["Graph Add Cmd"]]
+    fn_graph_export_cmd[["Graph Export Cmd"]]
+    tool_update_graph_80["result = Update Graph<br><i>Graphify: actualiza el grafo</i>"]
+    tool_query_graph_112["result = Query Graph<br><i>Graphify: consulta el grafo</i>"]
+    tool_add_url_to_graph_199["result = Add URL to Graph<br><i>Graphify: añade una URL como nodo</i>"]
+    tool_build_graph_40["result = Build Graph<br><i>Graphify: construye el grafo<br>(story-graph) del vault</i>"]
+    tool_export_graph_231["result = Export Graph<br><i>Graphify: exporta el grafo</i>"]
+    n_start --> fn_graphify_cmd
+    fn_graphify_cmd --> dec_30
+    dec_30 --> dec_32
+    dec_32 --> tool_build_graph_40
+    tool_build_graph_40 --> dec_42
+    dec_42 --> dec_58
+    dec_58 --> loop_60
+    n_start --> fn_graph_update_cmd
+    fn_graph_update_cmd --> tool_update_graph_80
+    tool_update_graph_80 --> dec_82
+    n_start --> fn_graph_query_cmd
+    fn_graph_query_cmd --> dec_99
+    dec_99 --> tool_query_graph_112
+    tool_query_graph_112 --> dec_114
+    n_start --> fn_graph_stats_cmd
+    fn_graph_stats_cmd --> dec_131
+    dec_131 --> dec_148
+    dec_148 --> loop_150
+    loop_150 --> dec_153
+    dec_153 --> dec_155
+    n_start --> fn_graph_report_cmd
+    fn_graph_report_cmd --> dec_167
+    dec_167 --> dec_175
+    n_start --> fn_graph_add_cmd
+    fn_graph_add_cmd --> dec_186
+    dec_186 --> tool_add_url_to_graph_199
+    tool_add_url_to_graph_199 --> dec_201
+    n_start --> fn_graph_export_cmd
+    fn_graph_export_cmd --> dec_211
+    dec_211 --> dec_224
+    dec_224 --> tool_export_graph_231
+    tool_export_graph_231 --> dec_233
+    class n_start node-start
+    class fn_graphify_cmd,fn_graph_update_cmd,fn_graph_query_cmd,fn_graph_stats_cmd,fn_graph_report_cmd,fn_graph_add_cmd,fn_graph_export_cmd node-subprocess
+    class dec_30,dec_32,dec_42,dec_58,dec_82,dec_99,dec_114,dec_131,dec_148,dec_153,dec_155,dec_167,dec_175,dec_186,dec_201,dec_211,dec_224,dec_233 node-decision
+    class tool_build_graph_40,tool_update_graph_80,tool_query_graph_112,tool_add_url_to_graph_199,tool_export_graph_231 node-tool
+    class loop_60,loop_150 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>
