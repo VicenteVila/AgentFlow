@@ -242,14 +242,15 @@ _MERMAID_HTML_TEMPLATE = """\
     .note {{ font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }}
     #diagram {{ background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }}
     .mermaid {{ display: flex; justify-content: center; }}
+    #diagram pre.mermaid {{ margin: 0; background: transparent; }}
   </style>
 </head>
 <body>
   <h1>{title}</h1>
   <p class="note">Click en los modulos con cursor mano para drill-down.</p>
-  <div id="diagram"><div class="mermaid">
+  <div id="diagram"><pre class="mermaid">
 {mmd_content}
-  </div></div>
+  </pre></div>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <script>mermaid.initialize({{startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{{useMaxWidth:false,htmlLabels:true,curve:'basis'}}}});</script>
 </body>
