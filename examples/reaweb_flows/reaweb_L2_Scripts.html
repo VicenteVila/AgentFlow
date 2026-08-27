@@ -24,7 +24,7 @@ flowchart TD
     classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
     classDef changed fill:#fde68a,stroke:#92400e
     subgraph n_1 ["FASE 1 · PREPARACIÓN"]
-    start(["Start<br><i>Agent.run() invoked</i>"])
+    n_start(["Start<br><i>Agent.run() invoked</i>"])
     end
     subgraph n_2 ["FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)"]
     dec_22{"rules_file.exists()<br><i>Condición en línea 22:</i>"}
@@ -39,16 +39,16 @@ flowchart TD
     fn_run_single[["Run Single"]]
     end
     subgraph n_3 ["FASE 3 · CIERRE"]
-    end(["End<br><i>db.close()</i>"])
+    n_end(["End<br><i>db.close()</i>"])
     end
-    start --> fn_load_archetype
+    n_start --> fn_load_archetype
     dec_22 --> dec_25
-    start --> fn_build_agent
+    n_start --> fn_build_agent
     fn_build_agent --> dec_40
     dec_40 --> loop_65
     loop_65 --> dec_70
     dec_70 --> loop_72
-    start --> fn_run_single
+    n_start --> fn_run_single
     fn_run_single --> dec_89
     fn_load_archetype -.-> dec_22
 

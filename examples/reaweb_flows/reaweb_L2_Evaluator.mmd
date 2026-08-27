@@ -5,7 +5,7 @@ flowchart TD
     classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
     classDef changed fill:#fde68a,stroke:#92400e
     subgraph n_1 ["FASE 1 · PREPARACIÓN"]
-    start(["Start<br><i>Agent.run() invoked</i>"])
+    n_start(["Start<br><i>Agent.run() invoked</i>"])
     dec_945{"start == -1<br><i>Condición en línea 945:</i>"}
     dec_510{"sid.startswith('seccion:')<br><i>Condición en línea 510:</i>"}
     dec_514{"sid.startswith('literal:')<br><i>Condición en línea 514:</i>"}
@@ -114,26 +114,26 @@ flowchart TD
     fn__clean_923[["Clean"]]
     end
     subgraph n_3 ["FASE 3 · CIERRE"]
-    end(["End<br><i>db.close()</i>"])
+    n_end(["End<br><i>db.close()</i>"])
     dec_949{"end == -1<br><i>Condición en línea 949:</i>"}
     fn_blend_visual_total[["Blend Visual Total"]]
     end
-    start --> fn__strip_js_comments
-    start --> fn__has_real_css_animations
+    n_start --> fn__strip_js_comments
+    n_start --> fn__has_real_css_animations
     fn__has_real_css_animations --> loop_151
     loop_151 --> dec_152
-    start --> fn__has_real_transitions
-    start --> fn__has_real_gradients
-    start --> fn__has_animated_canvas
+    n_start --> fn__has_real_transitions
+    n_start --> fn__has_real_gradients
+    n_start --> fn__has_animated_canvas
     dec_184 --> dec_186
-    start --> fn__no_dead_canvas
-    start --> fn__has_dark_mode
-    start --> fn__has_scroll_reveal
-    start --> fn__has_hover_effects
-    start --> fn__has_microinteractions
+    n_start --> fn__no_dead_canvas
+    n_start --> fn__has_dark_mode
+    n_start --> fn__has_scroll_reveal
+    n_start --> fn__has_hover_effects
+    n_start --> fn__has_microinteractions
     dec_230 --> dec_232
-    start --> fn__has_content_richness
-    start --> fn_extract_requirements
+    n_start --> fn__has_content_richness
+    n_start --> fn_extract_requirements
     fn_extract_requirements --> loop_258
     loop_258 --> dec_260
     dec_260 --> dec_262
@@ -147,43 +147,43 @@ flowchart TD
     loop_324 --> dec_326
     dec_326 --> dec_329
     dec_329 --> dec_331
-    start --> fn__inputs_labeled
+    n_start --> fn__inputs_labeled
     dec_338 --> loop_340
     loop_340 --> dec_341
     dec_341 --> dec_344
     dec_344 --> dec_348
     dec_348 --> dec_351
-    start --> fn__has_modern_images
-    start --> fn__scripts_async
-    start --> fn__img_responsive
+    n_start --> fn__has_modern_images
+    n_start --> fn__scripts_async
+    n_start --> fn__img_responsive
     dec_373 --> loop_376
     loop_376 --> dec_377
-    start --> fn__score
-    start --> fn_extract_sections
+    n_start --> fn__score
+    n_start --> fn_extract_sections
     fn_extract_sections --> loop_428
     loop_428 --> dec_431
     dec_431 --> dec_433
-    start --> fn__html_has_section
+    n_start --> fn__html_has_section
     fn__html_has_section --> loop_446
     loop_446 --> dec_447
-    start --> fn_extract_subtasks
+    n_start --> fn_extract_subtasks
     loop_476 --> loop_483
     loop_483 --> loop_489
-    start --> fn_subtasks_status
+    n_start --> fn_subtasks_status
     fn_subtasks_status --> loop_508
     dec_510 --> dec_514
     dec_514 --> dec_518
     dec_518 -- "YES" --> dec_521
     dec_518 -- "loop" --> loop_508
-    start --> fn_format_subtasks_status
-    start --> fn__jaccard
-    start --> fn__palette
-    start --> fn__dom_structure
-    start --> fn_novelty_score
+    n_start --> fn_format_subtasks_status
+    n_start --> fn__jaccard
+    n_start --> fn__palette
+    n_start --> fn__dom_structure
+    n_start --> fn_novelty_score
     fn_novelty_score --> fn__read_595
     dec_614 --> dec_616
-    start --> fn__apply_blocking_gates
-    start --> fn_evaluate
+    n_start --> fn__apply_blocking_gates
+    n_start --> fn_evaluate
     dec_679 --> dec_720
     dec_720 --> dec_724
     dec_724 --> dec_740
@@ -193,21 +193,21 @@ flowchart TD
     dec_755 --> dec_762
     dec_762 --> dec_769
     dec_769 --> dec_781
-    start --> fn_blend_visual_total
+    n_start --> fn_blend_visual_total
     dec_833 --> dec_837
     dec_837 --> dec_841
     dec_841 --> dec_843
     dec_843 --> loop_853
     loop_853 --> dec_854
     loop_853 --> dec_861
-    start --> fn_detect_root_cause
-    start --> fn_metrics_block
+    n_start --> fn_detect_root_cause
+    n_start --> fn_metrics_block
     fn_metrics_block --> fn__clean_923
     fn__clean_923 --> loop_929
     loop_929 --> dec_930
     dec_930 --> dec_932
     dec_932 --> dec_934
-    start --> fn_parse_metrics_block
+    n_start --> fn_parse_metrics_block
     dec_945 --> dec_949
     dec_152 -. "loop" .-> loop_151
     fn__has_animated_canvas -.-> dec_184

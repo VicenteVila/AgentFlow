@@ -30,10 +30,17 @@ _MERMAID_SHAPES = {
 _DEFAULT_SHAPE = ('[', ']')
 
 
+_MERMAID_RESERVED = frozenset(
+    {"graph", "flowchart", "subgraph", "end", "start", "click", "classDef", "class", "style", "linkStyle", "interpolate"}
+)
+
+
 def _sanitize_id(raw: str) -> str:
-    """Mermaid node IDs must be alphanum + underscore, not start with digit."""
+    """Mermaid node IDs must be alphanum + underscore, not start with digit, not reserved."""
     sanitized = re.sub(r"[^A-Za-z0-9_]", "_", raw)
     if sanitized and sanitized[0].isdigit():
+        sanitized = "n_" + sanitized
+    if sanitized in _MERMAID_RESERVED:
         sanitized = "n_" + sanitized
     return sanitized or "node"
 

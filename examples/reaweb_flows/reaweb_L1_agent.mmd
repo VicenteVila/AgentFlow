@@ -5,7 +5,7 @@ flowchart TD
     classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
     classDef changed fill:#fde68a,stroke:#92400e
     subgraph n_1 ["FASE 1 · PREPARACIÓN"]
-    start(["Start<br><i>Agent.run() invoked</i>"])
+    n_start(["Start<br><i>Agent.run() invoked</i>"])
     init["Init Agent<br><i>run_id, mkdir, upsert_run, write_text</i>"]
     special__seed_from_workspace_867["Seed Workspace<br><i>Si workspace/current existe</i>"]
     end
@@ -39,7 +39,7 @@ flowchart TD
     subgraph n_3 ["FASE 3 · CIERRE"]
     special__export_final_982(["Export Final<br><i>Copia mejor candidato a</i>"])
     end
-    start --> init
+    n_start --> init
     init --> main_loop
     special__seed_from_workspace_867 --> loop_869
     loop_869 --> dec_876

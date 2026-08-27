@@ -5,12 +5,12 @@ flowchart TD
     classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
     classDef changed fill:#fde68a,stroke:#92400e
     subgraph n_1 ["FASE 1 · PREPARACIÓN"]
-    start(["Start<br><i>Agent.run() invoked</i>"])
+    n_start(["Start<br><i>Agent.run() invoked</i>"])
     end
     subgraph n_2 ["FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)"]
     fn__now[["Now"]]
     end
     subgraph n_3 ["FASE 3 · CIERRE"]
-    end(["End<br><i>db.close()</i>"])
+    n_end(["End<br><i>db.close()</i>"])
     end
-    start --> fn__now
+    n_start --> fn__now
