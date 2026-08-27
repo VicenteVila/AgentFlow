@@ -1,0 +1,16 @@
+%% ReaWeb · L2 · Memory (phased)
+flowchart TD
+    classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    subgraph n_1 ["FASE 1 · PREPARACIÓN"]
+    start(["Start<br><i>Agent.run() invoked</i>"])
+    end
+    subgraph n_2 ["FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)"]
+    fn__now[["Now"]]
+    end
+    subgraph n_3 ["FASE 3 · CIERRE"]
+    end(["End<br><i>db.close()</i>"])
+    end
+    start --> fn__now

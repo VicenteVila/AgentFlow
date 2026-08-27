@@ -101,8 +101,16 @@ def to_mermaid(
     graph: FlowGraph,
     layout: str = "hierarchical",
     detail: str = "high",
+    links: dict[str, str] | None = None,
+    title: str | None = None,
 ) -> str:
-    """Render *graph* as Mermaid ``flowchart TD`` text."""
+    """Render *graph* as Mermaid ``flowchart TD`` text.
+
+    *links* maps node IDs to relative ``.mmd``/``.html`` URLs.
+    For each linked node a ``click <id> href "<url>"`` directive is appended,
+    enabling interactive drill-down in viewers that support
+    ``securityLevel: loose`` (e.g. mermaid.live, HTML+mermaid.js wrapper).
+    """
     if detail != "high":
         graph = with_detail_level(graph, detail)
 
@@ -117,7 +125,9 @@ def to_mermaid(
         result = hierarchical_layout(graph)
 
     lines: list[str] = []
-    lines.append(f"%% {graph.title}")
+    lines.append(f"%% {title or graph.title}")
+    if links:
+        lines.append("%%{init: {'securityLevel':'loose'}}%%")
     lines.append("flowchart TD")
 
     # Class for evolution nodes (dashed)
@@ -192,6 +202,12 @@ def to_mermaid(
     for fb in result.feedback_arrows:
         lines.append(_edge_line(fb.source_id, fb.target_id, fb.label, dashed=True))
 
+    # Click directives for interactive drill-down
+    if links:
+        for nid, url in links.items():
+            sid = _sanitize_id(nid)
+            lines.append(f'    click {sid} href "{url}" "Abrir detalle"')
+
     return "\n".join(lines) + "\n"
 
 
@@ -200,9 +216,14 @@ def save_mermaid(
     output_path: str | Path,
     layout: str = "hierarchical",
     detail: str = "high",
+    links: dict[str, str] | None = None,
+    title: str | None = None,
 ) -> Path:
     """Render *graph* and save as ``.mmd`` file."""
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(to_mermaid(graph, layout=layout, detail=detail), encoding="utf-8")
+    path.write_text(
+        to_mermaid(graph, layout=layout, detail=detail, links=links, title=title),
+        encoding="utf-8",
+    )
     return path

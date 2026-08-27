@@ -923,6 +923,54 @@ def test_to_html_without_links():
     assert "el.style.cursor" not in html
 
 
+def test_to_mermaid_with_links():
+    from agentflow.mermaid import to_mermaid
+
+    g = FlowGraph(title="MMD Links")
+    g.add_node(Node(id="comp_a", label="Comp A"))
+    g.add_node(Node(id="comp_b", label="Comp B"))
+    g.add_edge(Edge(source="comp_a", target="comp_b"))
+
+    links = {"comp_a": "detail_a.mmd", "comp_b": "detail_b.mmd"}
+    mmd = to_mermaid(g, links=links)
+    assert 'click comp_a href "detail_a.mmd" "Abrir detalle"' in mmd
+    assert 'click comp_b href "detail_b.mmd" "Abrir detalle"' in mmd
+    assert "securityLevel" in mmd  # loose header injected
+
+
+def test_to_mermaid_without_links():
+    from agentflow.mermaid import to_mermaid
+
+    g = FlowGraph(title="MMD No Links")
+    g.add_node(Node(id="a", label="A"))
+    mmd = to_mermaid(g)
+    assert "click" not in mmd
+    assert "securityLevel" not in mmd
+
+
+def test_save_mermaid_links():
+    from agentflow.mermaid import save_mermaid
+
+    g = FlowGraph(title="Save MMD Links")
+    g.add_node(Node(id="x", label="X"))
+    links = {"x": "target.mmd"}
+    with tempfile.TemporaryDirectory() as tmpdir:
+        path = Path(tmpdir) / "out.mmd"
+        save_mermaid(g, path, links=links)
+        content = path.read_text()
+        assert 'click x href "target.mmd" "Abrir detalle"' in content
+
+
+def test_mermaid_title_override():
+    from agentflow.mermaid import to_mermaid
+
+    g = FlowGraph(title="Old Title")
+    g.add_node(Node(id="a", label="A"))
+    mmd = to_mermaid(g, title="Custom Title")
+    assert "Custom Title" in mmd
+    assert "Old Title" not in mmd
+
+
 def test_save_html():
     from agentflow.html import save_html
 

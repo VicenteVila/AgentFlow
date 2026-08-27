@@ -1,0 +1,34 @@
+%% ReaWeb · L2 · Scripts (phased)
+flowchart TD
+    classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    subgraph n_1 ["FASE 1 · PREPARACIÓN"]
+    start(["Start<br><i>Agent.run() invoked</i>"])
+    end
+    subgraph n_2 ["FASE 2 · LOOP DE EVOLUCIÓN (H1…Hn)"]
+    dec_22{"rules_file.exists()<br><i>Condición en línea 22:</i>"}
+    dec_40{"not arq_dir.exists()<br><i>Condición en línea 40:</i>"}
+    dec_89{"verbose<br><i>Condición en línea 89:</i>"}
+    dec_25{"stack_file.exists()<br><i>Condición en línea 25:</i>"}
+    loop_65["For each tool_name"]
+    dec_70{"quick<br><i>Condición en línea 70:</i>"}
+    loop_72["For each tool_name"]
+    fn_load_archetype[["Load Archetype"]]
+    fn_build_agent[["Build Agent"]]
+    fn_run_single[["Run Single"]]
+    end
+    subgraph n_3 ["FASE 3 · CIERRE"]
+    end(["End<br><i>db.close()</i>"])
+    end
+    start --> fn_load_archetype
+    dec_22 --> dec_25
+    start --> fn_build_agent
+    fn_build_agent --> dec_40
+    dec_40 --> loop_65
+    loop_65 --> dec_70
+    dec_70 --> loop_72
+    start --> fn_run_single
+    fn_run_single --> dec_89
+    fn_load_archetype -.-> dec_22
