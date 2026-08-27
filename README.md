@@ -45,6 +45,9 @@ agentflow -i my_agent.py -f svg --palette neon -o flow.svg
 # Nueva generación completa: jerarquía muñecas rusas L0→L1→L2→L3
 agentflow -i ./mi_repo --drilldown -t MiProyecto --output-dir ./flow_output
 
+# Mermaid plano y horizontal (sin cajas FASE) + tema aplicado a los nodos
+agentflow -i my_agent.py -f mermaid -l phased --no-phases --theme neon -o flow.mmd
+
 # SVG export, dark theme, deterministic output
 agentflow -i my_agent.py -f svg --theme dark --seed 42 -o flow.svg
 ```
@@ -59,7 +62,7 @@ agentflow -i my_agent.py -f svg --theme dark --seed 42 -o flow.svg
 - **Smart visuals** — content-driven sizing, orthogonal routing, swimlanes, lateral feedback, light/dark themes, **semantic edge colors** (YES green / NO red / loop blue).
 - **Repo overview** — point at a directory and get a map of the whole codebase (one node per module, optional import edges).
 - **Drill-down (muñecas rusas)** — `--drilldown` genera toda la jerarquía L0→L1→L2→L3 como `.mmd` + `.html` interactivos con click-links y botón «← Volver».
-- **Mermaid export** — `flowchart TD` / `LR` que renderiza natively en GitHub/GitLab/Notion, no extra tooling.
+- **Mermaid export** — `flowchart TD` / `LR` que renderiza natively en GitHub/GitLab/Notion, no extra tooling. `--theme` colorea los nodos (`classDef`) y `--no-phases` deja el flujo plano y horizontal sin cajas FASE.
 - **Progressive detail** — `--detail low|med|high` makes huge graphs readable (low = labels only).
 - **Diff mode** — `agentflow diff old.py new.py` highlights added/removed/changed nodes (leverages `--seed` determinism).
 - **Sequence diagrams** — `-f sequence` / `-f mermaid-seq`: lifelines por agente (Planner/LLM/Memory…), mensajes ordenados por línea.

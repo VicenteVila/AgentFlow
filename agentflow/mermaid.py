@@ -9,10 +9,13 @@ Usage:
 
 from __future__ import annotations
 
+import json
 import re
+from collections import defaultdict
 from pathlib import Path
 
 from agentflow.layouts import (
+    get_theme,
     grid_layout,
     hierarchical_layout,
     phased_horizontal_layout,
@@ -30,6 +33,18 @@ _MERMAID_SHAPES = {
 }
 
 _DEFAULT_SHAPE = ('[', ']')
+
+# Node type → themed mermaid classDef name (node fills come from the theme).
+_ME_CLASS: dict[NodeType, str] = {
+    NodeType.START: "node-start",
+    NodeType.END: "node-end",
+    NodeType.PROCESS: "node-process",
+    NodeType.DECISION: "node-decision",
+    NodeType.SUBPROCESS: "node-subprocess",
+    NodeType.TOOL: "node-tool",
+    NodeType.LOOP: "node-loop",
+    NodeType.EVOLUTION: "node-evolution",
+}
 
 
 _MERMAID_RESERVED = frozenset(
@@ -112,13 +127,20 @@ def to_mermaid(
     detail: str = "high",
     links: dict[str, str] | None = None,
     title: str | None = None,
+    theme: str = "light",
+    no_phases: bool = False,
 ) -> str:
-    """Render *graph* as Mermaid ``flowchart TD`` text.
+    """Render *graph* as Mermaid ``flowchart TD``/``LR`` text.
 
     *links* maps node IDs to relative ``.mmd``/``.html`` URLs.
     For each linked node a ``click <id> href "<url>"`` directive is appended,
     enabling interactive drill-down in viewers that support
     ``securityLevel: loose`` (e.g. mermaid.live, HTML+mermaid.js wrapper).
+
+    *theme* colours the node classDefs (``light``/``dark``/``neon``/...); the
+    shape colours come from the theme palette instead of mermaid's defaults.
+    *no_phases* flattens ``phased``/``phased-horizontal`` to a single
+    left→right flowchart without FASE 1/2/3 subgraph boxes.
     """
     if detail != "high":
         graph = with_detail_level(graph, detail)
@@ -137,22 +159,36 @@ def to_mermaid(
     else:
         result = hierarchical_layout(graph)
 
+    pal = get_theme(theme)
+
     lines: list[str] = []
     lines.append(f"%% {title or graph.title}")
+    init: dict[str, object] = {}
     if links:
-        lines.append("%%{init: {'securityLevel':'loose'}}%%")
-    if layout == "phased-horizontal":
+        init["securityLevel"] = "loose"
+    if theme:
+        init["themeVariables"] = {"lineColor": pal["arrow"]}
+    if init:
+        lines.append("%%{init: " + json.dumps(init) + "}%%")
+    if no_phases or layout == "phased-horizontal":
         lines.append("flowchart LR")
     else:
         lines.append("flowchart TD")
 
-    # Class for evolution nodes (dashed)
-    lines.append("    classDef evolution fill:#ffedd5,stroke:#ea580c,stroke-dasharray: 5 5")
+    # Tile classDefs from the theme palette (skip EVOLUTION → custom dashed below)
+    for nt in (NodeType.START, NodeType.END, NodeType.PROCESS, NodeType.DECISION,
+               NodeType.SUBPROCESS, NodeType.TOOL, NodeType.LOOP):
+        c = pal["node_colors"][nt]
+        lines.append(f"    classDef {_ME_CLASS[nt]} "
+                     f"fill:{c['background']},stroke:{c['stroke']},color:{pal['text']}")
+    evo = pal["node_colors"][NodeType.EVOLUTION]
+    lines.append(f"    classDef evolution fill:{evo['background']},stroke:{evo['stroke']},"
+                 f"stroke-dasharray: 5 5,color:{pal['text']}")
     lines.append("    classDef added fill:#a7f3d0,stroke:#065f46")
     lines.append("    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5")
     lines.append("    classDef changed fill:#fde68a,stroke:#92400e")
 
-    # Phase / group / lane subgraphs
+    # Phase / group / lane subgraphs (skipped entirely when --no-phases)
     if layout in ("phased", "phased-horizontal"):
         boxes = result.phase_boxes
     elif layout == "swimlane":
@@ -160,9 +196,8 @@ def to_mermaid(
     else:
         boxes = result.group_boxes
     # Map phase/group/lane to node ids for subgraph containment
-    if boxes:
+    if boxes and not no_phases:
         # Build lookup
-        from collections import defaultdict
         by_box: dict[str, list[str]] = defaultdict(list)
         # For phased, use phase number; for hierarchical/swimlane, use group_id/lane_id
         if layout in ("phased", "phased-horizontal"):
@@ -218,6 +253,18 @@ def to_mermaid(
     for fb in result.feedback_arrows:
         lines.append(_edge_line(fb.source_id, fb.target_id, fb.label, dashed=True))
 
+    # Apply themed classes to nodes (evolution/diff nodes already carry their class)
+    if theme:
+        by_type: dict[str, list[str]] = defaultdict(list)
+        for gnode in graph.nodes:
+            if gnode.diff_status or gnode.node_type == NodeType.EVOLUTION:
+                continue
+            if gnode.node_type not in _ME_CLASS:
+                continue
+            by_type[_ME_CLASS[gnode.node_type]].append(_sanitize_id(gnode.id))
+        for cname, ids in by_type.items():
+            lines.append(f"    class {','.join(ids)} {cname}")
+
     # Click directives for interactive drill-down
     if links:
         for nid, url in links.items():
@@ -234,12 +281,15 @@ def save_mermaid(
     detail: str = "high",
     links: dict[str, str] | None = None,
     title: str | None = None,
+    theme: str = "light",
+    no_phases: bool = False,
 ) -> Path:
     """Render *graph* and save as ``.mmd`` file."""
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        to_mermaid(graph, layout=layout, detail=detail, links=links, title=title),
+        to_mermaid(graph, layout=layout, detail=detail, links=links, title=title,
+                   theme=theme, no_phases=no_phases),
         encoding="utf-8",
     )
     return path
@@ -282,10 +332,13 @@ def to_mermaid_html(
     detail: str = "high",
     links: dict[str, str] | None = None,
     title: str | None = None,
+    theme: str = "light",
+    no_phases: bool = False,
     back_link: str | None = None,
 ) -> str:
     """Wrap ``to_mermaid`` output in a standalone HTML with mermaid.js CDN."""
-    mmd = to_mermaid(graph, layout=layout, detail=detail, links=links, title=title)
+    mmd = to_mermaid(graph, layout=layout, detail=detail, links=links, title=title,
+                     theme=theme, no_phases=no_phases)
     resolved_title = title or graph.title
     back_link_html = ""
     if back_link:
@@ -304,6 +357,8 @@ def save_mermaid_html(
     detail: str = "high",
     links: dict[str, str] | None = None,
     title: str | None = None,
+    theme: str = "light",
+    no_phases: bool = False,
     back_link: str | None = None,
 ) -> Path:
     """Save mermaid HTML wrapper (CDN + loose) to *output_path*."""
@@ -316,6 +371,8 @@ def save_mermaid_html(
             detail=detail,
             links=links,
             title=title,
+            theme=theme,
+            no_phases=no_phases,
             back_link=back_link,
         ),
         encoding="utf-8",

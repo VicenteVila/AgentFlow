@@ -35,6 +35,8 @@ def _handle_diff(argv: list[str]) -> None:
     parser.add_argument("--no-legend", action="store_true")
     parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--detail", choices=["low", "med", "high"], default="high")
+    parser.add_argument("--no-phases", action="store_true",
+                        help="Mermaid only: flatten phased without FASE boxes (left→right)")
     args = parser.parse_args(argv)
     if args.palette:
         args.theme = args.palette
@@ -71,10 +73,12 @@ def _handle_diff(argv: list[str]) -> None:
         from agentflow.mermaid import save_mermaid, to_mermaid
 
         if args.output:
-            path = save_mermaid(graph, args.output, layout=args.layout, detail=args.detail)
+            path = save_mermaid(graph, args.output, layout=args.layout, detail=args.detail,
+                                theme=args.theme, no_phases=args.no_phases)
             print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
         else:
-            sys.stdout.write(to_mermaid(graph, layout=args.layout, detail=args.detail))
+            sys.stdout.write(to_mermaid(graph, layout=args.layout, detail=args.detail,
+                                        theme=args.theme, no_phases=args.no_phases))
         return
     if args.format == "html":
         from agentflow.html import save_html, to_html
@@ -295,6 +299,12 @@ def main(argv: list[str] | None = None) -> None:
         default=None,
         help="Output directory for --drilldown mode (default: ./drilldown_output)",
     )
+    parser.add_argument(
+        "--no-phases",
+        action="store_true",
+        help="Mermaid only: flatten phased/phased-horizontal into a single "
+             "left→right flowchart without FASE subgraph boxes",
+    )
 
     args = parser.parse_args(argv)
     if getattr(args, "palette", None):
@@ -357,10 +367,12 @@ def main(argv: list[str] | None = None) -> None:
         from agentflow.mermaid import save_mermaid, to_mermaid
 
         if args.output:
-            path = save_mermaid(graph, args.output, layout=args.layout, detail=args.detail)
+            path = save_mermaid(graph, args.output, layout=args.layout, detail=args.detail,
+                                theme=args.theme, no_phases=args.no_phases)
             print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
         else:
-            sys.stdout.write(to_mermaid(graph, layout=args.layout, detail=args.detail))
+            sys.stdout.write(to_mermaid(graph, layout=args.layout, detail=args.detail,
+                                        theme=args.theme, no_phases=args.no_phases))
         return
 
     if args.format == "html":

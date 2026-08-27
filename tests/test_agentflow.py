@@ -999,6 +999,53 @@ def test_save_mermaid_html():
         assert "mermaid" in content.lower()
 
 
+def test_mermaid_theme_node_colors():
+    from agentflow.mermaid import to_mermaid
+
+    graph = parse(SIMPLE_AGENT, title="Theme Mermaid")
+    neon = to_mermaid(graph, layout="phased", theme="neon")
+    light = to_mermaid(graph, layout="phased", theme="light")
+    assert neon != light
+    # Neon palette: black process nodes with purple stroke
+    assert "classDef node-process fill:#000000,stroke:#8b5cf6" in neon
+    assert "themeVariables" in neon
+    assert '"lineColor": "#00ff88"' in neon  # neon arrow colour
+
+
+def test_mermaid_no_phases_flattens():
+    from agentflow.mermaid import to_mermaid
+
+    graph = parse(SIMPLE_AGENT, title="Flat Mermaid")
+    mmd = to_mermaid(graph, layout="phased", no_phases=True)
+    # No FASE subgraph boxes at all
+    assert "subgraph" not in mmd
+    # Horizontal direction
+    assert "flowchart LR" in mmd
+    # Nodes still present
+    assert "Start" in mmd or "start" in mmd
+
+
+def test_cli_mermaid_no_phases_neon():
+    import subprocess
+    import sys
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        src = Path(tmpdir) / "agent.py"
+        src.write_text("class Agent:\n    def run(self):\n        if x:\n            do_a()\n        tool()\n")
+        out = Path(tmpdir) / "reaweb.mmd"
+        result = subprocess.run(
+            [sys.executable, "-m", "agentflow.cli", "-i", str(src),
+             "-f", "mermaid", "-l", "phased", "--no-phases", "--theme", "neon",
+             "-o", str(out)],
+            capture_output=True, text=True,
+        )
+        assert result.returncode == 0, result.stderr
+        content = out.read_text()
+        assert "flowchart LR" in content
+        assert "subgraph" not in content
+        assert "classDef node-process fill:#000000,stroke:#8b5cf6" in content
+
+
 def test_mermaid_reserved_keywords_sanitized():
     from agentflow.mermaid import _sanitize_id, to_mermaid
 
