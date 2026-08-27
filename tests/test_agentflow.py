@@ -2024,6 +2024,60 @@ def test_drilldown_recursive():
         assert "Volver" in content
 
 
+def test_drilldown_method_split_links_method_nodes():
+    from agentflow.drilldown import run_drilldown
+    from agentflow.profiles import Profile
+
+    profile = Profile(
+        name="splitmethod",
+        function_splits={
+            "agent.core": [
+                ("Persist", ["save", "load"]),
+                ("Read", ["get_keys"]),
+            ],
+        },
+    )
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp) / "repo"
+        (root / "agent").mkdir(parents=True)
+        (root / "agent" / "core.py").write_text(
+            "def get_keys():\n"
+            "    return keys\n\n"
+            "def _helper():\n"
+            "    pass\n\n"
+            "class Store:\n"
+            "    def save(self):\n"
+            "        if exists:\n"
+            "            write()\n"
+            "    def load(self):\n"
+            "        return read()\n"
+        )
+        out = Path(tmp) / "out"
+        run_drilldown(root, out_dir=out, prefix="t", profile=profile,
+                      include_hidden=True)
+
+        # per-group sub-flow pages written
+        persist = next(out.glob("*Core_Persist.mmd"))
+        read = next(out.glob("*Core_Read.mmd"))
+
+        # father is the whole-file flow (not a mod_* overview)
+        father = next(out.glob("*Core.mmd")).read_text(encoding="utf-8")
+        assert "fn_store_save" in father
+        assert "mod_" not in father
+
+        # class-method nodes are click-linked to their group sub-flow
+        persist_href = f'"{persist.with_suffix(".html").name}"'
+        read_href = f'"{read.with_suffix(".html").name}"'
+        assert f"click fn_store_save href {persist_href}" in father
+        assert f"click fn_store_load href {persist_href}" in father
+        assert f"click fn_get_keys href {read_href}" in father
+
+        # group sub-flow resolves the methods into a flow
+        persist_text = persist.read_text(encoding="utf-8")
+        assert "fn_save" in persist_text and "fn_load" in persist_text
+
+
 TRIGGER_AGENT = '''
 class Agent:
     def run(self):

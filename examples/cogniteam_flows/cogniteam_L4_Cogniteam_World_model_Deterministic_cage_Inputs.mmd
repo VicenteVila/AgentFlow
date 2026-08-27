@@ -1,0 +1,151 @@
+%% Deterministic Cage · Inputs
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_8{"schema_class ==<br>WebTaskInputs<br><i>Condición en línea 8:<br>schema_class == WebTaskInputs</i>"}
+    dec_75{"any((k in task_lower for k<br>in ('móvil', 'mobile', 'phone')))<br><i>Condición en línea 75:<br>any((k in task_lower for k in ('móvil', 'mobile', 'responsiv</i>"}
+    dec_84{"task, re.I)<br><i>Condición en línea 84:<br>re.search('\\b(csv|excel|spreadsheet)\\b', task, re.I)</i>"}
+    dec_93{"task, re.I)<br><i>Condición en línea 93:<br>re.search('\\b(clasificar|classification|clasificación|categ</i>"}
+    dec_102{"re.search('\\b(random<br>forest|rf|árbol|tree)\\b', task,<br><i>Condición en línea 102:<br>re.search('\\b(random forest|rf|árbol|tree)\\b', task, re.I)</i>"}
+    dec_111{"task, re.I)<br><i>Condición en línea 111:<br>re.search('\\b(blog|artículo|article|post|entrada)\\b', task</i>"}
+    dec_133{"actions|gitlab|jenkins)\\b', task,<br><i>Condición en línea 133:<br>re.search('\\b(ci/cd|pipeline|github actions|gitlab|jenkins)</i>"}
+    dec_144{"re.search('\\baws\\b', task,<br>re.I)<br><i>Condición en línea 144:<br>re.search('\\baws\\b', task, re.I)</i>"}
+    dec_153{"hacking|exploit)\\b', task, re.I)<br><i>Condición en línea 153:<br>re.search('\\b(pentest|penetration|ethical hacking|exploit)\</i>"}
+    dec_162{"task, re.I)<br><i>Condición en línea 162:<br>re.search('\\b(web|api|aplicación|app)\\b', task, re.I)</i>"}
+    dec_171{"re.search('\\bgdpr\\b',<br>task, re.I)<br><i>Condición en línea 171:<br>re.search('\\bgdpr\\b', task, re.I)</i>"}
+    dec_183{"not template_data<br><i>Condición en línea 183:<br>not template_data</i>"}
+    dec_29{"schema_class ==<br>DataScienceTaskInputs<br><i>Condición en línea 29:<br>schema_class == DataScienceTaskInputs</i>"}
+    dec_77{"any((k in task_lower for k<br>in ('tablet', 'ipad')))<br><i>Condición en línea 77:<br>any((k in task_lower for k in ('tablet', 'ipad')))</i>"}
+    dec_86{"task, re.I)<br><i>Condición en línea 86:<br>re.search('\\b(api|endpoint|rest)\\b', task, re.I)</i>"}
+    dec_95{"task, re.I)<br><i>Condición en línea 95:<br>re.search('\\b(regresión|regression|predecir|predict)\\b', t</i>"}
+    dec_104{"task, re.I)<br><i>Condición en línea 104:<br>re.search('\\b(svm|vector|machine)\\b', task, re.I)</i>"}
+    dec_113{"task, re.I)<br><i>Condición en línea 113:<br>re.search('\\b(copy|copywriting|ventas|sales|landing)\\b', t</i>"}
+    dec_135{"task, re.I)<br><i>Condición en línea 135:<br>re.search('\\b(cloud|aws|azure|gcp|infraestructura)\\b', tas</i>"}
+    dec_146{"re.search('\\bazure\\b',<br>task, re.I)<br><i>Condición en línea 146:<br>re.search('\\bazure\\b', task, re.I)</i>"}
+    dec_155{"task, re.I)<br><i>Condición en línea 155:<br>re.search('\\b(audit|auditoría|assessment|evaluación)\\b', t</i>"}
+    dec_164{"task, re.I)<br><i>Condición en línea 164:<br>re.search('\\b(network|red|infraestructura|infra)\\b', task,</i>"}
+    dec_173{"re.search('\\biso\\s*27001\\b',<br><i>Condición en línea 173:<br>re.search('\\biso\\s*27001\\b', task, re.I)</i>"}
+    dec_38{"schema_class ==<br>ContentTaskInputs<br><i>Condición en línea 38:<br>schema_class == ContentTaskInputs</i>"}
+    dec_79{"not devices or any((k in<br>task_lower for k in ('desktop',<br><i>Condición en línea 79:<br>not devices or any((k in task_lower for k in ('desktop', 'pc</i>"}
+    dec_88{"task, re.I)<br><i>Condición en línea 88:<br>re.search('\\b(database|db|sql|postgres|mysql)\\b', task, re</i>"}
+    dec_97{"task, re.I)<br><i>Condición en línea 97:<br>re.search('\\b(cluster|agrupar|clustering|segmentar)\\b', ta</i>"}
+    dec_106{"re.search('\\b(red<br>neuronal|neural|deep|nn)\\b',<br><i>Condición en línea 106:<br>re.search('\\b(red neuronal|neural|deep|nn)\\b', task, re.I)</i>"}
+    dec_115{"task, re.I)<br><i>Condición en línea 115:<br>re.search('\\b(doc|documentación|documentation|wiki|manual)\</i>"}
+    dec_137{"task, re.I)<br><i>Condición en línea 137:<br>re.search('\\b(monitor|observability|prometheus|grafana|logs</i>"}
+    dec_148{"re.search('\\b(gcp|google<br>cloud)\\b', task, re.I)<br><i>Condición en línea 148:<br>re.search('\\b(gcp|google cloud)\\b', task, re.I)</i>"}
+    dec_157{"task, re.I)<br><i>Condición en línea 157:<br>re.search('\\b(compliance|normativa|gdpr|iso|soc2)\\b', task</i>"}
+    dec_166{"task, re.I)<br><i>Condición en línea 166:<br>re.search('\\b(cloud|aws|azure|gcp)\\b', task, re.I)</i>"}
+    dec_175{"re.search('\\bsoc2\\b',<br>task, re.I)<br><i>Condición en línea 175:<br>re.search('\\bsoc2\\b', task, re.I)</i>"}
+    dec_47{"schema_class ==<br>DevOpsTaskInputs<br><i>Condición en línea 47:<br>schema_class == DevOpsTaskInputs</i>"}
+    dec_139{"swarm|orquestación)\\b', task,<br><i>Condición en línea 139:<br>re.search('\\b(kubernetes|k8s|docker swarm|orquestación)\\b'</i>"}
+    dec_56{"schema_class ==<br>SecurityTaskInputs<br><i>Condición en línea 56:<br>schema_class == SecurityTaskInputs</i>"}
+    loop_189["For loop"]
+    dec_191{"match<br><i>Condición en línea 191:<br>match</i>"}
+    loop_208["For each pat in patterns"]
+    dec_210{"match<br><i>Condición en línea 210:<br>match</i>"}
+    dec_217{"match<br><i>Condición en línea 217:<br>match</i>"}
+    loop_233["For loop"]
+    dec_234{"keyword in task_lower<br><i>Condición en línea 234:<br>keyword in task_lower</i>"}
+    fn__extract_inputs[["Extract Inputs"]]
+    fn__extract_num_pages[["Extract Num Pages"]]
+    fn__extract_devices[["Extract Devices"]]
+    fn__extract_data_source[["Extract Data Source"]]
+    fn__extract_ml_objective[["Extract Ml Objective"]]
+    fn__extract_model_type[["Extract Model Type"]]
+    fn__extract_content_type[["Extract Content Type"]]
+    fn__extract_tone[["Extract Tone"]]
+    fn__extract_seo_keywords[["Extract Seo Keywords"]]
+    fn__extract_infra_type[["Extract Infra Type"]]
+    fn__extract_cloud_provider[["Extract Cloud Provider"]]
+    fn__extract_audit_type[["Extract Audit Type"]]
+    fn__extract_security_scope[["Extract Security Scope"]]
+    fn__extract_compliance[["Extract Compliance"]]
+    fn_extract_variables[["Extract Variables"]]
+    fn__extract_title[["Extract Title"]]
+    fn__extract_subtitle[["Extract Subtitle"]]
+    fn__extract_cta[["Extract Cta"]]
+    n_start --> fn__extract_inputs
+    fn__extract_inputs --> dec_8
+    dec_8 --> dec_29
+    dec_29 --> dec_38
+    dec_38 --> dec_47
+    dec_47 --> dec_56
+    n_start --> fn__extract_num_pages
+    n_start --> fn__extract_devices
+    fn__extract_devices --> dec_75
+    dec_75 --> dec_77
+    dec_77 --> dec_79
+    n_start --> fn__extract_data_source
+    fn__extract_data_source --> dec_84
+    dec_84 --> dec_86
+    dec_86 --> dec_88
+    n_start --> fn__extract_ml_objective
+    fn__extract_ml_objective --> dec_93
+    dec_93 --> dec_95
+    dec_95 --> dec_97
+    n_start --> fn__extract_model_type
+    fn__extract_model_type --> dec_102
+    dec_102 --> dec_104
+    dec_104 --> dec_106
+    n_start --> fn__extract_content_type
+    fn__extract_content_type --> dec_111
+    dec_111 --> dec_113
+    dec_113 --> dec_115
+    n_start --> fn__extract_tone
+    n_start --> fn__extract_seo_keywords
+    n_start --> fn__extract_infra_type
+    fn__extract_infra_type --> dec_133
+    dec_133 --> dec_135
+    dec_135 --> dec_137
+    dec_137 --> dec_139
+    n_start --> fn__extract_cloud_provider
+    fn__extract_cloud_provider --> dec_144
+    dec_144 --> dec_146
+    dec_146 --> dec_148
+    n_start --> fn__extract_audit_type
+    fn__extract_audit_type --> dec_153
+    dec_153 --> dec_155
+    dec_155 --> dec_157
+    n_start --> fn__extract_security_scope
+    fn__extract_security_scope --> dec_162
+    dec_162 --> dec_164
+    dec_164 --> dec_166
+    n_start --> fn__extract_compliance
+    fn__extract_compliance --> dec_171
+    dec_171 --> dec_173
+    dec_173 --> dec_175
+    n_start --> fn_extract_variables
+    fn_extract_variables --> dec_183
+    dec_183 --> loop_189
+    loop_189 --> dec_191
+    dec_191 -- "loop" --> loop_189
+    loop_189 --> fn__extract_title
+    fn__extract_title --> fn__extract_subtitle
+    fn__extract_subtitle --> fn__extract_cta
+    n_start --> fn__extract_title
+    fn__extract_title --> loop_208
+    loop_208 --> dec_210
+    dec_210 -- "loop" --> loop_208
+    n_start --> fn__extract_subtitle
+    fn__extract_subtitle --> dec_217
+    n_start --> fn__extract_cta
+    fn__extract_cta --> loop_233
+    loop_233 --> dec_234
+    dec_234 -- "loop" --> loop_233
+    class n_start node-start
+    class fn__extract_inputs,fn__extract_num_pages,fn__extract_devices,fn__extract_data_source,fn__extract_ml_objective,fn__extract_model_type,fn__extract_content_type,fn__extract_tone,fn__extract_seo_keywords,fn__extract_infra_type,fn__extract_cloud_provider,fn__extract_audit_type,fn__extract_security_scope,fn__extract_compliance,fn_extract_variables,fn__extract_title,fn__extract_subtitle,fn__extract_cta node-subprocess
+    class dec_8,dec_29,dec_38,dec_47,dec_56,dec_75,dec_77,dec_79,dec_84,dec_86,dec_88,dec_93,dec_95,dec_97,dec_102,dec_104,dec_106,dec_111,dec_113,dec_115,dec_133,dec_135,dec_137,dec_139,dec_144,dec_146,dec_148,dec_153,dec_155,dec_157,dec_162,dec_164,dec_166,dec_171,dec_173,dec_175,dec_183,dec_191,dec_210,dec_217,dec_234 node-decision
+    class loop_189,loop_208,loop_233 node-loop
+    class n_end node-end

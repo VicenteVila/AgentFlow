@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Operations</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="cogniteam_L2_Cogniteam_Tools.html">← Volver</a>
+  <h1>Operations</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Operations
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_15{"not safe_path<br><i>Condición en línea 15:<br>not safe_path</i>"}
+    dec_64{"not safe_path<br><i>Condición en línea 64:<br>not safe_path</i>"}
+    dec_99{"not safe_path<br><i>Condición en línea 99:<br>not safe_path</i>"}
+    dec_129{"not safe_path<br><i>Condición en línea 129:<br>not safe_path</i>"}
+    dec_165{"not safe_path<br><i>Condición en línea 165:<br>not safe_path</i>"}
+    dec_199{"not safe_path<br><i>Condición en línea 199:<br>not safe_path</i>"}
+    dec_240{"not safe_source<br><i>Condición en línea 240:<br>not safe_source</i>"}
+    dec_22{"content is None<br><i>Condición en línea 22:<br>content is None</i>"}
+    dec_72{"not<br>os.path.isfile(safe_path)<br><i>Condición en línea 72:<br>not os.path.isfile(safe_path)</i>"}
+    dec_103{"not os.path.isdir(safe_path)<br><i>Condición en línea 103:<br>not os.path.isdir(safe_path)</i>"}
+    dec_136{"os.path.exists(safe_path)<br>and os.path.isdir(safe_path)<br><i>Condición en línea 136:<br>os.path.exists(safe_path) and os.path.isdir(safe_path)</i>"}
+    dec_170{"not<br>(os.path.exists(safe_path) and<br><i>Condición en línea 170:<br>not (os.path.exists(safe_path) and os.path.isfile(safe_path)</i>"}
+    dec_205{"os.path.abspath(safe_path)<br>== root_abs<br><i>Condición en línea 205:<br>os.path.abspath(safe_path) == root_abs</i>"}
+    dec_242{"not safe_dest<br><i>Condición en línea 242:<br>not safe_dest</i>"}
+    dec_30{"not isinstance(content, str)<br><i>Condición en línea 30:<br>not isinstance(content, str)</i>"}
+    dec_109{"not items<br><i>Condición en línea 109:<br>not items</i>"}
+    dec_142{"os.path.exists(safe_path)<br>and (not os.path.isdir(safe_path))<br><i>Condición en línea 142:<br>os.path.exists(safe_path) and (not os.path.isdir(safe_path))</i>"}
+    dec_175{"not<br>ask_confirmation(f'¿Borrar<br><i>Condición en línea 175:<br>not ask_confirmation(f'¿Borrar '(relative_filepath)'? Irreve</i>"}
+    dec_210{"not<br>(os.path.exists(safe_path) and<br><i>Condición en línea 210:<br>not (os.path.exists(safe_path) and os.path.isdir(safe_path))</i>"}
+    dec_246{"os.path.abspath(safe_source) ==<br><i>Condición en línea 246:<br>os.path.abspath(safe_source) == root_abs</i>"}
+    loop_117["For each item in detailed"]
+    dec_215{"not<br>ask_confirmation(f'¿Borrar y TODO<br><i>Condición en línea 215:<br>not ask_confirmation(f'¿Borrar directorio '(relative_dirpath</i>"}
+    dec_248{"not<br>os.path.exists(safe_source)<br><i>Condición en línea 248:<br>not os.path.exists(safe_source)</i>"}
+    dec_250{"os.path.exists(safe_dest)<br>and (not ya existe.<br><i>Condición en línea 250:<br>os.path.exists(safe_dest) and (not ask_confirmation(f'Destin</i>"}
+    dec_253{"not<br>'(source_relative_path)' -><br><i>Condición en línea 253:<br>not ask_confirmation(f'¿Mover/renombrar '(source_relative_pa</i>"}
+    fn_write_file_sandboxed[["Write File Sandboxed"]]
+    fn_read_file_sandboxed[["Read File Sandboxed"]]
+    fn_list_files_sandboxed[["List Files Sandboxed"]]
+    fn_create_directory_sandboxed[["Create Directory Sandboxed"]]
+    fn_delete_file_sandboxed[["Delete File Sandboxed"]]
+    fn_delete_directory_sandboxed[["Delete Directory Sandboxed"]]
+    fn_move_or_rename_sandboxed[["Move Or Rename Sandboxed"]]
+    n_start --> fn_write_file_sandboxed
+    fn_write_file_sandboxed --> dec_15
+    dec_15 --> dec_22
+    dec_22 --> dec_30
+    n_start --> fn_read_file_sandboxed
+    fn_read_file_sandboxed --> dec_64
+    dec_64 --> dec_72
+    n_start --> fn_list_files_sandboxed
+    fn_list_files_sandboxed --> dec_99
+    dec_99 --> dec_103
+    dec_103 --> dec_109
+    dec_109 -- "NO" --> loop_117
+    n_start --> fn_create_directory_sandboxed
+    fn_create_directory_sandboxed --> dec_129
+    dec_129 --> dec_136
+    dec_136 --> dec_142
+    n_start --> fn_delete_file_sandboxed
+    fn_delete_file_sandboxed --> dec_165
+    dec_165 --> dec_170
+    dec_170 --> dec_175
+    n_start --> fn_delete_directory_sandboxed
+    fn_delete_directory_sandboxed --> dec_199
+    dec_199 --> dec_205
+    dec_205 --> dec_210
+    dec_210 --> dec_215
+    n_start --> fn_move_or_rename_sandboxed
+    fn_move_or_rename_sandboxed --> dec_240
+    dec_240 --> dec_242
+    dec_242 --> dec_246
+    dec_246 --> dec_248
+    dec_248 --> dec_250
+    dec_250 --> dec_253
+    class n_start node-start
+    class fn_write_file_sandboxed,fn_read_file_sandboxed,fn_list_files_sandboxed,fn_create_directory_sandboxed,fn_delete_file_sandboxed,fn_delete_directory_sandboxed,fn_move_or_rename_sandboxed node-subprocess
+    class dec_15,dec_22,dec_30,dec_64,dec_72,dec_99,dec_103,dec_109,dec_129,dec_136,dec_142,dec_165,dec_170,dec_175,dec_199,dec_205,dec_210,dec_215,dec_240,dec_242,dec_246,dec_248,dec_250,dec_253 node-decision
+    class loop_117 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

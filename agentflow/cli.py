@@ -211,8 +211,9 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument(
         "--profile",
         default="generic",
-        help="Domain profile: 'generic', 'reaweb', 'reagame', 'traceforge', 'asubarnipal', or path "
-             "to a .py file defining a PROFILE dict (default: generic)",
+        help="Domain profile: 'generic', 'reaweb', 'reagame', 'traceforge', 'asubarnipal', "
+             "'cogniteam', or path to a .py file defining a PROFILE dict "
+             "(default: generic)",
     )
     parser.add_argument(
         "-t", "--title",

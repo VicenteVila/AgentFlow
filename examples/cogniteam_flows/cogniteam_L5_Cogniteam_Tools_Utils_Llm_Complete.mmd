@@ -1,0 +1,79 @@
+%% Llm · Complete
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_161{"not (s.startswith(''') and<br>s.endswith('''))<br><i>Condición en línea 161:<br>not (s.startswith(''') and s.endswith('''))</i>"}
+    dec_172{"primary == 'nvidia' and<br>_nvidia_available()<br><i>Condición en línea 172:<br>primary == 'nvidia' and _nvidia_available()</i>"}
+    dec_71{"primary == 'nvidia' and<br>_nvidia_available()<br><i>Condición en línea 71:<br>primary == 'nvidia' and _nvidia_available()</i>"}
+    dec_174{"primary == 'google' and<br>_google_available()<br><i>Condición en línea 174:<br>primary == 'google' and _google_available()</i>"}
+    dec_73{"result<br><i>Condición en línea 73:<br>result</i>"}
+    dec_75{"primary == 'google' and<br>_google_available()<br><i>Condición en línea 75:<br>primary == 'google' and _google_available()</i>"}
+    dec_176{"primary == 'mistral' and<br>_mistral_available()<br><i>Condición en línea 176:<br>primary == 'mistral' and _mistral_available()</i>"}
+    dec_77{"result<br><i>Condición en línea 77:<br>result</i>"}
+    dec_79{"primary == 'mistral' and<br>_mistral_available()<br><i>Condición en línea 79:<br>primary == 'mistral' and _mistral_available()</i>"}
+    dec_178{"primary == 'cerebras' and<br>_cerebras_available()<br><i>Condición en línea 178:<br>primary == 'cerebras' and _cerebras_available()</i>"}
+    dec_81{"result<br><i>Condición en línea 81:<br>result</i>"}
+    dec_83{"primary == 'cerebras' and<br>_cerebras_available()<br><i>Condición en línea 83:<br>primary == 'cerebras' and _cerebras_available()</i>"}
+    dec_180{"_groq_available(task)<br><i>Condición en línea 180:<br>_groq_available(task)</i>"}
+    dec_85{"result<br><i>Condición en línea 85:<br>result</i>"}
+    dec_184{"settings.use_ollama and<br>settings.ollama_base_url<br><i>Condición en línea 184:<br>settings.use_ollama and settings.ollama_base_url</i>"}
+    dec_89{"_groq_available(task)<br><i>Condición en línea 89:<br>_groq_available(task)</i>"}
+    dec_101{"result<br><i>Condición en línea 101:<br>result</i>"}
+    dec_111{"settings.use_ollama and<br>settings.ollama_base_url<br><i>Condición en línea 111:<br>settings.use_ollama and settings.ollama_base_url</i>"}
+    dec_122{"result<br><i>Condición en línea 122:<br>result</i>"}
+    dec_143{"response_format<br><i>Condición en línea 143:<br>response_format</i>"}
+    dec_148{"response and<br>response.choices and<br><i>Condición en línea 148:<br>response and response.choices and response.choices(0).messag</i>"}
+    fn_llm_complete[["Llm Complete"]]
+    fn__llm_complete_body[["Llm Complete Body"]]
+    fn__escape_control_chars_in_match[["Escape Control Chars In Match"]]
+    fn__resolve_model_name[["Resolve Model Name"]]
+    fn_sanitize_json_string_for_control_chars[["Sanitize Json String For Control Chars"]]
+    fn__try_provider_49[["Try Provider"]]
+    fn_replace_char_165[["Replace Char"]]
+    tool_get_model_for_task_130["model = Model for Task<br><i>Selecciona modelo/temperatura<br>según la tarea resuelta</i>"]
+    n_start --> fn_llm_complete
+    n_start --> fn__llm_complete_body
+    fn__llm_complete_body --> fn__try_provider_49
+    fn__try_provider_49 --> dec_71
+    dec_71 --> dec_73
+    dec_71 --> dec_75
+    dec_75 --> dec_77
+    dec_75 --> dec_79
+    dec_79 --> dec_81
+    dec_79 --> dec_83
+    dec_83 --> dec_85
+    dec_85 --> dec_89
+    dec_89 --> dec_101
+    dec_101 --> dec_111
+    dec_111 --> dec_122
+    dec_122 --> tool_get_model_for_task_130
+    tool_get_model_for_task_130 --> dec_143
+    dec_143 --> dec_148
+    n_start --> fn__escape_control_chars_in_match
+    fn__escape_control_chars_in_match --> dec_161
+    dec_161 --> fn_replace_char_165
+    n_start --> fn__resolve_model_name
+    fn__resolve_model_name --> dec_172
+    dec_172 --> dec_174
+    dec_174 --> dec_176
+    dec_176 --> dec_178
+    dec_178 --> dec_180
+    dec_180 --> dec_184
+    n_start --> fn_sanitize_json_string_for_control_chars
+    class n_start node-start
+    class fn_llm_complete,fn__llm_complete_body,fn__try_provider_49,fn__escape_control_chars_in_match,fn_replace_char_165,fn__resolve_model_name,fn_sanitize_json_string_for_control_chars node-subprocess
+    class dec_71,dec_73,dec_75,dec_77,dec_79,dec_81,dec_83,dec_85,dec_89,dec_101,dec_111,dec_122,dec_143,dec_148,dec_161,dec_172,dec_174,dec_176,dec_178,dec_180,dec_184 node-decision
+    class tool_get_model_for_task_130 node-tool
+    class n_end node-end

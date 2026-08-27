@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Check Drift</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="cogniteam_L1_Scripts.html">← Volver</a>
+  <h1>Check Drift</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Check Drift
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_37{"explicit<br><i>Condición en línea 37:<br>explicit</i>"}
+    loop_48["For each ak"]
+    loop_58["For loop"]
+    dec_66{"not m<br><i>Condición en línea 66:<br>not m</i>"}
+    dec_86{"normalize(expected) ==<br>normalize(actual)<br><i>Condición en línea 86:<br>normalize(expected) == normalize(actual)</i>"}
+    dec_127{"NOT emit_vars?<br><i>Niega emit_vars<br>para lógica invertida</i>"}
+    dec_40{"env<br><i>Condición en línea 40:<br>env</i>"}
+    loop_97["For each line in diff"]
+    loop_129["For loop"]
+    dec_130{"p in required and (not<br>p.exists())<br><i>Condición en línea 130:<br>p in required and (not p.exists())</i>"}
+    dec_142{"args.emit_vars<br><i>Condición en línea 142:<br>args.emit_vars</i>"}
+    dec_161{"args.check_adapter<br><i>Condición en línea 161:<br>args.check_adapter</i>"}
+    loop_180["For loop"]
+    dec_181{"not run_check(label,<br>expected, actual, src, ref)<br><i>Condición en línea 181:<br>not run_check(label, expected, actual, src, ref)</i>"}
+    dec_184{"failed<br><i>Condición en línea 184:<br>failed</i>"}
+    fn_find_cogniteam_root[["Find Cogniteam Root"]]
+    fn__domain_line[["Domain Line"]]
+    fn_domain_list_from_yaml[["Domain List From Yaml"]]
+    fn_extract_multi_prompt[["Extract Multi Prompt"]]
+    fn_normalize[["Normalize"]]
+    fn_folded_lines[["Folded Lines"]]
+    fn_render_yaml_prompt[["Render Yaml Prompt"]]
+    fn_run_check[["Run Check"]]
+    fn_main[["Main"]]
+    n_start --> fn_find_cogniteam_root
+    fn_find_cogniteam_root --> dec_37
+    dec_37 --> dec_40
+    n_start --> fn__domain_line
+    fn__domain_line --> loop_48
+    n_start --> fn_domain_list_from_yaml
+    fn_domain_list_from_yaml --> loop_58
+    n_start --> fn_extract_multi_prompt
+    fn_extract_multi_prompt --> dec_66
+    n_start --> fn_normalize
+    n_start --> fn_folded_lines
+    n_start --> fn_render_yaml_prompt
+    n_start --> fn_run_check
+    fn_run_check --> dec_86
+    dec_86 --> loop_97
+    n_start --> fn_main
+    fn_main --> dec_127
+    dec_127 --> loop_129
+    loop_129 --> dec_130
+    dec_130 -- "loop" --> loop_129
+    loop_129 --> dec_142
+    dec_142 --> dec_161
+    dec_161 --> loop_180
+    loop_180 --> dec_181
+    dec_181 -- "loop" --> loop_180
+    loop_180 --> dec_184
+    class n_start node-start
+    class fn_find_cogniteam_root,fn__domain_line,fn_domain_list_from_yaml,fn_extract_multi_prompt,fn_normalize,fn_folded_lines,fn_render_yaml_prompt,fn_run_check,fn_main node-subprocess
+    class dec_37,dec_40,dec_66,dec_86,dec_127,dec_130,dec_142,dec_161,dec_181,dec_184 node-decision
+    class loop_48,loop_58,loop_97,loop_129,loop_180 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

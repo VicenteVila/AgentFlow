@@ -1,0 +1,66 @@
+%% Orchestrator · Repair
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_53{"not tool_names<br><i>Condición en línea 53:<br>not tool_names</i>"}
+    dec_135{"NOT repair_max_attempts?<br><i>Niega repair_max_attempts<br>para lógica invertida</i>"}
+    dec_182{"action == 'insert'<br><i>Condición en línea 182:<br>action == 'insert'</i>"}
+    dec_82{"atype == 'RETRY_SAME'<br><i>Condición en línea 82:<br>atype == 'RETRY_SAME'</i>"}
+    dec_184{"not isinstance(prep_step,<br>dict) or not<br><i>Condición en línea 184:<br>not isinstance(prep_step, dict) or not prep_step.get('tool_t</i>"}
+    dec_85{"atype == 'PATCH_INPUTS'<br><i>Condición en línea 85:<br>atype == 'PATCH_INPUTS'</i>"}
+    dec_187{"inserts >=<br>settings.repair_max_inserted_prep<br><i>Condición en línea 187:<br>inserts >= settings.repair_max_inserted_prep</i>"}
+    dec_87{"isinstance(new_inputs, dict)<br>and dict)<br><i>Condición en línea 87:<br>isinstance(new_inputs, dict) and isinstance(step_info.get('i</i>"}
+    dec_199{"isinstance(steps(step_idx),<br>dict)<br><i>Condición en línea 199:<br>isinstance(steps(step_idx), dict)</i>"}
+    dec_92{"atype == 'PATCH_TOOL'<br><i>Condición en línea 92:<br>atype == 'PATCH_TOOL'</i>"}
+    dec_94{"new_tool in tool_map and<br>new_tool !=<br><i>Condición en línea 94:<br>new_tool in tool_map and new_tool != step_info.get('tool_to_</i>"}
+    dec_101{"atype == 'INSERT_BEFORE'<br><i>Condición en línea 101:<br>atype == 'INSERT_BEFORE'</i>"}
+    loop_208["For each i"]
+    dec_210{"isinstance(s, dict) and<br>isinstance(s.get('step'), int)<br><i>Condición en línea 210:<br>isinstance(s, dict) and isinstance(s.get('step'), int)</i>"}
+    dec_214{"action == 'retry'<br><i>Condición en línea 214:<br>action == 'retry'</i>"}
+    fn__is_transient_error[["Is Transient Error"]]
+    fn__try_local_repair[["Try Local Repair"]]
+    fn__try_local_repair_v2[["Try Local Repair V2"]]
+    fn__build_repair_structure_hint[["Build Repair Structure Hint"]]
+    tool_repair_with_loop_151["result = Repair Loop<br><i>Bucle de reparación: staging →<br>evidence → verify → promote</i>"]
+    tool_repair_step_59["action = Repair Step<br><i>Arregla un paso fallido con<br>feedback del validador</i>"]
+    n_start --> fn__is_transient_error
+    n_start --> fn__build_repair_structure_hint
+    n_start --> fn__try_local_repair
+    fn__try_local_repair --> dec_53
+    dec_53 --> fn__build_repair_structure_hint
+    fn__build_repair_structure_hint --> tool_repair_step_59
+    tool_repair_step_59 --> dec_82
+    dec_82 --> dec_85
+    dec_85 --> dec_87
+    dec_87 --> dec_92
+    dec_92 --> dec_94
+    dec_94 --> dec_101
+    n_start --> fn__try_local_repair_v2
+    fn__try_local_repair_v2 --> dec_135
+    dec_135 --> tool_repair_with_loop_151
+    tool_repair_with_loop_151 --> dec_182
+    dec_182 --> dec_184
+    dec_184 --> dec_187
+    dec_187 --> dec_199
+    dec_199 --> loop_208
+    loop_208 --> dec_210
+    dec_210 -- "loop" --> loop_208
+    loop_208 --> dec_214
+    class n_start node-start
+    class fn__is_transient_error,fn__build_repair_structure_hint,fn__try_local_repair,fn__try_local_repair_v2 node-subprocess
+    class dec_53,dec_82,dec_85,dec_87,dec_92,dec_94,dec_101,dec_135,dec_182,dec_184,dec_187,dec_199,dec_210,dec_214 node-decision
+    class tool_repair_step_59,tool_repair_with_loop_151 node-tool
+    class loop_208 node-loop
+    class n_end node-end

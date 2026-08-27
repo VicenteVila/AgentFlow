@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skills</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="cogniteam_L3_Cogniteam_Memory_Skills.html">← Volver</a>
+  <h1>Skills</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Skills
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    loop_123["Loop"]
+    dec_164{"skill_id not in self.skills<br><i>Condición en línea 164:<br>skill_id not in self.skills</i>"}
+    dec_195{"preferred == skill_a_id<br><i>Condición en línea 195:<br>preferred == skill_a_id</i>"}
+    loop_244["Loop"]
+    dec_271{"source not in self.graph or<br>target not in self.graph<br><i>Condición en línea 271:<br>source not in self.graph or target not in self.graph</i>"}
+    dec_319{"self.graph.number_of_nodes() == 0<br><i>Condición en línea 319:<br>self.graph.number_of_nodes() == 0</i>"}
+    loop_324["For loop"]
+    loop_369["For loop"]
+    loop_377["For loop"]
+    dec_516{"context('preferred_skill')<br>and context('preferred_skill') in<br><i>Condición en línea 516:<br>context('preferred_skill') and context('preferred_skill') in</i>"}
+    dec_518{"pref_skill.prompt_template<br><i>Condición en línea 518:<br>pref_skill.prompt_template</i>"}
+    dec_532{"result<br><i>Condición en línea 532:<br>result</i>"}
+    loop_214["For each p in preferences"]
+    dec_215{"p.skill_a_id in candidates<br>or p.skill_b_id in candidates<br><i>Condición en línea 215:<br>p.skill_a_id in candidates or p.skill_b_id in candidates</i>"}
+    dec_216{"p.preferred == p.skill_a_id<br><i>Condición en línea 216:<br>p.preferred == p.skill_a_id</i>"}
+    loop_222["For each c in candidates"]
+    dec_223{"c in self.skills<br><i>Condición en línea 223:<br>c in self.skills</i>"}
+    dec_227{"not pref_scores<br><i>Condición en línea 227:<br>not pref_scores</i>"}
+    loop_291["For loop"]
+    dec_292{"existing_id == node_id<br><i>Condición en línea 292:<br>existing_id == node_id</i>"}
+    dec_297{"overlap > 2<br><i>Condición en línea 297:<br>overlap > 2</i>"}
+    dec_299{"overlap > 5<br><i>Condición en línea 299:<br>overlap > 5</i>"}
+    dec_306{"len(self.nodes) > 1000<br><i>Condición en línea 306:<br>len(self.nodes) > 1000</i>"}
+    loop_341["For loop"]
+    loop_344["For each neighbor_id"]
+    dec_345{"neighbor_id in self.nodes<br><i>Condición en línea 345:<br>neighbor_id in self.nodes</i>"}
+    loop_380["For each node_id in to_remove"]
+    dec_381{"node_id in self.nodes<br><i>Condición en línea 381:<br>node_id in self.nodes</i>"}
+    dec_383{"node_id in self.graph<br><i>Condición en línea 383:<br>node_id in self.graph</i>"}
+    loop_401["For each round_num"]
+    dec_405{"verbose<br><i>Condición en línea 405:<br>verbose</i>"}
+    loop_409["For each skill in top_skills"]
+    dec_421{"round_num > 0 and<br>random.random() < 0.3<br><i>Condición en línea 421:<br>round_num > 0 and random.random() < 0.3</i>"}
+    loop_475["For each skill"]
+    dec_476{"query_lower in<br>skill.name.lower() or query_lower<br><i>Condición en línea 476:<br>query_lower in skill.name.lower() or query_lower in skill.de</i>"}
+    dec_485{"matching_skills<br><i>Condición en línea 485:<br>matching_skills</i>"}
+    fn_get_skills[["Get Skills"]]
+    fn_skillpolicymanager_register_skill[["Register Skill"]]
+    fn_skillpolicymanager_get_skills_by_category[["Get Skills By Category"]]
+    fn_skillpolicymanager_get_top_skills[["Get Top Skills"]]
+    fn_skillpolicymanager_record_skill_usage[["Record Skill Usage"]]
+    fn_skillpolicymanager_add_preference[["Add Preference"]]
+    fn_skillpolicymanager__update_skill_score[["Update Skill Score"]]
+    fn_skillpolicymanager_get_preferred_skill[["Get Preferred Skill"]]
+    fn_skillpolicymanager__add_sage_node[["Add Sage Node"]]
+    fn_skillpolicymanager__add_sage_edge[["Add Sage Edge"]]
+    fn_skillpolicymanager_sage_write[["Sage Write"]]
+    fn_skillpolicymanager_sage_read[["Sage Read"]]
+    fn_skillpolicymanager__sage_consolidate[["Sage Consolidate"]]
+    fn_skillpolicymanager_co_evolve[["Co Evolve"]]
+    fn_skillpolicymanager__generate_new_skill[["Generate New Skill"]]
+    fn_skillpolicymanager_retrieve_with_memory[["Retrieve With Memory"]]
+    tool_sage_read_470["graph_context = Sage Read<br><i>Lee el grafo de memoria<br>(sage graph)</i>"]
+    fn_skillpolicymanager_answer_with_memory[["Answer With Memory"]]
+    tool_retrieve_with_memory_507["context = Retrieve w/ Memory<br><i>Recupera skills relevantes para<br>la tarea</i>"]
+    fn_skillpolicymanager_save[["Save"]]
+    fn_skillpolicymanager_load[["Load"]]
+    tool_llm_complete_531["result = LLM Complete<br><i>Groq/Ollama: envía prompt + contexto<br>→ JSON/texto (routing por proveedor)</i>"]
+    tool_record_skill_usage_412["Record Skill Usage<br><i>Registra uso de skill y ajusta<br>score</i>"]
+    tool_sage_write_415["Sage Write<br><i>Escribe en el grafo de memoria</i>"]
+    evo__sage_consolidate_307["Sage Consolidate<br><i>Consolida el grafo de memoria<br>(sage)</i>"]:::evolution
+    evo__generate_new_skill_422["Generate Skill<br><i>Crea una skill nueva con prompt</i>"]:::evolution
+    n_start --> fn_get_skills
+    n_start --> fn_skillpolicymanager_register_skill
+    fn_skillpolicymanager_register_skill --> loop_123
+    fn_skillpolicymanager_register_skill --> fn_skillpolicymanager_get_skills_by_category
+    fn_skillpolicymanager_get_skills_by_category --> fn_skillpolicymanager_get_top_skills
+    fn_skillpolicymanager_get_top_skills --> fn_skillpolicymanager_record_skill_usage
+    fn_skillpolicymanager_record_skill_usage --> dec_164
+    fn_skillpolicymanager_record_skill_usage --> fn_skillpolicymanager_add_preference
+    fn_skillpolicymanager_add_preference --> dec_195
+    fn_skillpolicymanager_add_preference --> fn_skillpolicymanager__update_skill_score
+    fn_skillpolicymanager__update_skill_score --> fn_skillpolicymanager_get_preferred_skill
+    fn_skillpolicymanager_get_preferred_skill --> loop_214
+    loop_214 --> dec_215
+    dec_215 --> dec_216
+    dec_216 -- "loop" --> loop_214
+    loop_214 --> loop_222
+    loop_222 --> dec_223
+    dec_223 -- "loop" --> loop_222
+    loop_222 --> dec_227
+    fn_skillpolicymanager_get_preferred_skill --> fn_skillpolicymanager__add_sage_node
+    fn_skillpolicymanager__add_sage_node --> loop_244
+    fn_skillpolicymanager__add_sage_node --> fn_skillpolicymanager__add_sage_edge
+    fn_skillpolicymanager__add_sage_edge --> dec_271
+    fn_skillpolicymanager__add_sage_edge --> fn_skillpolicymanager_sage_write
+    fn_skillpolicymanager_sage_write --> loop_291
+    loop_291 --> dec_292
+    dec_292 --> dec_297
+    dec_297 --> dec_299
+    dec_299 -- "loop" --> loop_291
+    loop_291 --> dec_306
+    dec_306 --> evo__sage_consolidate_307
+    fn_skillpolicymanager_sage_write --> fn_skillpolicymanager_sage_read
+    fn_skillpolicymanager_sage_read --> dec_319
+    dec_319 --> loop_324
+    loop_324 --> loop_341
+    loop_341 --> loop_344
+    loop_344 --> dec_345
+    dec_345 -- "loop" --> loop_344
+    loop_344 -- "loop" --> loop_341
+    fn_skillpolicymanager_sage_read --> fn_skillpolicymanager__sage_consolidate
+    fn_skillpolicymanager__sage_consolidate --> loop_369
+    loop_369 --> loop_377
+    loop_377 --> loop_380
+    loop_380 --> dec_381
+    dec_381 --> dec_383
+    dec_383 -- "loop" --> loop_380
+    fn_skillpolicymanager__sage_consolidate --> fn_skillpolicymanager_co_evolve
+    fn_skillpolicymanager_co_evolve --> loop_401
+    loop_401 --> dec_405
+    dec_405 --> loop_409
+    loop_409 --> tool_record_skill_usage_412
+    tool_record_skill_usage_412 --> tool_sage_write_415
+    tool_sage_write_415 -- "loop" --> loop_409
+    loop_409 --> dec_421
+    dec_421 --> evo__generate_new_skill_422
+    evo__generate_new_skill_422 -- "loop" --> loop_401
+    fn_skillpolicymanager_co_evolve --> fn_skillpolicymanager__generate_new_skill
+    fn_skillpolicymanager__generate_new_skill --> fn_skillpolicymanager_retrieve_with_memory
+    fn_skillpolicymanager_retrieve_with_memory --> tool_sage_read_470
+    tool_sage_read_470 --> loop_475
+    loop_475 --> dec_476
+    dec_476 -- "loop" --> loop_475
+    loop_475 --> dec_485
+    fn_skillpolicymanager_retrieve_with_memory --> fn_skillpolicymanager_answer_with_memory
+    fn_skillpolicymanager_answer_with_memory --> tool_retrieve_with_memory_507
+    tool_retrieve_with_memory_507 --> dec_516
+    dec_516 --> dec_518
+    dec_518 --> tool_llm_complete_531
+    tool_llm_complete_531 --> dec_532
+    fn_skillpolicymanager_answer_with_memory --> fn_skillpolicymanager_save
+    fn_skillpolicymanager_save --> fn_skillpolicymanager_load
+    class n_start node-start
+    class fn_get_skills,fn_skillpolicymanager_register_skill,fn_skillpolicymanager_get_skills_by_category,fn_skillpolicymanager_get_top_skills,fn_skillpolicymanager_record_skill_usage,fn_skillpolicymanager_add_preference,fn_skillpolicymanager__update_skill_score,fn_skillpolicymanager_get_preferred_skill,fn_skillpolicymanager__add_sage_node,fn_skillpolicymanager__add_sage_edge,fn_skillpolicymanager_sage_write,fn_skillpolicymanager_sage_read,fn_skillpolicymanager__sage_consolidate,fn_skillpolicymanager_co_evolve,fn_skillpolicymanager__generate_new_skill,fn_skillpolicymanager_retrieve_with_memory,fn_skillpolicymanager_answer_with_memory,fn_skillpolicymanager_save,fn_skillpolicymanager_load node-subprocess
+    class loop_123,loop_214,loop_222,loop_244,loop_291,loop_324,loop_341,loop_344,loop_369,loop_377,loop_380,loop_401,loop_409,loop_475 node-loop
+    class dec_164,dec_195,dec_215,dec_216,dec_223,dec_227,dec_271,dec_292,dec_297,dec_299,dec_306,dec_319,dec_345,dec_381,dec_383,dec_405,dec_421,dec_476,dec_485,dec_516,dec_518,dec_532 node-decision
+    class tool_record_skill_usage_412,tool_sage_write_415,tool_sage_read_470,tool_retrieve_with_memory_507,tool_llm_complete_531 node-tool
+    class n_end node-end
+    click fn_get_skills href "cogniteam_L5_Cogniteam_Memory_Skills_Skills_Retrieve.html" "Abrir detalle"
+    click fn_skillpolicymanager_register_skill href "cogniteam_L5_Cogniteam_Memory_Skills_Skills_Manager.html" "Abrir detalle"
+    click fn_skillpolicymanager_get_skills_by_category href "cogniteam_L5_Cogniteam_Memory_Skills_Skills_Manager.html" "Abrir detalle"
+    click fn_skillpolicymanager_get_top_skills href "cogniteam_L5_Cogniteam_Memory_Skills_Skills_Manager.html" "Abrir detalle"
+    click fn_skillpolicymanager_record_skill_usage href "cogniteam_L5_Cogniteam_Memory_Skills_Skills_Manager.html" "Abrir detalle"
+    click fn_skillpolicymanager_add_preference href "cogniteam_L5_Cogniteam_Memory_Skills_Skills_Manager.html" "Abrir detalle"
+    click fn_skillpolicymanager__update_skill_score href "cogniteam_L5_Cogniteam_Memory_Skills_Skills_Manager.html" "Abrir detalle"
+    click fn_skillpolicymanager_get_preferred_skill href "cogniteam_L5_Cogniteam_Memory_Skills_Skills_Manager.html" "Abrir detalle"
+    click fn_skillpolicymanager__add_sage_node href "cogniteam_L5_Cogniteam_Memory_Skills_Skills_SageGraph.html" "Abrir detalle"
+    click fn_skillpolicymanager__add_sage_edge href "cogniteam_L5_Cogniteam_Memory_Skills_Skills_SageGraph.html" "Abrir detalle"
+    click fn_skillpolicymanager_sage_write href "cogniteam_L5_Cogniteam_Memory_Skills_Skills_SageGraph.html" "Abrir detalle"
+    click fn_skillpolicymanager_sage_read href "cogniteam_L5_Cogniteam_Memory_Skills_Skills_SageGraph.html" "Abrir detalle"
+    click fn_skillpolicymanager__sage_consolidate href "cogniteam_L5_Cogniteam_Memory_Skills_Skills_SageGraph.html" "Abrir detalle"
+    click fn_skillpolicymanager_co_evolve href "cogniteam_L5_Cogniteam_Memory_Skills_Skills_CoEvolve.html" "Abrir detalle"
+    click fn_skillpolicymanager__generate_new_skill href "cogniteam_L5_Cogniteam_Memory_Skills_Skills_CoEvolve.html" "Abrir detalle"
+    click fn_skillpolicymanager_retrieve_with_memory href "cogniteam_L5_Cogniteam_Memory_Skills_Skills_Retrieve.html" "Abrir detalle"
+    click fn_skillpolicymanager_answer_with_memory href "cogniteam_L5_Cogniteam_Memory_Skills_Skills_Retrieve.html" "Abrir detalle"
+    click fn_skillpolicymanager_save href "cogniteam_L5_Cogniteam_Memory_Skills_Skills_Manager.html" "Abrir detalle"
+    click fn_skillpolicymanager_load href "cogniteam_L5_Cogniteam_Memory_Skills_Skills_Manager.html" "Abrir detalle"
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

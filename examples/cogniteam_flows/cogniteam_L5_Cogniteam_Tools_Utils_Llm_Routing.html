@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Llm · Routing</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="cogniteam_L4_Cogniteam_Tools_Utils_Llm.html">← Volver</a>
+  <h1>Llm · Routing</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Llm · Routing
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_8{"is_circuit_open(provider)<br><i>Condición en línea 8:<br>is_circuit_open(provider)</i>"}
+    dec_17{"NOT use_ollama?<br><i>Niega use_ollama<br>para lógica invertida</i>"}
+    dec_33{"and (not<br><i>Condición en línea 33:<br>model_name_str.startswith('gemini-') and (not model_name_str</i>"}
+    dec_11{"limits<br><i>Condición en línea 11:<br>limits</i>"}
+    dec_28{"not<br>model.startswith('ollama/')<br><i>Condición en línea 28:<br>not model.startswith('ollama/')</i>"}
+    dec_35{"and (not<br><i>Condición en línea 35:<br>model_name_str.startswith('models/') and (not model_name_str</i>"}
+    dec_38{"Condition?<br><i>Condición en línea 38:<br>model_name_str.startswith('ollama/')</i>"}
+    dec_40{"ollama_model_name and<br>model_name_str == and (not<br><i>Condición en línea 40:<br>ollama_model_name and model_name_str == ollama_model_name an</i>"}
+    dec_46{"settings.use_ollama and (not<br><i>Condición en línea 46:<br>settings.use_ollama and (not model_name_str.startswith('gemi</i>"}
+    fn_get_last_provider[["Get Last Provider"]]
+    fn_get_last_model[["Get Last Model"]]
+    fn__provider_available[["Provider Available"]]
+    fn_get_model_for_task[["Get Model For Task"]]
+    fn_get_litellm_model_name[["Get Litellm Model Name"]]
+    fn_get_genai_model_name[["Get Genai Model Name"]]
+    n_start --> fn_get_last_provider
+    n_start --> fn_get_last_model
+    n_start --> fn__provider_available
+    fn__provider_available --> dec_8
+    dec_8 --> dec_11
+    n_start --> fn_get_model_for_task
+    fn_get_model_for_task --> dec_17
+    dec_17 --> dec_28
+    n_start --> fn_get_litellm_model_name
+    fn_get_litellm_model_name --> dec_33
+    dec_33 --> dec_35
+    dec_35 --> dec_38
+    dec_38 --> dec_40
+    dec_40 --> dec_46
+    n_start --> fn_get_genai_model_name
+    class n_start node-start
+    class fn_get_last_provider,fn_get_last_model,fn__provider_available,fn_get_model_for_task,fn_get_litellm_model_name,fn_get_genai_model_name node-subprocess
+    class dec_8,dec_11,dec_17,dec_28,dec_33,dec_35,dec_38,dec_40,dec_46 node-decision
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

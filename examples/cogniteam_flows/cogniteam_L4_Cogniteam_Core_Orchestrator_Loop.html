@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orchestrator · Loop</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="cogniteam_L3_Cogniteam_Core_Orchestrator.html">← Volver</a>
+  <h1>Orchestrator · Loop</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Orchestrator · Loop
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_26{"memory_enabled<br><i>Condición en línea 26:<br>memory_enabled</i>"}
+    fn__get_memory_context_28["memory_context = Memory Context<br><i>Compone el contexto de memoria<br>para el paso</i>"]
+    dec_29{"memory_context<br><i>Condición en línea 29:<br>memory_context</i>"}
+    dec_39{"artifacts_dir is None<br><i>Condición en línea 39:<br>artifacts_dir is None</i>"}
+    loop_62["Loop"]
+    dec_64{"replan_count > 0<br><i>Condición en línea 64:<br>replan_count > 0</i>"}
+    dec_66{"failed_plan_summary<br><i>Condición en línea 66:<br>failed_plan_summary</i>"}
+    dec_71{"continuation_mode<br><i>Condición en línea 71:<br>continuation_mode</i>"}
+    dec_93{"wm_status == 'failed'<br><i>Condición en línea 93:<br>wm_status == 'failed'</i>"}
+    dec_96{"plan_result.get('action') ==<br>'RECLARIFY'<br><i>Condición en línea 96:<br>plan_result.get('action') == 'RECLARIFY'</i>"}
+    dec_109{"not plan or not<br>isinstance(plan.get('steps'), or<br><i>Condición en línea 109:<br>not plan or not isinstance(plan.get('steps'), list) or (not</i>"}
+    dec_111{"replan_count <<br>max_replanning<br><i>Condición en línea 111:<br>replan_count < max_replanning</i>"}
+    dec_124{"continuation_mode<br><i>Condición en línea 124:<br>continuation_mode</i>"}
+    loop_125["For loop"]
+    dec_126{"isinstance(_s, dict)<br><i>Condición en línea 126:<br>isinstance(_s, dict)</i>"}
+    dec_133{"domain and archetype<br><i>Condición en línea 133:<br>domain and archetype</i>"}
+    dec_138{"continuation_mode<br><i>Condición en línea 138:<br>continuation_mode</i>"}
+    dec_143{"not structure_gate('passed')<br><i>Condición en línea 143:<br>not structure_gate('passed')</i>"}
+    dec_153{"not structure_gate('passed')<br><i>Condición en línea 153:<br>not structure_gate('passed')</i>"}
+    dec_159{"added<br><i>Condición en línea 159:<br>added</i>"}
+    dec_167{"not structure_gate('passed')<br><i>Condición en línea 167:<br>not structure_gate('passed')</i>"}
+    dec_169{"replan_count <<br>max_replanning<br><i>Condición en línea 169:<br>replan_count < max_replanning</i>"}
+    loop_189["Loop"]
+    dec_191{"flow_failed<br><i>Condición en línea 191:<br>flow_failed</i>"}
+    dec_194{"not isinstance(step_info,<br>dict)<br><i>Condición en línea 194:<br>not isinstance(step_info, dict)</i>"}
+    dec_203{"isinstance(step_num, int)<br>and step_num < resume_from<br><i>Condición en línea 203:<br>isinstance(step_num, int) and step_num < resume_from</i>"}
+    dec_221{"resolved and resolved !=<br>'AgentLogic'<br><i>Condición en línea 221:<br>resolved and resolved != 'AgentLogic'</i>"}
+    dec_328{"step_info.get('step_id') or<br>tool_name<br><i>Condición en línea 328:<br>step_info.get('step_id') or tool_name</i>"}
+    dec_331{"not step_ok<br><i>Condición en línea 331:<br>not step_ok</i>"}
+    dec_337{"step_attempts == 0 and<br><i>Condición en línea 337:<br>step_attempts == 0 and _is_transient_error(failed_step_detai</i>"}
+    dec_343{"settings.local_recovery and<br>step_attempts <= local_attempts<br><i>Condición en línea 343:<br>settings.local_recovery and step_attempts <= local_attempts</i>"}
+    dec_365{"action == 'retry'<br><i>Condición en línea 365:<br>action == 'retry'</i>"}
+    dec_368{"action == 'insert'<br><i>Condición en línea 368:<br>action == 'insert'</i>"}
+    dec_374{"step_attempts <<br>max_replanning<br><i>Condición en línea 374:<br>step_attempts < max_replanning</i>"}
+    dec_397{"requested_continuation<br><i>Condición en línea 397:<br>requested_continuation</i>"}
+    dec_400{"step_cap_exceeded<br><i>Condición en línea 400:<br>step_cap_exceeded</i>"}
+    dec_403{"flow_failed and replan_count<br>< max_replanning<br><i>Condición en línea 403:<br>flow_failed and replan_count < max_replanning</i>"}
+    dec_408{"flow_failed<br><i>Condición en línea 408:<br>flow_failed</i>"}
+    dec_416{"world_model and<br>world_model.get('keywords')<br><i>Condición en línea 416:<br>world_model and world_model.get('keywords')</i>"}
+    dec_435{"Condition?<br><i>Condición en línea 435:<br>grounding_result.should_continue()</i>"}
+    dec_437{"grounding_result.should_replan()<br><i>Condición en línea 437:<br>grounding_result.should_replan()</i>"}
+    dec_447{"grounding_result.should_abort()<br><i>Condición en línea 447:<br>grounding_result.should_abort()</i>"}
+    dec_456{"execution_success and domain<br>and archetype<br><i>Condición en línea 456:<br>execution_success and domain and archetype</i>"}
+    dec_466{"not _gate_v('passed')<br><i>Condición en línea 466:<br>not _gate_v('passed')</i>"}
+    dec_469{"replan_count <<br>max_replanning<br><i>Condición en línea 469:<br>replan_count < max_replanning</i>"}
+    dec_488{"execution_success and<br>world_model and<br><i>Condición en línea 488:<br>execution_success and world_model and world_model.get('keywo</i>"}
+    dec_490{"file_keywords<br><i>Condición en línea 490:<br>file_keywords</i>"}
+    loop_492["For each fname in file_keywords"]
+    dec_493{"not<br>_find_file_in_tree(artifacts_dir,<br><i>Condición en línea 493:<br>not _find_file_in_tree(artifacts_dir, fname)</i>"}
+    dec_495{"missing<br><i>Condición en línea 495:<br>missing</i>"}
+    dec_502{"execution_success and domain<br>and archetype<br><i>Condición en línea 502:<br>execution_success and domain and archetype</i>"}
+    dec_508{"not v('passed')<br><i>Condición en línea 508:<br>not v('passed')</i>"}
+    loop_510["For each e"]
+    dec_520{"execution_success<br><i>Condición en línea 520:<br>execution_success</i>"}
+    dec_523{"quality('total_conflicts') ><br>0<br><i>Condición en línea 523:<br>quality('total_conflicts') > 0</i>"}
+    loop_526["For each fwc"]
+    loop_527["For each c"]
+    dec_529{"quality('files_checked') > 0<br><i>Condición en línea 529:<br>quality('files_checked') > 0</i>"}
+    dec_533{"execution_success<br><i>Condición en línea 533:<br>execution_success</i>"}
+    fn__run_functional_validation_534["Functional Validation<br><i>Ejecuta validación funcional del<br>artefacto (script de prueba)</i>"]
+    dec_537{"calibration_store is not<br>None and domain and archetype and<br><i>Condición en línea 537:<br>calibration_store is not None and domain and archetype and w</i>"}
+    dec_545{"memory_enabled<br><i>Condición en línea 545:<br>memory_enabled</i>"}
+    dec_553{"flow_failed<br><i>Condición en línea 553:<br>flow_failed</i>"}
+    dec_575{"not flow_failed and domain<br>and archetype<br><i>Condición en línea 575:<br>not flow_failed and domain and archetype</i>"}
+    fn_run_orchestrated_flow[["Run Orchestrated Flow"]]
+    tool_generate_plan_with_world_model_76["plan_result = Plan w/ World Model<br><i>Plan enriquecido con el bloque<br>YAML del world model</i>"]
+    tool_create_cage_from_yaml_136["cage = Cage from YAML<br><i>Construye DeterministicCage<br>apartir del archetype YAML</i>"]
+    tool_extract_inputs_from_task_137["extracted_inputs = Extract Inputs<br><i>Extrae entradas del task<br>según el archetype</i>"]
+    tool_complete_plan_156["Complete Plan<br><i>YamlCage: completa el plan con<br>pasos de código/html/stack</i>"]
+    tool_create_cage_from_yaml_458["cage = Cage from YAML<br><i>Construye DeterministicCage<br>apartir del archetype YAML</i>"]
+    tool_extract_inputs_from_task_459["extracted_inputs = Extract Inputs<br><i>Extrae entradas del task<br>según el archetype</i>"]
+    tool_validate_artifacts_460["Validate Artifacts<br><i>YamlCage: valida el árbol de<br>artefactos generados</i>"]
+    tool_create_cage_from_yaml_505["cage = Cage from YAML<br><i>Construye DeterministicCage<br>apartir del archetype YAML</i>"]
+    tool_extract_inputs_from_task_506["extracted_inputs = Extract Inputs<br><i>Extrae entradas del task<br>según el archetype</i>"]
+    tool_validate_artifacts_507["v = Validate Artifacts<br><i>YamlCage: valida el árbol de<br>artefactos generados</i>"]
+    tool_verify_html_quality_522["quality = Verify HTML Quality<br><i>Valida calidad del HTML generado</i>"]
+    fn__record_step_skill_usage_329["Record Skill Usage<br><i>Persiste uso de skills<br>→ memoria de equipo</i>"]:::evolution
+    n_start --> fn_run_orchestrated_flow
+    fn_run_orchestrated_flow --> dec_26
+    dec_26 --> fn__get_memory_context_28
+    fn__get_memory_context_28 --> dec_29
+    dec_29 --> dec_39
+    dec_39 --> loop_62
+    loop_62 --> dec_64
+    dec_64 --> dec_66
+    dec_66 --> dec_71
+    dec_71 --> tool_generate_plan_with_world_model_76
+    tool_generate_plan_with_world_model_76 --> dec_93
+    dec_93 --> dec_96
+    dec_96 --> dec_109
+    dec_109 --> dec_111
+    dec_111 --> dec_124
+    dec_124 --> loop_125
+    loop_125 --> dec_126
+    dec_126 -- "loop" --> loop_125
+    loop_125 --> dec_133
+    dec_133 --> tool_create_cage_from_yaml_136
+    tool_create_cage_from_yaml_136 --> tool_extract_inputs_from_task_137
+    tool_extract_inputs_from_task_137 --> dec_138
+    dec_138 -- "YES" --> dec_143
+    dec_138 --> dec_153
+    dec_153 --> tool_complete_plan_156
+    tool_complete_plan_156 --> dec_159
+    dec_159 --> dec_167
+    dec_167 -- "YES" --> dec_169
+    dec_167 --> loop_189
+    loop_189 --> dec_191
+    dec_191 --> dec_194
+    dec_194 --> dec_203
+    dec_203 --> dec_221
+    dec_221 --> dec_328
+    dec_328 --> fn__record_step_skill_usage_329
+    fn__record_step_skill_usage_329 --> dec_331
+    dec_331 --> dec_337
+    dec_337 --> dec_343
+    dec_343 --> dec_365
+    dec_365 --> dec_368
+    dec_368 --> dec_374
+    dec_374 -- "loop" --> loop_189
+    loop_189 --> dec_397
+    dec_397 --> dec_400
+    dec_400 --> dec_403
+    dec_403 --> dec_408
+    dec_408 --> dec_416
+    dec_416 --> dec_435
+    dec_435 --> dec_437
+    dec_437 --> dec_447
+    dec_416 --> dec_456
+    dec_456 --> tool_create_cage_from_yaml_458
+    tool_create_cage_from_yaml_458 --> tool_extract_inputs_from_task_459
+    tool_extract_inputs_from_task_459 --> tool_validate_artifacts_460
+    tool_validate_artifacts_460 --> dec_466
+    dec_466 -- "YES" --> dec_469
+    dec_466 -- "loop" --> loop_62
+    loop_62 --> dec_488
+    dec_488 --> dec_490
+    dec_490 --> loop_492
+    loop_492 --> dec_493
+    dec_493 -- "loop" --> loop_492
+    loop_492 --> dec_495
+    dec_495 --> dec_502
+    dec_502 --> tool_create_cage_from_yaml_505
+    tool_create_cage_from_yaml_505 --> tool_extract_inputs_from_task_506
+    tool_extract_inputs_from_task_506 --> tool_validate_artifacts_507
+    tool_validate_artifacts_507 --> dec_508
+    dec_508 -- "YES" --> loop_510
+    dec_508 --> dec_520
+    dec_520 --> tool_verify_html_quality_522
+    tool_verify_html_quality_522 --> dec_523
+    dec_523 --> loop_526
+    loop_526 --> loop_527
+    loop_527 -- "loop" --> loop_526
+    dec_523 --> dec_529
+    dec_529 --> dec_533
+    dec_533 --> fn__run_functional_validation_534
+    fn__run_functional_validation_534 --> dec_537
+    dec_537 --> dec_545
+    dec_545 --> dec_553
+    dec_553 --> dec_575
+    class n_start node-start
+    class fn_run_orchestrated_flow node-subprocess
+    class dec_26,dec_29,dec_39,dec_64,dec_66,dec_71,dec_93,dec_96,dec_109,dec_111,dec_124,dec_126,dec_133,dec_138,dec_143,dec_153,dec_159,dec_167,dec_169,dec_191,dec_194,dec_203,dec_221,dec_328,dec_331,dec_337,dec_343,dec_365,dec_368,dec_374,dec_397,dec_400,dec_403,dec_408,dec_416,dec_435,dec_437,dec_447,dec_456,dec_466,dec_469,dec_488,dec_490,dec_493,dec_495,dec_502,dec_508,dec_520,dec_523,dec_529,dec_533,dec_537,dec_545,dec_553,dec_575 node-decision
+    class fn__get_memory_context_28,fn__run_functional_validation_534 node-process
+    class loop_62,loop_125,loop_189,loop_492,loop_510,loop_526,loop_527 node-loop
+    class tool_generate_plan_with_world_model_76,tool_create_cage_from_yaml_136,tool_extract_inputs_from_task_137,tool_complete_plan_156,tool_create_cage_from_yaml_458,tool_extract_inputs_from_task_459,tool_validate_artifacts_460,tool_create_cage_from_yaml_505,tool_extract_inputs_from_task_506,tool_validate_artifacts_507,tool_verify_html_quality_522 node-tool
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

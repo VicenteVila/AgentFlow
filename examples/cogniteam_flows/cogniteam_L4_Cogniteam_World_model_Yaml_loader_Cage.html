@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yaml Loader · Cage</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="cogniteam_L3_Cogniteam_World_model_Yaml_loader.html">← Volver</a>
+  <h1>Yaml Loader · Cage</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Yaml Loader · Cage
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_33{"not conditional<br><i>Condición en línea 33:<br>not conditional</i>"}
+    dec_53{"not structure<br><i>Condición en línea 53:<br>not structure</i>"}
+    dec_134{"not structure<br><i>Condición en línea 134:<br>not structure</i>"}
+    dec_236{"not isinstance(plan, dict)<br><i>Condición en línea 236:<br>not isinstance(plan, dict)</i>"}
+    dec_286{"step_cfg.required_sections<br><i>Condición en línea 286:<br>step_cfg.required_sections</i>"}
+    dec_323{"sections<br><i>Condición en línea 323:<br>sections</i>"}
+    dec_369{"step_cfg.required_tags<br><i>Condición en línea 369:<br>step_cfg.required_tags</i>"}
+    dec_36{"not m<br><i>Condición en línea 36:<br>not m</i>"}
+    dec_238{"not<br>isinstance(plan.get('steps'),<br><i>Condición en línea 238:<br>not isinstance(plan.get('steps'), list)</i>"}
+    dec_288{"step_cfg.required_patterns<br><i>Condición en línea 288:<br>step_cfg.required_patterns</i>"}
+    dec_325{"patterns<br><i>Condición en línea 325:<br>patterns</i>"}
+    dec_371{"step_cfg.required_patterns<br><i>Condición en línea 371:<br>step_cfg.required_patterns</i>"}
+    dec_40{"isinstance(inputs, dict)<br><i>Condición en línea 40:<br>isinstance(inputs, dict)</i>"}
+    dec_243{"not structure<br><i>Condición en línea 243:<br>not structure</i>"}
+    dec_290{"step_cfg.forbidden_patterns<br><i>Condición en línea 290:<br>step_cfg.forbidden_patterns</i>"}
+    dec_42{"value is None<br><i>Condición en línea 42:<br>value is None</i>"}
+    dec_95{"cfg is None or not<br>cfg.structure<br><i>Condición en línea 95:<br>cfg is None or not cfg.structure</i>"}
+    dec_100{"not has_html_css_js<br><i>Condición en línea 100:<br>not has_html_css_js</i>"}
+    loop_12["For each step in plan_steps"]
+    dec_13{"not isinstance(step, dict)<br><i>Condición en línea 13:<br>not isinstance(step, dict)</i>"}
+    dec_17{"not isinstance(inputs, dict)<br><i>Condición en línea 17:<br>not isinstance(inputs, dict)</i>"}
+    loop_20["For each key"]
+    dec_22{"isinstance(val, str) and val<br><i>Condición en línea 22:<br>isinstance(val, str) and val</i>"}
+    dec_24{"is_write<br><i>Condición en línea 24:<br>is_write</i>"}
+    loop_65["For each s in structure"]
+    dec_66{"s.file and<br>self._structure_required(s,<br><i>Condición en línea 66:<br>s.file and self._structure_required(s, domain, archetype, in</i>"}
+    loop_69["For loop"]
+    dec_72{"matched<br><i>Condición en línea 72:<br>matched</i>"}
+    dec_75{"fname.lower() in plan_text<br><i>Condición en línea 75:<br>fname.lower() in plan_text</i>"}
+    loop_104["For each pf in plan_files"]
+    dec_106{"Condition?<br><i>Condición en línea 106:<br>low.endswith(self._FRAMEWORK_EXTENSIONS)</i>"}
+    dec_108{"any((marker in low for<br>marker in self._FRAMEWORK_DIRS))<br><i>Condición en línea 108:<br>any((marker in low for marker in self._FRAMEWORK_DIRS))</i>"}
+    dec_111{"not offending<br><i>Condición en línea 111:<br>not offending</i>"}
+    loop_141["For each s in structure"]
+    dec_142{"not s.file or not<br>self._structure_required(s,<br><i>Condición en línea 142:<br>not s.file or not self._structure_required(s, domain, archet</i>"}
+    dec_145{"not path<br><i>Condición en línea 145:<br>not path</i>"}
+    dec_153{"_looks_like_filler(content,<br>ext)<br><i>Condición en línea 153:<br>_looks_like_filler(content, ext)</i>"}
+    loop_156["For each pat"]
+    dec_157{"not<br>re.search(re.escape(pat), content,<br><i>Condición en línea 157:<br>not re.search(re.escape(pat), content, re.IGNORECASE)</i>"}
+    loop_159["For each pat"]
+    dec_160{"re.search(re.escape(pat),<br>content, re.IGNORECASE)<br><i>Condición en línea 160:<br>re.search(re.escape(pat), content, re.IGNORECASE)</i>"}
+    loop_162["For each tag"]
+    dec_163{"not<br>re.search(re.escape(tag), content,<br><i>Condición en línea 163:<br>not re.search(re.escape(tag), content, re.IGNORECASE)</i>"}
+    loop_165["For each sec"]
+    dec_166{"not re.search('(\\w-)*'?\\b'<br>+ re.escape(sec) + '\\b', content,<br><i>Condición en línea 166:<br>not re.search('(\\w-)*'?\\b' + re.escape(sec) + '\\b', conte</i>"}
+    dec_173{"main_file<br><i>Condición en línea 173:<br>main_file</i>"}
+    dec_175{"main_path<br><i>Condición en línea 175:<br>main_path</i>"}
+    loop_177["For each tag"]
+    dec_178{"not<br>re.search(re.escape(tag), content,<br><i>Condición en línea 178:<br>not re.search(re.escape(tag), content, re.IGNORECASE)</i>"}
+    loop_180["For each cls"]
+    dec_181{"not<br>re.search('class=(\\\'')' + +<br><i>Condición en línea 181:<br>not re.search('class=(\\\'')' + re.escape(cls) + '(\\\'')',</i>"}
+    loop_183["For each pat"]
+    dec_184{"re.search(re.escape(pat),<br>content, re.IGNORECASE)<br><i>Condición en línea 184:<br>re.search(re.escape(pat), content, re.IGNORECASE)</i>"}
+    dec_186{"ver.min_length and<br>len(content) < ver.min_length<br><i>Condición en línea 186:<br>ver.min_length and len(content) < ver.min_length</i>"}
+    dec_188{"ver.max_length and<br>len(content) > ver.max_length<br><i>Condición en línea 188:<br>ver.max_length and len(content) > ver.max_length</i>"}
+    dec_196{"html_candidates and<br>(css_candidates or js_candidates)<br><i>Condición en línea 196:<br>html_candidates and (css_candidates or js_candidates)</i>"}
+    dec_206{"html_content<br><i>Condición en línea 206:<br>html_content</i>"}
+    loop_223["For loop"]
+    dec_224{"name in files<br><i>Condición en línea 224:<br>name in files</i>"}
+    loop_249["For each s in structure"]
+    dec_250{"not s.file or not<br>self._structure_required(s,<br><i>Condición en línea 250:<br>not s.file or not self._structure_required(s, domain, archet</i>"}
+    dec_256{"matched<br><i>Condición en línea 256:<br>matched</i>"}
+    dec_262{"added<br><i>Condición en línea 262:<br>added</i>"}
+    loop_263["For loop"]
+    dec_270{"step_cfg.action ==<br>'seo_meta'<br><i>Condición en línea 270:<br>step_cfg.action == 'seo_meta'</i>"}
+    dec_273{"ext in ('.css', '.js',<br>'.py', '.ts', '.json', '.md',<br><i>Condición en línea 273:<br>ext in ('.css', '.js', '.py', '.ts', '.json', '.md', '.txt')</i>"}
+    dec_275{"step_cfg.action ==<br>'landing_html' or ext == '.html'<br><i>Condición en línea 275:<br>step_cfg.action == 'landing_html' or ext == '.html'</i>"}
+    fn__structure_required[["Structure Required"]]
+    fn_validate_structure[["Validate Structure"]]
+    fn_validate_artifacts[["Validate Artifacts"]]
+    fn_complete_plan[["Complete Plan"]]
+    fn__build_code_steps[["Build Code Steps"]]
+    fn__build_textual_steps[["Build Textual Steps"]]
+    fn__build_meta_step[["Build Meta Step"]]
+    fn__build_html_steps[["Build Html Steps"]]
+    fn_create_cage_from_yaml[["Create Cage From Yaml"]]
+    fn__collect_plan_files[["Collect Plan Files"]]
+    fn__check_stack_architecture[["arch_errors = Check Stack Architecture"]]
+    fn__find_exact_file[["path = Find Exact File"]]
+    fn__build_completion_steps[["new_steps = Build Completion Steps"]]
+    n_start --> fn__collect_plan_files
+    fn__collect_plan_files --> loop_12
+    loop_12 --> dec_13
+    dec_13 --> dec_17
+    dec_17 --> loop_20
+    loop_20 --> dec_22
+    dec_22 --> dec_24
+    dec_24 -- "loop" --> loop_20
+    loop_20 -- "loop" --> loop_12
+    n_start --> fn__structure_required
+    fn__structure_required --> dec_33
+    dec_33 --> dec_36
+    dec_36 --> dec_40
+    dec_40 --> dec_42
+    n_start --> fn_validate_structure
+    fn_validate_structure --> dec_53
+    dec_53 --> fn__collect_plan_files
+    fn__collect_plan_files --> fn__check_stack_architecture
+    fn__check_stack_architecture --> loop_65
+    loop_65 --> dec_66
+    dec_66 -- "loop" --> loop_65
+    loop_65 --> loop_69
+    loop_69 --> dec_72
+    dec_72 --> dec_75
+    dec_75 -- "loop" --> loop_69
+    n_start --> fn__check_stack_architecture
+    fn__check_stack_architecture --> dec_95
+    dec_95 --> dec_100
+    dec_100 --> loop_104
+    loop_104 --> dec_106
+    dec_106 --> dec_108
+    dec_108 -- "loop" --> loop_104
+    loop_104 --> dec_111
+    n_start --> fn_validate_artifacts
+    fn_validate_artifacts --> dec_134
+    dec_134 --> loop_141
+    loop_141 --> dec_142
+    dec_142 --> fn__find_exact_file
+    fn__find_exact_file --> dec_145
+    dec_145 --> dec_153
+    dec_153 --> loop_156
+    loop_156 --> dec_157
+    dec_157 -- "loop" --> loop_156
+    loop_156 --> loop_159
+    loop_159 --> dec_160
+    dec_160 -- "loop" --> loop_159
+    loop_159 --> loop_162
+    loop_162 --> dec_163
+    dec_163 -- "loop" --> loop_162
+    loop_162 --> loop_165
+    loop_165 --> dec_166
+    dec_166 -- "loop" --> loop_165
+    loop_165 -- "loop" --> loop_141
+    loop_141 --> dec_173
+    dec_173 --> fn__find_exact_file
+    fn__find_exact_file --> dec_175
+    dec_175 --> loop_177
+    loop_177 --> dec_178
+    dec_178 -- "loop" --> loop_177
+    loop_177 --> loop_180
+    loop_180 --> dec_181
+    dec_181 -- "loop" --> loop_180
+    loop_180 --> loop_183
+    loop_183 --> dec_184
+    dec_184 -- "loop" --> loop_183
+    loop_183 --> dec_186
+    dec_186 --> dec_188
+    dec_188 --> dec_196
+    dec_196 --> dec_206
+    n_start --> fn__find_exact_file
+    fn__find_exact_file --> loop_223
+    loop_223 --> dec_224
+    dec_224 -- "loop" --> loop_223
+    n_start --> fn_complete_plan
+    fn_complete_plan --> dec_236
+    dec_236 --> dec_238
+    dec_238 --> dec_243
+    dec_243 --> fn__collect_plan_files
+    fn__collect_plan_files --> loop_249
+    loop_249 --> dec_250
+    dec_250 --> dec_256
+    dec_256 --> fn__build_completion_steps
+    fn__build_completion_steps -- "loop" --> loop_249
+    loop_249 --> dec_262
+    dec_262 --> loop_263
+    n_start --> fn__build_completion_steps
+    fn__build_completion_steps --> dec_270
+    dec_270 --> dec_273
+    dec_273 --> dec_275
+    n_start --> fn__build_code_steps
+    fn__build_code_steps --> dec_286
+    dec_286 --> dec_288
+    dec_288 --> dec_290
+    n_start --> fn__build_textual_steps
+    fn__build_textual_steps --> dec_323
+    dec_323 --> dec_325
+    n_start --> fn__build_meta_step
+    n_start --> fn__build_html_steps
+    fn__build_html_steps --> dec_369
+    dec_369 --> dec_371
+    n_start --> fn_create_cage_from_yaml
+    class n_start node-start
+    class fn__collect_plan_files,fn__structure_required,fn_validate_structure,fn__check_stack_architecture,fn_validate_artifacts,fn__find_exact_file,fn_complete_plan,fn__build_completion_steps,fn__build_code_steps,fn__build_textual_steps,fn__build_meta_step,fn__build_html_steps,fn_create_cage_from_yaml node-subprocess
+    class loop_12,loop_20,loop_65,loop_69,loop_104,loop_141,loop_156,loop_159,loop_162,loop_165,loop_177,loop_180,loop_183,loop_223,loop_249,loop_263 node-loop
+    class dec_13,dec_17,dec_22,dec_24,dec_33,dec_36,dec_40,dec_42,dec_53,dec_66,dec_72,dec_75,dec_95,dec_100,dec_106,dec_108,dec_111,dec_134,dec_142,dec_145,dec_153,dec_157,dec_160,dec_163,dec_166,dec_173,dec_175,dec_178,dec_181,dec_184,dec_186,dec_188,dec_196,dec_206,dec_224,dec_236,dec_238,dec_243,dec_250,dec_256,dec_262,dec_270,dec_273,dec_275,dec_286,dec_288,dec_290,dec_323,dec_325,dec_369,dec_371 node-decision
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

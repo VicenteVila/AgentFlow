@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ratelimit</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="cogniteam_L3_Cogniteam_Tools_Utils.html">← Volver</a>
+  <h1>Ratelimit</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Ratelimit
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_19{"state('failures') >=<br>_CIRCUIT_FAILURE_THRESHOLD<br><i>Condición en línea 19:<br>state('failures') >= _CIRCUIT_FAILURE_THRESHOLD</i>"}
+    dec_28{"state.get('failures', 0) > 0<br><i>Condición en línea 28:<br>state.get('failures', 0) > 0</i>"}
+    dec_36{"state.get('failures', 0) <<br>_CIRCUIT_FAILURE_THRESHOLD<br><i>Condición en línea 36:<br>state.get('failures', 0) < _CIRCUIT_FAILURE_THRESHOLD</i>"}
+    dec_80{"state.get('date') != today<br><i>Condición en línea 80:<br>state.get('date') != today</i>"}
+    dec_101{"state.get('date') != today<br><i>Condición en línea 101:<br>state.get('date') != today</i>"}
+    dec_116{"state.get('date') != today<br><i>Condición en línea 116:<br>state.get('date') != today</i>"}
+    dec_38{"time.time() <<br>state.get('open_until', 0)<br><i>Condición en línea 38:<br>time.time() < state.get('open_until', 0)</i>"}
+    dec_89{"state('requests_today') >=<br>max_per_day<br><i>Condición en línea 89:<br>state('requests_today') >= max_per_day</i>"}
+    dec_91{"len(state('minute_log')) >=<br>max_per_minute<br><i>Condición en línea 91:<br>len(state('minute_log')) >= max_per_minute</i>"}
+    fn_record_failure[["Record Failure"]]
+    fn_record_success[["Record Success"]]
+    fn_is_circuit_open[["Is Circuit Open"]]
+    fn__ensure_state_dir[["Ensure State Dir"]]
+    fn__state_path[["State Path"]]
+    fn__load_state[["Load State"]]
+    fn__save_state[["Save State"]]
+    fn__today[["Today"]]
+    fn_check_rate_limit[["Check Rate Limit"]]
+    fn_record_request[["Record Request"]]
+    fn_get_rate_status[["Get Rate Status"]]
+    n_start --> fn_record_failure
+    fn_record_failure --> dec_19
+    n_start --> fn_record_success
+    fn_record_success --> dec_28
+    n_start --> fn_is_circuit_open
+    fn_is_circuit_open --> dec_36
+    dec_36 --> dec_38
+    n_start --> fn__ensure_state_dir
+    n_start --> fn__state_path
+    n_start --> fn__load_state
+    n_start --> fn__save_state
+    n_start --> fn__today
+    n_start --> fn_check_rate_limit
+    fn_check_rate_limit --> dec_80
+    dec_80 --> dec_89
+    dec_89 --> dec_91
+    n_start --> fn_record_request
+    fn_record_request --> dec_101
+    n_start --> fn_get_rate_status
+    fn_get_rate_status --> dec_116
+    class n_start node-start
+    class fn_record_failure,fn_record_success,fn_is_circuit_open,fn__ensure_state_dir,fn__state_path,fn__load_state,fn__save_state,fn__today,fn_check_rate_limit,fn_record_request,fn_get_rate_status node-subprocess
+    class dec_19,dec_28,dec_36,dec_38,dec_80,dec_89,dec_91,dec_101,dec_116 node-decision
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

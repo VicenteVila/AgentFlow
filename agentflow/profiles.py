@@ -10,6 +10,7 @@ Built-in profiles are provided:
 - REAGAME: exhaustive labels for the ReaGame self-evolving game-design agent.
 - TRACEFORGE: labels for the TraceForge LLM-tracing library.
 - ASUBARNIPAL: labels for the Asubarnipal wiki/RAG assistant (Telegram + FastAPI).
+- COGNITEAM: labels for the CogniTeam multi-agent orchestration framework.
 
 Custom profiles can be loaded from an external Python file exposing a
 ``PROFILE`` dict (see :func:`load_profile`).
@@ -1073,6 +1074,432 @@ ASUBARNIPAL_PROFILE = Profile(
 )
 
 
+# ── CogniTeam profile ─────────────────────────────────────────────────
+
+_COGNITEAM_TOOL_INFO: dict[str, tuple[str, str]] = {
+    "llm_complete": (
+        "LLM Complete",
+        "Groq/Ollama: envía prompt + contexto\n→ JSON/texto (routing por proveedor)",
+    ),
+    "get_model_for_task": (
+        "Model for Task",
+        "Selecciona modelo/temperatura\nsegún la tarea resuelta",
+    ),
+    "get_llm_prompt": (
+        "LLM Prompt",
+        "Build del prompt según dominio\n(archetype fewshot)",
+    ),
+    "run_orchestrated_flow": (
+        "Run Orchestrated Flow",
+        "Orquesta multi-agente: planner →\ndeveloper → validator con retries",
+    ),
+    "execute_step": (
+        "Execute Step",
+        "Developer/Debugger: ejecuta un\npaso del plan con el LLM",
+    ),
+    "generate_plan": (
+        "Generate Plan",
+        "PlannerAgent: genera plan\nestructurado con World Model",
+    ),
+    "generate_plan_with_world_model": (
+        "Plan w/ World Model",
+        "Plan enriquecido con el bloque\nYAML del world model",
+    ),
+    "generate_world_model": (
+        "Generate World Model",
+        "WorldModelGenerator: archetype\nYAML desde el prompt del usuario",
+    ),
+    "create_planner_agent": (
+        "Create Planner",
+        "Factory del agente planner",
+    ),
+    "create_debugger_agent": (
+        "Create Debugger",
+        "Factory del agente debugger",
+    ),
+    "normalize_step_ids": (
+        "Normalize Steps",
+        "Renombra step_ids del plan\n(secuencia estable)",
+    ),
+    "clarify_task": (
+        "Clarify Task",
+        "Scoping interactivo: preguntas,\nmanifiesto y clasificación",
+    ),
+    "extract_inputs_from_task": (
+        "Extract Inputs",
+        "Extrae entradas del task\nsegún el archetype",
+    ),
+    "classify_without_llm": (
+        "Classify (No LLM)",
+        "Clasificación determinista por\nreglas (sin coste de LLM)",
+    ),
+    "run_with_world_model": (
+        "Run w/ World Model",
+        "DeterministicCage: run con\nworld model + verificación",
+    ),
+    "create_cage_from_yaml": (
+        "Cage from YAML",
+        "Construye DeterministicCage\napartir del archetype YAML",
+    ),
+    "complete_plan": (
+        "Complete Plan",
+        "YamlCage: completa el plan con\npasos de código/html/stack",
+    ),
+    "validate_artifacts": (
+        "Validate Artifacts",
+        "YamlCage: valida el árbol de\nartefactos generados",
+    ),
+    "repair_step": (
+        "Repair Step",
+        "Arregla un paso fallido con\nfeedback del validador",
+    ),
+    "repair_step_v2": (
+        "Repair Step v2",
+        "Reparación mejorada (evidencia\nrecopilada del entorno)",
+    ),
+    "repair_with_loop": (
+        "Repair Loop",
+        "Bucle de reparación: staging →\nevidence → verify → promote",
+    ),
+    "verify_grounding": (
+        "Verify Grounding",
+        "Comprueba que el artefacto\ngenerado sigue el plan",
+    ),
+    "verify_html_quality": (
+        "Verify HTML Quality",
+        "Valida calidad del HTML generado",
+    ),
+    "register_skill": (
+        "Register Skill",
+        "Añade una skill al catálogo\n(con score inicial)",
+    ),
+    "record_skill_usage": (
+        "Record Skill Usage",
+        "Registra uso de skill y ajusta\nscore",
+    ),
+    "retrieve_with_memory": (
+        "Retrieve w/ Memory",
+        "Recupera skills relevantes para\nla tarea",
+    ),
+    "answer_with_memory": (
+        "Answer w/ Memory",
+        "Respuesta del agente apoyada\nen memoria de skills",
+    ),
+    "sage_read": (
+        "Sage Read",
+        "Lee el grafo de memoria\n(sage graph)",
+    ),
+    "sage_write": (
+        "Sage Write",
+        "Escribe en el grafo de memoria",
+    ),
+    "co_evolve": (
+        "Co-Evolve",
+        "Genera nuevas skills a partir de\nlas existentes",
+    ),
+    "add_memory": (
+        "Add Memory",
+        "HMEM: añade un nodo de memoria\ncon contexto",
+    ),
+    "add_knowledge": (
+        "Add Knowledge",
+        "HMEM: añade conocimientos\n(tripletas)",
+    ),
+    "query_knowledge": (
+        "Query Knowledge",
+        "HMEM: consulta el conocimiento\nestructurado",
+    ),
+    "hybrid_retrieve": (
+        "Hybrid Retrieve",
+        "Recuperación híbrida (list-sage\ngraph + consulta local)",
+    ),
+    "consolidate": (
+        "Consolidate",
+        "Consolidación de memoria y\nresúmenes",
+    ),
+    "store_memory": (
+        "Store Memory",
+        "MATM: guarda memoria por agente",
+    ),
+    "retrieve_memories": (
+        "Retrieve Memories",
+        "MATM: recupera memoria transactiva",
+    ),
+    "transactive_retrieve": (
+        "Transactive Retrieve",
+        "Recupera de agentes expertos del\nteam",
+    ),
+    "synthesize_knowledge": (
+        "Synthesize",
+        "Sintetiza conocimiento recuperado",
+    ),
+    "find_expert": (
+        "Find Expert",
+        "MATM: selecciona el agente experto\npara el query",
+    ),
+    "extract_entities_from_text": (
+        "Extract Entities",
+        "GraphRAG: extrae entidades y\nrelaciones de un texto",
+    ),
+    "global_search": (
+        "Global Search",
+        "GraphRAG: búsqueda global sobre\ncomunidades resumidas",
+    ),
+    "local_search": (
+        "Local Search",
+        "GraphRAG: búsqueda local con\nvecinos de entidades",
+    ),
+    "hybrid_search": (
+        "Hybrid Search",
+        "GraphRAG: combina búsqueda\nlocal y global",
+    ),
+    "run_slow_phase": (
+        "Slow Phase",
+        "FastSlow: evolución lenta de\npolíticas (crossover/mutación)",
+    ),
+    "run_fast_phase": (
+        "Fast Phase",
+        "FastSlow: adaptación rápida\n(selección + control)",
+    ),
+    "get_best_action": (
+        "Best Action",
+        "FastSlow: decide la mejor acción",
+    ),
+    "execute_task": (
+        "Execute Task",
+        "ProspectiveOrchestrator: ejecuta\nla tarea con scoping + plan",
+    ),
+    "process_task": (
+        "Process Task",
+        "CageOrchestrator: procesa la tarea\n(end-to-end con cage)",
+    ),
+}
+
+_COGNITEAM_SPECIAL_CALLS: dict[str, tuple[str, str, NodeType]] = {
+    "_validate_output": (
+        "Validate Output",
+        "Verifica artefactos generados vs plan\n(file tree, quality)",
+        NodeType.PROCESS,
+    ),
+    "_record_step_skill_usage": (
+        "Record Skill Usage",
+        "Persiste uso de skills\n→ memoria de equipo",
+        NodeType.EVOLUTION,
+    ),
+    "_warmup_litellm": (
+        "Warmup LiteLLM",
+        "Precalienta routing/fallback\nde proveedores LLM",
+        NodeType.PROCESS,
+    ),
+    "_run_functional_validation": (
+        "Functional Validation",
+        "Ejecuta validación funcional del\nartefacto (script de prueba)",
+        NodeType.PROCESS,
+    ),
+    "_record_rejection": (
+        "Record Rejection",
+        "Registra un rechazo del cage\n→ adaptación",
+        NodeType.PROCESS,
+    ),
+    "_try_local_repair": (
+        "Local Repair",
+        "Intenta reparación puntual ante\nerror transitorio",
+        NodeType.PROCESS,
+    ),
+    "_get_memory_context": (
+        "Memory Context",
+        "Compone el contexto de memoria\npara el paso",
+        NodeType.PROCESS,
+    ),
+}
+
+_COGNITEAM_EVO_INFO: dict[str, tuple[str, str]] = {
+    "_calibrate": (
+        "Calibration Store",
+        "Guarda métricas de éxito\npara scoping futuro",
+    ),
+    "co_evolve": (
+        "Co-Evolve",
+        "Genera nuevas skills a partir de\nlas existentes",
+    ),
+    "_sage_consolidate": (
+        "Sage Consolidate",
+        "Consolida el grafo de memoria\n(sage)",
+    ),
+    "_generate_new_skill": (
+        "Generate Skill",
+        "Crea una skill nueva con prompt",
+    ),
+    "summarize_communities": (
+        "Summarize Communities",
+        "Resume comunidades detectadas\ndel grafo RAG",
+    ),
+    "_mutate_policy": (
+        "Mutate Policy",
+        "Mutación de políticas\nen la fase lenta",
+    ),
+}
+
+_COGNITEAM_FUNCTION_SPLITS: dict[str, list[tuple[str, list[str]]]] = {
+    "cogniteam.world_model.deterministic_cage": [
+        ("Inputs", [
+            "_extract_inputs", "_extract_num_pages", "_extract_devices",
+            "_extract_data_source", "_extract_ml_objective", "_extract_model_type",
+            "_extract_content_type", "_extract_tone", "_extract_seo_keywords",
+            "_extract_infra_type", "_extract_cloud_provider", "_extract_audit_type",
+            "_extract_security_scope", "_extract_compliance", "extract_variables",
+            "_extract_title", "_extract_subtitle", "_extract_cta",
+        ]),
+        ("Classify", [
+            "classify_without_llm", "_parse_task", "_classify_with_llm",
+            "_extract_word_count", "_render_prompt", "_check_world_model",
+            "run_with_world_model",
+        ]),
+        ("LLM", ["_call_llm", "_verify_output", "_get_rejection_adaptation", "_record_rejection"]),
+        ("Demo", ["demo"]),
+    ],
+    "cogniteam.core.orchestrator": [
+        ("Calibration", [
+            "_key", "record", "get_threshold", "get_report",
+            "to_dict", "from_dict", "save", "load",
+        ]),
+        ("Tools", [
+            "_resolve_tool_name", "_validate_output", "_seed_skills_once",
+            "_record_step_skill_usage", "_get_memory_context",
+            "_get_artifacts_summary", "_run_functional_validation",
+            "_find_file_in_tree",
+        ]),
+        ("Loop", ["run_orchestrated_flow"]),
+        ("Repair", [
+            "_is_transient_error", "_build_repair_structure_hint",
+            "_try_local_repair", "_try_local_repair_v2",
+        ]),
+        ("Memory", ["_build_completed_summary", "_store_in_memory", "_save_all_memory"]),
+    ],
+    "cogniteam.agents.planner_agent": [
+        ("WorldModel", [
+            "_select_world_model_prompt", "_get_yaml", "_yaml_world_model_block",
+            "generate_world_model",
+        ]),
+        ("Agent", ["create_planner_agent"]),
+        ("Prompt", ["_build_prompt", "_extract_json"]),
+        ("Plan", ["normalize_step_ids", "generate_plan", "generate_plan_with_world_model"]),
+    ],
+    "cogniteam.scoping.agent": [
+        ("Rules", [
+            "_archetype_comprobable_rules", "_archetype_prose_rules",
+            "_param_name_to_human", "_collect_known_params",
+        ]),
+        ("Ask", [
+            "_ask_user", "_show_classification", "_confirm_classification",
+            "_select_manual_classifications", "_generate_questions",
+            "_fallback_questions",
+        ]),
+        ("Clarify", [
+            "_yaml_missing_inputs", "_generate_clarified_task",
+            "_fallback_clarified", "_build_manifest", "clarify_task",
+        ]),
+    ],
+    "cogniteam.tools.utils.llm": [
+        ("Routing", [
+            "get_last_provider", "get_last_model", "_provider_available",
+            "get_model_for_task", "get_litellm_model_name", "get_genai_model_name",
+        ]),
+        ("Providers", [
+            "_ollama_complete", "_groq_complete", "_openai_compatible_complete",
+            "_cerebras_complete", "_mistral_complete", "_nvidia_complete",
+            "_google_complete",
+        ]),
+        ("Availability", [
+            "_cerebras_available", "_cerebras_model", "_mistral_available",
+            "_mistral_model", "_nvidia_available", "_nvidia_model",
+            "_google_available", "_google_model", "_get_primary_provider",
+            "_groq_available", "_record_groq",
+        ]),
+        ("Complete", [
+            "llm_complete", "_llm_complete_body", "_escape_control_chars_in_match",
+            "_resolve_model_name", "sanitize_json_string_for_control_chars",
+        ]),
+    ],
+    "cogniteam.agents.debugger_agent": [
+        ("Agent", ["create_debugger_agent"]),
+        ("Grounding", ["verify_grounding", "validate", "_grounding_fallback"]),
+        ("Quality", ["verify_html_quality"]),
+        ("Repair", [
+            "_repair_fallback", "repair_step", "repair_step_v2",
+            "_build_test_script_hint",
+        ]),
+    ],
+    "main": [
+        ("Setup", ["_build_tool_map", "_categorize_tools", "_warmup_litellm"]),
+        ("Entry", ["main"]),
+        ("Output", ["_save_result"]),
+    ],
+    "cogniteam.memory.skills.skills": [
+        ("Manager", [
+            "register_skill", "get_skills_by_category", "get_top_skills",
+            "record_skill_usage", "add_preference", "_update_skill_score",
+            "get_preferred_skill", "save", "load",
+        ]),
+        ("SageGraph", [
+            "_add_sage_node", "_add_sage_edge", "sage_write",
+            "sage_read", "_sage_consolidate",
+        ]),
+        ("CoEvolve", ["co_evolve", "_generate_new_skill"]),
+        ("Retrieve", ["retrieve_with_memory", "answer_with_memory", "get_skills"]),
+    ],
+    "cogniteam.world_model.yaml_loader": [
+        ("Loader", [
+            "_load", "get_archetype", "get_all_archetypes", "get_domain",
+            "get_domain_fewshot", "get_domain_prose", "get_llm_prompt",
+            "_render_conditionals", "get_verification_rules", "get_thresholds",
+            "get_grounding_keywords", "get_structure", "get_input_definitions",
+            "get_default_config", "get_calibration_config", "get_fallback",
+            "extract_inputs_from_task", "find_archetype_by_keywords",
+        ]),
+        ("Cage", [
+            "_collect_plan_files", "_structure_required", "validate_structure",
+            "_check_stack_architecture", "validate_artifacts", "_find_exact_file",
+            "complete_plan", "_build_completion_steps", "_build_code_steps",
+            "_build_textual_steps", "_build_meta_step", "_build_html_steps",
+            "create_cage_from_yaml",
+        ]),
+        ("Validation", [
+            "validate_output", "_looks_like_filler", "_extract_classes_ids_tags",
+            "_js_selectors", "_check_css_js_coherence",
+        ]),
+    ],
+    "cogniteam.agents.repair_v2": [
+        ("Staging", [
+            "_staging_dir_for", "_setup_staging", "_promote",
+            "_rewrite_paths_to_staging", "_execute_tool_in_staging",
+        ]),
+        ("Evidence", [
+            "_collect_file_evidence", "_collect_span_evidence", "_collect_evidence",
+            "_find_html_in_dir", "_run_verification",
+        ]),
+        ("Loop", ["repair_with_loop"]),
+    ],
+}
+
+_COGNITEAM_CLASS_SPLITS: dict[str, list[str]] = {
+    "cogniteam.world_model.world_model_layer": [
+        "WorldModelGenerator", "ProspectivePlannerAgent", "ProspectiveScopingAgent",
+        "ProspectiveDebuggerAgent", "CalibrationStore", "ProspectiveOrchestrator",
+        "LLMClient",
+    ],
+}
+
+COGNITEAM_PROFILE = Profile(
+    name="cogniteam",
+    tool_names=_COGNITEAM_TOOL_INFO,
+    special_calls=_COGNITEAM_SPECIAL_CALLS,
+    evolution_methods=_COGNITEAM_EVO_INFO,
+    function_splits=_COGNITEAM_FUNCTION_SPLITS,
+    class_splits=_COGNITEAM_CLASS_SPLITS,
+)
+
+
 # ── LangChain profile ─────────────────────────────────────────────────
 
 LANGCHAIN_PROFILE = Profile(
@@ -1224,6 +1651,7 @@ PROFILES: dict[str, Profile] = {
     "reagame": REAGAME_PROFILE,
     "traceforge": TRACEFORGE_PROFILE,
     "asubarnipal": ASUBARNIPAL_PROFILE,
+    "cogniteam": COGNITEAM_PROFILE,
     "langchain": LANGCHAIN_PROFILE,
     "crewai": CREWAI_PROFILE,
     "autogen": AUTOGEN_PROFILE,

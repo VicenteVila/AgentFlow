@@ -1,0 +1,42 @@
+%% Orchestrator · Calibration
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_22{"len(entries) < 5<br><i>Condición en línea 22:<br>len(entries) < 5</i>"}
+    dec_38{"not entries<br><i>Condición en línea 38:<br>not entries</i>"}
+    dec_30{"avg_brier < 0.15 and<br>success_rate > 0.7<br><i>Condición en línea 30:<br>avg_brier < 0.15 and success_rate > 0.7</i>"}
+    fn__key[["Key"]]
+    fn_record[["Record"]]
+    fn_get_threshold[["Get Threshold"]]
+    fn_get_report[["Get Report"]]
+    fn_to_dict[["To Dict"]]
+    fn_from_dict[["From Dict"]]
+    fn_save[["Save"]]
+    fn_load[["Load"]]
+    n_start --> fn__key
+    n_start --> fn_record
+    n_start --> fn_get_threshold
+    fn_get_threshold --> dec_22
+    dec_22 --> dec_30
+    n_start --> fn_get_report
+    fn_get_report --> dec_38
+    n_start --> fn_to_dict
+    n_start --> fn_from_dict
+    n_start --> fn_save
+    n_start --> fn_load
+    class n_start node-start
+    class fn__key,fn_record,fn_get_threshold,fn_get_report,fn_to_dict,fn_from_dict,fn_save,fn_load node-subprocess
+    class dec_22,dec_30,dec_38 node-decision
+    class n_end node-end

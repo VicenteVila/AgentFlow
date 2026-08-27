@@ -1,0 +1,178 @@
+%% Llm
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_36{"is_circuit_open(provider)<br><i>Condición en línea 36:<br>is_circuit_open(provider)</i>"}
+    dec_46{"NOT use_ollama?<br><i>Niega use_ollama<br>para lógica invertida</i>"}
+    dec_63{"and (not<br><i>Condición en línea 63:<br>model_name_str.startswith('gemini-') and (not model_name_str</i>"}
+    dec_122{"not content<br><i>Condición en línea 122:<br>not content</i>"}
+    dec_354{"not settings.use_groq or not<br>settings.groq_api_key<br><i>Condición en línea 354:<br>not settings.use_groq or not settings.groq_api_key</i>"}
+    dec_528{"not (s.startswith(''') and<br>s.endswith('''))<br><i>Condición en línea 528:<br>not (s.startswith(''') and s.endswith('''))</i>"}
+    dec_540{"primary == 'nvidia' and<br>_nvidia_available()<br><i>Condición en línea 540:<br>primary == 'nvidia' and _nvidia_available()</i>"}
+    dec_39{"limits<br><i>Condición en línea 39:<br>limits</i>"}
+    dec_57{"not<br>model.startswith('ollama/')<br><i>Condición en línea 57:<br>not model.startswith('ollama/')</i>"}
+    dec_65{"and (not<br><i>Condición en línea 65:<br>model_name_str.startswith('models/') and (not model_name_str</i>"}
+    dec_435{"primary == 'nvidia' and<br>_nvidia_available()<br><i>Condición en línea 435:<br>primary == 'nvidia' and _nvidia_available()</i>"}
+    dec_542{"primary == 'google' and<br>_google_available()<br><i>Condición en línea 542:<br>primary == 'google' and _google_available()</i>"}
+    dec_68{"Condition?<br><i>Condición en línea 68:<br>model_name_str.startswith('ollama/')</i>"}
+    dec_437{"result<br><i>Condición en línea 437:<br>result</i>"}
+    dec_439{"primary == 'google' and<br>_google_available()<br><i>Condición en línea 439:<br>primary == 'google' and _google_available()</i>"}
+    dec_544{"primary == 'mistral' and<br>_mistral_available()<br><i>Condición en línea 544:<br>primary == 'mistral' and _mistral_available()</i>"}
+    dec_70{"ollama_model_name and<br>model_name_str == and (not<br><i>Condición en línea 70:<br>ollama_model_name and model_name_str == ollama_model_name an</i>"}
+    dec_441{"result<br><i>Condición en línea 441:<br>result</i>"}
+    dec_443{"primary == 'mistral' and<br>_mistral_available()<br><i>Condición en línea 443:<br>primary == 'mistral' and _mistral_available()</i>"}
+    dec_546{"primary == 'cerebras' and<br>_cerebras_available()<br><i>Condición en línea 546:<br>primary == 'cerebras' and _cerebras_available()</i>"}
+    dec_76{"settings.use_ollama and (not<br><i>Condición en línea 76:<br>settings.use_ollama and (not model_name_str.startswith('gemi</i>"}
+    dec_445{"result<br><i>Condición en línea 445:<br>result</i>"}
+    dec_447{"primary == 'cerebras' and<br>_cerebras_available()<br><i>Condición en línea 447:<br>primary == 'cerebras' and _cerebras_available()</i>"}
+    dec_548{"_groq_available(task)<br><i>Condición en línea 548:<br>_groq_available(task)</i>"}
+    dec_449{"result<br><i>Condición en línea 449:<br>result</i>"}
+    dec_552{"settings.use_ollama and<br>settings.ollama_base_url<br><i>Condición en línea 552:<br>settings.use_ollama and settings.ollama_base_url</i>"}
+    dec_453{"_groq_available(task)<br><i>Condición en línea 453:<br>_groq_available(task)</i>"}
+    dec_465{"result<br><i>Condición en línea 465:<br>result</i>"}
+    dec_475{"settings.use_ollama and<br>settings.ollama_base_url<br><i>Condición en línea 475:<br>settings.use_ollama and settings.ollama_base_url</i>"}
+    dec_486{"result<br><i>Condición en línea 486:<br>result</i>"}
+    dec_507{"response_format<br><i>Condición en línea 507:<br>response_format</i>"}
+    dec_512{"response and<br>response.choices and<br><i>Condición en línea 512:<br>response and response.choices and response.choices(0).messag</i>"}
+    fn_get_last_provider[["Get Last Provider"]]
+    fn_get_last_model[["Get Last Model"]]
+    fn__provider_available[["Provider Available"]]
+    fn_get_model_for_task[["Get Model For Task"]]
+    fn_get_litellm_model_name[["Get Litellm Model Name"]]
+    fn_get_genai_model_name[["Get Genai Model Name"]]
+    fn__ollama_complete[["Ollama Complete"]]
+    fn__groq_complete[["Groq Complete"]]
+    fn__openai_compatible_complete[["Openai Compatible Complete"]]
+    fn__cerebras_available[["Cerebras Available"]]
+    fn__cerebras_model[["Cerebras Model"]]
+    fn__cerebras_complete[["Cerebras Complete"]]
+    fn__mistral_available[["Mistral Available"]]
+    fn__mistral_model[["Mistral Model"]]
+    fn__mistral_complete[["Mistral Complete"]]
+    fn__nvidia_available[["Nvidia Available"]]
+    fn__nvidia_model[["Nvidia Model"]]
+    fn__nvidia_complete[["Nvidia Complete"]]
+    fn__google_available[["Google Available"]]
+    fn__google_model[["Google Model"]]
+    fn__google_complete[["Google Complete"]]
+    fn__get_primary_provider[["Get Primary Provider"]]
+    fn__groq_available[["Groq Available"]]
+    fn__record_groq[["Record Groq"]]
+    fn_llm_complete[["Llm Complete"]]
+    fn__llm_complete_body[["Llm Complete Body"]]
+    fn__escape_control_chars_in_match[["Escape Control Chars In Match"]]
+    fn__resolve_model_name[["Resolve Model Name"]]
+    fn_sanitize_json_string_for_control_chars[["Sanitize Json String For Control Chars"]]
+    fn__try_provider_413[["Try Provider"]]
+    fn_replace_char_532[["Replace Char"]]
+    tool_get_model_for_task_494["model = Model for Task<br><i>Selecciona modelo/temperatura<br>según la tarea resuelta</i>"]
+    n_start --> fn_get_last_provider
+    n_start --> fn_get_last_model
+    n_start --> fn__provider_available
+    fn__provider_available --> dec_36
+    dec_36 --> dec_39
+    n_start --> fn_get_model_for_task
+    fn_get_model_for_task --> dec_46
+    dec_46 --> dec_57
+    n_start --> fn_get_litellm_model_name
+    fn_get_litellm_model_name --> dec_63
+    dec_63 --> dec_65
+    dec_65 --> dec_68
+    dec_68 --> dec_70
+    dec_70 --> dec_76
+    n_start --> fn_get_genai_model_name
+    n_start --> fn__ollama_complete
+    fn__ollama_complete --> dec_122
+    n_start --> fn__groq_complete
+    n_start --> fn__openai_compatible_complete
+    n_start --> fn__cerebras_available
+    n_start --> fn__cerebras_model
+    n_start --> fn__cerebras_complete
+    n_start --> fn__mistral_available
+    n_start --> fn__mistral_model
+    n_start --> fn__mistral_complete
+    n_start --> fn__nvidia_available
+    n_start --> fn__nvidia_model
+    n_start --> fn__nvidia_complete
+    n_start --> fn__google_available
+    n_start --> fn__google_model
+    n_start --> fn__google_complete
+    n_start --> fn__get_primary_provider
+    n_start --> fn__groq_available
+    fn__groq_available --> dec_354
+    n_start --> fn__record_groq
+    n_start --> fn_llm_complete
+    n_start --> fn__llm_complete_body
+    fn__llm_complete_body --> fn__try_provider_413
+    fn__try_provider_413 --> dec_435
+    dec_435 --> dec_437
+    dec_435 --> dec_439
+    dec_439 --> dec_441
+    dec_439 --> dec_443
+    dec_443 --> dec_445
+    dec_443 --> dec_447
+    dec_447 --> dec_449
+    dec_449 --> dec_453
+    dec_453 --> dec_465
+    dec_465 --> dec_475
+    dec_475 --> dec_486
+    dec_486 --> tool_get_model_for_task_494
+    tool_get_model_for_task_494 --> dec_507
+    dec_507 --> dec_512
+    n_start --> fn__escape_control_chars_in_match
+    fn__escape_control_chars_in_match --> dec_528
+    dec_528 --> fn_replace_char_532
+    n_start --> fn__resolve_model_name
+    fn__resolve_model_name --> dec_540
+    dec_540 --> dec_542
+    dec_542 --> dec_544
+    dec_544 --> dec_546
+    dec_546 --> dec_548
+    dec_548 --> dec_552
+    n_start --> fn_sanitize_json_string_for_control_chars
+    class n_start node-start
+    class fn_get_last_provider,fn_get_last_model,fn__provider_available,fn_get_model_for_task,fn_get_litellm_model_name,fn_get_genai_model_name,fn__ollama_complete,fn__groq_complete,fn__openai_compatible_complete,fn__cerebras_available,fn__cerebras_model,fn__cerebras_complete,fn__mistral_available,fn__mistral_model,fn__mistral_complete,fn__nvidia_available,fn__nvidia_model,fn__nvidia_complete,fn__google_available,fn__google_model,fn__google_complete,fn__get_primary_provider,fn__groq_available,fn__record_groq,fn_llm_complete,fn__llm_complete_body,fn__try_provider_413,fn__escape_control_chars_in_match,fn_replace_char_532,fn__resolve_model_name,fn_sanitize_json_string_for_control_chars node-subprocess
+    class dec_36,dec_39,dec_46,dec_57,dec_63,dec_65,dec_68,dec_70,dec_76,dec_122,dec_354,dec_435,dec_437,dec_439,dec_441,dec_443,dec_445,dec_447,dec_449,dec_453,dec_465,dec_475,dec_486,dec_507,dec_512,dec_528,dec_540,dec_542,dec_544,dec_546,dec_548,dec_552 node-decision
+    class tool_get_model_for_task_494 node-tool
+    class n_end node-end
+    click fn_get_last_provider href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Routing.html" "Abrir detalle"
+    click fn_get_last_model href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Routing.html" "Abrir detalle"
+    click fn__provider_available href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Routing.html" "Abrir detalle"
+    click fn_get_model_for_task href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Routing.html" "Abrir detalle"
+    click fn_get_litellm_model_name href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Routing.html" "Abrir detalle"
+    click fn_get_genai_model_name href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Routing.html" "Abrir detalle"
+    click fn__ollama_complete href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Providers.html" "Abrir detalle"
+    click fn__groq_complete href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Providers.html" "Abrir detalle"
+    click fn__openai_compatible_complete href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Providers.html" "Abrir detalle"
+    click fn__cerebras_complete href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Providers.html" "Abrir detalle"
+    click fn__mistral_complete href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Providers.html" "Abrir detalle"
+    click fn__nvidia_complete href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Providers.html" "Abrir detalle"
+    click fn__google_complete href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Providers.html" "Abrir detalle"
+    click fn__cerebras_available href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Availability.html" "Abrir detalle"
+    click fn__cerebras_model href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Availability.html" "Abrir detalle"
+    click fn__mistral_available href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Availability.html" "Abrir detalle"
+    click fn__mistral_model href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Availability.html" "Abrir detalle"
+    click fn__nvidia_available href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Availability.html" "Abrir detalle"
+    click fn__nvidia_model href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Availability.html" "Abrir detalle"
+    click fn__google_available href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Availability.html" "Abrir detalle"
+    click fn__google_model href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Availability.html" "Abrir detalle"
+    click fn__get_primary_provider href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Availability.html" "Abrir detalle"
+    click fn__groq_available href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Availability.html" "Abrir detalle"
+    click fn__record_groq href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Availability.html" "Abrir detalle"
+    click fn_llm_complete href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Complete.html" "Abrir detalle"
+    click fn__llm_complete_body href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Complete.html" "Abrir detalle"
+    click fn__escape_control_chars_in_match href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Complete.html" "Abrir detalle"
+    click fn__resolve_model_name href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Complete.html" "Abrir detalle"
+    click fn_sanitize_json_string_for_control_chars href "cogniteam_L5_Cogniteam_Tools_Utils_Llm_Complete.html" "Abrir detalle"

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hmem</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="cogniteam_L2_Cogniteam_Memory.html">← Volver</a>
+  <h1>Hmem</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Hmem
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_94{"self.root_id is None<br><i>Condición en línea 94:<br>self.root_id is None</i>"}
+    dec_99{"recent_l0<br><i>Condición en línea 99:<br>recent_l0</i>"}
+    dec_108{"entities<br><i>Condición en línea 108:<br>entities</i>"}
+    dec_137{"not self.root_id or<br>self.root_id not in self.nodes<br><i>Condición en línea 137:<br>not self.root_id or self.root_id not in self.nodes</i>"}
+    loop_109["For each entity in entities"]
+    dec_255{"self._consolidation_lock<br><i>Condición en línea 255:<br>self._consolidation_lock</i>"}
+    loop_268["For each node in l0_nodes"]
+    dec_416{"not combined<br><i>Condición en línea 416:<br>not combined</i>"}
+    dec_430{"result<br><i>Condición en línea 430:<br>result</i>"}
+    loop_194["For each t in knowledge_triplets"]
+    dec_195{"t.confidence <<br>min_confidence<br><i>Condición en línea 195:<br>t.confidence < min_confidence</i>"}
+    dec_197{"entity and entity.lower()<br>not in (t.subject.lower(),<br><i>Condición en línea 197:<br>entity and entity.lower() not in (t.subject.lower(), t.obj.l</i>"}
+    dec_202{"predicate and<br>predicate.lower() !=<br><i>Condición en línea 202:<br>predicate and predicate.lower() != t.predicate.lower()</i>"}
+    loop_215["while current_level"]
+    loop_217["For each t in knowledge_triplets"]
+    dec_221{"subj_lower == entity.lower()<br><i>Condición en línea 221:<br>subj_lower == entity.lower()</i>"}
+    dec_231{"obj_lower not in<br>visited_entities and depth <<br><i>Condición en línea 231:<br>obj_lower not in visited_entities and depth < max_hops</i>"}
+    dec_235{"obj_lower == entity.lower()<br><i>Condición en línea 235:<br>obj_lower == entity.lower()</i>"}
+    dec_245{"subj_lower not in<br>visited_entities and depth <<br><i>Condición en línea 245:<br>subj_lower not in visited_entities and depth < max_hops</i>"}
+    loop_278["For loop"]
+    dec_279{"len(group) < 2<br><i>Condición en línea 279:<br>len(group) < 2</i>"}
+    dec_295{"already_has_summary<br><i>Condición en línea 295:<br>already_has_summary</i>"}
+    loop_321["For each gn in group"]
+    loop_355["For each t in knowledge_triplets"]
+    dec_358{"query_lower in subj or<br>query_lower in obj<br><i>Condición en línea 358:<br>query_lower in subj or query_lower in obj</i>"}
+    loop_363["For each entity in matched_entities"]
+    loop_369["For each node in temporal"]
+    loop_379["For each kr in knowledge_results"]
+    fn_get_hmem[["Get Hmem"]]
+    fn_hmem_add_memory[["Add Memory"]]
+    fn_hmem__find_most_recent[["Find Most Recent"]]
+    fn_hmem_get_temporal_context[["Get Temporal Context"]]
+    fn_hmem_add_knowledge[["Add Knowledge"]]
+    fn_traverse_143[["Traverse"]]
+    fn_hmem_query_knowledge[["Query Knowledge"]]
+    fn_hmem_get_entity_graph[["Get Entity Graph"]]
+    fn_hmem_consolidate[["Consolidate"]]
+    fn_hmem__summarize[["Summarize"]]
+    fn_hmem_hybrid_retrieve[["Hybrid Retrieve"]]
+    fn_hmem_answer_with_memory[["Answer With Memory"]]
+    tool_hybrid_retrieve_411["context = Hybrid Retrieve<br><i>Recuperación híbrida (list-sage<br>graph + consulta local)</i>"]
+    fn_hmem_save[["Save"]]
+    fn_hmem_load[["Load"]]
+    tool_llm_complete_429["result = LLM Complete<br><i>Groq/Ollama: envía prompt + contexto<br>→ JSON/texto (routing por proveedor)</i>"]
+    fn_sort_key_389[["Sort Key"]]
+    n_start --> fn_get_hmem
+    n_start --> fn_hmem_add_memory
+    fn_hmem_add_memory --> dec_94
+    dec_94 -- "NO" --> dec_99
+    dec_99 --> dec_108
+    dec_108 --> loop_109
+    fn_hmem_add_memory --> fn_hmem__find_most_recent
+    fn_hmem__find_most_recent --> fn_hmem_get_temporal_context
+    fn_hmem_get_temporal_context --> dec_137
+    dec_137 --> fn_traverse_143
+    fn_hmem_get_temporal_context --> fn_hmem_add_knowledge
+    fn_hmem_add_knowledge --> fn_hmem_query_knowledge
+    fn_hmem_query_knowledge --> loop_194
+    loop_194 --> dec_195
+    dec_195 --> dec_197
+    dec_197 --> dec_202
+    dec_202 -- "loop" --> loop_194
+    fn_hmem_query_knowledge --> fn_hmem_get_entity_graph
+    fn_hmem_get_entity_graph --> loop_215
+    loop_215 --> loop_217
+    loop_217 --> dec_221
+    dec_221 --> dec_231
+    dec_221 --> dec_235
+    dec_235 --> dec_245
+    dec_245 -- "loop" --> loop_217
+    loop_217 -- "loop" --> loop_215
+    fn_hmem_get_entity_graph --> fn_hmem_consolidate
+    fn_hmem_consolidate --> dec_255
+    dec_255 --> loop_268
+    loop_268 --> loop_278
+    loop_278 --> dec_279
+    dec_279 --> dec_295
+    dec_295 --> loop_321
+    loop_321 -- "loop" --> loop_278
+    fn_hmem_consolidate --> fn_hmem__summarize
+    fn_hmem__summarize --> fn_hmem_hybrid_retrieve
+    fn_hmem_hybrid_retrieve --> loop_355
+    loop_355 --> dec_358
+    dec_358 -- "loop" --> loop_355
+    loop_355 --> loop_363
+    loop_363 --> loop_369
+    loop_369 --> loop_379
+    loop_379 --> fn_sort_key_389
+    fn_hmem_hybrid_retrieve --> fn_hmem_answer_with_memory
+    fn_hmem_answer_with_memory --> tool_hybrid_retrieve_411
+    tool_hybrid_retrieve_411 --> dec_416
+    dec_416 --> tool_llm_complete_429
+    tool_llm_complete_429 --> dec_430
+    fn_hmem_answer_with_memory --> fn_hmem_save
+    fn_hmem_save --> fn_hmem_load
+    class n_start node-start
+    class fn_get_hmem,fn_hmem_add_memory,fn_hmem__find_most_recent,fn_hmem_get_temporal_context,fn_traverse_143,fn_hmem_add_knowledge,fn_hmem_query_knowledge,fn_hmem_get_entity_graph,fn_hmem_consolidate,fn_hmem__summarize,fn_hmem_hybrid_retrieve,fn_sort_key_389,fn_hmem_answer_with_memory,fn_hmem_save,fn_hmem_load node-subprocess
+    class dec_94,dec_99,dec_108,dec_137,dec_195,dec_197,dec_202,dec_221,dec_231,dec_235,dec_245,dec_255,dec_279,dec_295,dec_358,dec_416,dec_430 node-decision
+    class loop_109,loop_194,loop_215,loop_217,loop_268,loop_278,loop_321,loop_355,loop_363,loop_369,loop_379 node-loop
+    class tool_hybrid_retrieve_411,tool_llm_complete_429 node-tool
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

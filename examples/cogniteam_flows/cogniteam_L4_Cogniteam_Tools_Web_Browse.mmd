@@ -1,0 +1,58 @@
+%% Browse
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_14{"not validate_url(url)<br><i>Condición en línea 14:<br>not validate_url(url)</i>"}
+    dec_26{"'charset' in content_type<br><i>Condición en línea 26:<br>'charset' in content_type</i>"}
+    dec_34{"is_arxiv<br><i>Condición en línea 34:<br>is_arxiv</i>"}
+    loop_35["For each selector"]
+    loop_41["For each el"]
+    dec_45{"title_el<br><i>Condición en línea 45:<br>title_el</i>"}
+    dec_48{"authors_el<br><i>Condición en línea 48:<br>authors_el</i>"}
+    dec_51{"not abstract_el<br><i>Condición en línea 51:<br>not abstract_el</i>"}
+    dec_53{"abstract_el<br><i>Condición en línea 53:<br>abstract_el</i>"}
+    dec_55{"parts<br><i>Condición en línea 55:<br>parts</i>"}
+    loop_59["For each selector"]
+    loop_66["For each el"]
+    loop_79["For each line in lines"]
+    dec_82{"len(line) < 20 and (not<br>re.search('(.!?:)$', line)) and<br><i>Condición en línea 82:<br>len(line) < 20 and (not re.search('(.!?:)$', line)) and (not</i>"}
+    dec_83{"cleaned and len(cleaned(-1))<br>> 80 and (not line))<br><i>Condición en línea 83:<br>cleaned and len(cleaned(-1)) > 80 and (not re.match('^(A-Z\\</i>"}
+    fn_browse_web_page[["Browse Web Page"]]
+    fn__clean_latex[["Clean Latex"]]
+    n_start --> fn_browse_web_page
+    fn_browse_web_page --> dec_14
+    dec_14 --> dec_26
+    dec_26 --> dec_34
+    dec_34 --> loop_35
+    loop_35 --> loop_41
+    loop_41 -- "loop" --> loop_35
+    loop_35 --> dec_45
+    dec_45 --> dec_48
+    dec_48 --> dec_51
+    dec_51 --> dec_53
+    dec_53 --> dec_55
+    dec_55 --> loop_59
+    loop_59 --> loop_66
+    loop_66 -- "loop" --> loop_59
+    loop_59 --> loop_79
+    loop_79 --> dec_82
+    dec_82 --> dec_83
+    dec_83 -- "loop" --> loop_79
+    n_start --> fn__clean_latex
+    class n_start node-start
+    class fn_browse_web_page,fn__clean_latex node-subprocess
+    class dec_14,dec_26,dec_34,dec_45,dec_48,dec_51,dec_53,dec_55,dec_82,dec_83 node-decision
+    class loop_35,loop_41,loop_59,loop_66,loop_79 node-loop
+    class n_end node-end

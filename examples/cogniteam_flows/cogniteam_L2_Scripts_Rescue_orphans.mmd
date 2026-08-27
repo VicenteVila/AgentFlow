@@ -1,0 +1,77 @@
+%% Rescue Orphans
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_40{"not own<br><i>Condición en línea 40:<br>not own</i>"}
+    dec_97{"DST.exists()<br><i>Condición en línea 97:<br>DST.exists()</i>"}
+    loop_43["For each run"]
+    dec_44{"not run.is_dir()<br><i>Condición en línea 44:<br>not run.is_dir()</i>"}
+    dec_47{"not own.issubset(run_files)<br><i>Condición en línea 47:<br>not own.issubset(run_files)</i>"}
+    dec_49{"all((_hash_of(run, rel) ==<br>own_hashes(rel) for rel in own))<br><i>Condición en línea 49:<br>all((_hash_of(run, rel) == own_hashes(rel) for rel in own))</i>"}
+    loop_57["For each f"]
+    dec_58{"f.is_file() and f.suffix in<br>('.md', '.html', '.json', '.txt',<br><i>Condición en línea 58:<br>f.is_file() and f.suffix in ('.md', '.html', '.json', '.txt'</i>"}
+    dec_65{"names & GAME_NAMES or any((k<br>in text for k in ('game over',<br><i>Condición en línea 65:<br>names & GAME_NAMES or any((k in text for k in ('game over',</i>"}
+    dec_71{"any((k in names for k in<br>('research.md', 'outline.md', and<br><i>Condición en línea 71:<br>any((k in names for k in ('research.md', 'outline.md', 'blog</i>"}
+    dec_75{"'blog.md' in names and<br>'fetch_arxiv_papers.py' in names<br><i>Condición en línea 75:<br>'blog.md' in names and 'fetch_arxiv_papers.py' in names</i>"}
+    dec_79{"any((k in names for k in<br>('brand_guide.json', 'brand.md',<br><i>Condición en línea 79:<br>any((k in names for k in ('brand_guide.json', 'brand_guideli</i>"}
+    dec_90{"res<br><i>Condición en línea 90:<br>res</i>"}
+    loop_101["For each flow_dir"]
+    dec_102{"not flow_dir.is_dir()<br><i>Condición en línea 102:<br>not flow_dir.is_dir()</i>"}
+    dec_105{"not files<br><i>Condición en línea 105:<br>not files</i>"}
+    dec_108{"_is_duplicated(flow_dir)<br><i>Condición en línea 108:<br>_is_duplicated(flow_dir)</i>"}
+    loop_126["For loop"]
+    loop_129["For each name in duplicated"]
+    loop_132["For loop"]
+    fn__hash_of[["Hash Of"]]
+    fn__relative_files[["Relative Files"]]
+    fn__is_duplicated[["Is Duplicated"]]
+    fn__infer[["Infer"]]
+    fn_main[["Main"]]
+    tool_create_cage_from_yaml_86["cage = Cage from YAML<br><i>Construye DeterministicCage<br>apartir del archetype YAML</i>"]
+    n_start --> fn__hash_of
+    n_start --> fn__relative_files
+    n_start --> fn__is_duplicated
+    fn__is_duplicated --> dec_40
+    dec_40 --> loop_43
+    loop_43 --> dec_44
+    dec_44 --> dec_47
+    dec_47 --> dec_49
+    dec_49 -- "loop" --> loop_43
+    n_start --> fn__infer
+    fn__infer --> loop_57
+    loop_57 --> dec_58
+    dec_58 -- "loop" --> loop_57
+    loop_57 --> dec_65
+    dec_65 --> dec_71
+    dec_71 --> dec_75
+    dec_75 --> dec_79
+    dec_79 --> tool_create_cage_from_yaml_86
+    tool_create_cage_from_yaml_86 --> dec_90
+    n_start --> fn_main
+    fn_main --> dec_97
+    dec_97 --> loop_101
+    loop_101 --> dec_102
+    dec_102 --> dec_105
+    dec_105 --> dec_108
+    dec_108 -- "loop" --> loop_101
+    loop_101 --> loop_126
+    loop_126 --> loop_129
+    loop_129 --> loop_132
+    class n_start node-start
+    class fn__hash_of,fn__relative_files,fn__is_duplicated,fn__infer,fn_main node-subprocess
+    class dec_40,dec_44,dec_47,dec_49,dec_58,dec_65,dec_71,dec_75,dec_79,dec_90,dec_97,dec_102,dec_105,dec_108 node-decision
+    class loop_43,loop_57,loop_101,loop_126,loop_129,loop_132 node-loop
+    class tool_create_cage_from_yaml_86 node-tool
+    class n_end node-end

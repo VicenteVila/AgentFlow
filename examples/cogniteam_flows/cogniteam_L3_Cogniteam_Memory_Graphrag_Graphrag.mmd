@@ -1,0 +1,127 @@
+%% Graphrag
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_123{"self.graph.number_of_nodes() < 2<br><i>Condición en línea 123:<br>self.graph.number_of_nodes() < 2</i>"}
+    dec_155{"NOT communities?<br><i>Niega communities<br>para lógica invertida</i>"}
+    dec_197{"NOT community_summaries?<br><i>Niega community_summaries<br>para lógica invertida</i>"}
+    loop_204["For loop"]
+    loop_218["For loop"]
+    loop_305["For each gr in global_results"]
+    loop_307["For each lr"]
+    dec_313{"not context<br><i>Condición en línea 313:<br>not context</i>"}
+    dec_324{"result<br><i>Condición en línea 324:<br>result</i>"}
+    loop_78["For each match"]
+    dec_80{"len(name) > 2 and name not<br>in seen<br><i>Condición en línea 80:<br>len(name) > 2 and name not in seen</i>"}
+    loop_141["For loop"]
+    loop_142["For each node in comm"]
+    loop_148["For loop"]
+    loop_159["For loop"]
+    dec_160{"not members<br><i>Condición en línea 160:<br>not members</i>"}
+    loop_165["For each m in members"]
+    dec_183{"result<br><i>Condición en línea 183:<br>result</i>"}
+    loop_235["For each node"]
+    dec_236{"node.lower() in query_lower<br>or query_lower in node.lower()<br><i>Condición en línea 236:<br>node.lower() in query_lower or query_lower in node.lower()</i>"}
+    dec_238{"desc and (query_lower in<br>desc.lower() or any((t in for t in<br><i>Condición en línea 238:<br>desc and (query_lower in desc.lower() or any((t in desc.lowe</i>"}
+    dec_244{"not seeds<br><i>Condición en línea 244:<br>not seeds</i>"}
+    loop_246["For each node"]
+    loop_248["For each qt"]
+    dec_249{"len(qt) > 3 and qt in<br>node_lower<br><i>Condición en línea 249:<br>len(qt) > 3 and qt in node_lower</i>"}
+    loop_256["For each seed"]
+    loop_257["For loop"]
+    dec_260{"node not in visited<br><i>Condición en línea 260:<br>node not in visited</i>"}
+    loop_263["For each neighbor"]
+    dec_265{"edge and<br>edge.get('relation')<br><i>Condición en línea 265:<br>edge and edge.get('relation')</i>"}
+    fn_get_graphrag[["Get Graphrag"]]
+    fn_graphragmemory_extract_entities_from_text[["Extract Entities From Text"]]
+    fn_graphragmemory__extract_entities_fallback[["Extract Entities Fallback"]]
+    fn_graphragmemory__add_to_graph[["Add To Graph"]]
+    fn_graphragmemory_detect_communities[["Detect Communities"]]
+    fn_graphragmemory_summarize_communities[["Summarize Communities"]]
+    fn_graphragmemory_global_search[["Global Search"]]
+    fn_graphragmemory_local_search[["Local Search"]]
+    fn_graphragmemory_hybrid_search[["Hybrid Search"]]
+    tool_global_search_286["global_results = Global Search<br><i>GraphRAG: búsqueda global sobre<br>comunidades resumidas</i>"]
+    fn_graphragmemory__generate_hybrid_summary[["Generate Hybrid Summary"]]
+    tool_local_search_287["local_results = Local Search<br><i>GraphRAG: búsqueda local con<br>vecinos de entidades</i>"]
+    fn_graphragmemory_add_text[["Add Text"]]
+    fn_graphragmemory_save[["Save"]]
+    fn_graphragmemory_load[["Load"]]
+    tool_llm_complete_323["result = LLM Complete<br><i>Groq/Ollama: envía prompt + contexto<br>→ JSON/texto (routing por proveedor)</i>"]
+    tool_llm_complete_182["result = LLM Complete<br><i>Groq/Ollama: envía prompt + contexto<br>→ JSON/texto (routing por proveedor)</i>"]
+    evo_summarize_communities_198["Summarize Communities<br><i>Resume comunidades detectadas<br>del grafo RAG</i>"]:::evolution
+    n_start --> fn_get_graphrag
+    n_start --> fn_graphragmemory_extract_entities_from_text
+    fn_graphragmemory_extract_entities_from_text --> fn_graphragmemory__extract_entities_fallback
+    fn_graphragmemory__extract_entities_fallback --> loop_78
+    loop_78 --> dec_80
+    dec_80 -- "loop" --> loop_78
+    fn_graphragmemory__extract_entities_fallback --> fn_graphragmemory__add_to_graph
+    fn_graphragmemory__add_to_graph --> fn_graphragmemory_detect_communities
+    fn_graphragmemory_detect_communities --> dec_123
+    dec_123 --> loop_141
+    loop_141 --> loop_142
+    loop_142 -- "loop" --> loop_141
+    loop_141 --> loop_148
+    fn_graphragmemory_detect_communities --> fn_graphragmemory_summarize_communities
+    fn_graphragmemory_summarize_communities --> dec_155
+    dec_155 --> loop_159
+    loop_159 --> dec_160
+    dec_160 --> loop_165
+    loop_165 --> tool_llm_complete_182
+    tool_llm_complete_182 --> dec_183
+    dec_183 -- "loop" --> loop_159
+    fn_graphragmemory_summarize_communities --> fn_graphragmemory_global_search
+    fn_graphragmemory_global_search --> dec_197
+    dec_197 --> evo_summarize_communities_198
+    evo_summarize_communities_198 --> loop_204
+    loop_204 --> loop_218
+    fn_graphragmemory_global_search --> fn_graphragmemory_local_search
+    fn_graphragmemory_local_search --> loop_235
+    loop_235 --> dec_236
+    dec_236 --> dec_238
+    dec_238 -- "loop" --> loop_235
+    loop_235 --> dec_244
+    dec_244 --> loop_246
+    loop_246 --> loop_248
+    loop_248 --> dec_249
+    dec_249 -- "loop" --> loop_248
+    loop_248 -- "loop" --> loop_246
+    loop_246 --> loop_256
+    loop_256 --> loop_257
+    loop_257 --> dec_260
+    dec_260 --> loop_263
+    loop_263 --> dec_265
+    dec_265 -- "loop" --> loop_263
+    loop_263 -- "loop" --> loop_257
+    loop_257 -- "loop" --> loop_256
+    fn_graphragmemory_local_search --> fn_graphragmemory_hybrid_search
+    fn_graphragmemory_hybrid_search --> tool_global_search_286
+    tool_global_search_286 --> tool_local_search_287
+    fn_graphragmemory_hybrid_search --> fn_graphragmemory__generate_hybrid_summary
+    fn_graphragmemory__generate_hybrid_summary --> loop_305
+    loop_305 --> loop_307
+    loop_307 --> dec_313
+    dec_313 --> tool_llm_complete_323
+    tool_llm_complete_323 --> dec_324
+    fn_graphragmemory__generate_hybrid_summary --> fn_graphragmemory_add_text
+    fn_graphragmemory_add_text --> fn_graphragmemory_save
+    fn_graphragmemory_save --> fn_graphragmemory_load
+    class n_start node-start
+    class fn_get_graphrag,fn_graphragmemory_extract_entities_from_text,fn_graphragmemory__extract_entities_fallback,fn_graphragmemory__add_to_graph,fn_graphragmemory_detect_communities,fn_graphragmemory_summarize_communities,fn_graphragmemory_global_search,fn_graphragmemory_local_search,fn_graphragmemory_hybrid_search,fn_graphragmemory__generate_hybrid_summary,fn_graphragmemory_add_text,fn_graphragmemory_save,fn_graphragmemory_load node-subprocess
+    class loop_78,loop_141,loop_142,loop_148,loop_159,loop_165,loop_204,loop_218,loop_235,loop_246,loop_248,loop_256,loop_257,loop_263,loop_305,loop_307 node-loop
+    class dec_80,dec_123,dec_155,dec_160,dec_183,dec_197,dec_236,dec_238,dec_244,dec_249,dec_260,dec_265,dec_313,dec_324 node-decision
+    class tool_llm_complete_182,tool_global_search_286,tool_local_search_287,tool_llm_complete_323 node-tool
+    class n_end node-end

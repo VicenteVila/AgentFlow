@@ -1,0 +1,122 @@
+%% Fastslow
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    loop_100["For each i"]
+    dec_116{"len(self.population) < 2<br><i>Condición en línea 116:<br>len(self.population) < 2</i>"}
+    dec_161{"max_split <= 1<br><i>Condición en línea 161:<br>max_split <= 1</i>"}
+    dec_203{"not words<br><i>Condición en línea 203:<br>not words</i>"}
+    dec_230{"NOT best_policy?<br><i>Niega best_policy<br>para lógica invertida</i>"}
+    dec_257{"not state_experiences<br><i>Condición en línea 257:<br>not state_experiences</i>"}
+    loop_262["For each exp in state_experiences"]
+    dec_278{"self.phase == 'slow'<br><i>Condición en línea 278:<br>self.phase == 'slow'</i>"}
+    dec_279{"self.phase_counter >=<br>self.slow_episodes<br><i>Condición en línea 279:<br>self.phase_counter >= self.slow_episodes</i>"}
+    dec_293{"self.phase_counter >=<br>self.fast_episodes<br><i>Condición en línea 293:<br>self.phase_counter >= self.fast_episodes</i>"}
+    dec_361{"self.best_policy<br><i>Condición en línea 361:<br>self.best_policy</i>"}
+    loop_122["For each policy in population"]
+    dec_123{"policy.trials > 0<br><i>Condición en línea 123:<br>policy.trials > 0</i>"}
+    dec_133{"elites<br><i>Condición en línea 133:<br>elites</i>"}
+    loop_140["Loop"]
+    dec_141{"random.random() <<br>self.crossover_rate and >= 2<br><i>Condición en línea 141:<br>random.random() < self.crossover_rate and len(elites) >= 2</i>"}
+    loop_168["For each key in child_params"]
+    dec_169{"isinstance(child_params(key),<br><i>Condición en línea 169:<br>isinstance(child_params(key), (int, float))</i>"}
+    loop_187["For each key in new_params"]
+    dec_188{"isinstance(new_params(key),<br>float)<br><i>Condición en línea 188:<br>isinstance(new_params(key), float)</i>"}
+    loop_212["For each i"]
+    dec_213{"random.random() < rate<br><i>Condición en línea 213:<br>random.random() < rate</i>"}
+    dec_214{"random.random() < 0.5<br><i>Condición en línea 214:<br>random.random() < 0.5</i>"}
+    dec_217{"i < len(mutated) - 1<br><i>Condición en línea 217:<br>i < len(mutated) - 1</i>"}
+    dec_222{"result == prompt and<br>random.random() < 0.5<br><i>Condición en línea 222:<br>result == prompt and random.random() < 0.5</i>"}
+    loop_313["For each cycle"]
+    loop_315["For each _"]
+    dec_317{"verbose<br><i>Condición en línea 317:<br>verbose</i>"}
+    loop_321["For each _"]
+    dec_323{"self.best_policy<br><i>Condición en línea 323:<br>self.best_policy</i>"}
+    dec_330{"verbose<br><i>Condición en línea 330:<br>verbose</i>"}
+    fn_get_fastslow[["Get Fastslow"]]
+    fn_fastslowlearner_initialize_population[["Initialize Population"]]
+    fn_fastslowlearner_run_slow_phase[["Run Slow Phase"]]
+    fn_fastslowlearner__crossover[["Crossover"]]
+    fn_fastslowlearner__mutate_policy[["Mutate Policy"]]
+    fn_fastslowlearner__mutate_prompt[["Mutate Prompt"]]
+    fn_fastslowlearner_run_fast_phase[["Run Fast Phase"]]
+    fn_fastslowlearner_get_best_action[["Get Best Action"]]
+    fn_fastslowlearner_step[["Step"]]
+    fn_fastslowlearner_learn[["Learn"]]
+    fn_fastslowlearner_save[["Save"]]
+    tool_run_slow_phase_280["result = Slow Phase<br><i>FastSlow: evolución lenta de<br>políticas (crossover/mutación)</i>"]
+    fn_fastslowlearner_load[["Load"]]
+    tool_run_fast_phase_327["Fast Phase<br><i>FastSlow: adaptación rápida<br>(selección + control)</i>"]
+    evo__mutate_policy_146["child = Mutate Policy<br><i>Mutación de políticas<br>en la fase lenta</i>"]:::evolution
+    n_start --> fn_get_fastslow
+    n_start --> fn_fastslowlearner_initialize_population
+    fn_fastslowlearner_initialize_population --> loop_100
+    fn_fastslowlearner_initialize_population --> fn_fastslowlearner_run_slow_phase
+    fn_fastslowlearner_run_slow_phase --> dec_116
+    dec_116 --> loop_122
+    loop_122 --> dec_123
+    dec_123 -- "loop" --> loop_122
+    loop_122 --> dec_133
+    dec_133 --> loop_140
+    loop_140 --> dec_141
+    dec_141 -- "NO" --> evo__mutate_policy_146
+    evo__mutate_policy_146 -- "loop" --> loop_140
+    fn_fastslowlearner_run_slow_phase --> fn_fastslowlearner__crossover
+    fn_fastslowlearner__crossover --> dec_161
+    dec_161 --> loop_168
+    loop_168 --> dec_169
+    dec_169 -- "loop" --> loop_168
+    fn_fastslowlearner__crossover --> fn_fastslowlearner__mutate_policy
+    fn_fastslowlearner__mutate_policy --> loop_187
+    loop_187 --> dec_188
+    dec_188 -- "loop" --> loop_187
+    fn_fastslowlearner__mutate_policy --> fn_fastslowlearner__mutate_prompt
+    fn_fastslowlearner__mutate_prompt --> dec_203
+    dec_203 --> loop_212
+    loop_212 --> dec_213
+    dec_213 --> dec_214
+    dec_214 --> dec_217
+    dec_217 -- "loop" --> loop_212
+    loop_212 --> dec_222
+    fn_fastslowlearner__mutate_prompt --> fn_fastslowlearner_run_fast_phase
+    fn_fastslowlearner_run_fast_phase --> dec_230
+    fn_fastslowlearner_run_fast_phase --> fn_fastslowlearner_get_best_action
+    fn_fastslowlearner_get_best_action --> dec_257
+    dec_257 --> loop_262
+    fn_fastslowlearner_get_best_action --> fn_fastslowlearner_step
+    fn_fastslowlearner_step --> dec_278
+    dec_278 --> dec_279
+    dec_279 -- "YES" --> tool_run_slow_phase_280
+    dec_278 --> dec_293
+    fn_fastslowlearner_step --> fn_fastslowlearner_learn
+    fn_fastslowlearner_learn --> loop_313
+    loop_313 --> loop_315
+    loop_315 --> dec_317
+    dec_317 -- "loop" --> loop_315
+    loop_315 --> loop_321
+    loop_321 --> dec_323
+    dec_323 --> tool_run_fast_phase_327
+    tool_run_fast_phase_327 --> dec_330
+    dec_330 -- "loop" --> loop_321
+    loop_321 -- "loop" --> loop_313
+    fn_fastslowlearner_learn --> fn_fastslowlearner_save
+    fn_fastslowlearner_save --> dec_361
+    fn_fastslowlearner_save --> fn_fastslowlearner_load
+    class n_start node-start
+    class fn_get_fastslow,fn_fastslowlearner_initialize_population,fn_fastslowlearner_run_slow_phase,fn_fastslowlearner__crossover,fn_fastslowlearner__mutate_policy,fn_fastslowlearner__mutate_prompt,fn_fastslowlearner_run_fast_phase,fn_fastslowlearner_get_best_action,fn_fastslowlearner_step,fn_fastslowlearner_learn,fn_fastslowlearner_save,fn_fastslowlearner_load node-subprocess
+    class loop_100,loop_122,loop_140,loop_168,loop_187,loop_212,loop_262,loop_313,loop_315,loop_321 node-loop
+    class dec_116,dec_123,dec_133,dec_141,dec_161,dec_169,dec_188,dec_203,dec_213,dec_214,dec_217,dec_222,dec_230,dec_257,dec_278,dec_279,dec_293,dec_317,dec_323,dec_330,dec_361 node-decision
+    class tool_run_slow_phase_280,tool_run_fast_phase_327 node-tool
+    class n_end node-end

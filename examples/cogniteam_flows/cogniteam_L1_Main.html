@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="cogniteam_L0_Overview.html">← Volver</a>
+  <h1>Main</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Main
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    fn__warmup_litellm_251["Warmup LiteLLM<br><i>Precalienta routing/fallback<br>de proveedores LLM</i>"]
+    loop_159["For loop"]
+    dec_161{"or rel.startswith('.venv') or or<br><i>Condición en línea 161:<br>rel.startswith('proyectos_finalizados') or rel.startswith('.</i>"}
+    loop_164["For each f in files"]
+    dec_166{"_is_junk_path(fp)<br><i>Condición en línea 166:<br>_is_junk_path(fp)</i>"}
+    dec_168{"fp not in snapshot_before<br><i>Condición en línea 168:<br>fp not in snapshot_before</i>"}
+    dec_171{"new_files<br><i>Condición en línea 171:<br>new_files</i>"}
+    loop_174["For each fp in new_files"]
+    dec_179{"fp.startswith('main.py') or<br>fp.startswith('cogniteam/') or<br><i>Condición en línea 179:<br>fp.startswith('main.py') or fp.startswith('cogniteam/') or f</i>"}
+    dec_208{"manifest<br><i>Condición en línea 208:<br>manifest</i>"}
+    dec_213{"Condition?<br><i>Condición en línea 213:<br>manifest.secondary_classifications</i>"}
+    loop_214["For each sc in secondary_classifications"]
+    dec_221{"plan_summary<br><i>Condición en línea 221:<br>plan_summary</i>"}
+    loop_224["For each s in steps"]
+    dec_230{"new_files<br><i>Condición en línea 230:<br>new_files</i>"}
+    loop_232["For each fp"]
+    dec_236{"outputs<br><i>Condición en línea 236:<br>outputs</i>"}
+    loop_238["For loop"]
+    dec_241{"len(outputs) > 10<br><i>Condición en línea 241:<br>len(outputs) > 10</i>"}
+    loop_345["For each name"]
+    dec_346{"name in HIDDEN_TOOLS<br><i>Condición en línea 346:<br>name in HIDDEN_TOOLS</i>"}
+    loop_351["For loop"]
+    dec_357{"desc<br><i>Condición en línea 357:<br>desc</i>"}
+    loop_375["Main Loop<br>(while True)"]
+    dec_381{"line.strip().upper() ==<br>'FIN_TAREA'<br><i>Condición en línea 381:<br>line.strip().upper() == 'FIN_TAREA'</i>"}
+    dec_386{"not requirements<br><i>Condición en línea 386:<br>not requirements</i>"}
+    fn__build_tool_map[["Build Tool Map"]]
+    fn__categorize_tools[["Categorize Tools"]]
+    fn__warmup_litellm[["Warmup Litellm"]]
+    fn__save_result[["Save Result"]]
+    fn_main[["Main"]]
+    tool_create_planner_agent_305["planner_agent = Create Planner<br><i>Factory del agente planner</i>"]
+    n_start --> fn__build_tool_map
+    n_start --> fn__categorize_tools
+    n_start --> fn__warmup_litellm
+    n_start --> fn__save_result
+    fn__save_result --> loop_159
+    loop_159 --> dec_161
+    dec_161 --> loop_164
+    loop_164 --> dec_166
+    dec_166 --> dec_168
+    dec_168 -- "loop" --> loop_164
+    loop_164 -- "loop" --> loop_159
+    loop_159 --> dec_171
+    dec_171 --> loop_174
+    loop_174 --> dec_179
+    dec_179 -- "loop" --> loop_174
+    loop_174 --> dec_208
+    dec_208 --> dec_213
+    dec_213 --> loop_214
+    loop_214 --> dec_221
+    dec_221 -- "NO" --> loop_224
+    loop_224 --> dec_230
+    dec_230 --> loop_232
+    loop_232 --> dec_236
+    dec_236 --> loop_238
+    loop_238 --> dec_241
+    n_start --> fn_main
+    fn_main --> fn__warmup_litellm_251
+    fn__warmup_litellm_251 --> tool_create_planner_agent_305
+    tool_create_planner_agent_305 --> loop_345
+    loop_345 --> dec_346
+    dec_346 --> loop_351
+    loop_351 --> dec_357
+    dec_357 -- "loop" --> loop_345
+    loop_345 --> loop_375
+    loop_375 --> dec_381
+    dec_381 -- "loop" --> loop_375
+    loop_375 --> dec_386
+    class n_start node-start
+    class fn__build_tool_map,fn__categorize_tools,fn__warmup_litellm,fn__save_result,fn_main node-subprocess
+    class loop_159,loop_164,loop_174,loop_214,loop_224,loop_232,loop_238,loop_345,loop_351,loop_375 node-loop
+    class dec_161,dec_166,dec_168,dec_171,dec_179,dec_208,dec_213,dec_221,dec_230,dec_236,dec_241,dec_346,dec_357,dec_381,dec_386 node-decision
+    class fn__warmup_litellm_251 node-process
+    class tool_create_planner_agent_305 node-tool
+    class n_end node-end
+    click fn__build_tool_map href "cogniteam_L2_Main_Setup.html" "Abrir detalle"
+    click fn__categorize_tools href "cogniteam_L2_Main_Setup.html" "Abrir detalle"
+    click fn__warmup_litellm href "cogniteam_L2_Main_Setup.html" "Abrir detalle"
+    click fn_main href "cogniteam_L2_Main_Entry.html" "Abrir detalle"
+    click fn__save_result href "cogniteam_L2_Main_Output.html" "Abrir detalle"
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

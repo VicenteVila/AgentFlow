@@ -1,0 +1,120 @@
+%% Orchestrator · Tools
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_2{"raw_name in available<br><i>Condición en línea 2:<br>raw_name in available</i>"}
+    dec_12{"not expected_format<br><i>Condición en línea 12:<br>not expected_format</i>"}
+    dec_201{"not html_files<br><i>Condición en línea 201:<br>not html_files</i>"}
+    dec_5{"m and m.group(1) in<br>available<br><i>Condición en línea 5:<br>m and m.group(1) in available</i>"}
+    dec_18{"expected_format == 'json'<br>and isinstance(check, str)<br><i>Condición en línea 18:<br>expected_format == 'json' and isinstance(check, str)</i>"}
+    dec_134{"ctx.get('results')<br><i>Condición en línea 134:<br>ctx.get('results')</i>"}
+    dec_26{"isinstance(output, dict) and<br>'success' in output and ('message'<br><i>Condición en línea 26:<br>isinstance(output, dict) and 'success' in output and ('messa</i>"}
+    dec_138{"temporal<br><i>Condición en línea 138:<br>temporal</i>"}
+    dec_27{"expected_format ==<br>'tool_response_dict'<br><i>Condición en línea 27:<br>expected_format == 'tool_response_dict'</i>"}
+    dec_36{"isinstance(output, dict) and<br>'result' in output<br><i>Condición en línea 36:<br>isinstance(output, dict) and 'result' in output</i>"}
+    dec_29{"expected_format == 'json'<br><i>Condición en línea 29:<br>expected_format == 'json'</i>"}
+    dec_37{"expected_format == 'json'<br><i>Condición en línea 37:<br>expected_format == 'json'</i>"}
+    dec_41{"isinstance(output, dict) and<br>'success' in output<br><i>Condición en línea 41:<br>isinstance(output, dict) and 'success' in output</i>"}
+    dec_147{"gctx.get('global_communities')<br><i>Condición en línea 147:<br>gctx.get('global_communities')</i>"}
+    dec_31{"output.get('success')<br><i>Condición en línea 31:<br>output.get('success')</i>"}
+    dec_42{"output.get('success')<br><i>Condición en línea 42:<br>output.get('success')</i>"}
+    dec_151{"summaries<br><i>Condición en línea 151:<br>summaries</i>"}
+    dec_47{"expected_format == 'html'<br><i>Condición en línea 47:<br>expected_format == 'html'</i>"}
+    dec_51{"expected_format in ('css',<br>'js', 'javascript', 'ts',<br><i>Condición en línea 51:<br>expected_format in ('css', 'js', 'javascript', 'ts', 'typesc</i>"}
+    dec_160{"sctx.get('relevant_skills')<br><i>Condición en línea 160:<br>sctx.get('relevant_skills')</i>"}
+    dec_53{"expected_format == 'text'<br><i>Condición en línea 53:<br>expected_format == 'text'</i>"}
+    dec_165{"skills_list<br><i>Condición en línea 165:<br>skills_list</i>"}
+    dec_55{"expected_format ==<br>'json_string'<br><i>Condición en línea 55:<br>expected_format == 'json_string'</i>"}
+    dec_170{"parts<br><i>Condición en línea 170:<br>parts</i>"}
+    dec_57{"valid<br><i>Condición en línea 57:<br>valid</i>"}
+    dec_63{"expected_format == 'json'<br><i>Condición en línea 63:<br>expected_format == 'json'</i>"}
+    dec_65{"expected_format == 'boolean'<br><i>Condición en línea 65:<br>expected_format == 'boolean'</i>"}
+    dec_67{"expected_format ==<br>'tool_response_dict'<br><i>Condición en línea 67:<br>expected_format == 'tool_response_dict'</i>"}
+    dec_72{"not valid<br><i>Condición en línea 72:<br>not valid</i>"}
+    loop_177["For loop"]
+    dec_178{"isinstance(val, dict)<br><i>Condición en línea 178:<br>isinstance(val, dict)</i>"}
+    dec_180{"isinstance(val, str)<br><i>Condición en línea 180:<br>isinstance(val, str)</i>"}
+    dec_184{"content and len(content) ><br>20<br><i>Condición en línea 184:<br>content and len(content) > 20</i>"}
+    loop_206["For each fname in html_files"]
+    dec_212{"result.get('passed')<br><i>Condición en línea 212:<br>result.get('passed')</i>"}
+    loop_218["For each err"]
+    dec_220{"result.get('screenshot_path')<br><i>Condición en línea 220:<br>result.get('screenshot_path')</i>"}
+    fn__resolve_tool_name[["Resolve Tool Name"]]
+    fn__validate_output[["Validate Output"]]
+    fn__seed_skills_once[["Seed Skills Once"]]
+    fn__record_step_skill_usage[["Record Step Skill Usage"]]
+    fn__get_memory_context[["Get Memory Context"]]
+    fn__get_artifacts_summary[["Get Artifacts Summary"]]
+    fn__run_functional_validation[["Run Functional Validation"]]
+    fn__find_file_in_tree[["Find File In Tree"]]
+    tool_hybrid_retrieve_133["ctx = Hybrid Retrieve<br><i>Recuperación híbrida (list-sage<br>graph + consulta local)</i>"]
+    tool_hybrid_search_146["gctx = Hybrid Search<br><i>GraphRAG: combina búsqueda<br>local y global</i>"]
+    tool_retrieve_with_memory_159["sctx = Retrieve w/ Memory<br><i>Recupera skills relevantes para<br>la tarea</i>"]
+    n_start --> fn__resolve_tool_name
+    fn__resolve_tool_name --> dec_2
+    dec_2 --> dec_5
+    n_start --> fn__validate_output
+    fn__validate_output --> dec_12
+    dec_12 --> dec_18
+    dec_18 --> dec_26
+    dec_26 --> dec_27
+    dec_27 --> dec_29
+    dec_29 --> dec_31
+    dec_26 --> dec_36
+    dec_36 --> dec_37
+    dec_36 --> dec_41
+    dec_41 --> dec_42
+    dec_42 --> dec_47
+    dec_47 --> dec_51
+    dec_51 --> dec_53
+    dec_53 --> dec_55
+    dec_55 --> dec_57
+    dec_55 --> dec_63
+    dec_63 --> dec_65
+    dec_65 --> dec_67
+    dec_67 --> dec_72
+    n_start --> fn__seed_skills_once
+    n_start --> fn__record_step_skill_usage
+    n_start --> fn__get_memory_context
+    fn__get_memory_context --> tool_hybrid_retrieve_133
+    tool_hybrid_retrieve_133 --> dec_134
+    dec_134 --> dec_138
+    dec_138 --> tool_hybrid_search_146
+    tool_hybrid_search_146 --> dec_147
+    dec_147 --> dec_151
+    dec_151 --> tool_retrieve_with_memory_159
+    tool_retrieve_with_memory_159 --> dec_160
+    dec_160 --> dec_165
+    dec_165 --> dec_170
+    n_start --> fn__get_artifacts_summary
+    fn__get_artifacts_summary --> loop_177
+    loop_177 --> dec_178
+    dec_178 --> dec_180
+    dec_180 --> dec_184
+    dec_184 -- "loop" --> loop_177
+    n_start --> fn__run_functional_validation
+    fn__run_functional_validation --> dec_201
+    dec_201 --> loop_206
+    loop_206 --> dec_212
+    dec_212 --> loop_218
+    loop_218 --> dec_220
+    dec_220 -- "loop" --> loop_206
+    n_start --> fn__find_file_in_tree
+    class n_start node-start
+    class fn__resolve_tool_name,fn__validate_output,fn__seed_skills_once,fn__record_step_skill_usage,fn__get_memory_context,fn__get_artifacts_summary,fn__run_functional_validation,fn__find_file_in_tree node-subprocess
+    class dec_2,dec_5,dec_12,dec_18,dec_26,dec_27,dec_29,dec_31,dec_36,dec_37,dec_41,dec_42,dec_47,dec_51,dec_53,dec_55,dec_57,dec_63,dec_65,dec_67,dec_72,dec_134,dec_138,dec_147,dec_151,dec_160,dec_165,dec_170,dec_178,dec_180,dec_184,dec_201,dec_212,dec_220 node-decision
+    class tool_hybrid_retrieve_133,tool_hybrid_search_146,tool_retrieve_with_memory_159 node-tool
+    class loop_177,loop_206,loop_218 node-loop
+    class n_end node-end

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cocoguide</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="cogniteam_L3_Cogniteam_Tools_Integrations.html">← Volver</a>
+  <h1>Cocoguide</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Cocoguide
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_36{"ruta_archivo_datos_json<br><i>Condición en línea 36:<br>ruta_archivo_datos_json</i>"}
+    dec_38{"not os.path.isfile(path) and<br>(not os.path.isabs(path))<br><i>Condición en línea 38:<br>not os.path.isfile(path) and (not os.path.isabs(path))</i>"}
+    dec_40{"os.path.isfile(path)<br><i>Condición en línea 40:<br>os.path.isfile(path)</i>"}
+    dec_53{"script_content_direct<br><i>Condición en línea 53:<br>script_content_direct</i>"}
+    dec_56{"screenshot_base64_direct<br><i>Condición en línea 56:<br>screenshot_base64_direct</i>"}
+    dec_59{"not script_text_final<br><i>Condición en línea 59:<br>not script_text_final</i>"}
+    dec_67{"fragmento_codigo_sugerido<br><i>Condición en línea 67:<br>fragmento_codigo_sugerido</i>"}
+    dec_73{"screenshot_base64_final<br><i>Condición en línea 73:<br>screenshot_base64_final</i>"}
+    dec_83{"screenshot_base64_final and<br>(not any((kw in model.lower() for<br><i>Condición en línea 83:<br>screenshot_base64_final and (not any((kw in model.lower() fo</i>"}
+    dec_89{"model.startswith('ollama/')<br><i>Condición en línea 89:<br>model.startswith('ollama/')</i>"}
+    dec_97{"response.choices and<br>response.choices(0).message and<br><i>Condición en línea 97:<br>response.choices and response.choices(0).message and respons</i>"}
+    dec_111{"hasattr(response, 'text')<br>and response.text<br><i>Condición en línea 111:<br>hasattr(response, 'text') and response.text</i>"}
+    dec_113{"hasattr(response,<br>'prompt_feedback') and and<br><i>Condición en línea 113:<br>hasattr(response, 'prompt_feedback') and response.prompt_fee</i>"}
+    fn_generar_guia_cocoguide[["Generar Guia Cocoguide"]]
+    n_start --> fn_generar_guia_cocoguide
+    fn_generar_guia_cocoguide --> dec_36
+    dec_36 --> dec_38
+    dec_38 --> dec_40
+    dec_40 --> dec_53
+    dec_53 --> dec_56
+    dec_56 --> dec_59
+    dec_59 --> dec_67
+    dec_67 --> dec_73
+    dec_73 --> dec_83
+    dec_83 --> dec_89
+    dec_89 -- "YES" --> dec_97
+    dec_89 --> dec_111
+    dec_111 --> dec_113
+    class n_start node-start
+    class fn_generar_guia_cocoguide node-subprocess
+    class dec_36,dec_38,dec_40,dec_53,dec_56,dec_59,dec_67,dec_73,dec_83,dec_89,dec_97,dec_111,dec_113 node-decision
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

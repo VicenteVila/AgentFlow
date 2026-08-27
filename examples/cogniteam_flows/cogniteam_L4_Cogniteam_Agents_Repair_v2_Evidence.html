@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Repair V2 · Evidence</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="cogniteam_L3_Cogniteam_Agents_Repair_v2.html">← Volver</a>
+  <h1>Repair V2 · Evidence</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Repair V2 · Evidence
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    fn__validate_output_103["fmt_ok = Validate Output<br><i>Verifica artefactos generados vs plan<br>(file tree, quality)</i>"]
+    dec_5{"not isinstance(inputs, dict)<br><i>Condición en línea 5:<br>not isinstance(inputs, dict)</i>"}
+    dec_69{"files_ev<br><i>Condición en línea 69:<br>files_ev</i>"}
+    dec_104{"not fmt_ok<br><i>Condición en línea 104:<br>not fmt_ok</i>"}
+    dec_112{"Condition?<br><i>Condición en línea 112:<br>settings.repair_validate_functional</i>"}
+    loop_41["For loop"]
+    dec_72{"spans_ev<br><i>Condición en línea 72:<br>spans_ev</i>"}
+    dec_114{"html_files<br><i>Condición en línea 114:<br>html_files</i>"}
+    loop_7["For each key"]
+    dec_9{"not fname or<br>isinstance(fname, (dict, list))<br><i>Condición en línea 9:<br>not fname or isinstance(fname, (dict, list))</i>"}
+    dec_12{"fname.startswith('((')<br><i>Condición en línea 12:<br>fname.startswith('((')</i>"}
+    dec_14{"fname.startswith(('.', '/'))<br><i>Condición en línea 14:<br>fname.startswith(('.', '/'))</i>"}
+    dec_17{"os.path.isfile(candidate)<br><i>Condición en línea 17:<br>os.path.isfile(candidate)</i>"}
+    dec_25{"os.path.isdir(artifacts_dir)<br><i>Condición en línea 25:<br>os.path.isdir(artifacts_dir)</i>"}
+    dec_29{"listing<br><i>Condición en línea 29:<br>listing</i>"}
+    loop_117["For each fname in html_files"]
+    dec_128{"not vres.get('passed')<br><i>Condición en línea 128:<br>not vres.get('passed')</i>"}
+    dec_138{"passed<br><i>Condición en línea 138:<br>passed</i>"}
+    fn__collect_evidence[["Collect Evidence"]]
+    fn__run_verification[["Run Verification"]]
+    fn__collect_file_evidence[["Collect File Evidence"]]
+    fn__collect_span_evidence[["Collect Span Evidence"]]
+    fn__find_html_in_dir[["Find Html In Dir"]]
+    n_start --> fn__collect_file_evidence
+    fn__collect_file_evidence --> dec_5
+    dec_5 --> loop_7
+    loop_7 --> dec_9
+    dec_9 --> dec_12
+    dec_12 --> dec_14
+    dec_14 --> dec_17
+    dec_17 -- "loop" --> loop_7
+    loop_7 --> dec_25
+    dec_25 --> dec_29
+    n_start --> fn__collect_span_evidence
+    fn__collect_span_evidence --> loop_41
+    n_start --> fn__collect_evidence
+    fn__collect_evidence --> fn__collect_file_evidence
+    fn__collect_file_evidence --> dec_69
+    dec_69 --> fn__collect_span_evidence
+    fn__collect_span_evidence --> dec_72
+    n_start --> fn__find_html_in_dir
+    n_start --> fn__run_verification
+    fn__run_verification --> fn__validate_output_103
+    fn__validate_output_103 --> dec_104
+    dec_104 --> dec_112
+    dec_112 --> fn__find_html_in_dir
+    fn__find_html_in_dir --> dec_114
+    dec_114 --> loop_117
+    loop_117 --> dec_128
+    dec_128 -- "loop" --> loop_117
+    loop_117 --> dec_138
+    class n_start node-start
+    class fn__collect_file_evidence,fn__collect_span_evidence,fn__collect_evidence,fn__find_html_in_dir,fn__run_verification node-subprocess
+    class dec_5,dec_9,dec_12,dec_14,dec_17,dec_25,dec_29,dec_69,dec_72,dec_104,dec_112,dec_114,dec_128,dec_138 node-decision
+    class loop_7,loop_41,loop_117 node-loop
+    class fn__validate_output_103 node-process
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

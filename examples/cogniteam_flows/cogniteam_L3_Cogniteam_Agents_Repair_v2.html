@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Repair V2</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="cogniteam_L2_Cogniteam_Agents.html">← Volver</a>
+  <h1>Repair V2</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Repair V2
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_44{"os.path.isdir(artifacts_dir)<br><i>Condición en línea 44:<br>os.path.isdir(artifacts_dir)</i>"}
+    dec_63{"not os.path.isdir(staging)<br><i>Condición en línea 63:<br>not os.path.isdir(staging)</i>"}
+    dec_85{"tool in _SANDBOX_FILE_TOOLS<br><i>Condición en línea 85:<br>tool in _SANDBOX_FILE_TOOLS</i>"}
+    dec_126{"asyncio.iscoroutinefunction(fn)<br><i>Condición en línea 126:<br>asyncio.iscoroutinefunction(fn)</i>"}
+    dec_135{"not isinstance(inputs, dict)<br><i>Condición en línea 135:<br>not isinstance(inputs, dict)</i>"}
+    loop_172["For loop"]
+    dec_201{"files_ev<br><i>Condición en línea 201:<br>files_ev</i>"}
+    fn__validate_output_237["fmt_ok = Validate Output<br><i>Verifica artefactos generados vs plan<br>(file tree, quality)</i>"]
+    dec_309{"not tool_names<br><i>Condición en línea 309:<br>not tool_names</i>"}
+    dec_92{"tool ==<br>'move_or_rename_sandboxed'<br><i>Condición en línea 92:<br>tool == 'move_or_rename_sandboxed'</i>"}
+    dec_108{"tool in _FILEPATH_TOOLS<br><i>Condición en línea 108:<br>tool in _FILEPATH_TOOLS</i>"}
+    dec_204{"spans_ev<br><i>Condición en línea 204:<br>spans_ev</i>"}
+    dec_238{"not fmt_ok<br><i>Condición en línea 238:<br>not fmt_ok</i>"}
+    dec_317{"attempts_in_loop >=<br>max_attempts<br><i>Condición en línea 317:<br>attempts_in_loop >= max_attempts</i>"}
+    dec_95{"src and (not<br>src.startswith(('.', '/')))<br><i>Condición en línea 95:<br>src and (not src.startswith(('.', '/')))</i>"}
+    dec_110{"orig and (not<br>str(orig).startswith(('.', '/')))<br><i>Condición en línea 110:<br>orig and (not str(orig).startswith(('.', '/')))</i>"}
+    dec_246{"Condition?<br><i>Condición en línea 246:<br>settings.repair_validate_functional</i>"}
+    dec_99{"dst and (not<br>dst.startswith(('.', '/')))<br><i>Condición en línea 99:<br>dst and (not dst.startswith(('.', '/')))</i>"}
+    dec_248{"html_files<br><i>Condición en línea 248:<br>html_files</i>"}
+    dec_104{"orig and (not<br>str(orig).startswith(('.', '/')))<br><i>Condición en línea 104:<br>orig and (not str(orig).startswith(('.', '/')))</i>"}
+    loop_45["For each entry"]
+    dec_46{"entry == '.cogniteam'<br><i>Condición en línea 46:<br>entry == '.cogniteam'</i>"}
+    dec_50{"os.path.isdir(src)<br><i>Condición en línea 50:<br>os.path.isdir(src)</i>"}
+    loop_65["For each entry"]
+    dec_66{"entry == '.cogniteam'<br><i>Condición en línea 66:<br>entry == '.cogniteam'</i>"}
+    dec_70{"os.path.isdir(src)<br><i>Condición en línea 70:<br>os.path.isdir(src)</i>"}
+    loop_137["For each key"]
+    dec_139{"not fname or<br>isinstance(fname, (dict, list))<br><i>Condición en línea 139:<br>not fname or isinstance(fname, (dict, list))</i>"}
+    dec_142{"fname.startswith('((')<br><i>Condición en línea 142:<br>fname.startswith('((')</i>"}
+    dec_144{"fname.startswith(('.', '/'))<br><i>Condición en línea 144:<br>fname.startswith(('.', '/'))</i>"}
+    dec_147{"os.path.isfile(candidate)<br><i>Condición en línea 147:<br>os.path.isfile(candidate)</i>"}
+    dec_155{"os.path.isdir(artifacts_dir)<br><i>Condición en línea 155:<br>os.path.isdir(artifacts_dir)</i>"}
+    dec_159{"listing<br><i>Condición en línea 159:<br>listing</i>"}
+    loop_251["For each fname in html_files"]
+    dec_262{"not vres.get('passed')<br><i>Condición en línea 262:<br>not vres.get('passed')</i>"}
+    dec_272{"passed<br><i>Condición en línea 272:<br>passed</i>"}
+    loop_326["For each i"]
+    dec_330{"last_evidence<br><i>Condición en línea 330:<br>last_evidence</i>"}
+    dec_361{"atype == 'ESCALATE'<br><i>Condición en línea 361:<br>atype == 'ESCALATE'</i>"}
+    dec_364{"atype == 'INSERT_BEFORE'<br><i>Condición en línea 364:<br>atype == 'INSERT_BEFORE'</i>"}
+    dec_366{"isinstance(prep_step, dict)<br>and prep_step.get('tool_to_use')<br><i>Condición en línea 366:<br>isinstance(prep_step, dict) and prep_step.get('tool_to_use')</i>"}
+    dec_367{"prep_step('tool_to_use') in<br>tool_map<br><i>Condición en línea 367:<br>prep_step('tool_to_use') in tool_map</i>"}
+    dec_383{"atype == 'PATCH_INPUTS'<br><i>Condición en línea 383:<br>atype == 'PATCH_INPUTS'</i>"}
+    dec_385{"isinstance(new_inputs, dict)<br>and dict)<br><i>Condición en línea 385:<br>isinstance(new_inputs, dict) and isinstance(step_info.get('i</i>"}
+    dec_389{"atype == 'PATCH_TOOL'<br><i>Condición en línea 389:<br>atype == 'PATCH_TOOL'</i>"}
+    dec_391{"new_tool in tool_map and<br>new_tool != tool_name<br><i>Condición en línea 391:<br>new_tool in tool_map and new_tool != tool_name</i>"}
+    dec_405{"isinstance(result, dict) and<br>result.get('success') is False<br><i>Condición en línea 405:<br>isinstance(result, dict) and result.get('success') is False</i>"}
+    dec_415{"passed<br><i>Condición en línea 415:<br>passed</i>"}
+    fn__staging_dir_for[["Staging Dir For"]]
+    fn__setup_staging[["Setup Staging"]]
+    fn__promote[["Promote"]]
+    fn__rewrite_paths_to_staging[["Rewrite Paths To Staging"]]
+    fn__execute_tool_in_staging[["Execute Tool In Staging"]]
+    fn__collect_file_evidence[["Collect File Evidence"]]
+    fn__collect_span_evidence[["Collect Span Evidence"]]
+    fn__collect_evidence[["Collect Evidence"]]
+    fn__find_html_in_dir[["Find Html In Dir"]]
+    fn__run_verification[["Run Verification"]]
+    fn_repair_with_loop[["Repair With Loop"]]
+    tool_repair_step_v2_334["action = Repair Step v2<br><i>Reparación mejorada (evidencia<br>recopilada del entorno)</i>"]
+    n_start --> fn__staging_dir_for
+    n_start --> fn__setup_staging
+    fn__setup_staging --> dec_44
+    dec_44 --> loop_45
+    loop_45 --> dec_46
+    dec_46 --> dec_50
+    dec_50 -- "loop" --> loop_45
+    n_start --> fn__promote
+    fn__promote --> dec_63
+    dec_63 --> loop_65
+    loop_65 --> dec_66
+    dec_66 --> dec_70
+    dec_70 -- "loop" --> loop_65
+    n_start --> fn__rewrite_paths_to_staging
+    fn__rewrite_paths_to_staging --> dec_85
+    dec_85 --> dec_92
+    dec_92 --> dec_95
+    dec_95 --> dec_99
+    dec_99 --> dec_104
+    dec_85 --> dec_108
+    dec_108 --> dec_110
+    n_start --> fn__execute_tool_in_staging
+    fn__execute_tool_in_staging --> dec_126
+    n_start --> fn__collect_file_evidence
+    fn__collect_file_evidence --> dec_135
+    dec_135 --> loop_137
+    loop_137 --> dec_139
+    dec_139 --> dec_142
+    dec_142 --> dec_144
+    dec_144 --> dec_147
+    dec_147 -- "loop" --> loop_137
+    loop_137 --> dec_155
+    dec_155 --> dec_159
+    n_start --> fn__collect_span_evidence
+    fn__collect_span_evidence --> loop_172
+    n_start --> fn__collect_evidence
+    fn__collect_evidence --> dec_201
+    dec_201 --> dec_204
+    n_start --> fn__find_html_in_dir
+    n_start --> fn__run_verification
+    fn__run_verification --> fn__validate_output_237
+    fn__validate_output_237 --> dec_238
+    dec_238 --> dec_246
+    dec_246 --> dec_248
+    dec_248 --> loop_251
+    loop_251 --> dec_262
+    dec_262 -- "loop" --> loop_251
+    loop_251 --> dec_272
+    n_start --> fn_repair_with_loop
+    fn_repair_with_loop --> dec_309
+    dec_309 --> dec_317
+    dec_317 --> loop_326
+    loop_326 --> dec_330
+    dec_330 --> tool_repair_step_v2_334
+    tool_repair_step_v2_334 --> dec_361
+    dec_361 --> dec_364
+    dec_364 --> dec_366
+    dec_366 --> dec_367
+    dec_367 --> dec_383
+    dec_383 --> dec_385
+    dec_383 --> dec_389
+    dec_389 --> dec_391
+    dec_391 --> dec_405
+    dec_405 --> dec_415
+    dec_415 -- "loop" --> loop_326
+    class n_start node-start
+    class fn__staging_dir_for,fn__setup_staging,fn__promote,fn__rewrite_paths_to_staging,fn__execute_tool_in_staging,fn__collect_file_evidence,fn__collect_span_evidence,fn__collect_evidence,fn__find_html_in_dir,fn__run_verification,fn_repair_with_loop node-subprocess
+    class dec_44,dec_46,dec_50,dec_63,dec_66,dec_70,dec_85,dec_92,dec_95,dec_99,dec_104,dec_108,dec_110,dec_126,dec_135,dec_139,dec_142,dec_144,dec_147,dec_155,dec_159,dec_201,dec_204,dec_238,dec_246,dec_248,dec_262,dec_272,dec_309,dec_317,dec_330,dec_361,dec_364,dec_366,dec_367,dec_383,dec_385,dec_389,dec_391,dec_405,dec_415 node-decision
+    class loop_45,loop_65,loop_137,loop_172,loop_251,loop_326 node-loop
+    class fn__validate_output_237 node-process
+    class tool_repair_step_v2_334 node-tool
+    class n_end node-end
+    click fn__staging_dir_for href "cogniteam_L4_Cogniteam_Agents_Repair_v2_Staging.html" "Abrir detalle"
+    click fn__setup_staging href "cogniteam_L4_Cogniteam_Agents_Repair_v2_Staging.html" "Abrir detalle"
+    click fn__promote href "cogniteam_L4_Cogniteam_Agents_Repair_v2_Staging.html" "Abrir detalle"
+    click fn__rewrite_paths_to_staging href "cogniteam_L4_Cogniteam_Agents_Repair_v2_Staging.html" "Abrir detalle"
+    click fn__execute_tool_in_staging href "cogniteam_L4_Cogniteam_Agents_Repair_v2_Staging.html" "Abrir detalle"
+    click fn__collect_file_evidence href "cogniteam_L4_Cogniteam_Agents_Repair_v2_Evidence.html" "Abrir detalle"
+    click fn__collect_span_evidence href "cogniteam_L4_Cogniteam_Agents_Repair_v2_Evidence.html" "Abrir detalle"
+    click fn__collect_evidence href "cogniteam_L4_Cogniteam_Agents_Repair_v2_Evidence.html" "Abrir detalle"
+    click fn__find_html_in_dir href "cogniteam_L4_Cogniteam_Agents_Repair_v2_Evidence.html" "Abrir detalle"
+    click fn__run_verification href "cogniteam_L4_Cogniteam_Agents_Repair_v2_Evidence.html" "Abrir detalle"
+    click fn_repair_with_loop href "cogniteam_L4_Cogniteam_Agents_Repair_v2_Loop.html" "Abrir detalle"
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

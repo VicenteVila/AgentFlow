@@ -1,0 +1,61 @@
+%% Skills · Manager
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    loop_15["Loop"]
+    dec_56{"skill_id not in self.skills<br><i>Condición en línea 56:<br>skill_id not in self.skills</i>"}
+    dec_85{"preferred == skill_a_id<br><i>Condición en línea 85:<br>preferred == skill_a_id</i>"}
+    loop_104["For each p in preferences"]
+    dec_105{"p.skill_a_id in candidates<br>or p.skill_b_id in candidates<br><i>Condición en línea 105:<br>p.skill_a_id in candidates or p.skill_b_id in candidates</i>"}
+    dec_106{"p.preferred == p.skill_a_id<br><i>Condición en línea 106:<br>p.preferred == p.skill_a_id</i>"}
+    loop_112["For each c in candidates"]
+    dec_113{"c in self.skills<br><i>Condición en línea 113:<br>c in self.skills</i>"}
+    dec_117{"not pref_scores<br><i>Condición en línea 117:<br>not pref_scores</i>"}
+    fn_register_skill[["Register Skill"]]
+    fn_get_skills_by_category[["Get Skills By Category"]]
+    fn_get_top_skills[["Get Top Skills"]]
+    fn_record_skill_usage[["Record Skill Usage"]]
+    fn_add_preference[["Add Preference"]]
+    fn_get_preferred_skill[["Get Preferred Skill"]]
+    fn_save[["Save"]]
+    fn_load[["Load"]]
+    fn__update_skill_score[["Update Skill Score"]]
+    n_start --> fn_register_skill
+    fn_register_skill --> loop_15
+    n_start --> fn_get_skills_by_category
+    n_start --> fn_get_top_skills
+    n_start --> fn_record_skill_usage
+    fn_record_skill_usage --> dec_56
+    n_start --> fn_add_preference
+    fn_add_preference --> dec_85
+    dec_85 -- "YES" --> fn__update_skill_score
+    fn__update_skill_score --> fn__update_skill_score
+    n_start --> fn__update_skill_score
+    n_start --> fn_get_preferred_skill
+    fn_get_preferred_skill --> loop_104
+    loop_104 --> dec_105
+    dec_105 --> dec_106
+    dec_106 -- "loop" --> loop_104
+    loop_104 --> loop_112
+    loop_112 --> dec_113
+    dec_113 -- "loop" --> loop_112
+    loop_112 --> dec_117
+    n_start --> fn_save
+    n_start --> fn_load
+    class n_start node-start
+    class fn_register_skill,fn_get_skills_by_category,fn_get_top_skills,fn_record_skill_usage,fn_add_preference,fn__update_skill_score,fn_get_preferred_skill,fn_save,fn_load node-subprocess
+    class loop_15,loop_104,loop_112 node-loop
+    class dec_56,dec_85,dec_105,dec_106,dec_113,dec_117 node-decision
+    class n_end node-end

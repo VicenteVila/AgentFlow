@@ -1,0 +1,52 @@
+%% Engine
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_28{"not client<br><i>Condición en línea 28:<br>not client</i>"}
+    dec_60{"not client<br><i>Condición en línea 60:<br>not client</i>"}
+    dec_98{"not client<br><i>Condición en línea 98:<br>not client</i>"}
+    dec_112{"not client<br><i>Condición en línea 112:<br>not client</i>"}
+    dec_71{"results('documents')<br><i>Condición en línea 71:<br>results('documents')</i>"}
+    loop_72["For loop"]
+    dec_88{"'does not exist' in str(e)<br><i>Condición en línea 88:<br>'does not exist' in str(e)</i>"}
+    loop_119["For each meta"]
+    dec_120{"meta and meta.get('doc_id')<br>not in seen<br><i>Condición en línea 120:<br>meta and meta.get('doc_id') not in seen</i>"}
+    dec_125{"'does not exist' in str(e)<br><i>Condición en línea 125:<br>'does not exist' in str(e)</i>"}
+    fn__get_chroma_client[["Get Chroma Client"]]
+    fn_index_document[["Index Document"]]
+    fn_query_documents[["Query Documents"]]
+    fn_delete_document[["Delete Document"]]
+    fn_list_documents[["List Documents"]]
+    n_start --> fn__get_chroma_client
+    n_start --> fn_index_document
+    fn_index_document --> dec_28
+    n_start --> fn_query_documents
+    fn_query_documents --> dec_60
+    dec_60 --> dec_71
+    dec_71 --> loop_72
+    loop_72 --> dec_88
+    n_start --> fn_delete_document
+    fn_delete_document --> dec_98
+    n_start --> fn_list_documents
+    fn_list_documents --> dec_112
+    dec_112 --> loop_119
+    loop_119 --> dec_120
+    dec_120 -- "loop" --> loop_119
+    loop_119 --> dec_125
+    class n_start node-start
+    class fn__get_chroma_client,fn_index_document,fn_query_documents,fn_delete_document,fn_list_documents node-subprocess
+    class dec_28,dec_60,dec_71,dec_88,dec_98,dec_112,dec_120,dec_125 node-decision
+    class loop_72,loop_119 node-loop
+    class n_end node-end

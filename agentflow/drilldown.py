@@ -291,56 +291,59 @@ def _handle_dir(ctx: _Ctx, root: Path, segments: list[str], level: int) -> str:
         if not segments:
             overview_target = f"{ctx.prefix}_L0_Overview.html"
 
-        if module in profile.function_splits:
-            groups = profile.function_splits[module]
+        if module in profile.function_splits or module in profile.class_splits:
+            items: list[tuple[str, str]] = []
             child_links: dict[str, str] = {}
-            for group, funcs in groups:
-                name = f"{split_name}_{group}"
-                for func in funcs:
-                    child_links[f"fn_{func}"] = f"{name}.html"
-            items = [(g, f"{g} · {len(fs)} funciones")
-                     for g, fs in groups]
-            for group, funcs in groups:
+            for group, funcs in profile.function_splits.get(module, []):
                 name = f"{split_name}_{group}"
                 sub = parse_functions(file, funcs, profile=ctx.profile,
                                       title=f"{_display_title(file)} · {group}")
+                child_links.update(
+                    {n.id: f"{name}.html" for n in sub.nodes if n.id.startswith("fn_")})
                 _save_artifact(ctx, name, sub, level + 2,
                                f"{_display_title(file)} · {group}", None,
                                f"{base_name}.html")
-            child_hrefs[file.stem] = f"{base_name}.html"
-        elif module in profile.class_splits:
-            child_links = {}
-            for cls in profile.class_splits[module]:
-                name = f"{split_name}_{cls}"
-                for node_id in (f"fn_{cls.lower()}_{m}".lower()
-                                for m in ("run", "schema", "__init__")):
-                    child_links[node_id] = f"{name}.html"
-            items = [(cls, f"{_title_segments([cls])} · clase")
-                     for cls in profile.class_splits[module]]
-            for cls in profile.class_splits[module]:
+                items.append((group, f"{group} · {len(funcs)} funciones"))
+            for cls in profile.class_splits.get(module, []):
                 name = f"{split_name}_{cls}"
                 sub = parse_class_methods(file, cls, profile=ctx.profile,
                                           title=f"{_display_title(file)} · {cls}")
+                child_links.update(
+                    {n.id: f"{name}.html" for n in sub.nodes if n.id.startswith("fn_")})
                 _save_artifact(ctx, name, sub, level + 2,
                                f"{_display_title(file)} · {cls}", None,
                                f"{base_name}.html")
-            child_hrefs[file.stem] = f"{base_name}.html"
-        else:
-            g = ctx.graph_of(file)
-            if g is None:
-                continue
-            _save_artifact(ctx, base_name, with_detail_level(g, "high"),
-                           level + 1, _display_title(file), None, overview_target)
+                items.append((cls, f"{_title_segments([cls])} · clase"))
             child_hrefs[file.stem] = f"{base_name}.html"
 
         # ── Split-file father: whole-flow, else per-group overview ────
         if module in profile.function_splits or module in profile.class_splits:
             father = ctx.graph_of(file)
+            valid: set[str] = set()
             if father is not None:
                 valid = {n.id for n in father.nodes}
-                links = {k: v for k, v in child_links.items() if k in valid} or None
-            else:
-                links = None
+                matched: set[str] = set()
+                for n in father.nodes:
+                    if not n.id.startswith("fn_") or n.id in matched:
+                        continue
+                    group_names = profile.function_splits.get(module, [])
+                    for group, funcs in group_names:
+                        if any(
+                            f"fn_{func}" == n.id or n.id.endswith(f"_{func}")
+                            for func in funcs
+                        ):
+                            child_links.setdefault(
+                                n.id, f"{split_name}_{group}.html")
+                            matched.add(n.id)
+                            break
+                    else:
+                        for cls in profile.class_splits.get(module, []):
+                            if n.id.startswith(f"fn_{cls.lower()}_"):
+                                child_links.setdefault(
+                                    n.id, f"{split_name}_{cls}.html")
+                                matched.add(n.id)
+                                break
+            links = {k: v for k, v in child_links.items() if k in valid} or None
             if links:
                 _save_artifact(ctx, base_name, with_detail_level(father, "high"),
                                level + 1, _display_title(file), links, overview_target)
@@ -352,6 +355,13 @@ def _handle_dir(ctx: _Ctx, root: Path, segments: list[str], level: int) -> str:
                          in zip(link_map, items, strict=True)}
                 _save_artifact(ctx, base_name, overview, level + 1,
                                _display_title(file), hrefs, overview_target)
+        else:
+            g = ctx.graph_of(file)
+            if g is None:
+                continue
+            _save_artifact(ctx, base_name, with_detail_level(g, "high"),
+                           level + 1, _display_title(file), None, overview_target)
+            child_hrefs[file.stem] = f"{base_name}.html"
 
     # ── Overview of this directory ───────────────────────────────────
     overview = _build_overview(ctx, root, overview_children, file_children)

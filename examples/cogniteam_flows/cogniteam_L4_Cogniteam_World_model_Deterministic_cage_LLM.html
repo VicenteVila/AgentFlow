@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deterministic Cage · LLM</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="cogniteam_L3_Cogniteam_World_model_Deterministic_cage.html">← Volver</a>
+  <h1>Deterministic Cage · LLM</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Deterministic Cage · LLM
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_6{"self.llm_calls_used > 5<br><i>Condición en línea 6:<br>self.llm_calls_used > 5</i>"}
+    dec_24{"not code or len(code) < 50<br><i>Condición en línea 24:<br>not code or len(code) < 50</i>"}
+    dec_96{"not failures<br><i>Condición en línea 96:<br>not failures</i>"}
+    dec_11{"len(prompt) ><br>max_prompt_chars<br><i>Condición en línea 11:<br>len(prompt) > max_prompt_chars</i>"}
+    dec_28{"archetype in<br>('landing-page', 'ecommerce',<br><i>Condición en línea 28:<br>archetype in ('landing-page', 'ecommerce', 'saas-dashboard')</i>"}
+    dec_101{"json_failures > 2<br><i>Condición en línea 101:<br>json_failures > 2</i>"}
+    dec_29{"'<html' not in code.lower()<br><i>Condición en línea 29:<br>'<html' not in code.lower()</i>"}
+    dec_51{"archetype in<br>('api-development', 'cli-tools')<br><i>Condición en línea 51:<br>archetype in ('api-development', 'cli-tools')</i>"}
+    dec_107{"conf_failures > 2<br><i>Condición en línea 107:<br>conf_failures > 2</i>"}
+    dec_31{"'<!DOCTYPE' not in<br>code.upper()<br><i>Condición en línea 31:<br>'<!DOCTYPE' not in code.upper()</i>"}
+    dec_52{"'def ' not in code and<br>'function ' not in code and ('=>'<br><i>Condición en línea 52:<br>'def ' not in code and 'function ' not in code and ('=>' not</i>"}
+    dec_57{"archetype in ('ml-model',<br>'data-pipeline')<br><i>Condición en línea 57:<br>archetype in ('ml-model', 'data-pipeline')</i>"}
+    dec_33{"'<head>' not in code.lower()<br><i>Condición en línea 33:<br>'<head>' not in code.lower()</i>"}
+    dec_54{"'return' not in code.lower()<br><i>Condición en línea 54:<br>'return' not in code.lower()</i>"}
+    dec_58{"'import' not in code.lower()<br><i>Condición en línea 58:<br>'import' not in code.lower()</i>"}
+    dec_63{"archetype in<br>('blog-article', 'copywriting',<br><i>Condición en línea 63:<br>archetype in ('blog-article', 'copywriting', 'documentation'</i>"}
+    dec_35{"'<body>' not in code.lower()<br><i>Condición en línea 35:<br>'<body>' not in code.lower()</i>"}
+    dec_60{"'def ' not in code<br><i>Condición en línea 60:<br>'def ' not in code</i>"}
+    dec_64{"len(code.split()) < 50<br><i>Condición en línea 64:<br>len(code.split()) < 50</i>"}
+    loop_39["For each step in expected_structure"]
+    dec_40{"step('action') ==<br>'html_structure'<br><i>Condición en línea 40:<br>step('action') == 'html_structure'</i>"}
+    dec_41{"'<header' not in<br>code.lower()<br><i>Condición en línea 41:<br>'<header' not in code.lower()</i>"}
+    dec_43{"'<footer' not in<br>code.lower()<br><i>Condición en línea 43:<br>'<footer' not in code.lower()</i>"}
+    dec_45{"step('action') ==<br>'css_styling'<br><i>Condición en línea 45:<br>step('action') == 'css_styling'</i>"}
+    dec_46{"'(' not in code or ')' not<br>in code<br><i>Condición en línea 46:<br>'(' not in code or ')' not in code</i>"}
+    dec_48{"'@media' not in code.lower()<br><i>Condición en línea 48:<br>'@media' not in code.lower()</i>"}
+    loop_79["For loop"]
+    dec_80{"pattern in code<br><i>Condición en línea 80:<br>pattern in code</i>"}
+    dec_84{"'<!— Explicación —>' in<br>code or '<!— Explanation —>' in<br><i>Condición en línea 84:<br>'<!— Explicación —>' in code or '<!— Explanation —>' in</i>"}
+    fn__call_llm[["Call Llm"]]
+    fn__verify_output[["Verify Output"]]
+    fn__get_rejection_adaptation[["Get Rejection Adaptation"]]
+    fn__record_rejection[["Record Rejection"]]
+    n_start --> fn__call_llm
+    fn__call_llm --> dec_6
+    dec_6 --> dec_11
+    n_start --> fn__verify_output
+    fn__verify_output --> dec_24
+    dec_24 --> dec_28
+    dec_28 --> dec_29
+    dec_29 --> dec_31
+    dec_31 --> dec_33
+    dec_33 --> dec_35
+    dec_35 --> loop_39
+    loop_39 --> dec_40
+    dec_40 --> dec_41
+    dec_41 --> dec_43
+    dec_40 --> dec_45
+    dec_45 --> dec_46
+    dec_46 --> dec_48
+    dec_48 -- "loop" --> loop_39
+    dec_28 --> dec_51
+    dec_51 --> dec_52
+    dec_52 --> dec_54
+    dec_51 --> dec_57
+    dec_57 --> dec_58
+    dec_58 --> dec_60
+    dec_57 --> dec_63
+    dec_63 --> dec_64
+    dec_64 --> loop_79
+    loop_79 --> dec_80
+    dec_80 -- "loop" --> loop_79
+    loop_79 --> dec_84
+    n_start --> fn__get_rejection_adaptation
+    fn__get_rejection_adaptation --> dec_96
+    dec_96 --> dec_101
+    dec_101 --> dec_107
+    n_start --> fn__record_rejection
+    class n_start node-start
+    class fn__call_llm,fn__verify_output,fn__get_rejection_adaptation,fn__record_rejection node-subprocess
+    class dec_6,dec_11,dec_24,dec_28,dec_29,dec_31,dec_33,dec_35,dec_40,dec_41,dec_43,dec_45,dec_46,dec_48,dec_51,dec_52,dec_54,dec_57,dec_58,dec_60,dec_63,dec_64,dec_80,dec_84,dec_96,dec_101,dec_107 node-decision
+    class loop_39,loop_79 node-loop
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+%% Yaml Loader · Validation
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_8{"rules.required_files<br><i>Condición en línea 8:<br>rules.required_files</i>"}
+    dec_55{"not content or not<br>content.strip()<br><i>Condición en línea 55:<br>not content or not content.strip()</i>"}
+    dec_59{"ext == '.css'<br><i>Condición en línea 59:<br>ext == '.css'</i>"}
+    loop_75["For each m"]
+    dec_108{"css and (classes or ids)<br><i>Condición en línea 108:<br>css and (classes or ids)</i>"}
+    dec_62{"ext == '.js'<br><i>Condición en línea 62:<br>ext == '.js'</i>"}
+    loop_77["For each m"]
+    dec_65{"ext == '.html'<br><i>Condición en línea 65:<br>ext == '.html'</i>"}
+    loop_79["For each m"]
+    loop_9["For each fname in required_files"]
+    dec_10{"f'=== (fname) ===' not in<br>code and fname not in code<br><i>Condición en línea 10:<br>f'=== (fname) ===' not in code and fname not in code</i>"}
+    dec_14{"rules.required_tags<br><i>Condición en línea 14:<br>rules.required_tags</i>"}
+    loop_15["For each tag in required_tags"]
+    dec_16{"tag.lower() not in<br>code.lower()<br><i>Condición en línea 16:<br>tag.lower() not in code.lower()</i>"}
+    dec_20{"rules.required_classes<br><i>Condición en línea 20:<br>rules.required_classes</i>"}
+    loop_21["For each cls in required_classes"]
+    dec_22{"f'class='(cls)'' not in code<br>and f'class='(cls)'' not in code<br><i>Condición en línea 22:<br>f'class='(cls)'' not in code and f'class='(cls)'' not in cod</i>"}
+    dec_26{"rules.required_patterns<br><i>Condición en línea 26:<br>rules.required_patterns</i>"}
+    loop_27["For each pattern in required_patterns"]
+    dec_28{"pattern.lower() not in<br>code.lower()<br><i>Condición en línea 28:<br>pattern.lower() not in code.lower()</i>"}
+    dec_32{"rules.forbidden_patterns<br><i>Condición en línea 32:<br>rules.forbidden_patterns</i>"}
+    loop_33["For each pattern in forbidden_patterns"]
+    dec_34{"pattern in code<br><i>Condición en línea 34:<br>pattern in code</i>"}
+    dec_38{"rules.min_length and<br>len(code) < rules.min_length<br><i>Condición en línea 38:<br>rules.min_length and len(code) < rules.min_length</i>"}
+    dec_40{"rules.max_length and<br>len(code) > rules.max_length<br><i>Condición en línea 40:<br>rules.max_length and len(code) > rules.max_length</i>"}
+    loop_86["For each m"]
+    loop_90["For each m"]
+    loop_110["For each c in classes"]
+    dec_111{"re.search('(?<!(\\w.-))\\.'<br>+ re.escape(c) + '\\b', css)<br><i>Condición en línea 111:<br>re.search('(?<!(\\w.-))\\.' + re.escape(c) + '\\b', css)</i>"}
+    loop_113["For each i in ids"]
+    dec_114{"+ re.escape(i) + '\\b', css)<br><i>Condición en línea 114:<br>re.search('#(?!(0-9a-fA-F)(3,8)\\b)' + re.escape(i) + '\\b',</i>"}
+    dec_116{"not matched<br><i>Condición en línea 116:<br>not matched</i>"}
+    dec_122{"js<br><i>Condición en línea 122:<br>js</i>"}
+    loop_126["For each sel in selectors"]
+    loop_127["For each token"]
+    dec_129{"not token<br><i>Condición en línea 129:<br>not token</i>"}
+    dec_131{"token.startswith('.')<br><i>Condición en línea 131:<br>token.startswith('.')</i>"}
+    dec_133{"token(1:) not in classes<br><i>Condición en línea 133:<br>token(1:) not in classes</i>"}
+    dec_135{"token.startswith('#')<br><i>Condición en línea 135:<br>token.startswith('#')</i>"}
+    dec_137{"token(1:) not in ids<br><i>Condición en línea 137:<br>token(1:) not in ids</i>"}
+    dec_139{"re.fullmatch('(a-zA-Z)(\\w-)*',<br><i>Condición en línea 139:<br>re.fullmatch('(a-zA-Z)(\\w-)*', token)</i>"}
+    dec_140{"token.lower() not in tags<br><i>Condición en línea 140:<br>token.lower() not in tags</i>"}
+    dec_142{"checked and len(missing) ==<br>checked<br><i>Condición en línea 142:<br>checked and len(missing) == checked</i>"}
+    loop_148["For each tok"]
+    dec_150{"len(warnings) >= 6<br><i>Condición en línea 150:<br>len(warnings) >= 6</i>"}
+    fn_validate_output[["Validate Output"]]
+    fn__looks_like_filler[["Looks Like Filler"]]
+    fn__check_css_js_coherence[["Check Css Js Coherence"]]
+    fn__extract_classes_ids_tags[["Extract Classes Ids Tags"]]
+    fn__js_selectors[["Js Selectors"]]
+    n_start --> fn_validate_output
+    fn_validate_output --> dec_8
+    dec_8 --> loop_9
+    loop_9 --> dec_10
+    dec_10 -- "loop" --> loop_9
+    loop_9 --> dec_14
+    dec_14 --> loop_15
+    loop_15 --> dec_16
+    dec_16 -- "loop" --> loop_15
+    loop_15 --> dec_20
+    dec_20 --> loop_21
+    loop_21 --> dec_22
+    dec_22 -- "loop" --> loop_21
+    loop_21 --> dec_26
+    dec_26 --> loop_27
+    loop_27 --> dec_28
+    dec_28 -- "loop" --> loop_27
+    loop_27 --> dec_32
+    dec_32 --> loop_33
+    loop_33 --> dec_34
+    dec_34 -- "loop" --> loop_33
+    loop_33 --> dec_38
+    dec_38 --> dec_40
+    n_start --> fn__looks_like_filler
+    fn__looks_like_filler --> dec_55
+    dec_55 --> dec_59
+    dec_59 --> dec_62
+    dec_62 --> dec_65
+    n_start --> fn__extract_classes_ids_tags
+    fn__extract_classes_ids_tags --> loop_75
+    loop_75 --> loop_77
+    loop_77 --> loop_79
+    n_start --> fn__js_selectors
+    fn__js_selectors --> loop_86
+    loop_86 --> loop_90
+    n_start --> fn__check_css_js_coherence
+    fn__check_css_js_coherence --> fn__extract_classes_ids_tags
+    fn__extract_classes_ids_tags --> dec_108
+    dec_108 --> loop_110
+    loop_110 --> dec_111
+    dec_111 -- "loop" --> loop_110
+    loop_110 --> loop_113
+    loop_113 --> dec_114
+    dec_114 -- "loop" --> loop_113
+    loop_113 --> dec_116
+    dec_116 --> dec_122
+    dec_122 --> fn__js_selectors
+    fn__js_selectors --> loop_126
+    loop_126 --> loop_127
+    loop_127 --> dec_129
+    dec_129 --> dec_131
+    dec_131 --> dec_133
+    dec_131 --> dec_135
+    dec_135 --> dec_137
+    dec_135 --> dec_139
+    dec_139 --> dec_140
+    dec_140 -- "loop" --> loop_127
+    loop_127 -- "loop" --> loop_126
+    loop_126 --> dec_142
+    dec_142 -- "NO" --> loop_148
+    loop_148 --> dec_150
+    dec_150 -- "loop" --> loop_148
+    class n_start node-start
+    class fn_validate_output,fn__looks_like_filler,fn__extract_classes_ids_tags,fn__js_selectors,fn__check_css_js_coherence node-subprocess
+    class dec_8,dec_10,dec_14,dec_16,dec_20,dec_22,dec_26,dec_28,dec_32,dec_34,dec_38,dec_40,dec_55,dec_59,dec_62,dec_65,dec_108,dec_111,dec_114,dec_116,dec_122,dec_129,dec_131,dec_133,dec_135,dec_137,dec_139,dec_140,dec_142,dec_150 node-decision
+    class loop_9,loop_15,loop_21,loop_27,loop_33,loop_75,loop_77,loop_79,loop_86,loop_90,loop_110,loop_113,loop_126,loop_127,loop_148 node-loop
+    class n_end node-end

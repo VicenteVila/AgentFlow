@@ -1,0 +1,36 @@
+%% cogniteam · cogniteam · tools · integrations
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart TD
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start"])
+    mod_api["Api<br><i>7 nodos, 5 enlaces</i>"]
+    mod_cocoguide["Cocoguide<br><i>16 nodos, 14 enlaces</i>"]
+    mod_pdf["Pdf<br><i>5 nodos, 3 enlaces</i>"]
+    mod_tts["Tts<br><i>7 nodos, 5 enlaces</i>"]
+    n_end(["End"])
+    mod_text_artifact["Text Artifact<br><i>9 nodos, 7 enlaces</i>"]
+    n_start --> mod_api
+    mod_api --> mod_cocoguide
+    mod_cocoguide --> mod_pdf
+    mod_pdf --> mod_text_artifact
+    mod_text_artifact --> mod_tts
+    mod_tts --> n_end
+    class n_start node-start
+    class mod_api,mod_cocoguide,mod_pdf,mod_tts node-process
+    class mod_text_artifact node-tool
+    class n_end node-end
+    click mod_api href "cogniteam_L4_Cogniteam_Tools_Integrations_Api.html" "Abrir detalle"
+    click mod_cocoguide href "cogniteam_L4_Cogniteam_Tools_Integrations_Cocoguide.html" "Abrir detalle"
+    click mod_pdf href "cogniteam_L4_Cogniteam_Tools_Integrations_Pdf.html" "Abrir detalle"
+    click mod_text_artifact href "cogniteam_L4_Cogniteam_Tools_Integrations_Text_artifact.html" "Abrir detalle"
+    click mod_tts href "cogniteam_L4_Cogniteam_Tools_Integrations_Tts.html" "Abrir detalle"
