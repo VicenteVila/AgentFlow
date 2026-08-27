@@ -1046,6 +1046,28 @@ def test_cli_mermaid_no_phases_neon():
         assert "classDef node-process fill:#000000,stroke:#8b5cf6" in content
 
 
+def test_cli_mermaid_html_format():
+    import subprocess
+    import sys
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        src = Path(tmpdir) / "agent.py"
+        src.write_text("class Agent:\n    def run(self):\n        tool()\n")
+        out = Path(tmpdir) / "reaweb.mermaid.html"
+        result = subprocess.run(
+            [sys.executable, "-m", "agentflow.cli", "-i", str(src),
+             "-f", "mermaid-html", "-l", "phased", "--no-phases", "--theme", "neon",
+             "-o", str(out)],
+            capture_output=True, text=True,
+        )
+        assert result.returncode == 0, result.stderr
+        content = out.read_text()
+        assert "<!DOCTYPE html>" in content
+        assert "flowchart LR" in content
+        assert "subgraph" not in content
+        assert 'classDef node-process fill:#000000,stroke:#8b5cf6' in content
+
+
 def test_mermaid_reserved_keywords_sanitized():
     from agentflow.mermaid import _sanitize_id, to_mermaid
 

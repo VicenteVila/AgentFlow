@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flow: agent</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+
+  <h1>Flow: agent</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Flow: agent
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    init["Init Agent<br><i>run_id, mkdir, upsert_run, write_text</i>"]
+    main_loop["Main Loop<br><i>while True:<br>  turn += 1<br>  register_evaluation()<br>  budget.done()?</i>"]
+    loop_869["Main Loop<br>(while True)"]
+    dec_876{"stop_reason<br><i>Condición en línea 876:<br>stop_reason</i>"}
+    dec_900{"NOT tool_calls?<br><i>Niega tool_calls<br>para lógica invertida</i>"}
+    dec_904{"any((k in text.lower() for k<br>in ('done', 'fin', 'finalizado',<br><i>Condición en línea 904:<br>any((k in text.lower() for k in ('done', 'fin', 'finalizado'</i>"}
+    dec_905{"self.target_h and<br>self.hypothesis_count <=<br><i>Condición en línea 905:<br>self.target_h and self.hypothesis_count <= self.target_h</i>"}
+    loop_919["For each call in tool_calls"]
+    dec_945{"call.name ==<br>'generate_candidate' and node_id<br><i>Condición en línea 945:<br>call.name == 'generate_candidate' and node_id is not None</i>"}
+    dec_949{"call.name ==<br>'generate_candidate' and node_id<br><i>Condición en línea 949:<br>call.name == 'generate_candidate' and node_id is not None</i>"}
+    dec_953{"call.name ==<br>'generate_candidate' and is not<br><i>Condición en línea 953:<br>call.name == 'generate_candidate' and pre_snapshot is not No</i>"}
+    dec_956{"node_id is not None and<br>call.name in 'audit_page')<br><i>Condición en línea 956:<br>node_id is not None and call.name in ('generate_candidate',</i>"}
+    dec_961{"self.budget.done()<br><i>Condición en línea 961:<br>self.budget.done()</i>"}
+    dec_969{"self.llm)<br><i>Condición en línea 969:<br>self.context.should_compact(transcript_text, self.llm)</i>"}
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_976{"self.memory.incremental.exists()<br><i>Condición en línea 976:<br>self.memory.incremental.exists()</i>"}
+    n_start --> init
+    init --> main_loop
+    main_loop --> loop_869
+    loop_869 --> dec_876
+    dec_876 --> dec_900
+    dec_900 --> dec_904
+    dec_904 --> dec_905
+    dec_905 --> loop_919
+    loop_919 --> dec_945
+    dec_945 --> dec_949
+    dec_949 --> dec_953
+    dec_953 --> dec_956
+    loop_919 --> dec_961
+    dec_961 --> dec_969
+    loop_869 --> dec_976
+    dec_956 -. "loop" .-> loop_919
+    dec_969 -. "loop" .-> loop_869
+    class n_start node-start
+    class init node-process
+    class main_loop,loop_869,loop_919 node-loop
+    class dec_876,dec_900,dec_904,dec_905,dec_945,dec_949,dec_953,dec_956,dec_961,dec_969,dec_976 node-decision
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

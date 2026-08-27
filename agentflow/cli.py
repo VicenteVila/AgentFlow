@@ -27,7 +27,7 @@ def _handle_diff(argv: list[str]) -> None:
     parser.add_argument("new", help="New version of the file")
     parser.add_argument("-o", "--output", default=None, help="Output file path")
     parser.add_argument("-l", "--layout", choices=["hierarchical", "grid", "phased", "phased-horizontal", "radial", "swimlane"], default="hierarchical")
-    parser.add_argument("-f", "--format", choices=["excalidraw", "svg", "mermaid", "html"], default="excalidraw")
+    parser.add_argument("-f", "--format", choices=["excalidraw", "svg", "mermaid", "mermaid-html", "html"], default="excalidraw")
     parser.add_argument("--profile", default="generic")
     parser.add_argument("-t", "--title", default=None)
     parser.add_argument("--theme", choices=["light", "dark", "pastel", "neon", "mono", "dungeon", "violet", "sandy", "ocean"], default="light")
@@ -80,6 +80,19 @@ def _handle_diff(argv: list[str]) -> None:
             sys.stdout.write(to_mermaid(graph, layout=args.layout, detail=args.detail,
                                         theme=args.theme, no_phases=args.no_phases))
         return
+
+    if args.format == "mermaid-html":
+        from agentflow.mermaid import save_mermaid_html, to_mermaid_html
+
+        if args.output:
+            path = save_mermaid_html(graph, args.output, layout=args.layout, detail=args.detail,
+                                     theme=args.theme, no_phases=args.no_phases)
+            print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
+        else:
+            sys.stdout.write(to_mermaid_html(graph, layout=args.layout, detail=args.detail,
+                                             theme=args.theme, no_phases=args.no_phases))
+        return
+
     if args.format == "html":
         from agentflow.html import save_html, to_html
 
@@ -235,7 +248,7 @@ def main(argv: list[str] | None = None) -> None:
     )
     parser.add_argument(
         "-f", "--format",
-        choices=["excalidraw", "svg", "mermaid", "html", "ascii", "dot", "sequence", "mermaid-seq", "sequence-html"],
+        choices=["excalidraw", "svg", "mermaid", "mermaid-html", "html", "ascii", "dot", "sequence", "mermaid-seq", "sequence-html"],
         default="excalidraw",
         help="Output format (default: excalidraw)",
     )
@@ -374,7 +387,17 @@ def main(argv: list[str] | None = None) -> None:
             sys.stdout.write(to_mermaid(graph, layout=args.layout, detail=args.detail,
                                         theme=args.theme, no_phases=args.no_phases))
         return
+    if args.format == "mermaid-html":
+        from agentflow.mermaid import save_mermaid_html, to_mermaid_html
 
+        if args.output:
+            path = save_mermaid_html(graph, args.output, layout=args.layout, detail=args.detail,
+                                     theme=args.theme, no_phases=args.no_phases)
+            print(f"OK: {path} ({graph.node_count} nodes, {graph.edge_count} edges)")
+        else:
+            sys.stdout.write(to_mermaid_html(graph, layout=args.layout, detail=args.detail,
+                                             theme=args.theme, no_phases=args.no_phases))
+        return
     if args.format == "html":
         from agentflow.html import save_html, to_html
 
