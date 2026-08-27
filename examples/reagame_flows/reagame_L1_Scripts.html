@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>reagame · scripts</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="reagame_L0_Overview.html">← Volver</a>
+  <h1>reagame · scripts</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% reagame · scripts
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start"])
+    mod__common["Common<br><i>12 nodos, 10 enlaces</i>"]
+    mod_backfill_memory["Backfill Memory<br><i>33 nodos, 36 enlaces</i>"]
+    mod_build_assets["Build Assets<br><i>52 nodos, 66 enlaces</i>"]
+    mod_build_baseline["Build Baseline<br><i>41 nodos, 39 enlaces</i>"]
+    mod_build_map_level["Build Map Level<br><i>52 nodos, 62 enlaces</i>"]
+    mod_cleanup_runs["Cleanup Runs<br><i>21 nodos, 20 enlaces</i>"]
+    mod_crop_from_manifest["Crop From Manifest<br><i>14 nodos, 14 enlaces</i>"]
+    mod_egame_cli["Egame Cli<br><i>4 nodos, 2 enlaces</i>"]
+    mod_export_candidate["Export Candidate<br><i>6 nodos, 4 enlaces</i>"]
+    mod_extract_transitables["Extract Transitables<br><i>51 nodos, 63 enlaces</i>"]
+    mod_gate_harness_edit["Gate Harness Edit<br><i>20 nodos, 18 enlaces</i>"]
+    mod_gen_collisions_from_art["Gen Collisions From Art<br><i>73 nodos, 96 enlaces</i>"]
+    mod_import_manual_sprites["Import Manual Sprites<br><i>31 nodos, 41 enlaces</i>"]
+    mod_merge_lessons["Merge Lessons<br><i>10 nodos, 10 enlaces</i>"]
+    mod_render_map_debug["Render Map Debug<br><i>14 nodos, 12 enlaces</i>"]
+    mod_run_agent["Run Agent<br><i>4 nodos, 2 enlaces</i>"]
+    mod_run_battery["Run Battery<br><i>21 nodos, 21 enlaces</i>"]
+    mod_run_benchmark["Run Benchmark<br><i>38 nodos, 39 enlaces</i>"]
+    mod_run_misevo["Run Misevo<br><i>17 nodos, 16 enlaces</i>"]
+    mod_seed_from_docs["Seed From Docs<br><i>14 nodos, 13 enlaces</i>"]
+    mod_slice_sprites["Slice Sprites<br><i>28 nodos, 33 enlaces</i>"]
+    mod_trend_evolution["Trend Evolution<br><i>34 nodos, 39 enlaces</i>"]
+    mod_vision_manifest["Vision Manifest<br><i>4 nodos, 2 enlaces</i>"]
+    n_end(["End"])
+    n_start --> mod__common
+    mod__common --> mod_backfill_memory
+    mod_backfill_memory --> mod_build_assets
+    mod_build_assets --> mod_build_baseline
+    mod_build_baseline --> mod_build_map_level
+    mod_build_map_level --> mod_cleanup_runs
+    mod_cleanup_runs --> mod_crop_from_manifest
+    mod_crop_from_manifest --> mod_egame_cli
+    mod_egame_cli --> mod_export_candidate
+    mod_export_candidate --> mod_extract_transitables
+    mod_extract_transitables --> mod_gate_harness_edit
+    mod_gate_harness_edit --> mod_gen_collisions_from_art
+    mod_gen_collisions_from_art --> mod_import_manual_sprites
+    mod_import_manual_sprites --> mod_merge_lessons
+    mod_merge_lessons --> mod_render_map_debug
+    mod_render_map_debug --> mod_run_agent
+    mod_run_agent --> mod_run_battery
+    mod_run_battery --> mod_run_benchmark
+    mod_run_benchmark --> mod_run_misevo
+    mod_run_misevo --> mod_seed_from_docs
+    mod_seed_from_docs --> mod_slice_sprites
+    mod_slice_sprites --> mod_trend_evolution
+    mod_trend_evolution --> mod_vision_manifest
+    mod_vision_manifest --> n_end
+    class n_start node-start
+    class mod__common,mod_backfill_memory,mod_build_assets,mod_build_baseline,mod_build_map_level,mod_cleanup_runs,mod_crop_from_manifest,mod_extract_transitables,mod_gate_harness_edit,mod_gen_collisions_from_art,mod_import_manual_sprites,mod_merge_lessons,mod_render_map_debug,mod_run_battery,mod_run_benchmark,mod_run_misevo,mod_seed_from_docs,mod_slice_sprites,mod_trend_evolution node-loop
+    class mod_egame_cli,mod_export_candidate,mod_run_agent,mod_vision_manifest node-process
+    class n_end node-end
+    click mod__common href "reagame_L2_Scripts__common.html" "Abrir detalle"
+    click mod_backfill_memory href "reagame_L2_Scripts_Backfill_memory.html" "Abrir detalle"
+    click mod_build_assets href "reagame_L2_Scripts_Build_assets.html" "Abrir detalle"
+    click mod_build_baseline href "reagame_L2_Scripts_Build_baseline.html" "Abrir detalle"
+    click mod_build_map_level href "reagame_L2_Scripts_Build_map_level.html" "Abrir detalle"
+    click mod_cleanup_runs href "reagame_L2_Scripts_Cleanup_runs.html" "Abrir detalle"
+    click mod_crop_from_manifest href "reagame_L2_Scripts_Crop_from_manifest.html" "Abrir detalle"
+    click mod_egame_cli href "reagame_L2_Scripts_Egame_cli.html" "Abrir detalle"
+    click mod_export_candidate href "reagame_L2_Scripts_Export_candidate.html" "Abrir detalle"
+    click mod_extract_transitables href "reagame_L2_Scripts_Extract_transitables.html" "Abrir detalle"
+    click mod_gate_harness_edit href "reagame_L2_Scripts_Gate_harness_edit.html" "Abrir detalle"
+    click mod_gen_collisions_from_art href "reagame_L2_Scripts_Gen_collisions_from_art.html" "Abrir detalle"
+    click mod_import_manual_sprites href "reagame_L2_Scripts_Import_manual_sprites.html" "Abrir detalle"
+    click mod_merge_lessons href "reagame_L2_Scripts_Merge_lessons.html" "Abrir detalle"
+    click mod_render_map_debug href "reagame_L2_Scripts_Render_map_debug.html" "Abrir detalle"
+    click mod_run_agent href "reagame_L2_Scripts_Run_agent.html" "Abrir detalle"
+    click mod_run_battery href "reagame_L2_Scripts_Run_battery.html" "Abrir detalle"
+    click mod_run_benchmark href "reagame_L2_Scripts_Run_benchmark.html" "Abrir detalle"
+    click mod_run_misevo href "reagame_L2_Scripts_Run_misevo.html" "Abrir detalle"
+    click mod_seed_from_docs href "reagame_L2_Scripts_Seed_from_docs.html" "Abrir detalle"
+    click mod_slice_sprites href "reagame_L2_Scripts_Slice_sprites.html" "Abrir detalle"
+    click mod_trend_evolution href "reagame_L2_Scripts_Trend_evolution.html" "Abrir detalle"
+    click mod_vision_manifest href "reagame_L2_Scripts_Vision_manifest.html" "Abrir detalle"
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

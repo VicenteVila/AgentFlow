@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>reagame · Drill-down completo</title>
+  <style>
+    body { margin: 0; padding: 28px; font-family: system-ui,-apple-system,sans-serif;
+            background: #0b0b0f; color: #e0e0e0; }
+    h1 { font-size: 1.4rem; color: #00ff88; margin: 0 0 4px 0; }
+    p.lead { font-size: 0.9rem; color: #94a3b8; margin: 0 0 22px 0; }
+    section.lvl { margin-bottom: 22px; }
+    h2 { font-size: 1rem; color: #facc15; border-bottom: 1px solid #2a2a35;
+          padding-bottom: 6px; }
+    ul { list-style: none; padding: 0; display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 6px; }
+    li {
+      background: #16161d; border: 1px solid #26262f; border-radius: 8px;
+      padding: 8px 12px; font-size: 0.85rem;
+    }
+    li:hover { border-color: #8b5cf6; }
+    a { color: #8b5cf6; text-decoration: none; font-weight: 600; }
+    a:hover { text-decoration: underline; color: #a78bfa; }
+    .t { color: #94a3b8; margin-left: 8px; }
+  </style>
+</head>
+<body>
+  <h1>reagame · Drill-down completo</h1>
+  <p class="lead">Cada gráfica es un flujograma Mermaid. Haz click en los nodos de
+  una vista para bajar de nivel; cada página incluye un &laquo;Volver&raquo; al padre.</p>
+  <section class='lvl'>
+    <h2>Nivel L0</h2>
+    <ul>
+      <li><a href="reagame_L0_Overview.html">reagame_L0_Overview</a><span class='t'>reagame</span></li>
+    </ul>
+  </section>
+  <section class='lvl'>
+    <h2>Nivel L1</h2>
+    <ul>
+      <li><a href="reagame_L1_Agent.html">reagame_L1_Agent</a><span class='t'>reagame · agent</span></li>
+      <li><a href="reagame_L1_Config.html">reagame_L1_Config</a><span class='t'>Config</span></li>
+      <li><a href="reagame_L1_Scripts.html">reagame_L1_Scripts</a><span class='t'>reagame · scripts</span></li>
+      <li><a href="reagame_L1_Tools.html">reagame_L1_Tools</a><span class='t'>reagame · tools</span></li>
+    </ul>
+  </section>
+  <section class='lvl'>
+    <h2>Nivel L2</h2>
+    <ul>
+      <li><a href="reagame_L2_Agent_Agent.html">reagame_L2_Agent_Agent</a><span class='t'>Agent</span></li>
+      <li><a href="reagame_L2_Agent_Budget_tracker.html">reagame_L2_Agent_Budget_tracker</a><span class='t'>Budget Tracker</span></li>
+      <li><a href="reagame_L2_Agent_Harness_snapshot.html">reagame_L2_Agent_Harness_snapshot</a><span class='t'>Harness Snapshot</span></li>
+      <li><a href="reagame_L2_Agent_Llm.html">reagame_L2_Agent_Llm</a><span class='t'>Llm</span></li>
+      <li><a href="reagame_L2_Agent_Llm_cache.html">reagame_L2_Agent_Llm_cache</a><span class='t'>Llm Cache</span></li>
+      <li><a href="reagame_L2_Agent_Memory_db.html">reagame_L2_Agent_Memory_db</a><span class='t'>Memory Db</span></li>
+      <li><a href="reagame_L2_Agent_State.html">reagame_L2_Agent_State</a><span class='t'>State</span></li>
+      <li><a href="reagame_L2_Scripts_Backfill_memory.html">reagame_L2_Scripts_Backfill_memory</a><span class='t'>Backfill Memory</span></li>
+      <li><a href="reagame_L2_Scripts_Build_assets.html">reagame_L2_Scripts_Build_assets</a><span class='t'>Build Assets</span></li>
+      <li><a href="reagame_L2_Scripts_Build_baseline.html">reagame_L2_Scripts_Build_baseline</a><span class='t'>Build Baseline</span></li>
+      <li><a href="reagame_L2_Scripts_Build_map_level.html">reagame_L2_Scripts_Build_map_level</a><span class='t'>Build Map Level</span></li>
+      <li><a href="reagame_L2_Scripts_Cleanup_runs.html">reagame_L2_Scripts_Cleanup_runs</a><span class='t'>Cleanup Runs</span></li>
+      <li><a href="reagame_L2_Scripts_Crop_from_manifest.html">reagame_L2_Scripts_Crop_from_manifest</a><span class='t'>Crop From Manifest</span></li>
+      <li><a href="reagame_L2_Scripts_Egame_cli.html">reagame_L2_Scripts_Egame_cli</a><span class='t'>Egame Cli</span></li>
+      <li><a href="reagame_L2_Scripts_Export_candidate.html">reagame_L2_Scripts_Export_candidate</a><span class='t'>Export Candidate</span></li>
+      <li><a href="reagame_L2_Scripts_Extract_transitables.html">reagame_L2_Scripts_Extract_transitables</a><span class='t'>Extract Transitables</span></li>
+      <li><a href="reagame_L2_Scripts_Gate_harness_edit.html">reagame_L2_Scripts_Gate_harness_edit</a><span class='t'>Gate Harness Edit</span></li>
+      <li><a href="reagame_L2_Scripts_Gen_collisions_from_art.html">reagame_L2_Scripts_Gen_collisions_from_art</a><span class='t'>Gen Collisions From Art</span></li>
+      <li><a href="reagame_L2_Scripts_Import_manual_sprites.html">reagame_L2_Scripts_Import_manual_sprites</a><span class='t'>Import Manual Sprites</span></li>
+      <li><a href="reagame_L2_Scripts_Merge_lessons.html">reagame_L2_Scripts_Merge_lessons</a><span class='t'>Merge Lessons</span></li>
+      <li><a href="reagame_L2_Scripts_Render_map_debug.html">reagame_L2_Scripts_Render_map_debug</a><span class='t'>Render Map Debug</span></li>
+      <li><a href="reagame_L2_Scripts_Run_agent.html">reagame_L2_Scripts_Run_agent</a><span class='t'>Run Agent</span></li>
+      <li><a href="reagame_L2_Scripts_Run_battery.html">reagame_L2_Scripts_Run_battery</a><span class='t'>Run Battery</span></li>
+      <li><a href="reagame_L2_Scripts_Run_benchmark.html">reagame_L2_Scripts_Run_benchmark</a><span class='t'>Run Benchmark</span></li>
+      <li><a href="reagame_L2_Scripts_Run_misevo.html">reagame_L2_Scripts_Run_misevo</a><span class='t'>Run Misevo</span></li>
+      <li><a href="reagame_L2_Scripts_Seed_from_docs.html">reagame_L2_Scripts_Seed_from_docs</a><span class='t'>Seed From Docs</span></li>
+      <li><a href="reagame_L2_Scripts_Slice_sprites.html">reagame_L2_Scripts_Slice_sprites</a><span class='t'>Slice Sprites</span></li>
+      <li><a href="reagame_L2_Scripts_Trend_evolution.html">reagame_L2_Scripts_Trend_evolution</a><span class='t'>Trend Evolution</span></li>
+      <li><a href="reagame_L2_Scripts_Vision_manifest.html">reagame_L2_Scripts_Vision_manifest</a><span class='t'>Vision Manifest</span></li>
+      <li><a href="reagame_L2_Scripts__common.html">reagame_L2_Scripts__common</a><span class='t'> Common</span></li>
+      <li><a href="reagame_L2_Tools_Base.html">reagame_L2_Tools_Base</a><span class='t'>Base</span></li>
+      <li><a href="reagame_L2_Tools_Code_exec.html">reagame_L2_Tools_Code_exec</a><span class='t'>Code Exec</span></li>
+      <li><a href="reagame_L2_Tools_Domain.html">reagame_L2_Tools_Domain</a><span class='t'>reagame · tools · domain</span></li>
+      <li><a href="reagame_L2_Tools_File_io.html">reagame_L2_Tools_File_io</a><span class='t'>File Io</span></li>
+    </ul>
+  </section>
+  <section class='lvl'>
+    <h2>Nivel L3</h2>
+    <ul>
+      <li><a href="reagame_L3_Agent_Agent_Audits.html">reagame_L3_Agent_Agent_Audits</a><span class='t'>Agent · Audits</span></li>
+      <li><a href="reagame_L3_Agent_Agent_Budget.html">reagame_L3_Agent_Agent_Budget</a><span class='t'>Agent · Budget</span></li>
+      <li><a href="reagame_L3_Agent_Agent_Finalize.html">reagame_L3_Agent_Agent_Finalize</a><span class='t'>Agent · Finalize</span></li>
+      <li><a href="reagame_L3_Agent_Agent_Init.html">reagame_L3_Agent_Agent_Init</a><span class='t'>Agent · Init</span></li>
+      <li><a href="reagame_L3_Agent_Agent_Iterations.html">reagame_L3_Agent_Agent_Iterations</a><span class='t'>Agent · Iterations</span></li>
+      <li><a href="reagame_L3_Agent_Agent_Lessons.html">reagame_L3_Agent_Agent_Lessons</a><span class='t'>Agent · Lessons</span></li>
+      <li><a href="reagame_L3_Agent_Memory_db_Experiments.html">reagame_L3_Agent_Memory_db_Experiments</a><span class='t'>Memory Db · Experiments</span></li>
+      <li><a href="reagame_L3_Agent_Memory_db_HarnessEdits.html">reagame_L3_Agent_Memory_db_HarnessEdits</a><span class='t'>Memory Db · HarnessEdits</span></li>
+      <li><a href="reagame_L3_Agent_Memory_db_Lessons.html">reagame_L3_Agent_Memory_db_Lessons</a><span class='t'>Memory Db · Lessons</span></li>
+      <li><a href="reagame_L3_Agent_Memory_db_Migrations.html">reagame_L3_Agent_Memory_db_Migrations</a><span class='t'>Memory Db · Migrations</span></li>
+      <li><a href="reagame_L3_Agent_Memory_db_Runs.html">reagame_L3_Agent_Memory_db_Runs</a><span class='t'>Memory Db · Runs</span></li>
+      <li><a href="reagame_L3_Agent_Memory_db_Tree.html">reagame_L3_Agent_Memory_db_Tree</a><span class='t'>Memory Db · Tree</span></li>
+      <li><a href="reagame_L3_Scripts_Build_baseline_AssetsScene.html">reagame_L3_Scripts_Build_baseline_AssetsScene</a><span class='t'>Build Baseline · AssetsScene</span></li>
+      <li><a href="reagame_L3_Scripts_Build_baseline_Enemies.html">reagame_L3_Scripts_Build_baseline_Enemies</a><span class='t'>Build Baseline · Enemies</span></li>
+      <li><a href="reagame_L3_Scripts_Build_baseline_Menu.html">reagame_L3_Scripts_Build_baseline_Menu</a><span class='t'>Build Baseline · Menu</span></li>
+      <li><a href="reagame_L3_Scripts_Build_baseline_Pickups.html">reagame_L3_Scripts_Build_baseline_Pickups</a><span class='t'>Build Baseline · Pickups</span></li>
+      <li><a href="reagame_L3_Scripts_Build_baseline_Player.html">reagame_L3_Scripts_Build_baseline_Player</a><span class='t'>Build Baseline · Player</span></li>
+      <li><a href="reagame_L3_Scripts_Build_baseline_Project.html">reagame_L3_Scripts_Build_baseline_Project</a><span class='t'>Build Baseline · Project</span></li>
+      <li><a href="reagame_L3_Tools_Domain_Creative_critic.html">reagame_L3_Tools_Domain_Creative_critic</a><span class='t'>Creative Critic</span></li>
+      <li><a href="reagame_L3_Tools_Domain_Deployer.html">reagame_L3_Tools_Domain_Deployer</a><span class='t'>Deployer</span></li>
+      <li><a href="reagame_L3_Tools_Domain_Functional_tester.html">reagame_L3_Tools_Domain_Functional_tester</a><span class='t'>Functional Tester</span></li>
+      <li><a href="reagame_L3_Tools_Domain_Game_evaluator.html">reagame_L3_Tools_Domain_Game_evaluator</a><span class='t'>Game Evaluator</span></li>
+      <li><a href="reagame_L3_Tools_Domain_Game_generator.html">reagame_L3_Tools_Domain_Game_generator</a><span class='t'>Game Generator</span></li>
+      <li><a href="reagame_L3_Tools_Domain_Meta_editor.html">reagame_L3_Tools_Domain_Meta_editor</a><span class='t'>Meta Editor</span></li>
+      <li><a href="reagame_L3_Tools_Domain_Skill_auditor.html">reagame_L3_Tools_Domain_Skill_auditor</a><span class='t'>Skill Auditor</span></li>
+      <li><a href="reagame_L3_Tools_Domain_Visual_critic.html">reagame_L3_Tools_Domain_Visual_critic</a><span class='t'>Visual Critic</span></li>
+    </ul>
+  </section>
+  <section class='lvl'>
+    <h2>Nivel L4</h2>
+    <ul>
+      <li><a href="reagame_L4_Tools_Domain_Game_evaluator_Connectivity.html">reagame_L4_Tools_Domain_Game_evaluator_Connectivity</a><span class='t'>Game Evaluator · Connectivity</span></li>
+      <li><a href="reagame_L4_Tools_Domain_Game_evaluator_Features.html">reagame_L4_Tools_Domain_Game_evaluator_Features</a><span class='t'>Game Evaluator · Features</span></li>
+      <li><a href="reagame_L4_Tools_Domain_Game_evaluator_Gating.html">reagame_L4_Tools_Domain_Game_evaluator_Gating</a><span class='t'>Game Evaluator · Gating</span></li>
+      <li><a href="reagame_L4_Tools_Domain_Game_evaluator_Novelty.html">reagame_L4_Tools_Domain_Game_evaluator_Novelty</a><span class='t'>Game Evaluator · Novelty</span></li>
+      <li><a href="reagame_L4_Tools_Domain_Game_evaluator_Subtasks.html">reagame_L4_Tools_Domain_Game_evaluator_Subtasks</a><span class='t'>Game Evaluator · Subtasks</span></li>
+      <li><a href="reagame_L4_Tools_Domain_Game_generator_AuditPage.html">reagame_L4_Tools_Domain_Game_generator_AuditPage</a><span class='t'>Game Generator · AuditPage</span></li>
+      <li><a href="reagame_L4_Tools_Domain_Game_generator_GenerateCandidate.html">reagame_L4_Tools_Domain_Game_generator_GenerateCandidate</a><span class='t'>Game Generator · GenerateCandidate</span></li>
+      <li><a href="reagame_L4_Tools_Domain_Game_generator_InspectArchetype.html">reagame_L4_Tools_Domain_Game_generator_InspectArchetype</a><span class='t'>Game Generator · InspectArchetype</span></li>
+      <li><a href="reagame_L4_Tools_Domain_Game_generator_RevertWorkspace.html">reagame_L4_Tools_Domain_Game_generator_RevertWorkspace</a><span class='t'>Game Generator · RevertWorkspace</span></li>
+      <li><a href="reagame_L4_Tools_Domain_Game_generator_SelectFinal.html">reagame_L4_Tools_Domain_Game_generator_SelectFinal</a><span class='t'>Game Generator · SelectFinal</span></li>
+      <li><a href="reagame_L4_Tools_Domain_Game_generator_UpdateLessons.html">reagame_L4_Tools_Domain_Game_generator_UpdateLessons</a><span class='t'>Game Generator · UpdateLessons</span></li>
+    </ul>
+  </section>
+
+</body>
+</html>

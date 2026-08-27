@@ -1,0 +1,80 @@
+%% Slice Sprites
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    loop_108["For each band"]
+    loop_114["For each p in written"]
+    loop_31["Loop"]
+    dec_32{"cols(i)<br><i>Condición en línea 32:<br>cols(i)</i>"}
+    loop_34["Loop"]
+    dec_36{"j - i >= minw<br><i>Condición en línea 36:<br>j - i >= minw</i>"}
+    loop_48["For each y"]
+    loop_49["For each x"]
+    dec_50{"not is_bg(img.getpixel((x,<br>y)))<br><i>Condición en línea 50:<br>not is_bg(img.getpixel((x, y)))</i>"}
+    dec_52{"x < minx<br><i>Condición en línea 52:<br>x < minx</i>"}
+    dec_54{"x > maxx<br><i>Condición en línea 54:<br>x > maxx</i>"}
+    dec_56{"y < miny<br><i>Condición en línea 56:<br>y < miny</i>"}
+    dec_58{"y > maxy<br><i>Condición en línea 58:<br>y > maxy</i>"}
+    dec_60{"not found<br><i>Condición en línea 60:<br>not found</i>"}
+    loop_70["For each y"]
+    loop_71["For each x"]
+    dec_73{"is_bg((r, g, b), tol=22)<br><i>Condición en línea 73:<br>is_bg((r, g, b), tol=22)</i>"}
+    loop_83["For loop"]
+    loop_85["For loop"]
+    dec_87{"bbox is None<br><i>Condición en línea 87:<br>bbox is None</i>"}
+    fn_is_bg[["Is Bg"]]
+    fn_column_runs[["Column Runs"]]
+    fn_cell_bbox[["Cell Bbox"]]
+    fn_transparentize[["Transparentize"]]
+    fn_slice_sheet[["Slice Sheet"]]
+    fn_main[["Main"]]
+    n_start --> fn_is_bg
+    n_start --> fn_column_runs
+    fn_column_runs --> loop_31
+    loop_31 --> dec_32
+    dec_32 --> loop_34
+    loop_34 --> dec_36
+    dec_32 -- "loop" --> loop_31
+    n_start --> fn_cell_bbox
+    fn_cell_bbox --> loop_48
+    loop_48 --> loop_49
+    loop_49 --> dec_50
+    dec_50 --> dec_52
+    dec_52 --> dec_54
+    dec_54 --> dec_56
+    dec_56 --> dec_58
+    dec_58 -- "loop" --> loop_49
+    loop_49 -- "loop" --> loop_48
+    loop_48 --> dec_60
+    n_start --> fn_transparentize
+    fn_transparentize --> loop_70
+    loop_70 --> loop_71
+    loop_71 --> dec_73
+    dec_73 -- "loop" --> loop_71
+    loop_71 -- "loop" --> loop_70
+    n_start --> fn_slice_sheet
+    fn_slice_sheet --> loop_83
+    loop_83 --> loop_85
+    loop_85 --> dec_87
+    dec_87 -- "loop" --> loop_85
+    loop_85 -- "loop" --> loop_83
+    n_start --> fn_main
+    fn_main --> loop_108
+    loop_108 --> loop_114
+    class n_start node-start
+    class fn_is_bg,fn_column_runs,fn_cell_bbox,fn_transparentize,fn_slice_sheet,fn_main node-subprocess
+    class loop_31,loop_34,loop_48,loop_49,loop_70,loop_71,loop_83,loop_85,loop_108,loop_114 node-loop
+    class dec_32,dec_36,dec_50,dec_52,dec_54,dec_56,dec_58,dec_60,dec_73,dec_87 node-decision
+    class n_end node-end

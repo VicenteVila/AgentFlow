@@ -1,0 +1,257 @@
+%% Game Evaluator
+%%{init: {"securityLevel": "loose", "themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_92{"not project_dir.exists()<br><i>Condición en línea 92:<br>not project_dir.exists()</i>"}
+    dec_112{"pg.exists()<br><i>Condición en línea 112:<br>pg.exists()</i>"}
+    dec_213{"not features<br><i>Condición en línea 213:<br>not features</i>"}
+    dec_235{"feature not in<br>FEATURE_ALIASES<br><i>Condición en línea 235:<br>feature not in FEATURE_ALIASES</i>"}
+    dec_323{"not connected<br><i>Condición en línea 323:<br>not connected</i>"}
+    dec_340{"not connected<br><i>Condición en línea 340:<br>not connected</i>"}
+    loop_398["For each feat in features"]
+    loop_419["For each f"]
+    dec_467{"not status<br><i>Condición en línea 467:<br>not status</i>"}
+    dec_499{"not gates<br><i>Condición en línea 499:<br>not gates</i>"}
+    loop_519["For loop"]
+    dec_599{"start == -1<br><i>Condición en línea 599:<br>start == -1</i>"}
+    dec_616{"total is None<br><i>Condición en línea 616:<br>total is None</i>"}
+    loop_648["For each p"]
+    dec_686{"r_size == 0 and c_size == 0<br><i>Condición en línea 686:<br>r_size == 0 and c_size == 0</i>"}
+    loop_117["For each p"]
+    loop_404["For loop"]
+    loop_470["For loop"]
+    dec_527{"feat('total') and<br>feat('fails')<br><i>Condición en línea 527:<br>feat('total') and feat('fails')</i>"}
+    dec_603{"end == -1<br><i>Condición en línea 603:<br>end == -1</i>"}
+    dec_620{"not has_vlm and (not<br>has_creativity)<br><i>Condición en línea 620:<br>not has_vlm and (not has_creativity)</i>"}
+    loop_653["For each p"]
+    dec_688{"r_size == 0 or c_size == 0<br><i>Condición en línea 688:<br>r_size == 0 or c_size == 0</i>"}
+    loop_408["For each lit in literals"]
+    dec_532{"func_tests<br><i>Condición en línea 532:<br>func_tests</i>"}
+    dec_624{"has_vlm<br><i>Condición en línea 624:<br>has_vlm</i>"}
+    dec_537{"not loaded and available<br><i>Condición en línea 537:<br>not loaded and available</i>"}
+    dec_548{"loaded<br><i>Condición en línea 548:<br>loaded</i>"}
+    dec_626{"has_creativity<br><i>Condición en línea 626:<br>has_creativity</i>"}
+    dec_539{"not loaded<br><i>Condición en línea 539:<br>not loaded</i>"}
+    dec_551{"not conn('input_real')<br><i>Condición en línea 551:<br>not conn('input_real')</i>"}
+    dec_571{"blocking<br><i>Condición en línea 571:<br>blocking</i>"}
+    dec_553{"not<br>conn('señales_conectadas')<br><i>Condición en línea 553:<br>not conn('señales_conectadas')</i>"}
+    dec_555{"no_jugable<br><i>Condición en línea 555:<br>no_jugable</i>"}
+    loop_82["For loop"]
+    dec_83{"any((a in task_l for a in<br>aliases))<br><i>Condición en línea 83:<br>any((a in task_l for a in aliases))</i>"}
+    loop_94["For each p"]
+    dec_95{"p.is_file()<br><i>Condición en línea 95:<br>p.is_file()</i>"}
+    dec_96{"p.suffix.lower() in<br>SCRIPT_EXTS<br><i>Condición en línea 96:<br>p.suffix.lower() in SCRIPT_EXTS</i>"}
+    dec_98{"p.suffix.lower() in<br>SCENE_EXTS<br><i>Condición en línea 98:<br>p.suffix.lower() in SCENE_EXTS</i>"}
+    dec_100{"p.suffix.lower() in<br>ASSET_EXTS<br><i>Condición en línea 100:<br>p.suffix.lower() in ASSET_EXTS</i>"}
+    loop_189["For loop"]
+    dec_194{"passed_<br><i>Condición en línea 194:<br>passed_</i>"}
+    loop_218["For each feat in features"]
+    dec_221{"hit<br><i>Condición en línea 221:<br>hit</i>"}
+    loop_248["For each sc"]
+    loop_253["For each m"]
+    loop_255["For each m"]
+    loop_257["For each m"]
+    loop_259["For each gd"]
+    loop_264["For each m"]
+    loop_266["For each m"]
+    loop_269["For each m"]
+    loop_278["For each gd"]
+    loop_283["For each m"]
+    loop_327["For each gd"]
+    dec_332{"any((k in text for k in<br>win_terms)) and any((m in text for<br><i>Condición en línea 332:<br>any((k in text for k in win_terms)) and any((m in text for m</i>"}
+    loop_344["For each gd"]
+    dec_349{"any((k in text for k in<br>lose_terms)) and any((m in text m<br><i>Condición en línea 349:<br>any((k in text for k in lose_terms)) and any((m in text for</i>"}
+    loop_426["For loop"]
+    dec_427{"sid == 'proyecto_carga'<br><i>Condición en línea 427:<br>sid == 'proyecto_carga'</i>"}
+    dec_430{"sid == 'bucle_activo'<br><i>Condición en línea 430:<br>sid == 'bucle_activo'</i>"}
+    dec_433{"sid == 'input_manejado'<br><i>Condición en línea 433:<br>sid == 'input_manejado'</i>"}
+    dec_436{"sid == 'input_real'<br><i>Condición en línea 436:<br>sid == 'input_real'</i>"}
+    dec_440{"sid == 'salto_real'<br><i>Condición en línea 440:<br>sid == 'salto_real'</i>"}
+    dec_444{"sid == 'señales_conectadas'<br><i>Condición en línea 444:<br>sid == 'señales_conectadas'</i>"}
+    dec_449{"sid == 'escena_raiz'<br><i>Condición en línea 449:<br>sid == 'escena_raiz'</i>"}
+    dec_452{"sid == 'sin_print'<br><i>Condición en línea 452:<br>sid == 'sin_print'</i>"}
+    loop_455["For each lit"]
+    loop_630["For each key"]
+    dec_631{"metrics.get(key) is not None<br><i>Condición en línea 631:<br>metrics.get(key) is not None</i>"}
+    dec_638{"gates<br><i>Condición en línea 638:<br>gates</i>"}
+    fn_has_entry[["Has Entry"]]
+    fn_extract_features[["Extract Features"]]
+    fn__project_files[["Project Files"]]
+    fn__all_source_text[["All Source Text"]]
+    fn__strip_comments[["Strip Comments"]]
+    fn__axis_score[["Axis Score"]]
+    fn_features_status[["Features Status"]]
+    fn_feature_present[["Feature Present"]]
+    fn__connected_methods[["Connected Methods"]]
+    fn__unconnected_signal_handlers[["Unconnected Signal Handlers"]]
+    fn__has_real_movement[["Has Real Movement"]]
+    fn__has_real_jump[["Has Real Jump"]]
+    fn__win_connected[["Win Connected"]]
+    fn__lose_connected[["Lose Connected"]]
+    fn__restart_real[["Restart Real"]]
+    fn_connectivity_report[["Connectivity Report"]]
+    fn_extract_subtasks[["Extract Subtasks"]]
+    fn_subtasks_status[["Subtasks Status"]]
+    fn_format_subtasks_status[["Format Subtasks Status"]]
+    fn__apply_blocking_gates[["Apply Blocking Gates"]]
+    fn_evaluate[["Evaluate"]]
+    fn_metrics_block[["Metrics Block"]]
+    fn_parse_metrics_block[["Parse Metrics Block"]]
+    fn_blend_visual_total[["Blend Visual Total"]]
+    fn__file_hashes[["File Hashes"]]
+    fn__jaccard[["Jaccard"]]
+    fn_novelty_score[["Novelty Score"]]
+    n_start --> fn_has_entry
+    n_start --> fn_extract_features
+    fn_extract_features --> loop_82
+    loop_82 --> dec_83
+    dec_83 -- "loop" --> loop_82
+    n_start --> fn__project_files
+    fn__project_files --> dec_92
+    dec_92 --> loop_94
+    loop_94 --> dec_95
+    dec_95 --> dec_96
+    dec_96 --> dec_98
+    dec_98 --> dec_100
+    dec_100 -- "loop" --> loop_94
+    n_start --> fn__all_source_text
+    fn__all_source_text --> dec_112
+    dec_112 --> loop_117
+    n_start --> fn__strip_comments
+    n_start --> fn__axis_score
+    fn__axis_score --> loop_189
+    loop_189 --> dec_194
+    dec_194 -- "loop" --> loop_189
+    n_start --> fn_features_status
+    fn_features_status --> dec_213
+    dec_213 --> loop_218
+    loop_218 --> dec_221
+    dec_221 -- "loop" --> loop_218
+    n_start --> fn_feature_present
+    fn_feature_present --> dec_235
+    n_start --> fn__connected_methods
+    fn__connected_methods --> loop_248
+    loop_248 --> loop_253
+    loop_253 --> loop_255
+    loop_255 --> loop_257
+    loop_257 -- "loop" --> loop_248
+    loop_248 --> loop_259
+    loop_259 --> loop_264
+    loop_264 --> loop_266
+    loop_266 --> loop_269
+    loop_269 -- "loop" --> loop_259
+    n_start --> fn__unconnected_signal_handlers
+    fn__unconnected_signal_handlers --> loop_278
+    loop_278 --> loop_283
+    loop_283 -- "loop" --> loop_278
+    n_start --> fn__has_real_movement
+    n_start --> fn__has_real_jump
+    n_start --> fn__win_connected
+    fn__win_connected --> dec_323
+    dec_323 --> loop_327
+    loop_327 --> dec_332
+    dec_332 -- "loop" --> loop_327
+    n_start --> fn__lose_connected
+    fn__lose_connected --> dec_340
+    dec_340 --> loop_344
+    loop_344 --> dec_349
+    dec_349 -- "loop" --> loop_344
+    n_start --> fn__restart_real
+    n_start --> fn_connectivity_report
+    n_start --> fn_extract_subtasks
+    fn_extract_subtasks --> loop_398
+    loop_398 --> loop_404
+    loop_404 --> loop_408
+    n_start --> fn_subtasks_status
+    fn_subtasks_status --> loop_419
+    loop_419 --> loop_426
+    loop_426 --> dec_427
+    dec_427 --> dec_430
+    dec_430 --> dec_433
+    dec_433 --> dec_436
+    dec_436 --> dec_440
+    dec_440 --> dec_444
+    dec_444 --> dec_449
+    dec_449 --> dec_452
+    dec_452 -- "loop" --> loop_426
+    loop_426 --> loop_455
+    n_start --> fn_format_subtasks_status
+    fn_format_subtasks_status --> dec_467
+    dec_467 --> loop_470
+    n_start --> fn__apply_blocking_gates
+    fn__apply_blocking_gates --> dec_499
+    n_start --> fn_evaluate
+    fn_evaluate --> loop_519
+    loop_519 --> dec_527
+    dec_527 --> dec_532
+    dec_532 --> dec_537
+    dec_537 --> dec_539
+    dec_532 --> dec_548
+    dec_548 --> dec_551
+    dec_551 --> dec_553
+    dec_553 --> dec_555
+    dec_548 --> dec_571
+    n_start --> fn_metrics_block
+    n_start --> fn_parse_metrics_block
+    fn_parse_metrics_block --> dec_599
+    dec_599 --> dec_603
+    n_start --> fn_blend_visual_total
+    fn_blend_visual_total --> dec_616
+    dec_616 --> dec_620
+    dec_620 --> dec_624
+    dec_624 --> dec_626
+    dec_626 --> loop_630
+    loop_630 --> dec_631
+    dec_631 -- "loop" --> loop_630
+    loop_630 --> dec_638
+    n_start --> fn__file_hashes
+    fn__file_hashes --> loop_648
+    loop_648 --> loop_653
+    n_start --> fn__jaccard
+    n_start --> fn_novelty_score
+    fn_novelty_score --> dec_686
+    dec_686 --> dec_688
+    class n_start node-start
+    class fn_has_entry,fn_extract_features,fn__project_files,fn__all_source_text,fn__strip_comments,fn__axis_score,fn_features_status,fn_feature_present,fn__connected_methods,fn__unconnected_signal_handlers,fn__has_real_movement,fn__has_real_jump,fn__win_connected,fn__lose_connected,fn__restart_real,fn_connectivity_report,fn_extract_subtasks,fn_subtasks_status,fn_format_subtasks_status,fn__apply_blocking_gates,fn_evaluate,fn_metrics_block,fn_parse_metrics_block,fn_blend_visual_total,fn__file_hashes,fn__jaccard,fn_novelty_score node-subprocess
+    class loop_82,loop_94,loop_117,loop_189,loop_218,loop_248,loop_253,loop_255,loop_257,loop_259,loop_264,loop_266,loop_269,loop_278,loop_283,loop_327,loop_344,loop_398,loop_404,loop_408,loop_419,loop_426,loop_455,loop_470,loop_519,loop_630,loop_648,loop_653 node-loop
+    class dec_83,dec_92,dec_95,dec_96,dec_98,dec_100,dec_112,dec_194,dec_213,dec_221,dec_235,dec_323,dec_332,dec_340,dec_349,dec_427,dec_430,dec_433,dec_436,dec_440,dec_444,dec_449,dec_452,dec_467,dec_499,dec_527,dec_532,dec_537,dec_539,dec_548,dec_551,dec_553,dec_555,dec_571,dec_599,dec_603,dec_616,dec_620,dec_624,dec_626,dec_631,dec_638,dec_686,dec_688 node-decision
+    class n_end node-end
+    click fn_extract_features href "reagame_L4_Tools_Domain_Game_evaluator_Features.html" "Abrir detalle"
+    click fn__project_files href "reagame_L4_Tools_Domain_Game_evaluator_Features.html" "Abrir detalle"
+    click fn__all_source_text href "reagame_L4_Tools_Domain_Game_evaluator_Features.html" "Abrir detalle"
+    click fn__strip_comments href "reagame_L4_Tools_Domain_Game_evaluator_Features.html" "Abrir detalle"
+    click fn__axis_score href "reagame_L4_Tools_Domain_Game_evaluator_Features.html" "Abrir detalle"
+    click fn_feature_present href "reagame_L4_Tools_Domain_Game_evaluator_Features.html" "Abrir detalle"
+    click fn_features_status href "reagame_L4_Tools_Domain_Game_evaluator_Features.html" "Abrir detalle"
+    click fn_has_entry href "reagame_L4_Tools_Domain_Game_evaluator_Features.html" "Abrir detalle"
+    click fn__connected_methods href "reagame_L4_Tools_Domain_Game_evaluator_Connectivity.html" "Abrir detalle"
+    click fn__unconnected_signal_handlers href "reagame_L4_Tools_Domain_Game_evaluator_Connectivity.html" "Abrir detalle"
+    click fn__has_real_movement href "reagame_L4_Tools_Domain_Game_evaluator_Connectivity.html" "Abrir detalle"
+    click fn__has_real_jump href "reagame_L4_Tools_Domain_Game_evaluator_Connectivity.html" "Abrir detalle"
+    click fn__win_connected href "reagame_L4_Tools_Domain_Game_evaluator_Connectivity.html" "Abrir detalle"
+    click fn__lose_connected href "reagame_L4_Tools_Domain_Game_evaluator_Connectivity.html" "Abrir detalle"
+    click fn__restart_real href "reagame_L4_Tools_Domain_Game_evaluator_Connectivity.html" "Abrir detalle"
+    click fn_connectivity_report href "reagame_L4_Tools_Domain_Game_evaluator_Connectivity.html" "Abrir detalle"
+    click fn_extract_subtasks href "reagame_L4_Tools_Domain_Game_evaluator_Subtasks.html" "Abrir detalle"
+    click fn_subtasks_status href "reagame_L4_Tools_Domain_Game_evaluator_Subtasks.html" "Abrir detalle"
+    click fn_format_subtasks_status href "reagame_L4_Tools_Domain_Game_evaluator_Subtasks.html" "Abrir detalle"
+    click fn_evaluate href "reagame_L4_Tools_Domain_Game_evaluator_Gating.html" "Abrir detalle"
+    click fn__apply_blocking_gates href "reagame_L4_Tools_Domain_Game_evaluator_Gating.html" "Abrir detalle"
+    click fn_metrics_block href "reagame_L4_Tools_Domain_Game_evaluator_Gating.html" "Abrir detalle"
+    click fn_parse_metrics_block href "reagame_L4_Tools_Domain_Game_evaluator_Gating.html" "Abrir detalle"
+    click fn_blend_visual_total href "reagame_L4_Tools_Domain_Game_evaluator_Gating.html" "Abrir detalle"
+    click fn__file_hashes href "reagame_L4_Tools_Domain_Game_evaluator_Novelty.html" "Abrir detalle"
+    click fn__jaccard href "reagame_L4_Tools_Domain_Game_evaluator_Novelty.html" "Abrir detalle"
+    click fn_novelty_score href "reagame_L4_Tools_Domain_Game_evaluator_Novelty.html" "Abrir detalle"

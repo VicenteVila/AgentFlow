@@ -1,0 +1,75 @@
+%% Skill Auditor
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_93{"not raw<br><i>Condición en línea 93:<br>not raw</i>"}
+    dec_138{"not SKILL_SAFETY_ENABLED<br><i>Condición en línea 138:<br>not SKILL_SAFETY_ENABLED</i>"}
+    dec_168{"not risk_spans<br><i>Condición en línea 168:<br>not risk_spans</i>"}
+    dec_194{"critic('verdict') ==<br>'reject'<br><i>Condición en línea 194:<br>critic('verdict') == 'reject'</i>"}
+    dec_97{"not m<br><i>Condición en línea 97:<br>not m</i>"}
+    dec_141{"llm is not None<br><i>Condición en línea 141:<br>llm is not None</i>"}
+    loop_171["For each span"]
+    dec_196{"should_repair(critic) and<br>critic('verdict') in ('delete',<br><i>Condición en línea 196:<br>should_repair(critic) and critic('verdict') in ('delete', 'p</i>"}
+    dec_103{"not isinstance(data, dict)<br><i>Condición en línea 103:<br>not isinstance(data, dict)</i>"}
+    dec_144{"not isinstance(llm, LLM)<br><i>Condición en línea 144:<br>not isinstance(llm, LLM)</i>"}
+    dec_174{"not repaired or<br>len(repaired.strip()) < 10<br><i>Condición en línea 174:<br>not repaired or len(repaired.strip()) < 10</i>"}
+    dec_198{"repaired_content is not None<br><i>Condición en línea 198:<br>repaired_content is not None</i>"}
+    dec_149{"parsed is not None<br><i>Condición en línea 149:<br>parsed is not None</i>"}
+    dec_177{"len(repaired) > len(lesson)<br><i>Condición en línea 177:<br>len(repaired) > len(lesson)</i>"}
+    dec_203{"leftover<br><i>Condición en línea 203:<br>leftover</i>"}
+    loop_125["For loop"]
+    loop_126["For each m"]
+    dec_128{"span and span not in spans<br><i>Condición en línea 128:<br>span and span not in spans</i>"}
+    dec_130{"len(spans) >= 5<br><i>Condición en línea 130:<br>len(spans) >= 5</i>"}
+    fn__parse_critic[["Parse Critic"]]
+    fn_risk_span_scan[["Risk Span Scan"]]
+    fn_audit_skill_score[["Audit Skill Score"]]
+    fn_deleter[["Deleter"]]
+    fn_should_repair[["Should Repair"]]
+    fn_govern_lesson[["Govern Lesson"]]
+    fn__int_105[["Int"]]
+    n_start --> fn__parse_critic
+    fn__parse_critic --> dec_93
+    dec_93 --> dec_97
+    dec_97 --> dec_103
+    dec_103 --> fn__int_105
+    n_start --> fn_risk_span_scan
+    fn_risk_span_scan --> loop_125
+    loop_125 --> loop_126
+    loop_126 --> dec_128
+    dec_128 --> dec_130
+    dec_130 -- "loop" --> loop_126
+    loop_126 -- "loop" --> loop_125
+    n_start --> fn_audit_skill_score
+    fn_audit_skill_score --> dec_138
+    dec_138 --> dec_141
+    dec_141 --> dec_144
+    dec_144 --> dec_149
+    n_start --> fn_deleter
+    fn_deleter --> dec_168
+    dec_168 --> loop_171
+    loop_171 --> dec_174
+    dec_174 --> dec_177
+    n_start --> fn_should_repair
+    n_start --> fn_govern_lesson
+    fn_govern_lesson --> dec_194
+    dec_194 --> dec_196
+    dec_196 --> dec_198
+    dec_198 -- "YES" --> dec_203
+    class n_start node-start
+    class fn__parse_critic,fn__int_105,fn_risk_span_scan,fn_audit_skill_score,fn_deleter,fn_should_repair,fn_govern_lesson node-subprocess
+    class dec_93,dec_97,dec_103,dec_128,dec_130,dec_138,dec_141,dec_144,dec_149,dec_168,dec_174,dec_177,dec_194,dec_196,dec_198,dec_203 node-decision
+    class loop_125,loop_126,loop_171 node-loop
+    class n_end node-end

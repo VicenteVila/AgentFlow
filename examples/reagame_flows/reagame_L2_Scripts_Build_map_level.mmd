@@ -1,0 +1,133 @@
+%% Build Map Level
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_27{"avg > 110<br><i>Condición en línea 27:<br>avg > 110</i>"}
+    dec_87{"not src.exists()<br><i>Condición en línea 87:<br>not src.exists()</i>"}
+    dec_28{"r > g + 4 or g > b + 4<br><i>Condición en línea 28:<br>r > g + 4 or g > b + 4</i>"}
+    dec_90{"alt<br><i>Condición en línea 90:<br>alt</i>"}
+    dec_97{"jp.exists()<br><i>Condición en línea 97:<br>jp.exists()</i>"}
+    loop_102["For loop"]
+    loop_35["For each gy"]
+    loop_36["For each gx"]
+    loop_38["For each dy"]
+    loop_39["For each dx"]
+    dec_41{"x >= w or y >= h<br><i>Condición en línea 41:<br>x >= w or y >= h</i>"}
+    dec_43{"is_terrain(*im.getpixel((x,<br>y)))<br><i>Condición en línea 43:<br>is_terrain(*im.getpixel((x, y)))</i>"}
+    loop_51["For each y"]
+    loop_52["For each x"]
+    dec_53{"grid(y)(x) == 0 or<br>visited(y)(x)<br><i>Condición en línea 53:<br>grid(y)(x) == 0 or visited(y)(x)</i>"}
+    loop_56["Loop"]
+    loop_62["Loop"]
+    loop_63["For each cx"]
+    dec_64{"grid(y2 + 1)(cx) == 0 or<br>visited(y2 + 1)(cx)<br><i>Condición en línea 64:<br>grid(y2 + 1)(cx) == 0 or visited(y2 + 1)(cx)</i>"}
+    dec_66{"can<br><i>Condición en línea 66:<br>can</i>"}
+    loop_69["For each yy"]
+    loop_70["For each xx"]
+    loop_105["For each y"]
+    loop_106["For each x"]
+    dec_107{"mk(x, y) == 0<br><i>Condición en línea 107:<br>mk(x, y) == 0</i>"}
+    dec_124{"json_path.exists()<br><i>Condición en línea 124:<br>json_path.exists()</i>"}
+    loop_137["For each r"]
+    dec_143{"'mision' not in text<br><i>Condición en línea 143:<br>'mision' not in text</i>"}
+    loop_159["For each b in nodes"]
+    dec_161{"any((f''(n)'' in first for n<br>in ('GroundA', 'GroundB', 'Plat1',<br><i>Condición en línea 161:<br>any((f''(n)'' in first for n in ('GroundA', 'GroundB', 'Grou</i>"}
+    dec_163{"'parent='Ground' in first or<br>'parent='Plat' in first<br><i>Condición en línea 163:<br>'parent='Ground' in first or 'parent='Plat' in first</i>"}
+    loop_173["For loop"]
+    dec_185{"header_end == -1<br><i>Condición en línea 185:<br>header_end == -1</i>"}
+    dec_192{"spawn is not None<br><i>Condición en línea 192:<br>spawn is not None</i>"}
+    dec_199{"enemies is not None<br><i>Condición en línea 199:<br>enemies is not None</i>"}
+    loop_201["For loop"]
+    dec_208{"coins is not None<br><i>Condición en línea 208:<br>coins is not None</i>"}
+    loop_210["For loop"]
+    dec_217{"len(coins) < 5<br><i>Condición en línea 217:<br>len(coins) < 5</i>"}
+    loop_218["For each i"]
+    dec_225{"goal is not None<br><i>Condición en línea 225:<br>goal is not None</i>"}
+    dec_233{"is_boss and 'data' in<br>locals() and (data is not None)<br><i>Condición en línea 233:<br>is_boss and 'data' in locals() and (data is not None)</i>"}
+    dec_235{"boss_pos<br><i>Condición en línea 235:<br>boss_pos</i>"}
+    dec_236{"'ext_boss' not in text<br><i>Condición en línea 236:<br>'ext_boss' not in text</i>"}
+    dec_239{"'name='Boss'' not in text<br><i>Condición en línea 239:<br>'name='Boss'' not in text</i>"}
+    dec_249{"p_path.exists()<br><i>Condición en línea 249:<br>p_path.exists()</i>"}
+    fn_is_terrain[["Is Terrain"]]
+    fn_grid_from_image[["Grid From Image"]]
+    fn_rects_from_grid[["Rects From Grid"]]
+    fn_build[["Build"]]
+    n_start --> fn_is_terrain
+    fn_is_terrain --> dec_27
+    dec_27 --> dec_28
+    n_start --> fn_grid_from_image
+    fn_grid_from_image --> loop_35
+    loop_35 --> loop_36
+    loop_36 --> loop_38
+    loop_38 --> loop_39
+    loop_39 --> dec_41
+    dec_41 --> dec_43
+    dec_43 -- "loop" --> loop_39
+    loop_39 -- "loop" --> loop_38
+    loop_38 -- "loop" --> loop_36
+    loop_36 -- "loop" --> loop_35
+    n_start --> fn_rects_from_grid
+    fn_rects_from_grid --> loop_51
+    loop_51 --> loop_52
+    loop_52 --> dec_53
+    dec_53 --> loop_56
+    loop_56 --> loop_62
+    loop_62 --> loop_63
+    loop_63 --> dec_64
+    dec_64 -- "loop" --> loop_63
+    loop_63 --> dec_66
+    dec_66 -- "loop" --> loop_62
+    loop_62 --> loop_69
+    loop_69 --> loop_70
+    loop_70 -- "loop" --> loop_69
+    loop_69 -- "loop" --> loop_52
+    loop_52 -- "loop" --> loop_51
+    n_start --> fn_build
+    fn_build --> dec_87
+    dec_87 --> dec_90
+    dec_90 --> dec_97
+    dec_97 --> loop_102
+    loop_102 --> loop_105
+    loop_105 --> loop_106
+    loop_106 --> dec_107
+    dec_107 -- "loop" --> loop_106
+    loop_106 -- "loop" --> loop_105
+    loop_105 --> dec_124
+    dec_124 -- "NO" --> loop_137
+    loop_137 --> dec_143
+    dec_143 --> loop_159
+    loop_159 --> dec_161
+    dec_161 --> dec_163
+    dec_163 -- "loop" --> loop_159
+    loop_159 --> loop_173
+    loop_173 --> dec_185
+    dec_185 --> dec_192
+    dec_192 --> dec_199
+    dec_199 --> loop_201
+    loop_201 --> dec_208
+    dec_208 --> loop_210
+    loop_210 --> dec_217
+    dec_217 --> loop_218
+    loop_218 --> dec_225
+    dec_225 --> dec_233
+    dec_233 --> dec_235
+    dec_235 --> dec_236
+    dec_236 --> dec_239
+    dec_239 --> dec_249
+    class n_start node-start
+    class fn_is_terrain,fn_grid_from_image,fn_rects_from_grid,fn_build node-subprocess
+    class dec_27,dec_28,dec_41,dec_43,dec_53,dec_64,dec_66,dec_87,dec_90,dec_97,dec_107,dec_124,dec_143,dec_161,dec_163,dec_185,dec_192,dec_199,dec_208,dec_217,dec_225,dec_233,dec_235,dec_236,dec_239,dec_249 node-decision
+    class loop_35,loop_36,loop_38,loop_39,loop_51,loop_52,loop_56,loop_62,loop_63,loop_69,loop_70,loop_102,loop_105,loop_106,loop_137,loop_159,loop_173,loop_201,loop_210,loop_218 node-loop
+    class n_end node-end

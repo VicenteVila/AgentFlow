@@ -1,0 +1,137 @@
+%% Build Assets
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_83{"w > size(0) or h > size(1)<br><i>Condición en línea 83:<br>w > size(0) or h > size(1)</i>"}
+    dec_183{"monedas and terreno<br><i>Condición en línea 183:<br>monedas and terreno</i>"}
+    dec_232{"ASSETS.exists()<br><i>Condición en línea 232:<br>ASSETS.exists()</i>"}
+    loop_184["For loop"]
+    loop_187["For loop"]
+    loop_45["For each y"]
+    dec_47{"on and s is None<br><i>Condición en línea 47:<br>on and s is None</i>"}
+    dec_49{"not on and s is not None<br><i>Condición en línea 49:<br>not on and s is not None</i>"}
+    dec_52{"s is not None<br><i>Condición en línea 52:<br>s is not None</i>"}
+    loop_60["For each x"]
+    dec_61{"cols(x) and s is None<br><i>Condición en línea 61:<br>cols(x) and s is None</i>"}
+    dec_63{"not cols(x) and s is not<br>None<br><i>Condición en línea 63:<br>not cols(x) and s is not None</i>"}
+    dec_64{"x - s >= minw<br><i>Condición en línea 64:<br>x - s >= minw</i>"}
+    dec_67{"s is not None and<br>mask.shape(1) - s >= minw<br><i>Condición en línea 67:<br>s is not None and mask.shape(1) - s >= minw</i>"}
+    loop_100["For loop"]
+    dec_102{"h < med_h * 0.5<br><i>Condición en línea 102:<br>h < med_h * 0.5</i>"}
+    loop_106["For loop"]
+    dec_109{"len(ys) == 0<br><i>Condición en línea 109:<br>len(ys) == 0</i>"}
+    dec_115{"0.3 < scale < 3<br><i>Condición en línea 115:<br>0.3 < scale < 3</i>"}
+    loop_132["For loop"]
+    dec_137{"14 <= h <= 70 and 12 <= w <=<br>70 and (area >= 120)<br><i>Condición en línea 137:<br>14 <= h <= 70 and 12 <= w <= 70 and (area >= 120)</i>"}
+    loop_141["while changed"]
+    loop_144["while boxes"]
+    loop_146["For each o in out"]
+    dec_147{"b(0) <= o(1) + 1 and o(0) <=<br>b(1) + 1 and (b(2) <= o(3) + 1) <=<br><i>Condición en línea 147:<br>b(0) <= o(1) + 1 and o(0) <= b(1) + 1 and (b(2) <= o(3) + 1)</i>"}
+    loop_159["For each b in boxes"]
+    dec_161{"lines and abs(cy -<br>(lines(-1)(0)(0) + / 2) < 20<br><i>Condición en línea 161:<br>lines and abs(cy - (lines(-1)(0)(0) + lines(-1)(0)(1)) / 2)</i>"}
+    loop_166["For loop"]
+    loop_168["For loop"]
+    loop_196["For loop"]
+    dec_197{"y1 - y0 + 1 < 10<br><i>Condición en línea 197:<br>y1 - y0 + 1 < 10</i>"}
+    loop_200["For loop"]
+    loop_206["For each r"]
+    loop_207["For each c"]
+    dec_211{"cell.mean() < 0.08<br><i>Condición en línea 211:<br>cell.mean() < 0.08</i>"}
+    loop_238["For loop"]
+    loop_241["For each f in frames"]
+    loop_255["For each p"]
+    loop_258["For loop"]
+    loop_260["For each p in files"]
+    fn_bg_color[["Bg Color"]]
+    fn_mask_of[["Mask Of"]]
+    fn_bands_of[["Bands Of"]]
+    fn_col_runs[["Col Runs"]]
+    fn_transparentize[["Transparentize"]]
+    fn_pad_centered[["Pad Centered"]]
+    fn_slice_big_cells[["Slice Big Cells"]]
+    fn_slice_cc[["Slice Cc"]]
+    fn_slice_grid16[["Slice Grid16"]]
+    fn_main[["Main"]]
+    n_start --> fn_bg_color
+    n_start --> fn_mask_of
+    n_start --> fn_bands_of
+    fn_bands_of --> loop_45
+    loop_45 --> dec_47
+    dec_47 --> dec_49
+    dec_49 -- "loop" --> loop_45
+    loop_45 --> dec_52
+    n_start --> fn_col_runs
+    fn_col_runs --> loop_60
+    loop_60 --> dec_61
+    dec_61 --> dec_63
+    dec_63 --> dec_64
+    dec_64 -- "loop" --> loop_60
+    loop_60 --> dec_67
+    n_start --> fn_transparentize
+    n_start --> fn_pad_centered
+    fn_pad_centered --> dec_83
+    n_start --> fn_slice_big_cells
+    fn_slice_big_cells --> loop_100
+    loop_100 --> dec_102
+    dec_102 --> loop_106
+    loop_106 --> dec_109
+    dec_109 --> dec_115
+    dec_115 -- "loop" --> loop_106
+    loop_106 -- "loop" --> loop_100
+    n_start --> fn_slice_cc
+    fn_slice_cc --> loop_132
+    loop_132 --> dec_137
+    dec_137 -- "loop" --> loop_132
+    loop_132 --> loop_141
+    loop_141 --> loop_144
+    loop_144 --> loop_146
+    loop_146 --> dec_147
+    dec_147 -- "loop" --> loop_146
+    loop_146 -- "loop" --> loop_144
+    loop_144 -- "loop" --> loop_141
+    loop_141 --> loop_159
+    loop_159 --> dec_161
+    dec_161 -- "loop" --> loop_159
+    loop_159 --> loop_166
+    loop_166 --> loop_168
+    loop_168 -- "loop" --> loop_166
+    n_start --> fn_slice_grid16
+    fn_slice_grid16 --> dec_183
+    dec_183 --> loop_184
+    loop_184 --> loop_187
+    loop_187 --> loop_196
+    loop_196 --> dec_197
+    dec_197 --> loop_200
+    loop_200 --> loop_206
+    loop_206 --> loop_207
+    loop_207 --> dec_211
+    dec_211 -- "loop" --> loop_207
+    loop_207 -- "loop" --> loop_206
+    loop_206 -- "loop" --> loop_200
+    loop_200 -- "loop" --> loop_196
+    n_start --> fn_main
+    fn_main --> dec_232
+    dec_232 --> loop_238
+    loop_238 --> loop_241
+    loop_241 -- "loop" --> loop_238
+    loop_238 --> loop_255
+    loop_255 --> loop_258
+    loop_258 --> loop_260
+    loop_260 -- "loop" --> loop_258
+    class n_start node-start
+    class fn_bg_color,fn_mask_of,fn_bands_of,fn_col_runs,fn_transparentize,fn_pad_centered,fn_slice_big_cells,fn_slice_cc,fn_slice_grid16,fn_main node-subprocess
+    class loop_45,loop_60,loop_100,loop_106,loop_132,loop_141,loop_144,loop_146,loop_159,loop_166,loop_168,loop_184,loop_187,loop_196,loop_200,loop_206,loop_207,loop_238,loop_241,loop_255,loop_258,loop_260 node-loop
+    class dec_47,dec_49,dec_52,dec_61,dec_63,dec_64,dec_67,dec_83,dec_102,dec_109,dec_115,dec_137,dec_147,dec_161,dec_183,dec_197,dec_211,dec_232 node-decision
+    class n_end node-end

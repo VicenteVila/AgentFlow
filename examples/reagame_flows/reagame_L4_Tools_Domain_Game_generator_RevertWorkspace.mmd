@@ -1,0 +1,52 @@
+%% Game Generator · RevertWorkspace
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_26{"candidate<br><i>Condición en línea 26:<br>candidate</i>"}
+    dec_28{"not has_entry(src)<br><i>Condición en línea 28:<br>not has_entry(src)</i>"}
+    loop_32["For each d"]
+    dec_33{"has_entry(d)<br><i>Condición en línea 33:<br>has_entry(d)</i>"}
+    dec_36{"src is None<br><i>Condición en línea 36:<br>src is None</i>"}
+    dec_40{"dst.exists()<br><i>Condición en línea 40:<br>dst.exists()</i>"}
+    loop_41["For each f"]
+    dec_42{"f.is_file()<br><i>Condición en línea 42:<br>f.is_file()</i>"}
+    dec_44{"f.is_dir()<br><i>Condición en línea 44:<br>f.is_dir()</i>"}
+    loop_46["For each f"]
+    dec_47{"f.is_file()<br><i>Condición en línea 47:<br>f.is_file()</i>"}
+    dec_49{"f.is_dir()<br><i>Condición en línea 49:<br>f.is_dir()</i>"}
+    fn_schema[["Schema"]]
+    fn_run[["Run"]]
+    n_start --> fn_schema
+    n_start --> fn_run
+    fn_run --> dec_26
+    dec_26 -- "YES" --> dec_28
+    dec_26 --> loop_32
+    loop_32 --> dec_33
+    dec_33 -- "loop" --> loop_32
+    loop_32 --> dec_36
+    dec_36 --> dec_40
+    dec_40 --> loop_41
+    loop_41 --> dec_42
+    dec_42 --> dec_44
+    dec_44 -- "loop" --> loop_41
+    loop_41 --> loop_46
+    loop_46 --> dec_47
+    dec_47 --> dec_49
+    dec_49 -- "loop" --> loop_46
+    class n_start node-start
+    class fn_schema,fn_run node-subprocess
+    class dec_26,dec_28,dec_33,dec_36,dec_40,dec_42,dec_44,dec_47,dec_49 node-decision
+    class loop_32,loop_41,loop_46 node-loop
+    class n_end node-end

@@ -1,0 +1,188 @@
+%% Gen Collisions From Art
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    loop_224["For loop"]
+    loop_245["For loop"]
+    dec_258{"not m<br><i>Condición en línea 258:<br>not m</i>"}
+    loop_44["For each y"]
+    loop_46["For each x"]
+    dec_48{"a > 128 and r + g + b > 75<br>and (not _is_checker(r, g, b))<br><i>Condición en línea 48:<br>a > 128 and r + g + b > 75 and (not _is_checker(r, g, b))</i>"}
+    loop_56["For each y"]
+    loop_59["Loop"]
+    dec_60{"not row(x)<br><i>Condición en línea 60:<br>not row(x)</i>"}
+    loop_62["Loop"]
+    dec_64{"x0 > 0 and x < W and (x - x0<br><= max_gap)<br><i>Condición en línea 64:<br>x0 > 0 and x < W and (x - x0 <= max_gap)</i>"}
+    loop_65["For each i"]
+    loop_69["For each x"]
+    loop_71["Loop"]
+    dec_72{"not mask(y)(x)<br><i>Condición en línea 72:<br>not mask(y)(x)</i>"}
+    loop_74["Loop"]
+    dec_76{"y0 > 0 and y < H and (y - y0<br><= max_gap)<br><i>Condición en línea 76:<br>y0 > 0 and y < H and (y - y0 <= max_gap)</i>"}
+    loop_77["For each i"]
+    loop_88["For each gy"]
+    loop_89["For each gx"]
+    loop_91["For each y"]
+    loop_93["For each x"]
+    dec_94{"row(x)<br><i>Condición en línea 94:<br>row(x)</i>"}
+    loop_109["For each y"]
+    dec_112{"y < H<br><i>Condición en línea 112:<br>y < H</i>"}
+    loop_113["Loop"]
+    dec_114{"mask(y)(x)<br><i>Condición en línea 114:<br>mask(y)(x)</i>"}
+    loop_116["Loop"]
+    loop_121["For each key"]
+    dec_122{"key not in runs<br><i>Condición en línea 122:<br>key not in runs</i>"}
+    loop_126["For each r in runs"]
+    dec_127{"r not in open_runs<br><i>Condición en línea 127:<br>r not in open_runs</i>"}
+    loop_137["For each _"]
+    loop_141["For each i"]
+    dec_142{"used(i)<br><i>Condición en línea 142:<br>used(i)</i>"}
+    loop_146["For each j"]
+    dec_147{"used(j)<br><i>Condición en línea 147:<br>used(j)</i>"}
+    dec_151{"abs(h - h2) <= 4 and abs(y -<br>y2) <= 4<br><i>Condición en línea 151:<br>abs(h - h2) <= 4 and abs(y - y2) <= 4</i>"}
+    dec_152{"x2 <= x + w + gap and x + w<br>>= x2 - gap<br><i>Condición en línea 152:<br>x2 <= x + w + gap and x + w >= x2 - gap</i>"}
+    dec_160{"abs(w - w2) <= 4 and abs(x -<br>x2) <= 4<br><i>Condición en línea 160:<br>abs(w - w2) <= 4 and abs(x - x2) <= 4</i>"}
+    dec_161{"y2 <= y + h + gap and y + h<br>>= y2 - gap<br><i>Condición en línea 161:<br>y2 <= y + h + gap and y + h >= y2 - gap</i>"}
+    dec_170{"not changed<br><i>Condición en línea 170:<br>not changed</i>"}
+    loop_174["For loop"]
+    loop_176["For loop"]
+    dec_177{"i == j or w2 * h2 <= w * h<br><i>Condición en línea 177:<br>i == j or w2 * h2 <= w * h</i>"}
+    dec_179{"x >= x2 and y >= y2 and (x +<br>w <= x2 + w2) and (y + h <= y2 +<br><i>Condición en línea 179:<br>x >= x2 and y >= y2 and (x + w <= x2 + w2) and (y + h <= y2</i>"}
+    dec_182{"not contained<br><i>Condición en línea 182:<br>not contained</i>"}
+    loop_192["For loop"]
+    loop_195["For each xx"]
+    loop_197["For each yy"]
+    dec_198{"raw_mask(yy)(xx)<br><i>Condición en línea 198:<br>raw_mask(yy)(xx)</i>"}
+    loop_204["For loop"]
+    dec_205{"d >= col_thresh and<br>run_start is None<br><i>Condición en línea 205:<br>d >= col_thresh and run_start is None</i>"}
+    dec_207{"d < col_thresh and run_start<br>is not None<br><i>Condición en línea 207:<br>d < col_thresh and run_start is not None</i>"}
+    loop_210["For loop"]
+    dec_212{"nw < 16<br><i>Condición en línea 212:<br>nw < 16</i>"}
+    dec_216{"s / (nw * h) >= min_density<br><i>Condición en línea 216:<br>s / (nw * h) >= min_density</i>"}
+    loop_275["For each mission in MISSIONS"]
+    dec_277{"not png.exists()<br><i>Condición en línea 277:<br>not png.exists()</i>"}
+    dec_302{"args.apply<br><i>Condición en línea 302:<br>args.apply</i>"}
+    dec_304{"patch_tscn(tscn, rects)<br><i>Condición en línea 304:<br>patch_tscn(tscn, rects)</i>"}
+    fn__is_checker[["Is Checker"]]
+    fn_solid_mask[["Solid Mask"]]
+    fn_close_gaps[["Close Gaps"]]
+    fn_quantize[["Quantize"]]
+    fn_extract_rects[["Extract Rects"]]
+    fn_merge_rects[["Merge Rects"]]
+    fn_density_filter[["Density Filter"]]
+    fn_overlay[["Overlay"]]
+    fn_patch_tscn[["Patch Tscn"]]
+    fn_main[["Main"]]
+    n_start --> fn__is_checker
+    n_start --> fn_solid_mask
+    fn_solid_mask --> loop_44
+    loop_44 --> loop_46
+    loop_46 --> dec_48
+    dec_48 -- "loop" --> loop_46
+    loop_46 -- "loop" --> loop_44
+    n_start --> fn_close_gaps
+    fn_close_gaps --> loop_56
+    loop_56 --> loop_59
+    loop_59 --> dec_60
+    dec_60 --> loop_62
+    loop_62 --> dec_64
+    dec_64 --> loop_65
+    dec_60 -- "loop" --> loop_59
+    loop_59 -- "loop" --> loop_56
+    loop_56 --> loop_69
+    loop_69 --> loop_71
+    loop_71 --> dec_72
+    dec_72 --> loop_74
+    loop_74 --> dec_76
+    dec_76 --> loop_77
+    dec_72 -- "loop" --> loop_71
+    loop_71 -- "loop" --> loop_69
+    n_start --> fn_quantize
+    fn_quantize --> loop_88
+    loop_88 --> loop_89
+    loop_89 --> loop_91
+    loop_91 --> loop_93
+    loop_93 --> dec_94
+    dec_94 -- "loop" --> loop_93
+    loop_93 -- "loop" --> loop_91
+    loop_91 -- "loop" --> loop_89
+    loop_89 -- "loop" --> loop_88
+    n_start --> fn_extract_rects
+    fn_extract_rects --> loop_109
+    loop_109 --> dec_112
+    dec_112 --> loop_113
+    loop_113 --> dec_114
+    dec_114 -- "YES" --> loop_116
+    dec_114 -- "loop" --> loop_113
+    loop_113 --> loop_121
+    loop_121 --> dec_122
+    dec_122 -- "loop" --> loop_121
+    loop_121 --> loop_126
+    loop_126 --> dec_127
+    dec_127 -- "loop" --> loop_126
+    loop_126 -- "loop" --> loop_109
+    n_start --> fn_merge_rects
+    fn_merge_rects --> loop_137
+    loop_137 --> loop_141
+    loop_141 --> dec_142
+    dec_142 --> loop_146
+    loop_146 --> dec_147
+    dec_147 --> dec_151
+    dec_151 --> dec_152
+    dec_151 --> dec_160
+    dec_160 --> dec_161
+    dec_161 -- "loop" --> loop_146
+    loop_146 -- "loop" --> loop_141
+    loop_141 --> dec_170
+    dec_170 -- "loop" --> loop_137
+    loop_137 --> loop_174
+    loop_174 --> loop_176
+    loop_176 --> dec_177
+    dec_177 --> dec_179
+    dec_179 -- "loop" --> loop_176
+    loop_176 --> dec_182
+    dec_182 -- "loop" --> loop_174
+    n_start --> fn_density_filter
+    fn_density_filter --> loop_192
+    loop_192 --> loop_195
+    loop_195 --> loop_197
+    loop_197 --> dec_198
+    dec_198 -- "loop" --> loop_197
+    loop_197 -- "loop" --> loop_195
+    loop_195 --> loop_204
+    loop_204 --> dec_205
+    dec_205 --> dec_207
+    dec_207 -- "loop" --> loop_204
+    loop_204 --> loop_210
+    loop_210 --> dec_212
+    dec_212 --> dec_216
+    dec_216 -- "loop" --> loop_210
+    loop_210 -- "loop" --> loop_192
+    n_start --> fn_overlay
+    fn_overlay --> loop_224
+    n_start --> fn_patch_tscn
+    fn_patch_tscn --> loop_245
+    loop_245 --> dec_258
+    n_start --> fn_main
+    fn_main --> loop_275
+    loop_275 --> dec_277
+    dec_277 --> dec_302
+    dec_302 --> dec_304
+    dec_304 -- "loop" --> loop_275
+    class n_start node-start
+    class fn__is_checker,fn_solid_mask,fn_close_gaps,fn_quantize,fn_extract_rects,fn_merge_rects,fn_density_filter,fn_overlay,fn_patch_tscn,fn_main node-subprocess
+    class loop_44,loop_46,loop_56,loop_59,loop_62,loop_65,loop_69,loop_71,loop_74,loop_77,loop_88,loop_89,loop_91,loop_93,loop_109,loop_113,loop_116,loop_121,loop_126,loop_137,loop_141,loop_146,loop_174,loop_176,loop_192,loop_195,loop_197,loop_204,loop_210,loop_224,loop_245,loop_275 node-loop
+    class dec_48,dec_60,dec_64,dec_72,dec_76,dec_94,dec_112,dec_114,dec_122,dec_127,dec_142,dec_147,dec_151,dec_152,dec_160,dec_161,dec_170,dec_177,dec_179,dec_182,dec_198,dec_205,dec_207,dec_212,dec_216,dec_258,dec_277,dec_302,dec_304 node-decision
+    class n_end node-end

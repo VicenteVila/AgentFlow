@@ -1,0 +1,83 @@
+%% Build Baseline · AssetsScene
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    loop_2["For each d"]
+    loop_4["For each p"]
+    loop_77["For each p in player_frames"]
+    loop_6["For each p"]
+    loop_87["For loop"]
+    loop_8["For each p"]
+    loop_113["For each p in enemy_frames"]
+    loop_11["For each p"]
+    loop_120["For loop"]
+    loop_14["For each p"]
+    dec_140{"boss_frames<br><i>Condición en línea 140:<br>boss_frames</i>"}
+    dec_16{"not list((WS /<br>'assets/coin').glob('*.png'))<br><i>Condición en línea 16:<br>not list((WS / 'assets/coin').glob('*.png'))</i>"}
+    loop_146["For each p in boss_frames"]
+    loop_194["For each p in goal_frames"]
+    loop_18["For each p"]
+    loop_153["For loop"]
+    dec_197{"len(goal_frames) > 1<br><i>Condición en línea 197:<br>len(goal_frames) > 1</i>"}
+    dec_20{"not list((WS /<br>'assets/coin').glob('*.png'))<br><i>Condición en línea 20:<br>not list((WS / 'assets/coin').glob('*.png'))</i>"}
+    dec_223{"boss_frames<br><i>Condición en línea 223:<br>boss_frames</i>"}
+    loop_24["For each p"]
+    dec_228{"bg_exists<br><i>Condición en línea 228:<br>bg_exists</i>"}
+    dec_26{"not list((WS /<br>'assets/goal').glob('*.png'))<br><i>Condición en línea 26:<br>not list((WS / 'assets/goal').glob('*.png'))</i>"}
+    dec_247{"bg_exists<br><i>Condición en línea 247:<br>bg_exists</i>"}
+    loop_28["For each p"]
+    loop_280["For loop"]
+    dec_32{"bg.exists()<br><i>Condición en línea 32:<br>bg.exists()</i>"}
+    loop_291["For loop"]
+    dec_37{"alt<br><i>Condición en línea 37:<br>alt</i>"}
+    fn_copy_assets[["Copy Assets"]]
+    fn_write_tscns[["Write Tscns"]]
+    fn_group_52[["Group"]]
+    n_start --> fn_copy_assets
+    fn_copy_assets --> loop_2
+    loop_2 --> loop_4
+    loop_4 --> loop_6
+    loop_6 --> loop_8
+    loop_8 --> loop_11
+    loop_11 --> loop_14
+    loop_14 --> dec_16
+    dec_16 --> loop_18
+    loop_18 --> dec_20
+    dec_20 --> loop_24
+    loop_24 --> dec_26
+    dec_26 --> loop_28
+    loop_28 --> dec_32
+    dec_32 -- "NO" --> dec_37
+    n_start --> fn_write_tscns
+    fn_write_tscns --> fn_group_52
+    fn_group_52 --> loop_77
+    loop_77 --> loop_87
+    loop_87 --> loop_113
+    loop_113 --> loop_120
+    loop_120 --> dec_140
+    dec_140 --> loop_146
+    loop_146 --> loop_153
+    dec_140 --> loop_194
+    loop_194 --> dec_197
+    dec_197 --> dec_223
+    dec_223 --> dec_228
+    dec_228 --> dec_247
+    dec_247 --> loop_280
+    loop_280 --> loop_291
+    class n_start node-start
+    class fn_copy_assets,fn_write_tscns,fn_group_52 node-subprocess
+    class loop_2,loop_4,loop_6,loop_8,loop_11,loop_14,loop_18,loop_24,loop_28,loop_77,loop_87,loop_113,loop_120,loop_146,loop_153,loop_194,loop_280,loop_291 node-loop
+    class dec_16,dec_20,dec_26,dec_32,dec_37,dec_140,dec_197,dec_223,dec_228,dec_247 node-decision
+    class n_end node-end

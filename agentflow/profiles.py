@@ -7,6 +7,7 @@ decision hints and phase patterns. The parser itself is domain-agnostic.
 Two built-in profiles are provided:
 - GENERIC: no domain knowledge — labels derive from the code itself.
 - REAWEB: exhaustive labels for the ReaWeb self-evolving web-design agent.
+- REAGAME: exhaustive labels for the ReaGame self-evolving game-design agent.
 
 Custom profiles can be loaded from an external Python file exposing a
 ``PROFILE`` dict (see :func:`load_profile`).
@@ -54,6 +55,14 @@ class Profile:
     # Framework-specific agent class names (for instance-to-actor mapping)
     # e.g. {"AgentExecutor": "Agent", "Crew": "Orchestrator"}
     agent_class_names: dict[str, str] = field(default_factory=dict)
+
+    # Drill-down: dotted module path -> [(group label, [function/method names])].
+    # Files listed here are split into one flowchart per group instead of being
+    # emitted whole as a single diagram (see agentflow.drilldown).
+    function_splits: dict[str, list[tuple[str, list[str]]]] = field(default_factory=dict)
+
+    # Drill-down: dotted module path -> [class names to expand, one diagram each].
+    class_splits: dict[str, list[str]] = field(default_factory=dict)
 
 
 # ── Generic profile ───────────────────────────────────────────────────
@@ -253,6 +262,68 @@ _REAWEB_PHASE_PATTERNS: dict[str, int] = {
 }
 
 
+# Drill-down splits: dotted module path -> [(group label, [function names])].
+_REAWEB_FUNCTION_SPLITS: dict[str, list[tuple[str, list[str]]]] = {
+    "agent.agent": [
+        ("Init", [
+            "__init__", "_system_prompt", "_snapshot", "_snapshot_workspace",
+            "_workspace_diff_summary", "_stash_vlm", "_render_state",
+        ]),
+        ("Iterations", [
+            "_handle_eval_result", "_last_action_summary", "_subtask_checklist",
+            "_safe_history_slice", "_exec_tool",
+        ]),
+        ("Lessons", [
+            "_maybe_subtask_lesson", "_maybe_auto_lesson", "_maybe_content_lesson",
+        ]),
+        ("Audits", [
+            "_auto_truth_audit", "_auto_visual_audit", "_compute_novelty",
+            "_attribute_harm",
+        ]),
+        ("Finalize", [
+            "_seed_from_workspace", "_export_final", "_current_best_score",
+        ]),
+    ],
+    "tools.domain.evaluator": [
+        ("Gating", ["evaluate", "_apply_blocking_gates"]),
+        ("Scoring", ["_score", "_strip_js_comments"]),
+        ("VisualTotal", ["blend_visual_total"]),
+        ("RequirementsSections", [
+            "extract_requirements", "extract_sections", "_html_has_section",
+        ]),
+        ("Subtasks", [
+            "extract_subtasks", "subtasks_status", "format_subtasks_status",
+        ]),
+        ("Novelty", ["novelty_score", "_jaccard", "_palette", "_dom_structure"]),
+        ("VisualChecks", [
+            "_has_real_css_animations", "_has_real_transitions",
+            "_has_real_gradients", "_has_animated_canvas", "_no_dead_canvas",
+            "_has_dark_mode", "_has_scroll_reveal", "_has_hover_effects",
+            "_has_microinteractions", "_has_content_richness", "_inputs_labeled",
+            "_has_modern_images", "_scripts_async", "_img_responsive",
+        ]),
+    ],
+    "scripts.trend_evolution": [
+        ("Data", ["_baseline", "collect"]),
+        ("Render", ["render_markdown", "_fmt_num"]),
+        ("Entry", ["main"]),
+    ],
+    "scripts.run_benchmark": [
+        ("Load", ["_baseline", "load_benchmark"]),
+        ("Render", ["render", "_f"]),
+        ("Suite", ["_run_suite"]),
+        ("Leaderboard", ["_write_leaderboard"]),
+        ("Entry", ["main"]),
+    ],
+}
+
+_REAWEB_CLASS_SPLITS: dict[str, list[str]] = {
+    "tools.domain.web_generator": [
+        "InspectArchetype", "FetchUrl", "GenerateCandidate", "AuditPage",
+        "UpdateLessons", "SelectFinal", "RevertWorkspace",
+    ],
+}
+
 REAWEB_PROFILE = Profile(
     name="reaweb",
     tool_names=_REAWEB_TOOL_INFO,
@@ -262,6 +333,246 @@ REAWEB_PROFILE = Profile(
     decision_hints=_REAWEB_DECISION_HINTS,
     phase_patterns=_REAWEB_PHASE_PATTERNS,
     init_label=("Init Agent", "Configura LLM, budget, memory,\ncontext manager, harness snapshot"),
+    function_splits=_REAWEB_FUNCTION_SPLITS,
+    class_splits=_REAWEB_CLASS_SPLITS,
+)
+
+
+# ── ReaGame profile ───────────────────────────────────────────────────
+
+_REAGAME_TOOL_INFO: dict[str, tuple[str, str]] = {
+    "generate_candidate": (
+        "Generate Candidate",
+        "LLM sub-agente genera un juego Godot\n(scripts .gd + assets) → hipótesis H0..Hn",
+    ),
+    "audit_page": (
+        "Audit Game",
+        "Validación estática del juego: features\nextraídas, controles, conectividad, gates",
+    ),
+    "audit_visual": (
+        "Audit Visual",
+        "VLM: captura del juego → score 0-100\n+ issues + sugerencias de arte/nivel",
+    ),
+    "audit_creative": (
+        "Audit Creative",
+        "VLM anti-proxy: novedad/originalidad\nscore 0-100, hints de mutación",
+    ),
+    "inspect_archetype": (
+        "Inspect Archetype",
+        "Analiza el archetype de juego\n(schema de archivos/features requeridos)",
+    ),
+    "update_lessons": (
+        "Update Lessons",
+        "Persiste lecciones acumuladas\na memory/global_lessons",
+    ),
+    "select_final": (
+        "Select Final",
+        "Selecciona mejor hipótesis\ny exporta a runs/{run_id}/final/",
+    ),
+    "revert_workspace": (
+        "Revert Workspace",
+        "Restaura el candidato anterior\nsi el nuevo empeora",
+    ),
+    "edit_skill": (
+        "Meta-Edit: edit_skill",
+        "Propone cambio al harness\nacepta/revierte vía gate_harness_edit",
+    ),
+    "review_harness": (
+        "Meta-Edit: review_harness",
+        "Propone cambio al harness\nacepta/revierte vía gate_harness_edit",
+    ),
+    "deploy_preview": (
+        "Deploy Preview",
+        "Empaqueta/preview del juego\n(export o http.server local)",
+    ),
+    "git_snapshot": (
+        "Git Snapshot",
+        "Copia candidato a runs/\npara historial de versiones",
+    ),
+}
+
+_REAGAME_EVO_INFO: dict[str, tuple[str, str]] = {
+    "_maybe_auto_lesson": (
+        "Auto Lesson",
+        "delta ≥ umbral → aprende worked/didnt\nmax por run, dedup por snippet",
+    ),
+    "_maybe_subtask_lesson": (
+        "Subtask Lesson",
+        "Detecta subtask fail→pass\n(prev best vs candidato actual)",
+    ),
+    "_maybe_content_lesson": (
+        "Content Lesson",
+        "Score < 85 → extrae issues\ny suggestions como lecciones",
+    ),
+    "_compute_novelty": (
+        "Compute Novelty",
+        "Hash de archivos + Jaccard vs\nmejores hipótesis previas",
+    ),
+    "_attribute_harm": (
+        "Attribute Harm",
+        "Detecta contenido/deficiencias graves\ny penaliza la hipótesis",
+    ),
+}
+
+_REAGAME_SPECIAL_CALLS: dict[str, tuple[str, str, NodeType]] = {
+    "_snapshot": (
+        "Snapshot Workspace",
+        "Copia workspace/ → candidates/{id}/\npara historial de cambios",
+        NodeType.PROCESS,
+    ),
+    "_seed_from_workspace": (
+        "Seed Workspace",
+        "Si workspace/current existe\n→ evalúa como H0 inicial",
+        NodeType.PROCESS,
+    ),
+    "_export_final": (
+        "Export Final",
+        "Copia mejor candidato a\nruns/{run_id}/final/",
+        NodeType.END,
+    ),
+    "_render_state": (
+        "Render State",
+        "Genera prompt con: turn, cost,\nbest, tree, lessons, stagnation",
+        NodeType.PROCESS,
+    ),
+    "_sync_budget_cost": ("", "", NodeType.PROCESS),
+}
+
+_REAGAME_DECISION_HINTS: list[tuple[str, str, str]] = [
+    ("attr='done'", "Task\ndone?",
+     "¿Agente devolvió done/fin/finalizado?\n→ terminar si alcanzó target_h"),
+    ("register_evaluation", "Stagnation\nreset?",
+     "score - last_best ≥ umbral?\n→ reset del contador de estancamiento"),
+    ("stop_reason", "Stop\nreason?",
+     "Motivo de parada?\nbudget/stagnation/agent-decided"),
+    ("tool_calls", "Has tool\ncalls?",
+     "LLM devolvió tool_calls?\n→ iterar sobre cada una"),
+    ("target_h", "Target H\nreached?",
+     "hypothesis_count ≤ target_h?\n→ seguir generando hipótesis"),
+    ("meta_edits", "Meta-edits\nenabled?",
+     "allow_meta_edits = True?\n→ permitir edit_skill"),
+    ("delta_threshold", "Delta ≥\numbral?",
+     "Mejora suficiente?\n→ aprender lección"),
+    ("should_compact", "Compact\ncontext?",
+     "tokens > umbral?\n→ compactar contexto (1 vez/run)"),
+    ("attr='nodes'", "Has nodes?",
+     "Search tree tiene nodos?\n→ evaluar candidato"),
+    ("global_lessons", "Lessons\nto merge?",
+     "¿Hay lecciones incremental?\n→ merge a global_lessons"),
+]
+
+_REAGAME_PHASE_PATTERNS: dict[str, int] = {
+    "start": 1,
+    "init": 1,
+    "seed": 1,
+    "main_loop": 2,
+    "render": 2,
+    "llm": 2,
+    "budget": 2,
+    "generate": 2,
+    "audit": 2,
+    "vlm": 2,
+    "creative": 2,
+    "lesson": 2,
+    "subtask_lesson": 2,
+    "content_lesson": 2,
+    "novelty": 2,
+    "snapshot": 2,
+    "select": 3,
+    "export": 3,
+    "final": 3,
+    "end": 3,
+    "meta": 3,
+    "harm": 3,
+    "summary": 3,
+}
+
+_REAGAME_FUNCTION_SPLITS: dict[str, list[tuple[str, list[str]]]] = {
+    "agent.agent": [
+        ("Init", [
+            "__init__", "_system_prompt", "_log", "_snapshot", "_render_state",
+        ]),
+        ("Iterations", [
+            "_last_action_summary", "_subtask_checklist", "_safe_history_slice",
+            "_exec_tool", "_handle_eval_result",
+        ]),
+        ("Lessons", [
+            "_maybe_subtask_lesson", "_maybe_auto_lesson", "_maybe_content_lesson",
+        ]),
+        ("Audits", [
+            "_compute_novelty", "_attribute_harm", "_smoke",
+        ]),
+        ("Finalize", [
+            "_seed_from_workspace", "_export_final", "_current_best_score",
+            "_final_summary",
+        ]),
+        ("Budget", ["_sync_budget_cost"]),
+    ],
+    "scripts.build_baseline": [
+        ("Project", ["write_project_godot", "write_game_gd"]),
+        ("Player", ["write_player_gd"]),
+        ("Enemies", ["write_enemy_gd", "write_boss_gd"]),
+        ("Pickups", ["write_coin_gd", "write_goal_gd"]),
+        ("Menu", ["write_menu"]),
+        ("AssetsScene", ["copy_assets", "write_tscns"]),
+    ],
+    "tools.domain.game_evaluator": [
+        ("Features", [
+            "extract_features", "_project_files", "_all_source_text",
+            "_strip_comments", "_axis_score", "feature_present",
+            "features_status", "has_entry",
+        ]),
+        ("Connectivity", [
+            "_connected_methods", "_unconnected_signal_handlers",
+            "_has_real_movement", "_has_real_jump", "_win_connected",
+            "_lose_connected", "_restart_real", "connectivity_report",
+        ]),
+        ("Subtasks", [
+            "extract_subtasks", "subtasks_status", "format_subtasks_status",
+        ]),
+        ("Gating", [
+            "evaluate", "_apply_blocking_gates", "metrics_block",
+            "parse_metrics_block", "blend_visual_total",
+        ]),
+        ("Novelty", ["_file_hashes", "_jaccard", "novelty_score"]),
+    ],
+    "agent.memory_db": [
+        ("Runs", ["upsert_run", "get_run", "all_runs"]),
+        ("Lessons", [
+            "add_lesson", "update_lesson_safety", "increment_harmful_reuses",
+            "record_reuse", "lessons", "lesson_text", "count_lessons",
+        ]),
+        ("Experiments", [
+            "add_experiment", "delete_experiments", "experiments",
+            "count_experiments",
+        ]),
+        ("Tree", ["upsert_node", "nodes", "count_nodes"]),
+        ("HarnessEdits", [
+            "add_harness_edit", "harness_edits", "get_harness_edit",
+            "set_harness_edit_decision", "count_harness_edits",
+        ]),
+        ("Migrations", ["_migrate_lessons_safety", "close"]),
+    ],
+}
+
+_REAGAME_CLASS_SPLITS: dict[str, list[str]] = {
+    "tools.domain.game_generator": [
+        "InspectArchetype", "GenerateCandidate", "AuditPage", "UpdateLessons",
+        "SelectFinal", "RevertWorkspace",
+    ],
+}
+
+REAGAME_PROFILE = Profile(
+    name="reagame",
+    tool_names=_REAGAME_TOOL_INFO,
+    special_calls=_REAGAME_SPECIAL_CALLS,
+    evolution_methods=_REAGAME_EVO_INFO,
+    dispatch_attr="name",
+    decision_hints=_REAGAME_DECISION_HINTS,
+    phase_patterns=_REAGAME_PHASE_PATTERNS,
+    init_label=("Init Agent", "Configura LLM, budget, memory,\ncontext manager, harness snapshot"),
+    function_splits=_REAGAME_FUNCTION_SPLITS,
+    class_splits=_REAGAME_CLASS_SPLITS,
 )
 
 
@@ -413,6 +724,7 @@ AUTOGEN_PROFILE = Profile(
 PROFILES: dict[str, Profile] = {
     "generic": GENERIC_PROFILE,
     "reaweb": REAWEB_PROFILE,
+    "reagame": REAGAME_PROFILE,
     "langchain": LANGCHAIN_PROFILE,
     "crewai": CREWAI_PROFILE,
     "autogen": AUTOGEN_PROFILE,

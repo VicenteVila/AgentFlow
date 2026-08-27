@@ -23,7 +23,7 @@ from agentflow.layouts import with_detail_level
 from agentflow.mermaid import save_mermaid, save_mermaid_html
 from agentflow.models import Edge, FlowGraph, Node, NodeType
 from agentflow.parser import parse_class_methods, parse_file, parse_functions
-from agentflow.profiles import Profile
+from agentflow.profiles import Profile, get_profile
 from agentflow.repo import _classify_file_graph
 
 # Directories never turned into flowcharts (data / tests / docs).
@@ -38,70 +38,8 @@ _SKIP_DIRS = _EXCLUDED_DIRS | {
     "build", "htmlcov", ".tox",
 }
 
-# Function-level splits: dotted module path -> [(group label, [function names])].
-# A file listed here is NOT emitted whole; each group becomes its own flowchart.
-FUNCTION_SPLITS: dict[str, list[tuple[str, list[str]]]] = {
-    "agent.agent": [
-        ("Init", [
-            "__init__", "_system_prompt", "_snapshot", "_snapshot_workspace",
-            "_workspace_diff_summary", "_stash_vlm", "_render_state",
-        ]),
-        ("Iterations", [
-            "_handle_eval_result", "_last_action_summary", "_subtask_checklist",
-            "_safe_history_slice", "_exec_tool",
-        ]),
-        ("Lessons", [
-            "_maybe_subtask_lesson", "_maybe_auto_lesson", "_maybe_content_lesson",
-        ]),
-        ("Audits", [
-            "_auto_truth_audit", "_auto_visual_audit", "_compute_novelty",
-            "_attribute_harm",
-        ]),
-        ("Finalize", [
-            "_seed_from_workspace", "_export_final", "_current_best_score",
-        ]),
-    ],
-    "tools.domain.evaluator": [
-        ("Gating", ["evaluate", "_apply_blocking_gates"]),
-        ("Scoring", ["_score", "_strip_js_comments"]),
-        ("VisualTotal", ["blend_visual_total"]),
-        ("RequirementsSections", [
-            "extract_requirements", "extract_sections", "_html_has_section",
-        ]),
-        ("Subtasks", [
-            "extract_subtasks", "subtasks_status", "format_subtasks_status",
-        ]),
-        ("Novelty", ["novelty_score", "_jaccard", "_palette", "_dom_structure"]),
-        ("VisualChecks", [
-            "_has_real_css_animations", "_has_real_transitions",
-            "_has_real_gradients", "_has_animated_canvas", "_no_dead_canvas",
-            "_has_dark_mode", "_has_scroll_reveal", "_has_hover_effects",
-            "_has_microinteractions", "_has_content_richness", "_inputs_labeled",
-            "_has_modern_images", "_scripts_async", "_img_responsive",
-        ]),
-    ],
-    "scripts.trend_evolution": [
-        ("Data", ["_baseline", "collect"]),
-        ("Render", ["render_markdown", "_fmt_num"]),
-        ("Entry", ["main"]),
-    ],
-    "scripts.run_benchmark": [
-        ("Load", ["_baseline", "load_benchmark"]),
-        ("Render", ["render", "_f"]),
-        ("Suite", ["_run_suite"]),
-        ("Leaderboard", ["_write_leaderboard"]),
-        ("Entry", ["main"]),
-    ],
-}
-
-# Class-level splits: dotted module path -> [class names to expand each alone].
-CLASS_SPLITS: dict[str, list[str]] = {
-    "tools.domain.web_generator": [
-        "InspectArchetype", "FetchUrl", "GenerateCandidate", "AuditPage",
-        "UpdateLessons", "SelectFinal", "RevertWorkspace",
-    ],
-}
-
+# Function/class-level splits live in the profile (Profile.function_splits /
+# Profile.class_splits) so each repo family can carry its own split table.
 _MAX_DEPTH = 6
 
 
@@ -274,6 +212,8 @@ def _handle_dir(ctx: _Ctx, root: Path, segments: list[str], level: int) -> str:
     if level > _MAX_DEPTH:
         return _handle_dir_shallow(ctx, root, segments, level)
 
+    profile = get_profile(ctx.profile)
+
     # ── Plan children ────────────────────────────────────────────────
     overview_children: list[tuple[Path, str]] = []
     file_children: list[tuple[Path, list[str]]] = []
@@ -318,8 +258,8 @@ def _handle_dir(ctx: _Ctx, root: Path, segments: list[str], level: int) -> str:
         if not segments:
             overview_target = f"{ctx.prefix}_L0_Overview.html"
 
-        if module in FUNCTION_SPLITS:
-            groups = FUNCTION_SPLITS[module]
+        if module in profile.function_splits:
+            groups = profile.function_splits[module]
             child_links: dict[str, str] = {}
             for group, funcs in groups:
                 name = f"{split_name}_{group}"
@@ -335,15 +275,16 @@ def _handle_dir(ctx: _Ctx, root: Path, segments: list[str], level: int) -> str:
                                f"{_display_title(file)} · {group}", None,
                                f"{base_name}.html")
             child_hrefs[file.stem] = f"{base_name}.html"
-        elif module in CLASS_SPLITS:
+        elif module in profile.class_splits:
             child_links = {}
-            for cls in CLASS_SPLITS[module]:
+            for cls in profile.class_splits[module]:
                 name = f"{split_name}_{cls}"
                 for node_id in (f"fn_{cls.lower()}_{m}".lower()
                                 for m in ("run", "schema", "__init__")):
                     child_links[node_id] = f"{name}.html"
-            items = [(cls, f"{_title_segments([cls])} · clase") for cls in CLASS_SPLITS[module]]
-            for cls in CLASS_SPLITS[module]:
+            items = [(cls, f"{_title_segments([cls])} · clase")
+                     for cls in profile.class_splits[module]]
+            for cls in profile.class_splits[module]:
                 name = f"{split_name}_{cls}"
                 sub = parse_class_methods(file, cls, profile=ctx.profile,
                                           title=f"{_display_title(file)} · {cls}")
@@ -360,7 +301,7 @@ def _handle_dir(ctx: _Ctx, root: Path, segments: list[str], level: int) -> str:
             child_hrefs[file.stem] = f"{base_name}.html"
 
         # ── Split-file father: whole-flow, else per-group overview ────
-        if module in FUNCTION_SPLITS or module in CLASS_SPLITS:
+        if module in profile.function_splits or module in profile.class_splits:
             father = ctx.graph_of(file)
             if father is not None:
                 valid = {n.id for n in father.nodes}

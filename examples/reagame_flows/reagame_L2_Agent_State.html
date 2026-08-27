@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>State</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="reagame_L1_Agent.html">← Volver</a>
+  <h1>State</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% State
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    loop_182["For each m"]
+    dec_206{"not SKILL_SAFETY_ENABLED<br><i>Condición en línea 206:<br>not SKILL_SAFETY_ENABLED</i>"}
+    dec_118{"self.db is not None<br><i>Condición en línea 118:<br>self.db is not None</i>"}
+    dec_188{"not out<br><i>Condición en línea 188:<br>not out</i>"}
+    dec_212{"governed('admitted')<br><i>Condición en línea 212:<br>governed('admitted')</i>"}
+    dec_121{"Lessons<br>to merge?<br><i>¿Hay lecciones incremental?<br>→ merge a global_lessons</i>"}
+    dec_191{"plain<br><i>Condición en línea 191:<br>plain</i>"}
+    loop_85["For each nd"]
+    loop_76["For each nd"]
+    dec_78{"s > best_score<br><i>Condición en línea 78:<br>s > best_score</i>"}
+    loop_239["For each item"]
+    dec_240{"isinstance(item, str)<br><i>Condición en línea 240:<br>isinstance(item, str)</i>"}
+    dec_242{"isinstance(item, dict)<br><i>Condición en línea 242:<br>isinstance(item, dict)</i>"}
+    fn__parse_lesson_blocks[["Parse Lesson Blocks"]]
+    fn__govern_lesson_block[["Govern Lesson Block"]]
+    fn_searchtree_load[["Load"]]
+    fn_memory_read_global_lessons[["Read Global Lessons"]]
+    fn_contextmanager_compact[["Compact"]]
+    fn_searchtree_save[["Save"]]
+    fn_memory_append_global[["Append Global"]]
+    fn_contextmanager__summarize[["Summarize"]]
+    fn_searchtree_add[["Add"]]
+    fn_memory_append_incremental[["Append Incremental"]]
+    fn_contextmanager_should_compact[["Should Compact"]]
+    fn_searchtree_best[["Best"]]
+    fn_memory_add_experiment[["Add Experiment"]]
+    fn_searchtree_summary[["Summary"]]
+    n_start --> fn__parse_lesson_blocks
+    fn__parse_lesson_blocks --> loop_182
+    loop_182 --> dec_188
+    dec_188 --> dec_191
+    n_start --> fn__govern_lesson_block
+    fn__govern_lesson_block --> dec_206
+    dec_206 --> dec_212
+    n_start --> fn_searchtree_load
+    fn_searchtree_load --> fn_searchtree_save
+    fn_searchtree_save --> fn_searchtree_add
+    fn_searchtree_add --> fn_searchtree_best
+    fn_searchtree_best --> loop_76
+    loop_76 --> dec_78
+    dec_78 -- "loop" --> loop_76
+    fn_searchtree_best --> fn_searchtree_summary
+    fn_searchtree_summary --> loop_85
+    n_start --> fn_memory_read_global_lessons
+    fn_memory_read_global_lessons --> dec_118
+    dec_118 --> dec_121
+    fn_memory_read_global_lessons --> fn_memory_append_global
+    fn_memory_append_global --> fn_memory_append_incremental
+    fn_memory_append_incremental --> fn_memory_add_experiment
+    n_start --> fn_contextmanager_compact
+    fn_contextmanager_compact --> fn_contextmanager__summarize
+    fn_contextmanager__summarize --> loop_239
+    loop_239 --> dec_240
+    dec_240 --> dec_242
+    dec_242 -- "loop" --> loop_239
+    fn_contextmanager__summarize --> fn_contextmanager_should_compact
+    class n_start node-start
+    class fn__parse_lesson_blocks,fn__govern_lesson_block,fn_searchtree_load,fn_searchtree_save,fn_searchtree_add,fn_searchtree_best,fn_searchtree_summary,fn_memory_read_global_lessons,fn_memory_append_global,fn_memory_append_incremental,fn_memory_add_experiment,fn_contextmanager_compact,fn_contextmanager__summarize,fn_contextmanager_should_compact node-subprocess
+    class loop_182,loop_76,loop_85,loop_239 node-loop
+    class dec_188,dec_191,dec_206,dec_212,dec_78,dec_118,dec_121,dec_240,dec_242 node-decision
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

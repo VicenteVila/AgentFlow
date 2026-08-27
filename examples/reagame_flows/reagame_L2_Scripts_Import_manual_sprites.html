@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Import Manual Sprites</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    .back-link { font-size: 0.9rem; margin-bottom: 12px; display: inline-block; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+    #diagram pre.mermaid { margin: 0; background: transparent; }
+  </style>
+</head>
+<body>
+<a class="back-link" href="reagame_L1_Scripts.html">← Volver</a>
+  <h1>Import Manual Sprites</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><pre class="mermaid">
+%% Import Manual Sprites
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    loop_99["For each x"]
+    loop_100["For each y"]
+    dec_101{"is_bg(x, y) and (not<br>visited(y * w + x))<br><i>Condición en línea 101:<br>is_bg(x, y) and (not visited(y * w + x))</i>"}
+    loop_104["For each y"]
+    loop_105["For each x"]
+    dec_106{"is_bg(x, y) and (not<br>visited(y * w + x))<br><i>Condición en línea 106:<br>is_bg(x, y) and (not visited(y * w + x))</i>"}
+    loop_110["while stack"]
+    loop_113["For loop"]
+    dec_114{"0 <= nx < w and 0 <= ny < h<br>and (not visited(ny * w + nx))<br><i>Condición en línea 114:<br>0 <= nx < w and 0 <= ny < h and (not visited(ny * w + nx))</i>"}
+    dec_115{"is_bg(nx, ny)<br><i>Condición en línea 115:<br>is_bg(nx, ny)</i>"}
+    loop_124["For each y"]
+    loop_125["For each x"]
+    dec_126{"out_alpha(x, y) == 0<br><i>Condición en línea 126:<br>out_alpha(x, y) == 0</i>"}
+    dec_129{"min(r, g, b) >= WHITE_MIN<br><i>Condición en línea 129:<br>min(r, g, b) >= WHITE_MIN</i>"}
+    dec_134{"vecinos_transp<br><i>Condición en línea 134:<br>vecinos_transp</i>"}
+    loop_143["For each p"]
+    dec_145{"not m<br><i>Condición en línea 145:<br>not m</i>"}
+    loop_159["For loop"]
+    dec_161{"anim_map.get(raw_pre, '?')<br>is None<br><i>Condición en línea 161:<br>anim_map.get(raw_pre, '?') is None</i>"}
+    dec_165{"anim in keyed<br><i>Condición en línea 165:<br>anim in keyed</i>"}
+    loop_196["For loop"]
+    loop_197["For loop"]
+    loop_225["For each src_name in SOURCES"]
+    dec_230{"not rep('ok')<br><i>Condición en línea 230:<br>not rep('ok')</i>"}
+    fn_chroma_key_white[["Chroma Key White"]]
+    fn_parse_frames[["Parse Frames"]]
+    fn_process_character[["Process Character"]]
+    fn_main[["Main"]]
+    fn_is_bg_93[["Is Bg"]]
+    n_start --> fn_chroma_key_white
+    fn_chroma_key_white --> fn_is_bg_93
+    fn_is_bg_93 --> loop_99
+    loop_99 --> loop_100
+    loop_100 --> dec_101
+    dec_101 -- "loop" --> loop_100
+    loop_100 -- "loop" --> loop_99
+    loop_99 --> loop_104
+    loop_104 --> loop_105
+    loop_105 --> dec_106
+    dec_106 -- "loop" --> loop_105
+    loop_105 -- "loop" --> loop_104
+    loop_104 --> loop_110
+    loop_110 --> loop_113
+    loop_113 --> dec_114
+    dec_114 --> dec_115
+    dec_115 -- "loop" --> loop_113
+    loop_113 -- "loop" --> loop_110
+    loop_110 --> loop_124
+    loop_124 --> loop_125
+    loop_125 --> dec_126
+    dec_126 --> dec_129
+    dec_129 --> dec_134
+    dec_134 -- "loop" --> loop_125
+    loop_125 -- "loop" --> loop_124
+    n_start --> fn_parse_frames
+    fn_parse_frames --> loop_143
+    loop_143 --> dec_145
+    dec_145 -- "loop" --> loop_143
+    n_start --> fn_process_character
+    fn_process_character --> loop_159
+    loop_159 --> dec_161
+    dec_161 --> dec_165
+    dec_165 -- "loop" --> loop_159
+    loop_159 --> loop_196
+    loop_196 --> loop_197
+    loop_197 -- "loop" --> loop_196
+    n_start --> fn_main
+    fn_main --> loop_225
+    loop_225 --> dec_230
+    dec_230 -- "loop" --> loop_225
+    class n_start node-start
+    class fn_chroma_key_white,fn_is_bg_93,fn_parse_frames,fn_process_character,fn_main node-subprocess
+    class loop_99,loop_100,loop_104,loop_105,loop_110,loop_113,loop_124,loop_125,loop_143,loop_159,loop_196,loop_197,loop_225 node-loop
+    class dec_101,dec_106,dec_114,dec_115,dec_126,dec_129,dec_134,dec_145,dec_161,dec_165,dec_230 node-decision
+    class n_end node-end
+
+  </pre></div>
+  <script src="./assets/mermaid.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';document.head.appendChild(s)"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>

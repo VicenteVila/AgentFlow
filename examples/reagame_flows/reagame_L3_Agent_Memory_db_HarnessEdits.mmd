@@ -1,0 +1,36 @@
+%% Memory Db · HarnessEdits
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_15{"decision<br><i>Condición en línea 15:<br>decision</i>"}
+    dec_18{"run_id<br><i>Condición en línea 18:<br>run_id</i>"}
+    dec_21{"where<br><i>Condición en línea 21:<br>where</i>"}
+    fn_add_harness_edit[["Add Harness Edit"]]
+    fn_harness_edits[["Harness Edits"]]
+    fn_get_harness_edit[["Get Harness Edit"]]
+    fn_set_harness_edit_decision[["Set Harness Edit Decision"]]
+    fn_count_harness_edits[["Count Harness Edits"]]
+    n_start --> fn_add_harness_edit
+    n_start --> fn_harness_edits
+    fn_harness_edits --> dec_15
+    dec_15 --> dec_18
+    dec_18 --> dec_21
+    n_start --> fn_get_harness_edit
+    n_start --> fn_set_harness_edit_decision
+    n_start --> fn_count_harness_edits
+    class n_start node-start
+    class fn_add_harness_edit,fn_harness_edits,fn_get_harness_edit,fn_set_harness_edit_decision,fn_count_harness_edits node-subprocess
+    class dec_15,dec_18,dec_21 node-decision
+    class n_end node-end

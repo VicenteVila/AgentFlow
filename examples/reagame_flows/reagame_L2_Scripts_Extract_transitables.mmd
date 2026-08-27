@@ -1,0 +1,133 @@
+%% Extract Transitables
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_32{"bs.size != (tr.shape(1),<br>tr.shape(0))<br><i>Condición en línea 32:<br>bs.size != (tr.shape(1), tr.shape(0))</i>"}
+    dec_109{"suffix == 'Boss'<br><i>Condición en línea 109:<br>suffix == 'Boss'</i>"}
+    dec_36{"'Boss' in str(tr_path)<br><i>Condición en línea 36:<br>'Boss' in str(tr_path)</i>"}
+    dec_111{"not tr.exists() and<br>ntr.exists()<br><i>Condición en línea 111:<br>not tr.exists() and ntr.exists()</i>"}
+    dec_114{"not src_tr.exists() or not<br>base.exists()<br><i>Condición en línea 114:<br>not src_tr.exists() or not base.exists()</i>"}
+    loop_48["For each gy"]
+    loop_49["For each gx"]
+    dec_51{"blk.size and blk.mean() ><br>cov<br><i>Condición en línea 51:<br>blk.size and blk.mean() > cov</i>"}
+    loop_56["For each y"]
+    loop_57["For each x"]
+    dec_58{"grid(y, x) == 0 or<br>visited(y, x)<br><i>Condición en línea 58:<br>grid(y, x) == 0 or visited(y, x)</i>"}
+    loop_61["Loop"]
+    loop_65["Loop"]
+    loop_66["For each cx"]
+    dec_67{"grid(y2 + 1, cx) == 0 or<br>visited(y2 + 1, cx)<br><i>Condición en línea 67:<br>grid(y2 + 1, cx) == 0 or visited(y2 + 1, cx)</i>"}
+    dec_70{"can<br><i>Condición en línea 70:<br>can</i>"}
+    loop_81["while changed"]
+    loop_84["while rects"]
+    loop_87["For loop"]
+    dec_90{"ox and oy<br><i>Condición en línea 90:<br>ox and oy</i>"}
+    dec_98{"not merged<br><i>Condición en línea 98:<br>not merged</i>"}
+    loop_126["For loop"]
+    dec_127{"y + h >= 700<br><i>Condición en línea 127:<br>y + h >= 700</i>"}
+    loop_129["For each cx"]
+    dec_132{"len(idx)<br><i>Condición en línea 132:<br>len(idx)</i>"}
+    dec_134{"tops<br><i>Condición en línea 134:<br>tops</i>"}
+    dec_151{"suffix == 'Boss'<br><i>Condición en línea 151:<br>suffix == 'Boss'</i>"}
+    dec_156{"low<br><i>Condición en línea 156:<br>low</i>"}
+    dec_161{"rects<br><i>Condición en línea 161:<br>rects</i>"}
+    dec_165{"suffix == 'Boss'<br><i>Condición en línea 165:<br>suffix == 'Boss'</i>"}
+    dec_171{"len(chosen) < 2<br><i>Condición en línea 171:<br>len(chosen) < 2</i>"}
+    loop_172["For each g"]
+    dec_173{"g not in chosen<br><i>Condición en línea 173:<br>g not in chosen</i>"}
+    dec_175{"len(chosen) == 2<br><i>Condición en línea 175:<br>len(chosen) == 2</i>"}
+    dec_178{"len(chosen) == 2 and<br>chosen(0) == chosen(1)<br><i>Condición en línea 178:<br>len(chosen) == 2 and chosen(0) == chosen(1)</i>"}
+    loop_181["For loop"]
+    dec_186{"suffix == 'Boss' and<br>spawn_rect is not None<br><i>Condición en línea 186:<br>suffix == 'Boss' and spawn_rect is not None</i>"}
+    dec_189{"len(enemies) >= 1<br><i>Condición en línea 189:<br>len(enemies) >= 1</i>"}
+    loop_194["For each p"]
+    dec_195{"p == spawn_rect<br><i>Condición en línea 195:<br>p == spawn_rect</i>"}
+    dec_197{"p(2) >= 64 and len(coins) <<br>5<br><i>Condición en línea 197:<br>p(2) >= 64 and len(coins) < 5</i>"}
+    dec_199{"not any((abs(pos(0) - c(0))<br>< 80 and abs(pos(1) - c(1)) < 48 c<br><i>Condición en línea 199:<br>not any((abs(pos(0) - c(0)) < 80 and abs(pos(1) - c(1)) < 48</i>"}
+    loop_216["For each mstr"]
+    dec_218{"mstr.lower() == 'boss' or<br>mstr == '4'<br><i>Condición en línea 218:<br>mstr.lower() == 'boss' or mstr == '4'</i>"}
+    fn_marked_mask[["Marked Mask"]]
+    fn_grid_rects[["Grid Rects"]]
+    fn_merge_close[["Merge Close"]]
+    fn_extract[["Extract"]]
+    fn_main[["Main"]]
+    n_start --> fn_marked_mask
+    fn_marked_mask --> dec_32
+    dec_32 --> dec_36
+    n_start --> fn_grid_rects
+    fn_grid_rects --> loop_48
+    loop_48 --> loop_49
+    loop_49 --> dec_51
+    dec_51 -- "loop" --> loop_49
+    loop_49 -- "loop" --> loop_48
+    loop_48 --> loop_56
+    loop_56 --> loop_57
+    loop_57 --> dec_58
+    dec_58 --> loop_61
+    loop_61 --> loop_65
+    loop_65 --> loop_66
+    loop_66 --> dec_67
+    dec_67 -- "loop" --> loop_66
+    loop_66 --> dec_70
+    dec_70 -- "loop" --> loop_65
+    loop_65 -- "loop" --> loop_57
+    loop_57 -- "loop" --> loop_56
+    n_start --> fn_merge_close
+    fn_merge_close --> loop_81
+    loop_81 --> loop_84
+    loop_84 --> loop_87
+    loop_87 --> dec_90
+    dec_90 -- "loop" --> loop_87
+    loop_87 --> dec_98
+    dec_98 -- "loop" --> loop_84
+    loop_84 -- "loop" --> loop_81
+    n_start --> fn_extract
+    fn_extract --> dec_109
+    dec_109 --> dec_111
+    dec_111 --> dec_114
+    dec_114 --> loop_126
+    loop_126 --> dec_127
+    dec_127 --> loop_129
+    loop_129 --> dec_132
+    dec_132 -- "loop" --> loop_129
+    loop_129 --> dec_134
+    dec_127 -- "loop" --> loop_126
+    loop_126 --> dec_151
+    dec_151 --> dec_156
+    dec_156 --> dec_161
+    dec_161 --> dec_165
+    dec_165 --> dec_171
+    dec_171 --> loop_172
+    loop_172 --> dec_173
+    dec_173 --> dec_175
+    dec_175 -- "loop" --> loop_172
+    loop_172 --> dec_178
+    dec_178 --> loop_181
+    loop_181 --> dec_186
+    dec_186 --> dec_189
+    dec_189 --> loop_194
+    loop_194 --> dec_195
+    dec_195 --> dec_197
+    dec_197 --> dec_199
+    dec_199 -- "loop" --> loop_194
+    n_start --> fn_main
+    fn_main --> loop_216
+    loop_216 --> dec_218
+    dec_218 -- "loop" --> loop_216
+    class n_start node-start
+    class fn_marked_mask,fn_grid_rects,fn_merge_close,fn_extract,fn_main node-subprocess
+    class dec_32,dec_36,dec_51,dec_58,dec_67,dec_70,dec_90,dec_98,dec_109,dec_111,dec_114,dec_127,dec_132,dec_134,dec_151,dec_156,dec_161,dec_165,dec_171,dec_173,dec_175,dec_178,dec_186,dec_189,dec_195,dec_197,dec_199,dec_218 node-decision
+    class loop_48,loop_49,loop_56,loop_57,loop_61,loop_65,loop_66,loop_81,loop_84,loop_87,loop_126,loop_129,loop_172,loop_181,loop_194,loop_216 node-loop
+    class n_end node-end

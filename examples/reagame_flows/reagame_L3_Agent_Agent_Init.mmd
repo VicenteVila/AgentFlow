@@ -1,0 +1,58 @@
+%% Agent · Init
+%%{init: {"themeVariables": {"lineColor": "#00ff88"}}}%%
+flowchart LR
+    classDef node-start fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-end fill:#000000,stroke:#ff0055,color:#e0e0e0
+    classDef node-process fill:#000000,stroke:#8b5cf6,color:#e0e0e0
+    classDef node-decision fill:#000000,stroke:#facc15,color:#e0e0e0
+    classDef node-subprocess fill:#000000,stroke:#00ffff,color:#e0e0e0
+    classDef node-tool fill:#000000,stroke:#00ff88,color:#e0e0e0
+    classDef node-loop fill:#000000,stroke:#ff00ff,color:#e0e0e0
+    classDef evolution fill:#000000,stroke:#ff8800,stroke-dasharray: 5 5,color:#e0e0e0
+    classDef added fill:#a7f3d0,stroke:#065f46
+    classDef removed fill:#fecaca,stroke:#991b1b,stroke-dasharray: 5 5
+    classDef changed fill:#fde68a,stroke:#92400e
+    n_start(["Start<br><i>Agent.run() invoked<br>budget.start()</i>"])
+    n_end(["End<br><i>db.close()<br>_final_summary()</i>"])
+    dec_91{"NOT allow_meta_edits?<br><i>Niega allow_meta_edits<br>para lógica invertida</i>"}
+    dec_134{"not has_entry(src)<br><i>Condición en línea 134:<br>not has_entry(src)</i>"}
+    dec_164{"best<br><i>Condición en línea 164:<br>best</i>"}
+    dec_93{"self.quick<br><i>Condición en línea 93:<br>self.quick</i>"}
+    dec_168{"feat('total')<br><i>Condición en línea 168:<br>feat('total')</i>"}
+    dec_100{"Target H<br>reached?<br><i>hypothesis_count ≤ target_h?<br>→ seguir generando hipótesis</i>"}
+    loop_177["For each exp"]
+    dec_118{"self.rules<br><i>Condición en línea 118:<br>self.rules</i>"}
+    dec_138{"dst.exists()<br><i>Condición en línea 138:<br>dst.exists()</i>"}
+    loop_141["For each f"]
+    dec_142{"f.is_file()<br><i>Condición en línea 142:<br>f.is_file()</i>"}
+    dec_144{"f.is_dir()<br><i>Condición en línea 144:<br>f.is_dir()</i>"}
+    fn___init__[["Init"]]
+    fn__system_prompt[["System Prompt"]]
+    fn__snapshot[["Snapshot"]]
+    fn__render_state[["Render State"]]
+    fn__log[["Log"]]
+    n_start --> fn___init__
+    n_start --> fn__system_prompt
+    fn__system_prompt --> dec_91
+    dec_91 --> dec_93
+    dec_93 --> dec_100
+    dec_100 --> dec_118
+    n_start --> fn__log
+    n_start --> fn__snapshot
+    fn__snapshot --> dec_134
+    dec_134 --> fn__log
+    fn__log --> dec_138
+    dec_138 --> loop_141
+    loop_141 --> dec_142
+    dec_142 --> dec_144
+    dec_144 -- "loop" --> loop_141
+    loop_141 --> fn__log
+    n_start --> fn__render_state
+    fn__render_state --> dec_164
+    dec_164 --> dec_168
+    dec_168 --> loop_177
+    class n_start node-start
+    class fn___init__,fn__system_prompt,fn__log,fn__snapshot,fn__render_state node-subprocess
+    class dec_91,dec_93,dec_100,dec_118,dec_134,dec_138,dec_142,dec_144,dec_164,dec_168 node-decision
+    class loop_141,loop_177 node-loop
+    class n_end node-end
