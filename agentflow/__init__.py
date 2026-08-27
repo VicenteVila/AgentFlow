@@ -5,7 +5,7 @@ from agentflow.diff import diff_files, diff_graphs
 from agentflow.dot import save_dot, to_dot
 from agentflow.excalidraw import save_excalidraw, to_excalidraw
 from agentflow.html import save_html, to_html
-from agentflow.mermaid import save_mermaid, to_mermaid
+from agentflow.mermaid import save_mermaid, save_mermaid_html, to_mermaid, to_mermaid_html
 from agentflow.models import Edge, FlowGraph, Node, NodeType
 from agentflow.parser import parse_file, parse_source
 from agentflow.profiles import Profile, get_profile, load_profile
@@ -44,12 +44,14 @@ __all__ = [
     "save_dot",
     "save_html",
     "save_mermaid",
+    "save_mermaid_html",
     "save_svg",
     "to_excalidraw",
     "to_ascii",
     "to_dot",
     "to_html",
     "to_mermaid",
+    "to_mermaid_html",
     "to_mermaid_sequence",
     "to_sequence_html",
     "to_sequence_svg",

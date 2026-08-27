@@ -227,3 +227,62 @@ def save_mermaid(
         encoding="utf-8",
     )
     return path
+
+
+_MERMAID_HTML_TEMPLATE = """\
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
+  <style>
+    body {{ margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }}
+    h1 {{ font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }}
+    .note {{ font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }}
+    #diagram {{ background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }}
+    .mermaid {{ display: flex; justify-content: center; }}
+  </style>
+</head>
+<body>
+  <h1>{title}</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><div class="mermaid">
+{mmd_content}
+  </div></div>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({{startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{{useMaxWidth:false,htmlLabels:true,curve:'basis'}}}});</script>
+</body>
+</html>
+"""
+
+
+def to_mermaid_html(
+    graph: FlowGraph,
+    layout: str = "phased",
+    detail: str = "high",
+    links: dict[str, str] | None = None,
+    title: str | None = None,
+) -> str:
+    """Wrap ``to_mermaid`` output in a standalone HTML with mermaid.js CDN."""
+    mmd = to_mermaid(graph, layout=layout, detail=detail, links=links, title=title)
+    resolved_title = title or graph.title
+    return _MERMAID_HTML_TEMPLATE.format(title=resolved_title, mmd_content=mmd)
+
+
+def save_mermaid_html(
+    graph: FlowGraph,
+    output_path: str | Path,
+    layout: str = "phased",
+    detail: str = "high",
+    links: dict[str, str] | None = None,
+    title: str | None = None,
+) -> Path:
+    """Save mermaid HTML wrapper (CDN + loose) to *output_path*."""
+    path = Path(output_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        to_mermaid_html(graph, layout=layout, detail=detail, links=links, title=title),
+        encoding="utf-8",
+    )
+    return path

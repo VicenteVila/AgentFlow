@@ -971,6 +971,34 @@ def test_mermaid_title_override():
     assert "Old Title" not in mmd
 
 
+def test_to_mermaid_html():
+    from agentflow.mermaid import to_mermaid_html
+
+    g = FlowGraph(title="HTML Wrapper")
+    g.add_node(Node(id="a", label="A"))
+    links = {"a": "next.html"}
+    html = to_mermaid_html(g, links=links, title="Wrapper Test")
+    assert "<!DOCTYPE html>" in html
+    assert "mermaid.min.js" in html
+    assert "securityLevel" in html
+    assert "'loose'" in html
+    assert 'click a href "next.html"' in html
+    assert "Wrapper Test" in html
+
+
+def test_save_mermaid_html():
+    from agentflow.mermaid import save_mermaid_html
+
+    g = FlowGraph(title="Save Wrapper")
+    g.add_node(Node(id="x", label="X"))
+    with tempfile.TemporaryDirectory() as tmpdir:
+        path = Path(tmpdir) / "out.html"
+        save_mermaid_html(g, path, title="My Page")
+        content = path.read_text()
+        assert "<!DOCTYPE html>" in content
+        assert "mermaid" in content.lower()
+
+
 def test_save_html():
     from agentflow.html import save_html
 

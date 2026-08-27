@@ -1,3 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReaWeb · L0 · Phased</title>
+  <style>
+    body { margin: 0; padding: 24px; font-family: system-ui,-apple-system,sans-serif; background: #f8fafc; }
+    h1 { font-size: 1.2rem; color: #334155; margin: 0 0 8px 0; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin: 0 0 16px 0; }
+    #diagram { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; overflow: auto; }
+    .mermaid { display: flex; justify-content: center; }
+  </style>
+</head>
+<body>
+  <h1>ReaWeb · L0 · Phased</h1>
+  <p class="note">Click en los modulos con cursor mano para drill-down.</p>
+  <div id="diagram"><div class="mermaid">
 %% ReaWeb · L0 · Phased
 %%{init: {'securityLevel':'loose'}}%%
 flowchart TD
@@ -29,3 +47,9 @@ flowchart TD
     click comp_2 href "reaweb_L2_Evaluator.html" "Abrir detalle"
     click comp_3 href "reaweb_L2_Memory.html" "Abrir detalle"
     click comp_4 href "reaweb_L2_Scripts.html" "Abrir detalle"
+
+  </div></div>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true,securityLevel:'loose',theme:'default',flowchart:{useMaxWidth:false,htmlLabels:true,curve:'basis'}});</script>
+</body>
+</html>
